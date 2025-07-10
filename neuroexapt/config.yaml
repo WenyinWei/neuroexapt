@@ -1,0 +1,48 @@
+# Default configuration for Neuro Exapt
+
+# Information Theory Parameters
+information:
+  bottleneck_weight: 0.5
+  layer_importance_weight: 1.0
+  task_type_weights:
+    classification: 1.2
+    generation: 0.8
+    regression: 1.0
+
+# Entropy Control Parameters
+entropy:
+  initial_threshold: 0.5
+  decay_rate: 0.05
+  min_threshold: 0.1
+  task_complexity_factor: 0.2
+
+# Structural Evolution Parameters
+evolution:
+  prune_threshold: 0.3
+  expand_gamma: 0.1
+  mutation_rate: 0.1
+  max_layers: 100
+  min_layers: 3
+
+# Network Architecture Parameters
+architecture:
+  depth_decay_lambda: 0.03  # For ResNet-like architectures
+  transformer_decay_lambda: 0.01
+  discrete_param_range: [1, 10]
+
+# Training Parameters
+training:
+  info_retention_alpha: 0.7
+  structure_variation_beta: 0.3
+  convergence_threshold: 1e-4
+  max_epochs: 1000
+
+# Monitoring Parameters
+monitoring:
+  log_interval: 10
+  save_interval: 50
+  metrics:
+    - entropy
+    - mutual_information
+    - structural_complexity
+    - layer_importance 
