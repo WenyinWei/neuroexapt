@@ -17,12 +17,45 @@ if sys.version_info < (3, 8):
 
 # Import main classes when available
 try:
-    from .neuroexapt import NeuroExapt
+    from .neuroexapt import NeuroExapt, NeuroExaptWrapper
     from .trainer import Trainer
     
+    # Import core components for advanced usage
+    from .core import (
+        InformationBottleneck,
+        AdaptiveEntropy,
+        StructuralEvolution,
+        PruneByEntropy,
+        ExpandWithMI,
+        MutateDiscrete
+    )
+    
+    # Import mathematical utilities
+    from .math import (
+        calculate_entropy,
+        calculate_mutual_information,
+        calculate_network_complexity,
+        DiscreteParameterOptimizer
+    )
+    
     __all__ = [
+        # Main classes
         "NeuroExapt",
+        "NeuroExaptWrapper", 
         "Trainer",
+        # Core components
+        "InformationBottleneck",
+        "AdaptiveEntropy",
+        "StructuralEvolution",
+        "PruneByEntropy",
+        "ExpandWithMI",
+        "MutateDiscrete",
+        # Math utilities
+        "calculate_entropy",
+        "calculate_mutual_information",
+        "calculate_network_complexity",
+        "DiscreteParameterOptimizer",
+        # Metadata
         "__version__",
     ]
 except ImportError:
