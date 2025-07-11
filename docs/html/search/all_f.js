@@ -1,0 +1,20 @@
+var searchData=
+[
+  ['save_5fevolution_5fhistory_0',['save_evolution_history',['../classneuroexapt_1_1core_1_1structural__evolution_1_1StructuralEvolution.html#a2ae75a34588e6aa4b6e205c171970486',1,'neuroexapt::core::structural_evolution::StructuralEvolution']]],
+  ['save_5fstate_1',['save_state',['../classneuroexapt_1_1core_1_1entropy__control_1_1AdaptiveEntropy.html#ac541ac8a4f7c07b5a26d223e0cba2cc2',1,'neuroexapt.core.entropy_control.AdaptiveEntropy.save_state()'],['../classneuroexapt_1_1neuroexapt_1_1NeuroExapt.html#a24adb77c4149f8437285f8977279d688',1,'neuroexapt.neuroexapt.NeuroExapt.save_state()']]],
+  ['schedule_2',['schedule',['../classneuroexapt_1_1core_1_1operators_1_1AdaptiveOperator.html#ac5c2520d84f512c6126fc50179b5c008',1,'neuroexapt::core::operators::AdaptiveOperator']]],
+  ['scheduler_3',['scheduler',['../classneuroexapt_1_1trainer_1_1Trainer.html#a74d870e2220cd858d1827b97aa42ae55',1,'neuroexapt::trainer::Trainer']]],
+  ['set_5fcomplexity_5festimator_4',['set_complexity_estimator',['../classneuroexapt_1_1core_1_1entropy__control_1_1AdaptiveEntropy.html#ad97bc6d7b9dd6ceb4d73cbc58f928034',1,'neuroexapt::core::entropy_control::AdaptiveEntropy']]],
+  ['setup_5flogger_5',['setup_logger',['../namespaceneuroexapt_1_1utils_1_1logging.html#ae7b7eb2a8911da891671a56a060c383a',1,'neuroexapt::utils::logging']]],
+  ['should_5fexpand_6',['should_expand',['../classneuroexapt_1_1core_1_1entropy__control_1_1AdaptiveEntropy.html#a14ac1b589613d34e6dfca730ca781054',1,'neuroexapt::core::entropy_control::AdaptiveEntropy']]],
+  ['should_5fprune_7',['should_prune',['../classneuroexapt_1_1core_1_1entropy__control_1_1AdaptiveEntropy.html#ad1794116d694d16459e374ef8eb6ef8d',1,'neuroexapt::core::entropy_control::AdaptiveEntropy']]],
+  ['simplecnn_8',['SimpleCNN',['../classexamples_1_1basic__classification_1_1SimpleCNN.html',1,'examples::basic_classification']]],
+  ['step_9',['step',['../classneuroexapt_1_1math_1_1optimization_1_1DiscreteParameterOptimizer.html#ac26eedbc02b95baf8c78c00983a825f8',1,'neuroexapt.math.optimization.DiscreteParameterOptimizer.step()'],['../classneuroexapt_1_1math_1_1optimization_1_1InformationBottleneckOptimizer.html#ae9a093cd969e335081afef11ebf1b54a',1,'neuroexapt.math.optimization.InformationBottleneckOptimizer.step()'],['../classneuroexapt_1_1math_1_1optimization_1_1AdaptiveLearningRateScheduler.html#acf140f1db83bfee64b65ade7d16fa4ef',1,'neuroexapt.math.optimization.AdaptiveLearningRateScheduler.step()']]],
+  ['struct_5foptimizer_10',['struct_optimizer',['../classneuroexapt_1_1neuroexapt_1_1NeuroExapt.html#a3f6c590f817cd590754f3b463ce27941',1,'neuroexapt::neuroexapt::NeuroExapt']]],
+  ['structural_5fevolution_2epy_11',['structural_evolution.py',['../structural__evolution_8py.html',1,'']]],
+  ['structuralevolution_12',['StructuralEvolution',['../classneuroexapt_1_1core_1_1structural__evolution_1_1StructuralEvolution.html',1,'neuroexapt::core::structural_evolution']]],
+  ['structuralgradientestimator_13',['StructuralGradientEstimator',['../classneuroexapt_1_1math_1_1optimization_1_1StructuralGradientEstimator.html',1,'neuroexapt::math::optimization']]],
+  ['structuraloperator_14',['StructuralOperator',['../classneuroexapt_1_1core_1_1operators_1_1StructuralOperator.html',1,'neuroexapt::core::operators']]],
+  ['symbol_20glossary_15',['Symbol Glossary',['../symbols.html',1,'']]],
+  ['symbols_2emd_16',['symbols.md',['../symbols_8md.html',1,'']]]
+];
