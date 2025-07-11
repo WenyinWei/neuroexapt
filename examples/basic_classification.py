@@ -409,12 +409,26 @@ def main():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Using device: {device}")
     
+    # Enable cuDNN optimizations for better performance
+    if torch.cuda.is_available():
+        torch.backends.cudnn.benchmark = True
+        torch.backends.cudnn.enabled = True
+        print("✅ cuDNN benchmark mode enabled")
+    
     # Hyperparameters
-    batch_size = 128
+    batch_size = 512  # Increased from 128 for better GPU utilization
     learning_rate = 0.001
     epochs = 50
     info_weight = 0.1  # Weight for information-theoretic loss
     entropy_threshold = 0.3  # Threshold for structural decisions
+    
+    # Enable mixed precision training for better GPU utilization
+    use_amp = torch.cuda.is_available()
+    if use_amp:
+        scaler = torch.cuda.amp.GradScaler()
+        print("✅ Mixed precision training enabled (FP16)")
+    else:
+        scaler = None
     
     # Get data loaders
     print("\nLoading CIFAR-10 dataset...")
@@ -422,9 +436,10 @@ def main():
     print("Training samples: 50000")  # CIFAR-10 standard
     print("Test samples: 10000")      # CIFAR-10 standard
     
-    # Create model - start with a simpler base model for evolution
+    # Create model - use a larger model for better GPU utilization
     print("\nInitializing base model...")
-    model = SimpleCNN(num_classes=10)  # Start with simple model, let intelligent evolution improve it
+    # Use DeeperCNN for better GPU utilization (more compute intensive)
+    model = DeeperCNN(num_classes=10)  # Larger model for better GPU usage
     model = model.to(device)
     print(f"Initial model parameters: {sum(p.numel() for p in model.parameters()):,}")
     
@@ -510,18 +525,36 @@ def main():
             train_total = 0
             
             for batch_idx, (data, targets) in enumerate(train_loader):
-                data, targets = data.to(device), targets.to(device)
+                # Non-blocking transfer to GPU for better overlap
+                data = data.to(device, non_blocking=True)
+                targets = targets.to(device, non_blocking=True)
                 
                 optimizer.zero_grad()
-                outputs = wrapped_model(data)
                 
-                # Calculate loss with information-theoretic components
-                ce_loss = F.cross_entropy(outputs, targets)
-                info_loss = neuro_exapt.info_theory.compute_information_loss(outputs, targets)
-                loss = ce_loss + info_weight * info_loss
-                
-                loss.backward()
-                optimizer.step()
+                # Forward pass with mixed precision
+                if use_amp:
+                    with torch.cuda.amp.autocast():
+                        outputs = wrapped_model(data)
+                        
+                        # Calculate loss with information-theoretic components
+                        ce_loss = F.cross_entropy(outputs, targets)
+                        info_loss = neuro_exapt.info_theory.compute_information_loss(outputs, targets)
+                        loss = ce_loss + info_weight * info_loss
+                    
+                    # Backward pass with gradient scaling
+                    scaler.scale(loss).backward()
+                    scaler.step(optimizer)
+                    scaler.update()
+                else:
+                    outputs = wrapped_model(data)
+                    
+                    # Calculate loss with information-theoretic components
+                    ce_loss = F.cross_entropy(outputs, targets)
+                    info_loss = neuro_exapt.info_theory.compute_information_loss(outputs, targets)
+                    loss = ce_loss + info_weight * info_loss
+                    
+                    loss.backward()
+                    optimizer.step()
                 
                 train_loss += loss.item()
                 _, predicted = outputs.max(1)
@@ -535,8 +568,16 @@ def main():
             
             with torch.no_grad():
                 for data, targets in test_loader:
-                    data, targets = data.to(device), targets.to(device)
-                    outputs = wrapped_model(data)
+                    # Non-blocking transfer for better GPU utilization
+                    data = data.to(device, non_blocking=True)
+                    targets = targets.to(device, non_blocking=True)
+                    
+                    if use_amp:
+                        with torch.cuda.amp.autocast():
+                            outputs = wrapped_model(data)
+                    else:
+                        outputs = wrapped_model(data)
+                    
                     _, predicted = outputs.max(1)
                     val_total += targets.size(0)
                     val_correct += predicted.eq(targets).sum().item()
