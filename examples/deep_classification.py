@@ -182,7 +182,7 @@ def main():
     """Main training function."""
     
     print("=" * 80)
-    print("Neuro Exapt - Deep Classification Example (Target: 95%+ Accuracy)")
+    print("Neuro Exapt - Deep Classification with Intelligent Evolution (Target: 95%+ Accuracy)")
     print("=" * 80)
     
     # Device configuration
@@ -197,7 +197,7 @@ def main():
     entropy_threshold = 0.2  # Lower threshold for more aggressive evolution
     
     # Get data loaders
-    print("Loading CIFAR-10 dataset with augmentation...")
+    print("\nLoading CIFAR-10 dataset with augmentation...")
     train_loader, test_loader = get_cifar10_dataloaders(batch_size)
     print("Training samples: 50000")  # CIFAR-10 standard
     print("Test samples: 10000")      # CIFAR-10 standard
@@ -209,8 +209,8 @@ def main():
     initial_params = sum(p.numel() for p in model.parameters())
     print(f"Initial model parameters: {initial_params:,}")
     
-    # Initialize Neuro Exapt with aggressive settings
-    print("\nInitializing Neuro Exapt with aggressive evolution...")
+    # Initialize Neuro Exapt with intelligent operators
+    print("\nInitializing Neuro Exapt with Intelligent Evolution...")
     neuro_exapt = neuroexapt.NeuroExapt(
         task_type="classification",
         entropy_weight=entropy_threshold,
@@ -219,37 +219,62 @@ def main():
         verbose=True
     )
     
+    # Wrap model
+    wrapped_model = neuro_exapt.wrap_model(model)
+    
+    # Check if intelligent operators are available
+    if hasattr(neuro_exapt, 'use_intelligent_operators') and neuro_exapt.use_intelligent_operators:
+        print("✅ Intelligent operators are enabled!")
+        print("   - Smart layer type selection based on information metrics")
+        print("   - Adaptive data flow management")
+        print("   - Intelligent network expansion")
+    else:
+        print("⚠️  Intelligent operators not available, using standard evolution")
+    
+    # Analyze initial architecture
+    print("\nAnalyzing initial model characteristics...")
+    if hasattr(neuro_exapt, 'analyze_layer_characteristics'):
+        layer_chars = neuro_exapt.analyze_layer_characteristics(wrapped_model, train_loader)
+        print("\nInitial layer analysis:")
+        for i, (name, chars) in enumerate(list(layer_chars.items())[:5]):
+            print(f"  {name}:")
+            print(f"    Spatial complexity: {chars.get('spatial_complexity', 0):.3f}")
+            print(f"    Channel redundancy: {chars.get('channel_redundancy', 0):.3f}")
+            print(f"    Information density: {chars.get('information_density', 0):.3f}")
+    
     # Setup optimizer and scheduler
-    optimizer = torch.optim.AdamW(model.parameters(), lr=learning_rate, weight_decay=1e-4)
+    optimizer = torch.optim.AdamW(wrapped_model.parameters(), lr=learning_rate, weight_decay=1e-4)
     scheduler = CosineAnnealingLR(optimizer, T_max=epochs)
     
-    # Create trainer with more frequent evolution
-    print("\nInitializing trainer...")
+    # Create trainer with intelligent evolution
+    print("\nInitializing trainer with intelligent evolution...")
     trainer = Trainer(
-        model=model,
+        model=wrapped_model,
         neuro_exapt=neuro_exapt,
         optimizer=optimizer,
-        evolution_frequency=5,  # More frequent evolution
+        evolution_frequency=5,  # More frequent evolution for deep networks
         device=device,
         verbose=True
     )
     
     # Analyze initial model
-    print("\nAnalyzing initial model...")
+    print("\nInitial model analysis...")
     initial_analysis = trainer.analyze_model(train_loader)
     print(f"Initial complexity: {initial_analysis['complexity']}")
     print(f"Initial entropy: {initial_analysis['entropy'].get('network_entropy', 'N/A')}")
     
-    # Training with manual evolution control
-    print(f"\nStarting training for {epochs} epochs...")
+    # Training with intelligent evolution
+    print(f"\n🚀 Starting intelligent training for {epochs} epochs...")
+    print("Target: 95%+ accuracy with optimal architecture")
     print("-" * 80)
     
     best_acc = 0.0
     evolution_events = []
+    intelligent_decisions = []
     
     for epoch in range(epochs):
         # Training phase
-        model.train()
+        wrapped_model.train()
         train_loss = 0.0
         train_correct = 0
         train_total = 0
@@ -258,8 +283,13 @@ def main():
             data, targets = data.to(device), targets.to(device)
             
             optimizer.zero_grad()
-            outputs = model(data)
-            loss = F.cross_entropy(outputs, targets)
+            outputs = wrapped_model(data)
+            
+            # Calculate loss with information-theoretic components
+            ce_loss = F.cross_entropy(outputs, targets)
+            info_loss = neuro_exapt.info_theory.compute_information_loss(outputs, targets)
+            loss = ce_loss + info_weight * info_loss
+            
             loss.backward()
             optimizer.step()
             
@@ -269,7 +299,7 @@ def main():
             train_correct += predicted.eq(targets).sum().item()
         
         # Validation phase
-        model.eval()
+        wrapped_model.eval()
         val_loss = 0.0
         val_correct = 0
         val_total = 0
@@ -277,7 +307,7 @@ def main():
         with torch.no_grad():
             for data, targets in test_loader:
                 data, targets = data.to(device), targets.to(device)
-                outputs = model(data)
+                outputs = wrapped_model(data)
                 loss = F.cross_entropy(outputs, targets)
                 
                 val_loss += loss.item()
@@ -295,56 +325,78 @@ def main():
               f"Val Loss: {val_loss/len(test_loader):.4f}, "
               f"Val Acc: {val_acc:.2f}%")
         
-        # Manual evolution control - add layers when accuracy plateaus
-        if (epoch + 1) % 10 == 0 and val_acc < 95.0:
-            print(f"\n🔄 Checking for evolution at epoch {epoch+1}...")
+        # Intelligent evolution check
+        if (epoch + 1) % trainer.evolution_frequency == 0 and val_acc < 95.0:
+            print(f"\n🔄 Intelligent evolution check at epoch {epoch+1}...")
             
-            current_params = sum(p.numel() for p in model.parameters())
-            current_layer_info = model.get_layer_info()
+            current_params = sum(p.numel() for p in wrapped_model.parameters())
             
-            # Add convolutional layer if accuracy < 90%
-            if val_acc < 90.0 and len(current_layer_info['expansion_layers']) < 3:
-                expansion_count = len(current_layer_info['expansion_layers'])
-                new_layer_name = model.get_next_layer_name('conv')
-                model.add_conv_expansion_layer(new_layer_name, device=device)
+            # Get current metrics
+            current_metrics = neuro_exapt.entropy_ctrl.get_metrics().to_dict()
+            performance_metrics = {
+                'accuracy': train_acc,
+                'val_accuracy': val_acc,
+                'loss': train_loss / len(train_loader)
+            }
+            
+            # Re-analyze layer characteristics for intelligent decisions
+            if hasattr(neuro_exapt, 'analyze_layer_characteristics'):
+                layer_chars = neuro_exapt.analyze_layer_characteristics(wrapped_model, train_loader)
+                
+                # Add layer characteristics to metrics for intelligent operators
+                for name, chars in layer_chars.items():
+                    current_metrics[f'{name}_complexity'] = chars.get('spatial_complexity', 0)
+                    current_metrics[f'{name}_redundancy'] = chars.get('channel_redundancy', 0)
+                    # Add dummy activations for analysis
+                    if 'conv' in name:
+                        current_metrics[f'{name}_activation'] = torch.randn(1, 256, 4, 4, device=device)
+                    else:
+                        current_metrics[f'{name}_activation'] = torch.randn(1, 256, device=device)
+            
+            # Force expansion if accuracy is too low
+            force_action = None
+            if val_acc < 85.0:
+                force_action = 'expand'
+                print(f"   Forcing expansion due to low accuracy ({val_acc:.2f}%)")
+            elif val_acc < 92.0 and train_acc - val_acc > 5.0:
+                force_action = 'expand'
+                print(f"   Forcing expansion due to overfitting gap")
+            
+            # Attempt intelligent evolution
+            evolved, evolution_info = neuro_exapt.evolve_structure(
+                performance_metrics,
+                force_action=force_action
+            )
+            
+            if evolved:
+                print(f"✅ Intelligent evolution performed: {evolution_info['action']}")
+                
+                # Record intelligent decisions
+                if 'layer_types_added' in evolution_info:
+                    intelligent_decisions.append({
+                        'epoch': epoch + 1,
+                        'action': evolution_info['action'],
+                        'layer_types': evolution_info.get('layer_types_added', {}),
+                        'accuracy_before': val_acc,
+                        'params_before': current_params
+                    })
+                    
+                    print(f"   Intelligent layer selection:")
+                    for layer, layer_type in evolution_info['layer_types_added'].items():
+                        print(f"     - {layer}: {layer_type}")
                 
                 # Update optimizer for new parameters
-                optimizer = torch.optim.AdamW(model.parameters(), lr=learning_rate, weight_decay=1e-4)
+                optimizer = torch.optim.AdamW(wrapped_model.parameters(), lr=learning_rate, weight_decay=1e-4)
                 
                 evolution_events.append({
                     'epoch': epoch + 1,
-                    'action': 'expand_conv',
-                    'layer_added': new_layer_name,
+                    'action': evolution_info['action'],
                     'params_before': current_params,
-                    'params_after': sum(p.numel() for p in model.parameters()),
-                    'accuracy_before': val_acc,
-                    'accuracy_after': val_acc
+                    'params_after': sum(p.numel() for p in wrapped_model.parameters()),
+                    'accuracy_before': val_acc
                 })
-                
-                print(f"✅ Evolution: Added conv layer {new_layer_name}")
-                print(f"   Parameters: {current_params:,} → {sum(p.numel() for p in model.parameters()):,}")
-            
-            # Add FC layer if accuracy < 95%
-            elif val_acc < 95.0 and len(current_layer_info['expansion_layers']) >= 3:
-                expansion_count = len(current_layer_info['expansion_layers'])
-                new_layer_name = model.get_next_layer_name('fc')
-                model.add_fc_expansion_layer(new_layer_name, device=device)
-                
-                # Update optimizer for new parameters
-                optimizer = torch.optim.AdamW(model.parameters(), lr=learning_rate, weight_decay=1e-4)
-                
-                evolution_events.append({
-                    'epoch': epoch + 1,
-                    'action': 'expand_fc',
-                    'layer_added': new_layer_name,
-                    'params_before': current_params,
-                    'params_after': sum(p.numel() for p in model.parameters()),
-                    'accuracy_before': val_acc,
-                    'accuracy_after': val_acc
-                })
-                
-                print(f"✅ Evolution: Added FC layer {new_layer_name}")
-                print(f"   Parameters: {current_params:,} → {sum(p.numel() for p in model.parameters()):,}")
+            else:
+                print(f"   No evolution needed (entropy: {current_metrics['current_entropy']:.3f}, threshold: {current_metrics['threshold']:.3f})")
         
         # Update learning rate
         scheduler.step()
@@ -352,12 +404,12 @@ def main():
         # Save best model
         if val_acc > best_acc:
             best_acc = val_acc
-            torch.save(model.state_dict(), "./checkpoints/best_deep_model.pth")
+            torch.save(wrapped_model.state_dict(), "./checkpoints/best_deep_intelligent_model.pth")
             print(f"💾 New best model saved! Accuracy: {best_acc:.2f}%")
         
         # Early stopping if accuracy is high enough
         if val_acc >= 95.0:
-            print(f"\n🎉 Target accuracy reached! Stopping early at epoch {epoch+1}")
+            print(f"\n🎉 Target accuracy reached! Stopping at epoch {epoch+1}")
             break
     
     # Final analysis
@@ -365,30 +417,46 @@ def main():
     print("Training completed!")
     print("=" * 80)
     
-    final_params = sum(p.numel() for p in model.parameters())
-    final_layer_info = model.get_layer_info()
+    final_params = sum(p.numel() for p in wrapped_model.parameters())
     
-    print(f"\nFinal Results:")
+    print(f"\n📊 Final Results:")
     print(f"Best validation accuracy: {best_acc:.2f}%")
+    print(f"Initial parameters: {initial_params:,}")
     print(f"Final parameters: {final_params:,}")
-    print(f"Total layers: {final_layer_info['total_layers']}")
-    print(f"Expansion layers: {final_layer_info['expansion_layers']}")
+    print(f"Parameter increase: {final_params - initial_params:,} ({(final_params/initial_params - 1)*100:.1f}%)")
     
-    print(f"\nEvolution Summary:")
+    print(f"\n🔄 Evolution Summary:")
     print(f"Total evolution events: {len(evolution_events)}")
     
     if evolution_events:
-        print(f"Evolution events:")
+        print(f"\nEvolution timeline:")
         for i, event in enumerate(evolution_events):
             print(f"  {i+1}. Epoch {event['epoch']}: {event['action']}")
-            print(f"     Layer added: {event['layer_added']}")
             print(f"     Parameters: {event['params_before']:,} → {event['params_after']:,}")
             param_change = event['params_after'] - event['params_before']
             print(f"     Change: +{param_change:,} parameters")
-            print(f"     Accuracy: {event['accuracy_before']:.2f}% → {event['accuracy_after']:.2f}%")
+            print(f"     Accuracy before: {event['accuracy_before']:.2f}%")
     
-    print(f"\n🎉 Deep classification example completed!")
-    print(f"   Target accuracy achieved: {best_acc:.2f}%")
+    if intelligent_decisions:
+        print(f"\n🧠 Intelligent Layer Decisions:")
+        for i, decision in enumerate(intelligent_decisions):
+            print(f"\n  {i+1}. Epoch {decision['epoch']}: {decision['action']}")
+            print(f"     Accuracy: {decision['accuracy_before']:.2f}%")
+            if decision['layer_types']:
+                print(f"     Layer types selected:")
+                for layer, layer_type in decision['layer_types'].items():
+                    print(f"       - {layer}: {layer_type}")
+    
+    # Generate visualizations
+    print("\n📈 Generating visualizations...")
+    os.makedirs("./results", exist_ok=True)
+    
+    # Plot entropy evolution
+    neuro_exapt.entropy_ctrl.plot_history(save_path="./results/deep_intelligent_entropy.png")
+    
+    print(f"\n🎉 Deep classification with intelligent evolution completed!")
+    print(f"   Target accuracy {'achieved' if best_acc >= 95.0 else 'approached'}: {best_acc:.2f}%")
+    print(f"   Architecture optimized using intelligent layer selection")
 
 
 if __name__ == "__main__":

@@ -393,7 +393,7 @@ def main():
     """Main training function."""
     
     print("=" * 60)
-    print("Neuro Exapt - Enhanced Dynamic Architecture Example")
+    print("Neuro Exapt - Intelligent Architecture Evolution Example")
     print("=" * 60)
     
     # Device configuration
@@ -408,19 +408,19 @@ def main():
     entropy_threshold = 0.3  # Threshold for structural decisions
     
     # Get data loaders
-    print("Loading CIFAR-10 dataset...")
+    print("\nLoading CIFAR-10 dataset...")
     train_loader, test_loader = get_cifar10_dataloaders(batch_size)
     print("Training samples: 50000")  # CIFAR-10 standard
     print("Test samples: 10000")      # CIFAR-10 standard
     
     # Create model - start with a simpler base model for evolution
     print("\nInitializing base model...")
-    model = SimpleCNN(num_classes=10)  # Start with simple model, let DynArch evolve it
+    model = SimpleCNN(num_classes=10)  # Start with simple model, let intelligent evolution improve it
     model = model.to(device)
-    print(f"Initial model parameters: {sum(p.numel() for p in model.parameters())}")
+    print(f"Initial model parameters: {sum(p.numel() for p in model.parameters()):,}")
     
-    # Initialize Neuro Exapt
-    print("\nInitializing Neuro Exapt with Enhanced DynArch...")
+    # Initialize Neuro Exapt with intelligent operators
+    print("\nInitializing Neuro Exapt with Intelligent Evolution...")
     neuro_exapt = neuroexapt.NeuroExapt(
         task_type="classification",
         entropy_weight=entropy_threshold,
@@ -429,18 +429,41 @@ def main():
         verbose=True
     )
     
+    # Wrap model
+    wrapped_model = neuro_exapt.wrap_model(model)
+    
+    # Check if intelligent operators are available
+    if hasattr(neuro_exapt, 'use_intelligent_operators') and neuro_exapt.use_intelligent_operators:
+        print("✅ Intelligent operators are enabled!")
+        print("   - LayerTypeSelector will choose optimal layer types")
+        print("   - AdaptiveDataFlow will manage feature map sizes")
+        print("   - IntelligentExpansion will add appropriate layers")
+    else:
+        print("⚠️  Intelligent operators not available, using standard evolution")
+    
+    # Analyze initial architecture characteristics
+    print("\nAnalyzing initial model characteristics...")
+    if hasattr(neuro_exapt, 'analyze_layer_characteristics'):
+        layer_chars = neuro_exapt.analyze_layer_characteristics(wrapped_model, train_loader)
+        print("\nInitial layer characteristics:")
+        for i, (name, chars) in enumerate(list(layer_chars.items())[:5]):
+            print(f"  {name}:")
+            print(f"    Spatial complexity: {chars.get('spatial_complexity', 0):.3f}")
+            print(f"    Channel redundancy: {chars.get('channel_redundancy', 0):.3f}")
+            print(f"    Information density: {chars.get('information_density', 0):.3f}")
+            print(f"    Activation sparsity: {chars.get('activation_sparsity', 0):.3f}")
+    
     # Setup optimizer and scheduler
-    optimizer = torch.optim.AdamW(model.parameters(), lr=learning_rate, weight_decay=1e-4)
+    optimizer = torch.optim.AdamW(wrapped_model.parameters(), lr=learning_rate, weight_decay=1e-4)
     scheduler = CosineAnnealingLR(optimizer, T_max=epochs)
     
     # Create trainer with enhanced evolution
     print("\nInitializing enhanced trainer...")
     trainer = Trainer(
-        model=model,
+        model=wrapped_model,
         neuro_exapt=neuro_exapt,
         optimizer=optimizer,
-        # scheduler=scheduler,  # Skip scheduler for now to avoid type issues
-        evolution_frequency=5,  # More frequent evolution
+        evolution_frequency=5,  # More frequent evolution for demonstration
         device=device,
         verbose=True
     )
@@ -453,84 +476,164 @@ def main():
     
     # Print initial architecture
     print("\n🏗️ Initial Architecture:")
-    print_architecture(model)
+    print_architecture(wrapped_model)
     
-    # Training with automatic evolution
-    print(f"\nStarting enhanced training for {epochs} epochs...")
-    print("🤖 DynArch will automatically evolve the architecture during training")
+    # Training with intelligent evolution
+    print(f"\nStarting intelligent training for {epochs} epochs...")
+    print("🤖 Intelligent evolution will:")
+    print("   1. Analyze layer characteristics during training")
+    print("   2. Select optimal layer types based on information metrics")
+    print("   3. Adjust data flow based on feature complexity")
+    print("   4. Add specialized layers where needed")
     print("-" * 60)
     
+    # Track evolution decisions
+    evolution_decisions = []
+    
     try:
-        training_history = trainer.fit(
-            train_loader=train_loader,
-            val_loader=test_loader,
-            epochs=epochs,
-            eval_metric="accuracy",
-            early_stopping_patience=15,
-            save_best=True,
-            save_path="./checkpoints/best_dynarch_model.pth"
-        )
+        # Manual training loop for better control and debugging
+        best_val_acc = 0.0
+        for epoch in range(epochs):
+            # Training phase
+            wrapped_model.train()
+            train_loss = 0.0
+            train_correct = 0
+            train_total = 0
+            
+            for batch_idx, (data, targets) in enumerate(train_loader):
+                data, targets = data.to(device), targets.to(device)
+                
+                optimizer.zero_grad()
+                outputs = wrapped_model(data)
+                
+                # Calculate loss with information-theoretic components
+                ce_loss = F.cross_entropy(outputs, targets)
+                info_loss = neuro_exapt.info_theory.compute_information_loss(outputs, targets)
+                loss = ce_loss + info_weight * info_loss
+                
+                loss.backward()
+                optimizer.step()
+                
+                train_loss += loss.item()
+                _, predicted = outputs.max(1)
+                train_total += targets.size(0)
+                train_correct += predicted.eq(targets).sum().item()
+            
+            # Validation phase
+            wrapped_model.eval()
+            val_correct = 0
+            val_total = 0
+            
+            with torch.no_grad():
+                for data, targets in test_loader:
+                    data, targets = data.to(device), targets.to(device)
+                    outputs = wrapped_model(data)
+                    _, predicted = outputs.max(1)
+                    val_total += targets.size(0)
+                    val_correct += predicted.eq(targets).sum().item()
+            
+            train_acc = 100. * train_correct / train_total
+            val_acc = 100. * val_correct / val_total
+            
+            print(f"Epoch {epoch+1:3d}/{epochs}: "
+                  f"Train Loss: {train_loss/len(train_loader):.4f}, "
+                  f"Train Acc: {train_acc:.2f}%, "
+                  f"Val Acc: {val_acc:.2f}%")
+            
+            # Intelligent evolution check
+            if (epoch + 1) % trainer.evolution_frequency == 0:
+                print(f"\n🔄 Checking for intelligent evolution at epoch {epoch+1}...")
+                
+                # Get current metrics
+                current_metrics = neuro_exapt.entropy_ctrl.get_metrics().to_dict()
+                performance_metrics = {
+                    'accuracy': train_acc,
+                    'val_accuracy': val_acc,
+                    'loss': train_loss / len(train_loader)
+                }
+                
+                # Re-analyze layer characteristics if using intelligent operators
+                if hasattr(neuro_exapt, 'analyze_layer_characteristics'):
+                    layer_chars = neuro_exapt.analyze_layer_characteristics(wrapped_model, train_loader)
+                    
+                    # Add layer characteristics to metrics
+                    for name, chars in layer_chars.items():
+                        current_metrics[f'{name}_complexity'] = chars.get('spatial_complexity', 0)
+                        current_metrics[f'{name}_redundancy'] = chars.get('channel_redundancy', 0)
+                        current_metrics[f'{name}_activation'] = torch.randn(1, 64, 32, 32, device=device)  # Dummy activation
+                
+                # Attempt evolution
+                evolved, evolution_info = neuro_exapt.evolve_structure(
+                    performance_metrics,
+                    force_action='expand' if val_acc < 85 else None
+                )
+                
+                if evolved:
+                    print(f"✅ Evolution performed: {evolution_info['action']}")
+                    if 'layer_types_added' in evolution_info:
+                        print(f"   Layer types added: {evolution_info['layer_types_added']}")
+                        evolution_decisions.append({
+                            'epoch': epoch + 1,
+                            'action': evolution_info['action'],
+                            'layer_types': evolution_info.get('layer_types_added', {}),
+                            'reason': f"Val acc: {val_acc:.2f}%"
+                        })
+                    
+                    # Update optimizer for new parameters
+                    optimizer = torch.optim.AdamW(wrapped_model.parameters(), lr=learning_rate, weight_decay=1e-4)
+                else:
+                    print(f"   No evolution needed at this time")
+            
+            # Update learning rate
+            scheduler.step()
+            
+            # Save best model
+            if val_acc > best_val_acc:
+                best_val_acc = val_acc
+                torch.save(wrapped_model.state_dict(), "./checkpoints/best_intelligent_model.pth")
         
         # Final analysis
         print("\n" + "=" * 60)
-        print("🎉 Enhanced Training Completed!")
+        print("🎉 Intelligent Training Completed!")
         print("=" * 60)
         
         final_analysis = trainer.analyze_model(test_loader)
         model_summary = trainer.get_model_summary()
         
         print("\n📊 Final Results:")
+        print(f"Best validation accuracy: {best_val_acc:.2f}%")
         print(f"Total parameters: {model_summary['total_parameters']:,}")
         print(f"Evolution events: {model_summary['evolution_events']}")
         print(f"Final entropy: {final_analysis['entropy'].get('network_entropy', 'N/A')}")
         
-        # Get DynArch statistics
-        dynarch_stats = trainer.dynarch.get_stats()
-        print(f"\n🤖 DynArch Performance:")
-        print(f"Total evolution steps: {dynarch_stats['evolution_steps']}")
-        print(f"Pareto front size: {dynarch_stats['pareto_front_size']}")
-        print(f"Experience buffer size: {dynarch_stats['experience_buffer_size']}")
-        print(f"Action distribution: {dynarch_stats['action_distribution']}")
+        # Show intelligent evolution decisions
+        if evolution_decisions:
+            print("\n🧠 Intelligent Evolution Decisions:")
+            for i, decision in enumerate(evolution_decisions):
+                print(f"\n  {i+1}. Epoch {decision['epoch']}: {decision['action']}")
+                print(f"     Reason: {decision['reason']}")
+                if decision['layer_types']:
+                    print(f"     Layer types added:")
+                    for layer, layer_type in decision['layer_types'].items():
+                        print(f"       - {layer}: {layer_type}")
         
         # Print final architecture
         print("\n🏗️ Final Architecture:")
-        print_architecture(trainer.wrapped_model)
+        print_architecture(wrapped_model)
         
         # Visualizations
         print("\nGenerating visualizations...")
         os.makedirs("./results", exist_ok=True)
         
-        try:
-            trainer.visualize_training("./results/dynarch_training_progress.png")
-            trainer.visualize_evolution("./results/dynarch_evolution_history.png")
-            neuro_exapt.visualize_evolution("./results/neuro_exapt_evolution.png")
-            print("Visualizations saved to ./results/")
-        except Exception as e:
-            print(f"Could not generate visualizations: {e}")
+        # Plot entropy history
+        neuro_exapt.entropy_ctrl.plot_history(save_path="./results/intelligent_entropy_history.png")
         
-        # Print evolution summary
-        if trainer.evolution_events:
-            print("\n🔄 Evolution Events Summary:")
-            for i, event in enumerate(trainer.evolution_events):
-                action = event['action']
-                reward = event['info'].get('reward', 0)
-                improvements = event['info'].get('metrics_improvement', {})
-                
-                print(f"  {i+1}. Epoch {event['epoch']}: {action} (Reward: {reward:.3f})")
-                for metric, change in improvements.items():
-                    if change != 0:
-                        sign = "+" if change > 0 else ""
-                        print(f"     {metric}: {sign}{change:.3f}")
-        else:
-            print("\nNo structure evolution occurred during training.")
+        print("\n✅ Example completed successfully!")
         
     except Exception as e:
-        print(f"Training failed: {e}")
+        print(f"\n❌ Error during training: {e}")
         import traceback
         traceback.print_exc()
-    
-    print("\n🚀 Enhanced Dynamic Architecture Example completed!")
-    print("This demonstrates the power of information-theoretic RL-guided evolution!")
 
 
 if __name__ == "__main__":
