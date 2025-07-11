@@ -96,6 +96,12 @@ class Trainer:
         self.training_history = defaultdict(list)
         self.evolution_events = []
         
+        # Entropy saturation detection
+        self.entropy_saturation_window = 10  # Check last N epochs
+        self.entropy_variance_threshold = 0.01  # Variance threshold for saturation
+        self.min_epochs_between_evolution = 3  # Minimum epochs between evolutions
+        self.last_evolution_epoch = -1
+        
         # Setup logging
         if self.verbose:
             self.logger = setup_logger("Trainer")
@@ -168,8 +174,8 @@ class Trainer:
             # Log metrics
             self._log_epoch_metrics(epoch, train_metrics, val_metrics)
             
-            # Structure evolution
-            if epoch % self.evolution_frequency == 0 and epoch > 0:
+            # Structure evolution based on entropy saturation
+            if self._should_evolve_structure(epoch, train_metrics):
                 self._evolve_structure(train_metrics, val_metrics)
                 
             # Learning rate scheduling
@@ -215,6 +221,80 @@ class Trainer:
             self.logger.info(f"   Action distribution: {stats['action_distribution']}")
             
         return dict(self.training_history)
+        
+    def _should_evolve_structure(self, epoch: int, train_metrics: Dict[str, float]) -> bool:
+        """
+        Determine if structure evolution should occur based on entropy saturation.
+        
+        Evolution triggers when:
+        1. Entropy has plateaued (low variance over window)
+        2. Accuracy has plateaued or entropy is increasing
+        3. Minimum epochs since last evolution have passed
+        
+        Args:
+            epoch: Current epoch
+            train_metrics: Current training metrics
+            
+        Returns:
+            True if evolution should occur
+        """
+        # Check minimum epochs constraint
+        if epoch - self.last_evolution_epoch < self.min_epochs_between_evolution:
+            return False
+            
+        # Need enough history for saturation detection
+        if 'entropy' not in self.training_history or len(self.training_history['entropy']) < self.entropy_saturation_window:
+            return False
+            
+        # Get recent entropy history
+        recent_entropy = self.training_history['entropy'][-self.entropy_saturation_window:]
+        entropy_variance = np.var(recent_entropy)
+        entropy_mean = np.mean(recent_entropy)
+        
+        # Get recent accuracy history if available
+        recent_accuracy = []
+        if 'accuracy' in self.training_history:
+            recent_accuracy = self.training_history['accuracy'][-self.entropy_saturation_window:]
+            
+        # Check for entropy saturation
+        is_entropy_saturated = entropy_variance < self.entropy_variance_threshold
+        
+        # Check for entropy increase (bad sign)
+        entropy_trend = np.polyfit(range(len(recent_entropy)), recent_entropy, 1)[0]
+        is_entropy_increasing = entropy_trend > 0.001
+        
+        # Check for accuracy plateau if available
+        is_accuracy_plateau = False
+        if recent_accuracy and len(recent_accuracy) >= 5:
+            accuracy_variance = np.var(recent_accuracy[-5:])
+            is_accuracy_plateau = accuracy_variance < 0.5  # Less than 0.5% variance
+            
+        # Evolution decision
+        should_evolve = False
+        reason = ""
+        
+        if is_entropy_saturated and entropy_mean > self.neuro_exapt.entropy_ctrl.threshold:
+            should_evolve = True
+            reason = f"Entropy saturated at high level ({entropy_mean:.3f})"
+        elif is_entropy_increasing and is_accuracy_plateau:
+            should_evolve = True
+            reason = f"Entropy increasing ({entropy_trend:.4f}) with accuracy plateau"
+        elif is_entropy_saturated and is_accuracy_plateau:
+            should_evolve = True
+            reason = f"Both entropy and accuracy plateaued"
+        elif epoch > 0 and epoch % max(self.evolution_frequency, 20) == 0:
+            # Fall back to periodic evolution if no saturation detected for too long
+            should_evolve = True
+            reason = "Periodic evolution (no saturation detected)"
+            
+        if should_evolve and self.verbose:
+            self.logger.info(f"🔍 Evolution triggered: {reason}")
+            self.logger.info(f"   Entropy variance: {entropy_variance:.5f}")
+            self.logger.info(f"   Entropy mean: {entropy_mean:.3f}")
+            if recent_accuracy:
+                self.logger.info(f"   Recent accuracy: {recent_accuracy[-1]:.2f}%")
+                
+        return should_evolve
         
     def _train_epoch(self, train_loader: DataLoader, loss_fn: Callable) -> Dict[str, float]:
         """Train for one epoch."""
@@ -346,6 +426,9 @@ class Trainer:
     ):
         """Perform structure evolution based on current metrics."""
         try:
+            # Record evolution epoch
+            self.last_evolution_epoch = self.current_epoch
+            
             # Combine metrics for evolution decision
             performance_metrics = {**train_metrics, **val_metrics}
             
