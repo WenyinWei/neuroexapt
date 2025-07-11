@@ -145,7 +145,7 @@ class NeuroExapt:
                     'mutation_rate': 0.1,
                     'max_layers': 100,
                     'min_layers': 3,
-                    'expand_ratio': 1.5 # Added for intelligent expansion
+                    'expand_ratio': 0.1  # Ratio of layers to expand in one step
                 },
                 'architecture': {
                     'depth_decay_lambda': 0.03,
@@ -174,6 +174,19 @@ class NeuroExapt:
         
     def _init_operators(self):
         """Initialize structural operators."""
+        # First initialize base operators
+        self.prune_op = PruneByEntropy(
+            threshold=self.config['evolution']['prune_threshold']
+        )
+        
+        self.expand_op = ExpandWithMI(
+            gamma=self.config['evolution']['expand_gamma']
+        )
+        
+        self.mutate_op = MutateDiscrete(
+            mutation_rate=self.config['evolution']['mutation_rate']
+        )
+        
         # Try to use intelligent operators if available
         try:
             from .core.intelligent_operators import (
@@ -216,19 +229,6 @@ class NeuroExapt:
             
         except ImportError:
             # Fall back to standard operators
-            self.prune_op = PruneByEntropy(
-                threshold=self.config['evolution']['prune_threshold']
-            )
-            
-            self.expand_op = ExpandWithMI(
-                gamma=self.config['evolution']['expand_gamma']
-            )
-            
-            self.mutate_op = MutateDiscrete(
-                mutation_rate=self.config['evolution']['mutation_rate']
-            )
-            
-            # Compound operator for complex strategies
             self.compound_op = CompoundOperator([
                 self.prune_op,
                 self.expand_op,

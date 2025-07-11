@@ -23,6 +23,7 @@ evolution:
   mutation_rate: 0.1
   max_layers: 100
   min_layers: 3
+  expand_ratio: 0.1  # Ratio of layers to expand in one step
 
 # Network Architecture Parameters
 architecture:

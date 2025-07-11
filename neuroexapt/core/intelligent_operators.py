@@ -177,6 +177,11 @@ class IntelligentExpansionOperator(StructuralOperator):
                 activation, layer_metrics, metrics.get('task_type', 'classification')
             )
             
+            # Get the actual layer module
+            layer = dict(expanded_model.named_modules()).get(layer_name)
+            if layer is None:
+                continue
+                
             # Create and insert new layer
             new_layer = self._create_layer(selected_type, layer, activation)
             if new_layer:
