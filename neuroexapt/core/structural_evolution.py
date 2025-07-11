@@ -426,13 +426,88 @@ class StructuralEvolution:
         expanded_model = copy.deepcopy(model)
         new_layers = []
         
-        for point in expansion_points:
-            # This is a simplified implementation
-            # In practice, you'd analyze the layer type and add appropriate new layers
-            new_layer_name = f"{point}_expanded"
-            new_layers.append(new_layer_name)
-            
-        warnings.warn("Layer expansion is simplified in this implementation")
+        # Get device from model
+        device = next(expanded_model.parameters()).device
+        
+        # Check if model has special expansion methods
+        if hasattr(expanded_model, 'add_expansion_layer'):
+            # Use model's built-in expansion method
+            for i, point in enumerate(expansion_points):
+                if hasattr(expanded_model, 'get_next_layer_name'):
+                    layer_name = expanded_model.get_next_layer_name()
+                else:
+                    layer_name = f'expanded_{i}'
+                if expanded_model.add_expansion_layer(layer_name, device=device):
+                    new_layers.append(layer_name)
+        else:
+            # Generic expansion for models without special methods
+            for point in expansion_points:
+                parts = point.split('.')
+                parent = expanded_model
+                
+                # Navigate to the parent module
+                for part in parts[:-1]:
+                    if hasattr(parent, part):
+                        parent = getattr(parent, part)
+                    else:
+                        continue
+                
+                # Get the original layer
+                if not hasattr(parent, parts[-1]):
+                    continue
+                    
+                original_layer = getattr(parent, parts[-1])
+                
+                # Create appropriate expansion based on layer type
+                if isinstance(original_layer, nn.Conv2d):
+                    # For Conv2d, add a parallel conv layer
+                    in_channels = original_layer.in_channels
+                    out_channels = original_layer.out_channels
+                    kernel_size = original_layer.kernel_size
+                    
+                    # Handle kernel_size which can be int or tuple
+                    if isinstance(kernel_size, int):
+                        padding = kernel_size // 2
+                    else:
+                        padding = kernel_size[0] // 2
+                    
+                    # Create a sequential block with the original layer and new layer
+                    new_block = nn.Sequential(
+                        original_layer,
+                        nn.BatchNorm2d(out_channels),
+                        nn.ReLU(inplace=True),
+                        nn.Conv2d(out_channels, out_channels, kernel_size, padding=padding),
+                        nn.BatchNorm2d(out_channels),
+                        nn.ReLU(inplace=True)
+                    ).to(device)
+                    
+                    setattr(parent, parts[-1], new_block)
+                    new_layers.append(f"{point}_expansion")
+                    
+                elif isinstance(original_layer, nn.Linear):
+                    # For Linear layers, add intermediate layer
+                    in_features = original_layer.in_features
+                    out_features = original_layer.out_features
+                    hidden_features = int((in_features + out_features) * 0.75)
+                    
+                    new_block = nn.Sequential(
+                        nn.Linear(in_features, hidden_features),
+                        nn.BatchNorm1d(hidden_features),
+                        nn.ReLU(inplace=True),
+                        nn.Dropout(0.1),
+                        nn.Linear(hidden_features, out_features)
+                    ).to(device)
+                    
+                    # Copy weights from original to maintain some behavior
+                    with torch.no_grad():
+                        # Initialize first layer to approximate original transformation
+                        min_features = min(out_features, hidden_features)
+                        new_block[0].weight.data[:min_features, :] = original_layer.weight.data[:min_features, :]
+                        if original_layer.bias is not None and new_block[0].bias is not None:
+                            new_block[0].bias.data[:min_features] = original_layer.bias.data[:min_features]
+                    
+                    setattr(parent, parts[-1], new_block)
+                    new_layers.append(f"{point}_expansion")
         
         return expanded_model, new_layers
         

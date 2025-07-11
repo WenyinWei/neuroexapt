@@ -1,0 +1,8 @@
+{
+  "cifar10/cifar-10-python.tar.gz": {
+    "cached_at": 1752229493.422672,
+    "size": 170498071,
+    "checksum": "6d958be074577803d12ecdefd02955f39262c83c16fe9348329d7fe0b5c001ce",
+    "expected_size": 170498071
+  }
+}
