@@ -8,9 +8,10 @@ optimization on a simple classification task using CIFAR-10.
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader, Dataset
 import torchvision
 import torchvision.transforms as transforms
+from torch.optim.lr_scheduler import CosineAnnealingLR
 import numpy as np
 import sys
 import os
@@ -62,38 +63,27 @@ class SimpleCNN(nn.Module):
 
 
 def get_cifar10_dataloaders(batch_size=128, num_workers=2):
-    """Get CIFAR-10 data loaders."""
+    """Get CIFAR-10 data loaders with advanced downloading capabilities including 迅雷 integration."""
     
-    # Data transformations
-    transform_train = transforms.Compose([
-        transforms.RandomCrop(32, padding=4),
-        transforms.RandomHorizontalFlip(),
-        transforms.ToTensor(),
-        transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
-    ])
-
-    transform_test = transforms.Compose([
-        transforms.ToTensor(),
-        transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
-    ])
-
-    # Datasets
-    trainset = torchvision.datasets.CIFAR10(
-        root='./data', train=True, download=True, transform=transform_train
+    # Import the advanced dataset loader
+    from neuroexapt.utils.dataset_loader import AdvancedDatasetLoader
+    
+    # Initialize the advanced loader with P2P acceleration, caching, and 迅雷 integration
+    loader = AdvancedDatasetLoader(
+        cache_dir="./data_cache",      # Cache directory for downloaded files
+        download_dir="./data",         # Directory for extracted datasets
+        use_p2p=True,                  # Enable P2P acceleration
+        use_xunlei=True,               # Enable 迅雷 integration for Chinese users
+        max_retries=3                  # Number of retry attempts
     )
-    testset = torchvision.datasets.CIFAR10(
-        root='./data', train=False, download=True, transform=transform_test
+    
+    # Get data loaders with automatic downloading and caching
+    return loader.get_cifar10_dataloaders(
+        batch_size=batch_size,
+        num_workers=num_workers,
+        download=True,                 # Automatically download if not present
+        force_download=False           # Don't force re-download if cached
     )
-
-    # Data loaders
-    train_loader = DataLoader(
-        trainset, batch_size=batch_size, shuffle=True, num_workers=num_workers
-    )
-    test_loader = DataLoader(
-        testset, batch_size=batch_size, shuffle=False, num_workers=num_workers
-    )
-
-    return train_loader, test_loader
 
 
 def main():
@@ -137,7 +127,7 @@ def main():
     
     # Setup optimizer and scheduler
     optimizer = torch.optim.AdamW(model.parameters(), lr=learning_rate, weight_decay=1e-4)
-    scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=epochs)
+    scheduler = CosineAnnealingLR(optimizer, T_max=epochs)
     
     # Create trainer
     print("\nInitializing trainer...")

@@ -14,6 +14,7 @@ A revolutionary neural network framework based on information theory for dynamic
 - **Structural Evolution**: Information-guided pruning and expansion with convergence guarantees
 - **Discrete Parameter Optimization**: Continuous relaxation of discrete architectural choices
 - **Task-Aware Optimization**: Automatic adaptation to different task complexities and domains
+- **迅雷集成下载**: 为中国用户提供P2P加速下载，支持自动路径配置
 
 ## 📐 Mathematical Foundation
 
@@ -133,6 +134,17 @@ doxygen Doxyfile
 ```
 
 ## 🔥 Quick Start
+
+### 迅雷下载配置 (中国用户)
+
+如果您在中国大陆使用，建议先配置迅雷下载路径：
+
+```bash
+# 自动配置迅雷默认下载路径
+python -m neuroexapt.utils.xunlei_config_helper
+
+# 或手动配置：打开迅雷 → 设置 → 下载设置 → 默认下载目录设为 ./datasets
+```
 
 ### Basic Usage
 
