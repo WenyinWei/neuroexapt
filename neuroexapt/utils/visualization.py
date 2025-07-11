@@ -77,6 +77,7 @@ class AutoLayout:
         self.min_spacing = 4
         self.branch_spacing = 8
         self.vertical_spacing = 1
+        self._ansi_pattern = None  # Cache regex pattern
         
     def calculate_branch_layout(self, branches: Dict[str, List[Any]], 
                               additional_width: int = 0) -> Dict[str, LayoutNode]:
@@ -399,8 +400,9 @@ class AutoLayout:
     def _strip_ansi(self, text: str) -> str:
         """Remove ANSI color codes from text for length calculation."""
         import re
-        ansi_escape = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
-        return ansi_escape.sub('', text)
+        if self._ansi_pattern is None:
+            self._ansi_pattern = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
+        return self._ansi_pattern.sub('', text)
 
 
 class ModelVisualizer:
