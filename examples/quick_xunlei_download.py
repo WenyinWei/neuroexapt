@@ -9,6 +9,7 @@ import os
 sys.path.append('.')
 
 from neuroexapt.utils.xunlei_downloader import XunleiDatasetDownloader, XunleiDownloader
+from neuroexapt.utils.dataset_loader import AdvancedDatasetLoader
 import logging
 
 # 配置日志

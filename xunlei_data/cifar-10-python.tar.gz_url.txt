@@ -1,0 +1,5 @@
+URL: https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz
+Full Path: D:\Repo\neuroexapt\xunlei_data\cifar-10-python.tar.gz
+Save Directory: xunlei_data
+Filename: cifar-10-python.tar.gz
+Instructions: 请将此URL复制到迅雷中，并设置保存路径为: D:\Repo\neuroexapt\xunlei_data\cifar-10-python.tar.gz

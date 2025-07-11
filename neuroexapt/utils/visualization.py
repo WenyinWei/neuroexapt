@@ -704,7 +704,8 @@ class ModelVisualizer:
         if not fusion_layers or not branch_layout:
             return
         
-        print("\nBranch Fusion:")
+        # Remove the redundant "Branch Fusion:" line
+        print()  # Just add a blank line for spacing
         
         # Show branch outputs
         output_line = ""
@@ -752,18 +753,25 @@ class ModelVisualizer:
         for line in fusion_lines:
             print(line)
         
-        # Show fusion layer
+        # Show fusion layer with fusion method information
         for fusion_layer in fusion_layers:
             layer_info = self._get_layer_info(
                 fusion_layer, model, structure_info,
                 previous_model, changed_layers
             )
             
+            # Get the actual layer module to determine fusion method
+            layer_module = self._get_layer_module(fusion_layer, model)
+            fusion_method = self._get_fusion_method(layer_module, fusion_layer)
+            
+            # Format layer with fusion method
             layer_repr = self._format_layer(layer_info)
+            if fusion_method:
+                layer_repr += f" {Colors.DIM}[{fusion_method}]{Colors.RESET}"
+            
             param_repr = self._format_params(layer_info)
             
             # Display fusion layer aligned with fusion position
-            # Combine layer name and params on same line with proper spacing
             layer_display = f"{layer_repr}"
             param_display = f"{param_repr}"
             
@@ -782,6 +790,38 @@ class ModelVisualizer:
             # Place arrow directly below at fusion position
             print(" " * fusion_x + f"{Colors.MAGENTA}↓{Colors.RESET}")
             print()
+    
+    def _get_fusion_method(self, layer_module: Optional[nn.Module], layer_name: str) -> str:
+        """Determine the fusion method based on the layer implementation."""
+        if not layer_module:
+            return ""
+        
+        # Check common fusion patterns
+        if hasattr(layer_module, 'fusion_method'):
+            return layer_module.fusion_method
+        
+        # Infer from layer type or name
+        layer_name_lower = layer_name.lower()
+        if 'concat' in layer_name_lower or 'concatenate' in layer_name_lower:
+            return "concat"
+        elif 'add' in layer_name_lower or 'sum' in layer_name_lower:
+            return "add"
+        elif 'multiply' in layer_name_lower or 'mul' in layer_name_lower:
+            return "multiply"
+        elif 'attention' in layer_name_lower:
+            return "attention"
+        elif 'weighted' in layer_name_lower:
+            return "weighted"
+        
+        # Check if it's a Conv layer (common for concat fusion)
+        if isinstance(layer_module, nn.Conv2d):
+            # If the input channels suggest concatenation
+            if hasattr(layer_module, 'in_channels'):
+                # This is a heuristic - if in_channels is larger than expected,
+                # it might be concat fusion
+                return "concat"
+        
+        return ""
     
     def _visualize_sequential(self, model: nn.Module,
                              structure_info: Dict[str, Any],

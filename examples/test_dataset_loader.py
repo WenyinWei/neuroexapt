@@ -13,6 +13,7 @@ import time
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from neuroexapt.utils.dataset_loader import AdvancedDatasetLoader
+from neuroexapt.utils.xunlei_downloader import XunleiDownloader
 
 
 def test_dataset_loader():

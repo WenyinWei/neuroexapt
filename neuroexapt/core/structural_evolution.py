@@ -368,23 +368,37 @@ class StructuralEvolution:
         performance_metrics: Dict[str, float]
     ) -> str:
         """Decide which evolution action to take."""
-        # Check performance degradation
-        if len(self.evolution_history) > 0:
-            last_step = self.evolution_history[-1]
-            perf_drop = performance_metrics.get('accuracy', 0) - last_step.metrics_before.get('accuracy', 0)
-            
-            if perf_drop < -0.05:  # Significant performance drop
-                return 'expand'  # Recover by expanding
-                
-        # Entropy-based decision
-        if current_entropy < threshold * 0.8:
-            return 'prune'
-        elif current_entropy > threshold * 1.5:
-            return 'expand'
-        elif self.current_epoch % 10 == 0:  # Periodic mutation
-            return 'mutate'
+        val_accuracy = performance_metrics.get('val_accuracy', 0)
+        
+        # More aggressive expansion for better accuracy
+        if val_accuracy < 85.0:  # If accuracy is below 85%, prioritize expansion
+            if self.current_epoch % 5 == 0:  # More frequent expansion
+                return 'expand'
+            elif current_entropy > threshold * 1.2:  # Lower threshold for expansion
+                return 'expand'
+            elif self.current_epoch % 8 == 0:  # Periodic mutation
+                return 'mutate'
+            else:
+                return 'none'
         else:
-            return 'none'
+            # Normal evolution logic for high accuracy
+            # Check performance degradation
+            if len(self.evolution_history) > 0:
+                last_step = self.evolution_history[-1]
+                perf_drop = performance_metrics.get('accuracy', 0) - last_step.metrics_before.get('accuracy', 0)
+                
+                if perf_drop < -0.05:  # Significant performance drop
+                    return 'expand'  # Recover by expanding
+                    
+            # Entropy-based decision
+            if current_entropy < threshold * 0.8:
+                return 'prune'
+            elif current_entropy > threshold * 1.5:
+                return 'expand'
+            elif self.current_epoch % 10 == 0:  # Periodic mutation
+                return 'mutate'
+            else:
+                return 'none'
             
     def _remove_layers(self, model: nn.Module, layers_to_remove: List[str]) -> nn.Module:
         """Remove specified layers from model."""

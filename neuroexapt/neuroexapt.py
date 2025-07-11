@@ -12,6 +12,7 @@ import warnings
 import os
 import yaml
 from datetime import datetime
+import torch.nn.functional as F
 
 from .core import (
     InformationBottleneck,
@@ -143,7 +144,8 @@ class NeuroExapt:
                     'expand_gamma': 0.1,
                     'mutation_rate': 0.1,
                     'max_layers': 100,
-                    'min_layers': 3
+                    'min_layers': 3,
+                    'expand_ratio': 1.5 # Added for intelligent expansion
                 },
                 'architecture': {
                     'depth_decay_lambda': 0.03,
@@ -172,24 +174,68 @@ class NeuroExapt:
         
     def _init_operators(self):
         """Initialize structural operators."""
-        self.prune_op = PruneByEntropy(
-            threshold=self.config['evolution']['prune_threshold']
-        )
-        
-        self.expand_op = ExpandWithMI(
-            gamma=self.config['evolution']['expand_gamma']
-        )
-        
-        self.mutate_op = MutateDiscrete(
-            mutation_rate=self.config['evolution']['mutation_rate']
-        )
-        
-        # Compound operator for complex strategies
-        self.compound_op = CompoundOperator([
-            self.prune_op,
-            self.expand_op,
-            self.mutate_op
-        ])
+        # Try to use intelligent operators if available
+        try:
+            from .core.intelligent_operators import (
+                IntelligentExpansionOperator,
+                AdaptiveDataFlowOperator,
+                BranchSpecializationOperator,
+                LayerTypeSelector
+            )
+            
+            # Initialize intelligent operators
+            self.layer_selector = LayerTypeSelector(self.info_theory)
+            
+            self.intelligent_expand_op = IntelligentExpansionOperator(
+                layer_selector=self.layer_selector,
+                expansion_ratio=self.config['evolution']['expand_ratio'],
+                device=self.device
+            )
+            
+            self.data_flow_op = AdaptiveDataFlowOperator(
+                min_spatial_size=7,
+                complexity_threshold=0.3,
+                device=self.device
+            )
+            
+            self.branch_op = BranchSpecializationOperator(
+                num_branches=3,
+                device=self.device
+            )
+            
+            # Use intelligent operators in compound operator
+            self.compound_op = CompoundOperator([
+                self.prune_op,
+                self.intelligent_expand_op,
+                self.data_flow_op,
+                self.mutate_op,
+                self.branch_op
+            ])
+            
+            self.use_intelligent_operators = True
+            
+        except ImportError:
+            # Fall back to standard operators
+            self.prune_op = PruneByEntropy(
+                threshold=self.config['evolution']['prune_threshold']
+            )
+            
+            self.expand_op = ExpandWithMI(
+                gamma=self.config['evolution']['expand_gamma']
+            )
+            
+            self.mutate_op = MutateDiscrete(
+                mutation_rate=self.config['evolution']['mutation_rate']
+            )
+            
+            # Compound operator for complex strategies
+            self.compound_op = CompoundOperator([
+                self.prune_op,
+                self.expand_op,
+                self.mutate_op
+            ])
+            
+            self.use_intelligent_operators = False
         
     def wrap_model(self, model: nn.Module) -> nn.Module:
         """
@@ -304,16 +350,53 @@ class NeuroExapt:
                     layer_entropies[name].append(value)
                     
         # Average metrics
+        avg_entropy = np.mean(entropy_values) if entropy_values else 0.0
         metrics = {
-            'average_entropy': np.mean(entropy_values),
-            'entropy_std': np.std(entropy_values),
+            'network_entropy': avg_entropy,  # 添加这个键
+            'average_entropy': avg_entropy,
+            'entropy_std': np.std(entropy_values) if entropy_values else 0.0,
             'layer_entropies': {
                 name: np.mean(values) 
                 for name, values in layer_entropies.items()
-            }
+            },
+            'entropy_trend': self._calculate_entropy_trend(entropy_values),
+            'branch_diversity': self._calculate_branch_diversity(layer_entropies)
         }
         
         return metrics
+    
+    def _calculate_entropy_trend(self, entropy_values: List[float]) -> float:
+        """Calculate entropy trend over recent values."""
+        if len(entropy_values) < 5:
+            return 0.0
+        
+        # Use last 10 values for trend calculation
+        recent_values = entropy_values[-10:]
+        if len(recent_values) < 3:
+            return 0.0
+            
+        # Linear regression slope
+        x = np.arange(len(recent_values))
+        slope = np.polyfit(x, recent_values, 1)[0]
+        return float(slope)
+    
+    def _calculate_branch_diversity(self, layer_entropies: Dict[str, List[float]]) -> float:
+        """Calculate diversity between different network branches."""
+        if not layer_entropies:
+            return 0.0
+        
+        # Calculate average entropy for each layer
+        avg_layer_entropies = {
+            name: np.mean(values) 
+            for name, values in layer_entropies.items()
+        }
+        
+        if len(avg_layer_entropies) < 2:
+            return 0.0
+        
+        # Calculate standard deviation as diversity measure
+        diversity = np.std(list(avg_layer_entropies.values()))
+        return float(diversity)
         
     def evolve_structure(
         self,
@@ -566,6 +649,98 @@ class NeuroExapt:
             return
             
         plot_evolution_history(self.evolution_history, save_path)
+
+    def analyze_layer_characteristics(self, model: nn.Module, dataloader: torch.utils.data.DataLoader) -> Dict[str, Any]:
+        """
+        Analyze layer characteristics for intelligent evolution decisions.
+        
+        Args:
+            model: Model to analyze
+            dataloader: Data loader for analysis
+            
+        Returns:
+            Dictionary of layer characteristics
+        """
+        model.eval()
+        layer_characteristics = {}
+        
+        # Register hooks to capture activations
+        activations = {}
+        def hook_fn(name):
+            def hook(module, input, output):
+                activations[name] = output.detach()
+            return hook
+        
+        hooks = []
+        for name, module in model.named_modules():
+            if isinstance(module, (nn.Conv2d, nn.Linear)) and len(list(module.parameters())) > 0:
+                handle = module.register_forward_hook(hook_fn(name))
+                hooks.append(handle)
+        
+        with torch.no_grad():
+            # Run a few batches to collect statistics
+            for batch_idx, (inputs, targets) in enumerate(dataloader):
+                if batch_idx >= 5:  # Analyze first 5 batches
+                    break
+                    
+                inputs = inputs.to(self.device)
+                outputs = model(inputs)
+                
+                # Analyze each layer's activation
+                for name, activation in activations.items():
+                    if name not in layer_characteristics:
+                        layer_characteristics[name] = {
+                            'spatial_complexity': [],
+                            'channel_redundancy': [],
+                            'activation_sparsity': [],
+                            'information_density': []
+                        }
+                    
+                    # Spatial complexity (for conv layers)
+                    if activation.dim() == 4:  # Conv2d output
+                        # Gradient-based complexity
+                        dx = activation[:, :, 1:, :] - activation[:, :, :-1, :]
+                        dy = activation[:, :, :, 1:] - activation[:, :, :, :-1]
+                        grad_mag = torch.sqrt(dx[:, :, :, :-1]**2 + dy[:, :, :-1, :]**2)
+                        complexity = grad_mag.mean().item() / (activation.std().item() + 1e-6)
+                        layer_characteristics[name]['spatial_complexity'].append(complexity)
+                        
+                        # Channel redundancy
+                        channels = activation.size(1)
+                        if channels > 1:
+                            correlations = []
+                            for i in range(min(10, channels)):
+                                for j in range(i+1, min(10, channels)):
+                                    corr = F.cosine_similarity(
+                                        activation[:, i].flatten().unsqueeze(0),
+                                        activation[:, j].flatten().unsqueeze(0)
+                                    ).item()
+                                    correlations.append(abs(corr))
+                            redundancy = np.mean(correlations) if correlations else 0.0
+                            layer_characteristics[name]['channel_redundancy'].append(redundancy)
+                    
+                    # Activation sparsity
+                    sparsity = (activation == 0).float().mean().item()
+                    layer_characteristics[name]['activation_sparsity'].append(sparsity)
+                    
+                    # Information density (entropy-based)
+                    entropy = self.info_theory.calculate_entropy(activation)
+                    layer_characteristics[name]['information_density'].append(entropy)
+        
+        # Remove hooks
+        for hook in hooks:
+            hook.remove()
+        
+        # Aggregate statistics
+        for name in layer_characteristics:
+            for metric in layer_characteristics[name]:
+                values = layer_characteristics[name][metric]
+                if values:
+                    layer_characteristics[name][metric] = np.mean(values)
+                else:
+                    layer_characteristics[name][metric] = 0.0
+        
+        return layer_characteristics
 
 
 class NeuroExaptWrapper(nn.Module):

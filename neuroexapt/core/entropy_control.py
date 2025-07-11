@@ -155,9 +155,13 @@ class AdaptiveEntropy:
             self._layer_entropy_cache.clear()
             for name, layer_out in layer_outputs.items():
                 if layer_out.dim() > 1:
-                    layer_probs = torch.softmax(layer_out.view(layer_out.size(0), -1), dim=-1)
-                    layer_log_probs = torch.log(layer_probs + 1e-10)
-                    layer_entropy = -torch.sum(layer_probs * layer_log_probs, dim=-1).mean()
+                    # For multi-dimensional outputs, calculate entropy along feature dimension
+                    if layer_out.size(1) > 1:  # Multiple features
+                        layer_probs = torch.softmax(layer_out.view(layer_out.size(0), -1), dim=-1)
+                        layer_log_probs = torch.log(layer_probs + 1e-10)
+                        layer_entropy = -torch.sum(layer_probs * layer_log_probs, dim=-1).mean()
+                    else:  # Single feature
+                        layer_entropy = layer_out.var()
                     self._layer_entropy_cache[name] = layer_entropy.item()
                 else:
                     self._layer_entropy_cache[name] = layer_out.var().item()
@@ -184,7 +188,15 @@ class AdaptiveEntropy:
                 return False
             current_entropy = self.entropy_history[-1]
         
-        return current_entropy < self.threshold
+        # More sophisticated pruning decision
+        if current_entropy < self.threshold:
+            # Check if entropy has been consistently low
+            if len(self.entropy_history) >= 5:
+                recent_entropy = self.entropy_history[-5:]
+                if all(e < self.threshold * 1.2 for e in recent_entropy):
+                    return True
+        
+        return False
     
     def should_expand(self, current_entropy: Optional[float] = None) -> bool:
         """
@@ -214,6 +226,41 @@ class AdaptiveEntropy:
             entropy_trend = np.polyfit(range(len(recent_entropy)), recent_entropy, 1)[0]
             if entropy_trend > 0.01:  # Positive trend
                 return True
+        
+        # Check for entropy saturation (plateau)
+        if len(self.entropy_history) >= 10:
+            recent_entropy = self.entropy_history[-10:]
+            entropy_std = np.std(recent_entropy)
+            if entropy_std < 0.01 and current_entropy > self.threshold:  # Low variance, high entropy
+                return True
+        
+        return False
+    
+    def should_add_branch(self, layer_entropies: Optional[Dict[str, float]] = None) -> bool:
+        """
+        Determine if a new branch should be added based on branch diversity.
+        
+        Args:
+            layer_entropies: Dictionary of layer entropy values
+            
+        Returns:
+            True if adding a branch is recommended
+        """
+        if not layer_entropies:
+            return False
+        
+        # Calculate branch diversity
+        entropy_values = list(layer_entropies.values())
+        if len(entropy_values) < 2:
+            return False
+        
+        diversity = np.std(entropy_values)
+        mean_entropy = np.mean(entropy_values)
+        
+        # Add branch if diversity is low (branches are too similar)
+        # or if mean entropy is high (network is saturated)
+        if diversity < 0.1 or mean_entropy > self.threshold * 2:
+            return True
         
         return False
     

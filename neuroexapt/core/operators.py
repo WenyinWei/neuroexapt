@@ -75,32 +75,35 @@ class PruneByEntropy(StructuralOperator):
             
         # Get eligible layers
         eligible_layers = self._get_eligible_layers(model)
-        
-        # Sort by entropy (ascending)
-        entropy_items = [(name, layer_entropies.get(name, float('inf'))) 
-                        for name in eligible_layers]
-        entropy_items.sort(key=lambda x: x[1])
-        
-        # Determine layers to prune
-        max_prune = int(len(eligible_layers) * self.prune_ratio)
-        layers_to_prune = []
-        
-        for layer_name, entropy in entropy_items:
-            if entropy < self.threshold and len(layers_to_prune) < max_prune:
-                if len(eligible_layers) - len(layers_to_prune) > self.min_layers_to_keep:
-                    layers_to_prune.append(layer_name)
-                    
-        if not layers_to_prune:
-            return model, {'pruned_layers': [], 'message': 'No layers meet pruning criteria'}
+        if len(eligible_layers) <= self.min_layers_to_keep:
+            return model, {'pruned_layers': [], 'message': 'Too few layers to prune'}
             
-        # Create pruned model
+        # Find layers below threshold
+        prune_candidates = []
+        for layer_name in eligible_layers:
+            if layer_name in layer_entropies:
+                if layer_entropies[layer_name] < self.threshold:
+                    prune_candidates.append((layer_name, layer_entropies[layer_name]))
+                    
+        if not prune_candidates:
+            return model, {'pruned_layers': [], 'message': 'No layers below entropy threshold'}
+            
+        # Sort by entropy (ascending) and limit by prune ratio
+        prune_candidates.sort(key=lambda x: x[1])
+        max_prune = int(len(eligible_layers) * self.prune_ratio)
+        layers_to_prune = [name for name, _ in prune_candidates[:max_prune]]
+        
+        # Ensure minimum layers remain
+        if len(eligible_layers) - len(layers_to_prune) < self.min_layers_to_keep:
+            layers_to_prune = layers_to_prune[:len(eligible_layers) - self.min_layers_to_keep]
+            
+        # Prune layers
         pruned_model = self._prune_layers(model, layers_to_prune)
         
         info = {
             'pruned_layers': layers_to_prune,
             'num_pruned': len(layers_to_prune),
-            'threshold_used': self.threshold,
-            'lowest_entropy': entropy_items[0][1] if entropy_items else None
+            'threshold_used': self.threshold
         }
         
         return pruned_model, info
@@ -163,7 +166,8 @@ class ExpandWithMI(StructuralOperator):
         gamma: float = 0.1,
         max_layers_to_add: int = 5,
         expand_ratio: float = 0.1,
-        expansion_factor: float = 1.5
+        expansion_factor: float = 1.5,
+        intelligent_mode: bool = True
     ):
         """
         Initialize MI-guided expansion operator.
@@ -173,14 +177,32 @@ class ExpandWithMI(StructuralOperator):
             max_layers_to_add: Maximum layers to add in one step
             expand_ratio: Maximum ratio of layers to expand
             expansion_factor: Factor for new layer dimensions
+            intelligent_mode: Use intelligent layer type selection
         """
         self.gamma = gamma
         self.max_layers_to_add = max_layers_to_add
         self.expand_ratio = expand_ratio
         self.expansion_factor = expansion_factor
+        self.intelligent_mode = intelligent_mode
+        
+        # Import intelligent operators if available
+        if intelligent_mode:
+            try:
+                from .intelligent_operators import LayerTypeSelector, IntelligentExpansionOperator
+                self.layer_selector = LayerTypeSelector()
+                self.intelligent_expander = IntelligentExpansionOperator()
+            except ImportError:
+                self.intelligent_mode = False
+                self.layer_selector = None
+                self.intelligent_expander = None
         
     def apply(self, model: nn.Module, metrics: Dict[str, Any]) -> Tuple[nn.Module, Dict[str, Any]]:
         """Apply MI-guided expansion."""
+        # Use intelligent expansion if available
+        if self.intelligent_mode and self.intelligent_expander:
+            return self.intelligent_expander.apply(model, metrics)
+        
+        # Fall back to original implementation
         layer_importances = metrics.get('layer_importances', {})
         if not layer_importances:
             return model, {'expanded_layers': [], 'message': 'No importance metrics available'}
@@ -242,8 +264,11 @@ class ExpandWithMI(StructuralOperator):
         return any(imp > threshold for imp in importances)
         
     def _expand_layers(self, model: nn.Module, layers_to_expand: List[str]) -> nn.Module:
-        """Add new layers at specified expansion points."""
+        """Add new layers at specified expansion points with device management."""
         expanded_model = copy.deepcopy(model)
+        
+        # Get model device
+        model_device = next(expanded_model.parameters()).device
         
         for layer_name in layers_to_expand:
             parts = layer_name.split('.')
@@ -257,9 +282,9 @@ class ExpandWithMI(StructuralOperator):
             
             # Create expanded block based on layer type
             if isinstance(original_layer, nn.Linear):
-                expanded_block = self._create_linear_expansion(original_layer)
+                expanded_block = self._create_linear_expansion(original_layer, model_device)
             elif isinstance(original_layer, nn.Conv2d):
-                expanded_block = self._create_conv2d_expansion(original_layer)
+                expanded_block = self._create_conv2d_expansion(original_layer, model_device)
             else:
                 # Skip unsupported layer types
                 continue
@@ -269,13 +294,14 @@ class ExpandWithMI(StructuralOperator):
             
         return expanded_model
         
-    def _create_linear_expansion(self, layer: nn.Linear) -> nn.Module:
-        """Create expanded linear block."""
+    def _create_linear_expansion(self, layer: nn.Linear, device: torch.device) -> nn.Module:
+        """Create expanded linear block with device consistency."""
         in_features = layer.in_features
         out_features = layer.out_features
         hidden_features = int(out_features * self.expansion_factor)
         
-        return nn.Sequential(
+        # Create new layers and move to device
+        expansion_block = nn.Sequential(
             layer,
             nn.ReLU(inplace=True),
             nn.Linear(out_features, hidden_features),
@@ -283,14 +309,22 @@ class ExpandWithMI(StructuralOperator):
             nn.Linear(hidden_features, out_features)
         )
         
-    def _create_conv2d_expansion(self, layer: nn.Conv2d) -> nn.Module:
-        """Create expanded conv2d block."""
+        # Move to device and initialize new layers
+        expansion_block.to(device)
+        self._initialize_new_layers(expansion_block, device)
+        
+        return expansion_block
+        
+    def _create_conv2d_expansion(self, layer: nn.Conv2d, device: torch.device) -> nn.Module:
+        """Create expanded conv2d block with device consistency."""
         in_channels = layer.in_channels
         out_channels = layer.out_channels
         hidden_channels = int(out_channels * self.expansion_factor)
         
-        return nn.Sequential(
+        # Create new layers
+        expansion_block = nn.Sequential(
             layer,
+            nn.BatchNorm2d(out_channels),
             nn.ReLU(inplace=True),
             nn.Conv2d(
                 out_channels, hidden_channels,
@@ -303,6 +337,41 @@ class ExpandWithMI(StructuralOperator):
                 kernel_size=1, stride=1
             )
         )
+        
+        # Move to device and initialize new layers
+        expansion_block.to(device)
+        self._initialize_new_layers(expansion_block, device)
+        
+        return expansion_block
+    
+    def _initialize_new_layers(self, module: nn.Module, device: torch.device):
+        """Initialize new layers with proper device placement."""
+        # Get all layers in the sequential module
+        layers = list(module.children()) if isinstance(module, nn.Sequential) else [module]
+        
+        for i, layer in enumerate(layers):
+            if isinstance(layer, (nn.Linear, nn.Conv2d)):
+                # Skip the original layer (first in sequence)
+                if i == 0:
+                    continue
+                    
+                # Initialize new layers
+                if hasattr(layer, 'weight') and layer.weight is not None:
+                    torch.nn.init.kaiming_normal_(layer.weight, mode='fan_out', nonlinearity='relu')
+                if hasattr(layer, 'bias') and layer.bias is not None:
+                    torch.nn.init.zeros_(layer.bias)
+                    
+                # Ensure on correct device
+                layer.to(device)
+            elif isinstance(layer, nn.BatchNorm2d):
+                # Initialize batch norm
+                if hasattr(layer, 'weight') and layer.weight is not None:
+                    torch.nn.init.ones_(layer.weight)
+                if hasattr(layer, 'bias') and layer.bias is not None:
+                    torch.nn.init.zeros_(layer.bias)
+                    
+                # Ensure on correct device
+                layer.to(device)
 
 
 class MutateDiscrete(StructuralOperator):
@@ -357,79 +426,105 @@ class MutateDiscrete(StructuralOperator):
         return mutated_model, info
         
     def can_apply(self, model: nn.Module, metrics: Dict[str, Any]) -> bool:
-        """Mutation can always be applied."""
+        """Check if mutation can be applied."""
+        # Mutation can always be attempted
         return True
         
     def _mutate_module(self, name: str, module: nn.Module) -> Optional[Dict[str, Any]]:
-        """Mutate a single module's discrete parameters."""
-        mutation_info = {'layer': name, 'type': type(module).__name__, 'changes': {}}
-        
-        if isinstance(module, (nn.Conv1d, nn.Conv2d, nn.Conv3d)):
-            # Mutate convolution parameters
-            changes = self._mutate_conv_params(module)
-            if changes:
-                mutation_info['changes'] = changes
-                return mutation_info
-                
-        elif isinstance(module, nn.MultiheadAttention):
-            # Mutate attention parameters
-            changes = self._mutate_attention_params(module)
-            if changes:
-                mutation_info['changes'] = changes
-                return mutation_info
-                
+        """Mutate a single module's parameters."""
+        if isinstance(module, nn.Conv2d):
+            return self._mutate_conv2d(name, module)
+        elif isinstance(module, nn.Linear):
+            return self._mutate_linear(name, module)
+        elif hasattr(module, 'num_heads'):  # Multi-head attention
+            return self._mutate_attention(name, module)
         return None
         
-    def _mutate_conv_params(self, conv: nn.Module) -> Dict[str, Tuple[Any, Any]]:
-        """Mutate convolutional layer parameters."""
-        changes = {}
+    def _mutate_conv2d(self, name: str, conv: nn.Conv2d) -> Optional[Dict[str, Any]]:
+        """Mutate Conv2d parameters."""
+        mutations = {}
         
-        # Note: Actual mutation of kernel size, stride, etc. requires
-        # reconstructing the layer, which is complex. This is a simplified
-        # version that tracks what would be changed.
-        
-        if 'kernel_size' in self.parameter_ranges and np.random.random() < 0.5:
-            old_kernel = conv.kernel_size
+        # Kernel size mutation (requires layer replacement)
+        if 'kernel_size' in self.parameter_ranges and np.random.random() < 0.3:
+            old_kernel = conv.kernel_size[0] if isinstance(conv.kernel_size, tuple) else conv.kernel_size
             k_min, k_max = self.parameter_ranges['kernel_size']
             
             # Continuous relaxation
             theta = np.random.randn()
             k_continuous = torch.sigmoid(torch.tensor(theta)) * (k_max - k_min) + k_min
-            new_kernel = int(k_continuous.item() + 0.5)
+            new_kernel = int(torch.round(k_continuous).item())
+            new_kernel = max(k_min, min(k_max, new_kernel))
             
-            if isinstance(old_kernel, tuple):
-                new_kernel = (new_kernel, new_kernel)
+            if new_kernel != old_kernel:
+                mutations['kernel_size'] = (old_kernel, new_kernel)
                 
-            changes['kernel_size'] = (old_kernel, new_kernel)
+        # Groups mutation (for grouped convolution)
+        if 'groups' in self.parameter_ranges and conv.in_channels == conv.out_channels:
+            old_groups = conv.groups
+            g_min, g_max = self.parameter_ranges['groups']
             
-        return changes
-        
-    def _mutate_attention_params(self, attn: nn.MultiheadAttention) -> Dict[str, Tuple[Any, Any]]:
-        """Mutate attention layer parameters."""
-        changes = {}
-        
-        if 'num_heads' in self.parameter_ranges and np.random.random() < 0.5:
-            old_heads = attn.num_heads
-            h_min, h_max = self.parameter_ranges['num_heads']
+            # Find valid group numbers (must divide channels)
+            valid_groups = [g for g in range(g_min, min(g_max, conv.in_channels) + 1) 
+                          if conv.in_channels % g == 0]
             
-            # Ensure new number of heads divides embed_dim
-            embed_dim = attn.embed_dim
-            valid_heads = [h for h in range(h_min, h_max + 1) if embed_dim % h == 0]
-            
-            if valid_heads:
+            if valid_groups and len(valid_groups) > 1:
                 theta = np.random.randn()
-                h_continuous = torch.sigmoid(torch.tensor(theta)) * len(valid_heads)
-                new_heads_idx = int(h_continuous.item())
-                new_heads = valid_heads[min(new_heads_idx, len(valid_heads) - 1)]
+                g_continuous = torch.sigmoid(torch.tensor(theta)) * len(valid_groups)
+                g_idx = int(torch.round(g_continuous).item()) % len(valid_groups)
+                new_groups = valid_groups[g_idx]
                 
-                changes['num_heads'] = (old_heads, new_heads)
+                if new_groups != old_groups:
+                    mutations['groups'] = (old_groups, new_groups)
+                    
+        if mutations:
+            return {
+                'layer': name,
+                'type': 'Conv2d',
+                'mutations': mutations
+            }
+        return None
+        
+    def _mutate_linear(self, name: str, linear: nn.Linear) -> Optional[Dict[str, Any]]:
+        """Mutate Linear layer parameters."""
+        # For linear layers, we might mutate the hidden dimension ratio
+        # This would require architectural changes
+        return None
+        
+    def _mutate_attention(self, name: str, module: nn.Module) -> Optional[Dict[str, Any]]:
+        """Mutate attention parameters."""
+        mutations = {}
+        
+        if hasattr(module, 'num_heads'):
+            old_heads = module.num_heads
+            h_min, h_max = self.parameter_ranges.get('num_heads', (1, 16))
+            
+            # Find valid head numbers (must divide embedding dimension)
+            embed_dim = getattr(module, 'embed_dim', None)
+            if embed_dim:
+                valid_heads = [h for h in range(h_min, min(h_max, embed_dim) + 1) 
+                             if embed_dim % h == 0]
                 
-        return changes
+                if valid_heads and len(valid_heads) > 1:
+                    theta = np.random.randn()
+                    h_continuous = torch.sigmoid(torch.tensor(theta)) * len(valid_heads)
+                    h_idx = int(torch.round(h_continuous).item()) % len(valid_heads)
+                    new_heads = valid_heads[h_idx]
+                    
+                    if new_heads != old_heads:
+                        mutations['num_heads'] = (old_heads, new_heads)
+                        
+        if mutations:
+            return {
+                'layer': name,
+                'type': 'Attention',
+                'mutations': mutations
+            }
+        return None
 
 
 class CompoundOperator(StructuralOperator):
     """
-    Combine multiple operators with conditional logic.
+    Combines multiple operators for complex evolution strategies.
     """
     
     def __init__(self, operators: List[StructuralOperator]):
@@ -442,9 +537,9 @@ class CompoundOperator(StructuralOperator):
         self.operators = operators
         
     def apply(self, model: nn.Module, metrics: Dict[str, Any]) -> Tuple[nn.Module, Dict[str, Any]]:
-        """Apply operators sequentially based on conditions."""
+        """Apply all applicable operators."""
         current_model = model
-        all_info = {'operations': []}
+        all_info: Dict[str, Any] = {'operations': []}
         
         for i, operator in enumerate(self.operators):
             if operator.can_apply(current_model, metrics):
@@ -481,7 +576,7 @@ class AdaptiveOperator(StructuralOperator):
         
         Args:
             base_operator: Base operator to adapt
-            schedule: Adaptation schedule ('linear', 'cosine', 'exponential')
+            schedule: Adaptation schedule (linear, exponential, cosine)
             initial_scale: Initial parameter scale
             final_scale: Final parameter scale
         """
@@ -490,40 +585,41 @@ class AdaptiveOperator(StructuralOperator):
         self.initial_scale = initial_scale
         self.final_scale = final_scale
         self.current_epoch = 0
-        self.total_epochs = 100  # Default, should be set externally
         
-    def update_epoch(self, epoch: int, total_epochs: int):
-        """Update current epoch for adaptation."""
-        self.current_epoch = epoch
-        self.total_epochs = total_epochs
-        self._adapt_parameters()
-        
-    def _adapt_parameters(self):
-        """Adapt operator parameters based on schedule."""
-        progress = self.current_epoch / self.total_epochs
-        
-        if self.schedule == 'linear':
-            scale = self.initial_scale + (self.final_scale - self.initial_scale) * progress
-        elif self.schedule == 'cosine':
-            scale = self.final_scale + 0.5 * (self.initial_scale - self.final_scale) * \
-                   (1 + np.cos(np.pi * progress))
-        elif self.schedule == 'exponential':
-            scale = self.initial_scale * (self.final_scale / self.initial_scale) ** progress
-        else:
-            scale = self.initial_scale
-            
-        # Apply scale to base operator parameters
-        if isinstance(self.base_operator, PruneByEntropy):
-            self.base_operator.threshold *= scale
-        elif isinstance(self.base_operator, ExpandWithMI):
-            self.base_operator.gamma *= scale
-        elif isinstance(self.base_operator, MutateDiscrete):
-            self.base_operator.mutation_rate *= scale
-            
     def apply(self, model: nn.Module, metrics: Dict[str, Any]) -> Tuple[nn.Module, Dict[str, Any]]:
-        """Apply base operator with adapted parameters."""
+        """Apply operator with adapted parameters."""
+        # Update operator parameters based on progress
+        progress = metrics.get('training_progress', 0.0)
+        scale = self._get_scale(progress)
+        
+        # Adapt operator parameters
+        self._adapt_parameters(scale)
+        
+        # Apply base operator
         return self.base_operator.apply(model, metrics)
         
     def can_apply(self, model: nn.Module, metrics: Dict[str, Any]) -> bool:
         """Check if base operator can be applied."""
-        return self.base_operator.can_apply(model, metrics) 
+        return self.base_operator.can_apply(model, metrics)
+        
+    def _get_scale(self, progress: float) -> float:
+        """Calculate parameter scale based on progress."""
+        if self.schedule == 'linear':
+            return self.initial_scale + (self.final_scale - self.initial_scale) * progress
+        elif self.schedule == 'exponential':
+            return self.initial_scale * (self.final_scale / self.initial_scale) ** progress
+        elif self.schedule == 'cosine':
+            return self.final_scale + 0.5 * (self.initial_scale - self.final_scale) * \
+                   (1 + np.cos(np.pi * progress))
+        else:
+            return self.initial_scale
+            
+    def _adapt_parameters(self, scale: float):
+        """Adapt base operator parameters."""
+        # Example adaptations based on operator type
+        if isinstance(self.base_operator, PruneByEntropy) and hasattr(self.base_operator, 'threshold'):
+            self.base_operator.threshold *= scale
+        elif isinstance(self.base_operator, ExpandWithMI) and hasattr(self.base_operator, 'gamma'):
+            self.base_operator.gamma *= scale
+        elif isinstance(self.base_operator, MutateDiscrete) and hasattr(self.base_operator, 'mutation_rate'):
+            self.base_operator.mutation_rate *= scale 

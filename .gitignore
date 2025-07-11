@@ -30,3 +30,12 @@ __pycache__/
 # OS
 .DS_Store
 Thumbs.db
+
+# DynArch specific
+checkpoints/best_dynarch_model.pth
+results/dynarch_*
+policy_checkpoints/
+experience_buffer_*.pkl
+
+# Enhanced results
+results/enhanced_*

@@ -98,6 +98,11 @@ class InformationBottleneck:
         x_np = x.detach().cpu().numpy().flatten()
         y_np = y.detach().cpu().numpy().flatten()
         
+        # Ensure same length by truncating to shorter one
+        min_len = min(len(x_np), len(y_np))
+        x_np = x_np[:min_len]
+        y_np = y_np[:min_len]
+        
         # Create 2D histogram
         hist_2d, _, _ = np.histogram2d(x_np, y_np, bins=self.n_bins)
         hist_2d = hist_2d + 1e-10
@@ -165,7 +170,8 @@ class InformationBottleneck:
         
         # Cache result if layer name provided
         if layer_name:
-            self._activation_cache[f"{layer_name}_importance"] = importance
+            # Store as tensor to maintain type consistency
+            self._activation_cache[f"{layer_name}_importance"] = torch.tensor(importance)
             
         return importance
     
@@ -305,7 +311,8 @@ class InformationBottleneck:
                 outputs = model(inputs)
                 
                 # Analyze each layer
-                for name, activation in self._activation_cache.items():
+                activation_items = list(self._activation_cache.items())
+                for name, activation in activation_items:
                     if "importance" not in name:
                         # Calculate layer entropy
                         entropy = self.calculate_entropy(activation)

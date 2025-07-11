@@ -262,12 +262,12 @@ class AdvancedDatasetLoader:
                 'direct_urls': [
                     'https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz'
                 ],
-                'chinese_mirrors': [
-                    'https://download.pytorch.org/datasets/cifar-10-python.tar.gz',  # PyTorch official
-                    'https://huggingface.co/datasets/cifar10/resolve/main/cifar-10-python.tar.gz',  # HuggingFace
-                ],
+                'chinese_mirrors': [],
                 'alternative_mirrors': [
-                    'https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz',  # Original source
+                    'https://mirrors.tuna.tsinghua.edu.cn/pytorch-datasets/cifar-10-python.tar.gz',
+                    'https://mirrors.ustc.edu.cn/pytorch-datasets/cifar-10-python.tar.gz',
+                    'https://download.pytorch.org/datasets/cifar-10-python.tar.gz',
+                    'https://huggingface.co/datasets/cifar10/resolve/main/cifar-10-python.tar.gz',
                 ]
             },
             'cifar100': {
@@ -279,12 +279,12 @@ class AdvancedDatasetLoader:
                 'direct_urls': [
                     'https://www.cs.toronto.edu/~kriz/cifar-100-python.tar.gz'
                 ],
-                'chinese_mirrors': [
-                    'https://download.pytorch.org/datasets/cifar-100-python.tar.gz',  # PyTorch official
-                    'https://huggingface.co/datasets/cifar100/resolve/main/cifar-100-python.tar.gz',  # HuggingFace
-                ],
+                'chinese_mirrors': [],
                 'alternative_mirrors': [
-                    'https://www.cs.toronto.edu/~kriz/cifar-100-python.tar.gz',  # Original source
+                    'https://mirrors.tuna.tsinghua.edu.cn/pytorch-datasets/cifar-100-python.tar.gz',
+                    'https://mirrors.ustc.edu.cn/pytorch-datasets/cifar-100-python.tar.gz',
+                    'https://download.pytorch.org/datasets/cifar-100-python.tar.gz',
+                    'https://huggingface.co/datasets/cifar100/resolve/main/cifar-100-python.tar.gz',
                 ]
             },
             'mnist': {
@@ -380,15 +380,15 @@ class AdvancedDatasetLoader:
                     shutil.copy2(cache_path, target_path)
                 continue
             
-            # Try Chinese mirrors first for speed
+            # Try direct URLs first (Toronto University)
             download_success = False
             
-            if 'chinese_mirrors' in config and i < len(config['chinese_mirrors']):
-                chinese_url = config['chinese_mirrors'][i]
-                logger.info(f"Trying Chinese mirror: {chinese_url}")
+            if 'direct_urls' in config and i < len(config['direct_urls']):
+                direct_url = config['direct_urls'][i]
+                logger.info(f"Trying direct source: {direct_url}")
                 
                 for attempt in range(self.max_retries):
-                    if self._download_file_with_fallback(chinese_url, target_path, filename):
+                    if self._download_file_with_fallback(direct_url, target_path, filename):
                         # Verify file size to ensure it's not an HTML page
                         if target_path.exists() and target_path.stat().st_size > 10000000:  # > 10MB
                             download_success = True
@@ -397,23 +397,31 @@ class AdvancedDatasetLoader:
                             logger.warning(f"Downloaded file too small, likely HTML page")
                             target_path.unlink()  # Remove corrupted file
                     else:
-                        logger.warning(f"Chinese mirror download attempt {attempt + 1} failed")
-                        if attempt < self.max_retries - 1:
-                            time.sleep(2 ** attempt)
-            
-            # Fallback to direct URLs if Chinese mirrors fail
-            if not download_success and 'direct_urls' in config and i < len(config['direct_urls']):
-                direct_url = config['direct_urls'][i]
-                logger.info(f"Falling back to direct source: {direct_url}")
-                
-                for attempt in range(self.max_retries):
-                    if self._download_file_with_fallback(direct_url, target_path, filename):
-                        download_success = True
-                        break
-                    else:
                         logger.warning(f"Direct download attempt {attempt + 1} failed")
                         if attempt < self.max_retries - 1:
                             time.sleep(2 ** attempt)
+            
+            # Fallback to alternative mirrors if direct URLs fail
+            if not download_success and 'alternative_mirrors' in config and i < len(config['alternative_mirrors']):
+                for mirror_url in config['alternative_mirrors']:
+                    logger.info(f"Trying alternative mirror: {mirror_url}")
+                    
+                    for attempt in range(self.max_retries):
+                        if self._download_file_with_fallback(mirror_url, target_path, filename):
+                            # Verify file size to ensure it's not an HTML page
+                            if target_path.exists() and target_path.stat().st_size > 10000000:  # > 10MB
+                                download_success = True
+                                break
+                            else:
+                                logger.warning(f"Downloaded file too small, likely HTML page")
+                                target_path.unlink()  # Remove corrupted file
+                        else:
+                            logger.warning(f"Alternative mirror download attempt {attempt + 1} failed")
+                            if attempt < self.max_retries - 1:
+                                time.sleep(2 ** attempt)
+                    
+                    if download_success:
+                        break
             
             if download_success:
                 # Cache the downloaded file
@@ -471,7 +479,21 @@ class AdvancedDatasetLoader:
             logger.info(f"🚀 Trying 迅雷 download: {filename}")
             if self.xunlei_downloader.download_with_xunlei(url, str(filepath.parent), filename):
                 logger.info(f"✅ 迅雷 download started for {filename}")
-                return True
+                # Wait for download to complete
+                logger.info(f"⏳ Waiting for 迅雷 download to complete...")
+                max_wait_time = 300  # 5 minutes
+                wait_interval = 5    # Check every 5 seconds
+                waited_time = 0
+                
+                while waited_time < max_wait_time:
+                    if filepath.exists() and filepath.stat().st_size > 10000000:  # > 10MB
+                        logger.info(f"✅ 迅雷 download completed: {filename}")
+                        return True
+                    time.sleep(wait_interval)
+                    waited_time += wait_interval
+                    logger.info(f"⏳ Still waiting... ({waited_time}s/{max_wait_time}s)")
+                
+                logger.warning(f"⚠️ 迅雷 download timeout for {filename}, trying alternatives")
             else:
                 logger.warning(f"⚠️ 迅雷 download failed for {filename}, trying alternatives")
         
@@ -616,10 +638,10 @@ class AdvancedDatasetLoader:
 
         # Datasets
         trainset = torchvision.datasets.CIFAR10(
-            root=str(self.download_dir), train=True, download=False, transform=transform_train
+            root=str(self.download_dir), train=True, download=True, transform=transform_train
         )
         testset = torchvision.datasets.CIFAR10(
-            root=str(self.download_dir), train=False, download=False, transform=transform_test
+            root=str(self.download_dir), train=False, download=True, transform=transform_test
         )
 
         # Data loaders

@@ -17,7 +17,8 @@ from collections import defaultdict
 
 from .neuroexapt import NeuroExapt
 from .utils.logging import setup_logger, log_metrics
-from .utils.visualization import plot_training_progress, plot_entropy_evolution
+from .utils.visualization import plot_evolution_history, plot_entropy_history
+from .core.dynarch import DynamicArchitecture
 
 
 class Trainer:
@@ -89,6 +90,7 @@ class Trainer:
         self.current_epoch = 0
         self.best_loss = float('inf')
         self.best_accuracy = 0.0
+        self.current_train_loader = None  # Store train_loader for evolution
         
         # Metrics tracking
         self.training_history = defaultdict(list)
@@ -98,6 +100,13 @@ class Trainer:
         if self.verbose:
             self.logger = setup_logger("Trainer")
             
+        self.dynarch = DynamicArchitecture(
+            self.wrapped_model, 
+            self.neuro_exapt.struct_optimizer, 
+            self.neuro_exapt.info_theory,
+            device=self.device  # Pass device to DynamicArchitecture
+        )
+        
     def fit(
         self,
         train_loader: DataLoader,
@@ -125,6 +134,9 @@ class Trainer:
         Returns:
             Training history dictionary
         """
+        # Store train_loader for evolution
+        self.current_train_loader = train_loader
+        
         # Setup loss function
         if loss_fn is None:
             loss_fn = nn.CrossEntropyLoss()
@@ -194,6 +206,14 @@ class Trainer:
         if self.verbose:
             self.logger.info("Training completed")
             
+            # Print final DynArch statistics
+            stats = self.dynarch.get_stats()
+            self.logger.info(f"🤖 DynArch Statistics:")
+            self.logger.info(f"   Total evolution steps: {stats['evolution_steps']}")
+            self.logger.info(f"   Final epsilon: {stats['current_epsilon']:.3f}")
+            self.logger.info(f"   Pareto front size: {stats['pareto_front_size']}")
+            self.logger.info(f"   Action distribution: {stats['action_distribution']}")
+            
         return dict(self.training_history)
         
     def _train_epoch(self, train_loader: DataLoader, loss_fn: Callable) -> Dict[str, float]:
@@ -216,8 +236,11 @@ class Trainer:
             # Forward pass
             output = self.wrapped_model(data)
             
-            # Compute combined loss
-            loss = self.wrapped_model.compute_loss(output, target, loss_fn)
+            # Compute loss
+            if hasattr(self.wrapped_model, 'compute_loss'):
+                loss = self.wrapped_model.compute_loss(output, target, loss_fn)
+            else:
+                loss = loss_fn(output, target)
             
             # Backward pass
             loss.backward()
@@ -267,7 +290,10 @@ class Trainer:
                 data, target = data.to(self.device), target.to(self.device)
                 
                 output = self.wrapped_model(data)
-                loss = self.wrapped_model.compute_loss(output, target, loss_fn)
+                if hasattr(self.wrapped_model, 'compute_loss'):
+                    loss = self.wrapped_model.compute_loss(output, target, loss_fn)
+                else:
+                    loss = loss_fn(output, target)
                 
                 total_loss += loss.item()
                 
@@ -323,10 +349,24 @@ class Trainer:
             # Combine metrics for evolution decision
             performance_metrics = {**train_metrics, **val_metrics}
             
-            # Evolve structure
-            evolved, evolution_info = self.neuro_exapt.evolve_structure(performance_metrics)
+            state = self.dynarch.get_state(performance_metrics)
+            action = self.dynarch.select_action(state)
             
-            if evolved:
+            # Create a mini-loader for quick evaluation (use first few batches)
+            mini_loader_data = []
+            if self.current_train_loader:
+                train_iter = iter(self.current_train_loader)
+                for _ in range(3):  # Use first 3 batches
+                    try:
+                        mini_loader_data.append(next(train_iter))
+                    except StopIteration:
+                        break
+            
+            success, evolution_info = self.dynarch.apply_tentative(action, state, mini_loader_data)
+            
+            if success:
+                print("🎉 Evolution successful!")
+                
                 # Update optimizer for new parameters
                 self.optimizer = torch.optim.AdamW(
                     self.wrapped_model.parameters(),
@@ -337,13 +377,34 @@ class Trainer:
                 # Log evolution event
                 self.evolution_events.append({
                     'epoch': self.current_epoch,
-                    'action': evolution_info.get('action', 'unknown'),
+                    'action': evolution_info.get('action_info', {}).get('action_type', 'unknown'),
                     'info': evolution_info
                 })
                 
                 if self.verbose:
-                    action = evolution_info.get('action', 'unknown')
-                    self.logger.info(f"Structure evolved: {action} at epoch {self.current_epoch}")
+                    action_info = evolution_info.get('action_info', {})
+                    reward = evolution_info.get('reward', 0)
+                    improvements = evolution_info.get('metrics_improvement', {})
+                    
+                    # Detailed evolution report
+                    self.logger.info(f"🔄 ARCHITECTURE EVOLUTION at epoch {self.current_epoch}:")
+                    self.logger.info(f"   Action: {action_info.get('action_type', 'unknown')}")
+                    self.logger.info(f"   Reward: {reward:.4f}")
+                    
+                    for metric, change in improvements.items():
+                        if change != 0:
+                            sign = "+" if change > 0 else ""
+                            self.logger.info(f"   {metric.title()} change: {sign}{change:.4f}")
+                    
+                    self.logger.info("")
+                    
+                    # Visualize
+                    from neuroexapt.utils.visualization import ascii_model_graph
+                    ascii_model_graph(self.wrapped_model)
+            else:
+                reason = evolution_info.get('reason', 'unknown')
+                if self.verbose:
+                    self.logger.info(f"❌ Evolution failed: {reason}")
                     
         except Exception as e:
             if self.verbose:
@@ -435,7 +496,9 @@ class Trainer:
             warnings.warn("No training history to visualize")
             return
             
-        plot_training_progress(dict(self.training_history), save_path)
+        # TODO: Implement training progress visualization
+        if self.verbose:
+            self.logger.info("Training visualization not yet implemented")
         
     def visualize_evolution(self, save_path: Optional[str] = None):
         """Visualize structure evolution history."""
@@ -448,7 +511,7 @@ class Trainer:
         for event in self.evolution_events:
             evolution_history.append(event['info'])
             
-        plot_entropy_evolution(evolution_history, save_path)
+        plot_evolution_history(evolution_history, save_path)
         
     def get_model_summary(self) -> Dict[str, Any]:
         """Get comprehensive model summary."""
