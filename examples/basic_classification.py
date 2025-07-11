@@ -371,6 +371,15 @@ def get_cifar10_dataloaders(batch_size=128, num_workers=2):
     # Import the advanced dataset loader
     from neuroexapt.utils.dataset_loader import AdvancedDatasetLoader
     
+    # Use more workers for better GPU utilization (0 on Windows to avoid issues)
+    import platform
+    if platform.system() == 'Windows':
+        # Windows has issues with multiprocessing in DataLoader
+        actual_workers = 0
+    else:
+        # Use more workers on Linux/Mac
+        actual_workers = min(num_workers, 4)
+    
     # Initialize the advanced loader with P2P acceleration, caching, and 迅雷 integration
     loader = AdvancedDatasetLoader(
         cache_dir="./data_cache",      # Cache directory for downloaded files
@@ -383,7 +392,7 @@ def get_cifar10_dataloaders(batch_size=128, num_workers=2):
     # Get data loaders with automatic downloading and caching
     return loader.get_cifar10_dataloaders(
         batch_size=batch_size,
-        num_workers=num_workers,
+        num_workers=actual_workers,
         download=True,                 # Automatically download if not present
         force_download=True            # Force re-download to ensure clean dataset
     )

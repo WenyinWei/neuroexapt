@@ -637,19 +637,32 @@ class AdvancedDatasetLoader:
         ])
 
         # Datasets
-        trainset = torchvision.datasets.CIFAR10(
-            root=str(self.download_dir), train=True, download=True, transform=transform_train
+        train_dataset = torchvision.datasets.CIFAR10(
+            root=str(self.download_dir), train=True, download=False, transform=transform_train
         )
-        testset = torchvision.datasets.CIFAR10(
-            root=str(self.download_dir), train=False, download=True, transform=transform_test
+        test_dataset = torchvision.datasets.CIFAR10(
+            root=str(self.download_dir), train=False, download=False, transform=transform_test
         )
 
-        # Data loaders
+        # Create data loaders
         train_loader = DataLoader(
-            trainset, batch_size=batch_size, shuffle=True, num_workers=num_workers
+            train_dataset,
+            batch_size=batch_size,
+            shuffle=True,
+            num_workers=num_workers,
+            pin_memory=torch.cuda.is_available(),  # Enable pin_memory for CUDA
+            drop_last=True,
+            persistent_workers=num_workers > 0  # Keep workers alive between epochs
         )
+        
         test_loader = DataLoader(
-            testset, batch_size=batch_size, shuffle=False, num_workers=num_workers
+            test_dataset,
+            batch_size=batch_size,
+            shuffle=False,
+            num_workers=num_workers,
+            pin_memory=torch.cuda.is_available(),  # Enable pin_memory for CUDA
+            drop_last=False,
+            persistent_workers=num_workers > 0  # Keep workers alive between epochs
         )
 
         return train_loader, test_loader
@@ -677,19 +690,32 @@ class AdvancedDatasetLoader:
         ])
 
         # Datasets
-        trainset = torchvision.datasets.CIFAR100(
+        train_dataset = torchvision.datasets.CIFAR100(
             root=str(self.download_dir), train=True, download=False, transform=transform_train
         )
-        testset = torchvision.datasets.CIFAR100(
+        test_dataset = torchvision.datasets.CIFAR100(
             root=str(self.download_dir), train=False, download=False, transform=transform_test
         )
 
-        # Data loaders
+        # Create data loaders
         train_loader = DataLoader(
-            trainset, batch_size=batch_size, shuffle=True, num_workers=num_workers
+            train_dataset,
+            batch_size=batch_size,
+            shuffle=True,
+            num_workers=num_workers,
+            pin_memory=torch.cuda.is_available(),  # Enable pin_memory for CUDA
+            drop_last=True,
+            persistent_workers=num_workers > 0  # Keep workers alive between epochs
         )
+        
         test_loader = DataLoader(
-            testset, batch_size=batch_size, shuffle=False, num_workers=num_workers
+            test_dataset,
+            batch_size=batch_size,
+            shuffle=False,
+            num_workers=num_workers,
+            pin_memory=torch.cuda.is_available(),  # Enable pin_memory for CUDA
+            drop_last=False,
+            persistent_workers=num_workers > 0  # Keep workers alive between epochs
         )
 
         return train_loader, test_loader

@@ -155,27 +155,59 @@ class DeepCNN(nn.Module):
 
 
 def get_cifar10_dataloaders(batch_size=128, num_workers=2):
-    """Get CIFAR-10 data loaders with advanced downloading capabilities."""
+    """Get CIFAR-10 data loaders with proper device optimization."""
     
-    # Import the advanced dataset loader
-    from neuroexapt.utils.dataset_loader import AdvancedDatasetLoader
+    # Use more workers for better GPU utilization (0 on Windows to avoid issues)
+    import platform
+    if platform.system() == 'Windows':
+        # Windows has issues with multiprocessing in DataLoader
+        actual_workers = 0
+    else:
+        # Use more workers on Linux/Mac
+        actual_workers = min(num_workers, 4)
     
-    # Initialize the advanced loader
-    loader = AdvancedDatasetLoader(
-        cache_dir="./data_cache",
-        download_dir="./data",
-        use_p2p=True,
-        use_xunlei=True,
-        max_retries=3
+    # Define transforms
+    transform_train = transforms.Compose([
+        transforms.RandomCrop(32, padding=4),
+        transforms.RandomHorizontalFlip(),
+        transforms.ToTensor(),
+        transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
+    ])
+    
+    transform_test = transforms.Compose([
+        transforms.ToTensor(),
+        transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
+    ])
+    
+    # Load datasets
+    trainset = torchvision.datasets.CIFAR10(
+        root='./data', train=True, download=True, transform=transform_train
     )
     
-    # Get data loaders with data augmentation
-    return loader.get_cifar10_dataloaders(
-        batch_size=batch_size,
-        num_workers=num_workers,
-        download=True,
-        force_download=False
+    testset = torchvision.datasets.CIFAR10(
+        root='./data', train=False, download=True, transform=transform_test
     )
+    
+    # Create data loaders with optimization
+    train_loader = DataLoader(
+        trainset, 
+        batch_size=batch_size, 
+        shuffle=True, 
+        num_workers=actual_workers,
+        pin_memory=torch.cuda.is_available(),
+        persistent_workers=actual_workers > 0
+    )
+    
+    test_loader = DataLoader(
+        testset, 
+        batch_size=batch_size, 
+        shuffle=False, 
+        num_workers=actual_workers,
+        pin_memory=torch.cuda.is_available(),
+        persistent_workers=actual_workers > 0
+    )
+    
+    return train_loader, test_loader
 
 
 def main():
