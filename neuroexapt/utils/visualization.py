@@ -798,7 +798,7 @@ class ModelVisualizer:
         
         # Check common fusion patterns
         if hasattr(layer_module, 'fusion_method'):
-            return layer_module.fusion_method
+            return str(layer_module.fusion_method)
         
         # Infer from layer type or name
         layer_name_lower = layer_name.lower()
