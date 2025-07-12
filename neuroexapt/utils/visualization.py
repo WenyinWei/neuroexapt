@@ -18,7 +18,8 @@ from collections import defaultdict
 import math
 
 if TYPE_CHECKING:
-    from neuroexapt.core import ArchitectureTracker
+    # from neuroexapt.core import ArchitectureTracker
+    ArchitectureTracker = Any  # Type hint placeholder
 
 
 # ANSI color codes for terminal output
@@ -421,7 +422,8 @@ class ModelVisualizer:
                        changed_layers: Optional[List[str]] = None,
                        sample_input: Optional[torch.Tensor] = None,
                        title: str = "Dynamic Architecture Visualization",
-                       architecture_tracker: Optional['ArchitectureTracker'] = None) -> None:
+                       architecture_tracker: Optional['ArchitectureTracker'] = None,
+                       force_show: bool = False) -> None:
         """
         Visualize model architecture with automatic layout.
         
@@ -439,6 +441,10 @@ class ModelVisualizer:
         # Store architecture tracker for use in layer info methods
         self.architecture_tracker = architecture_tracker
         
+        # Check if visualization should be shown
+        if not force_show and not self._should_show_visualization(model, previous_model, changed_layers):
+            return
+        
         # Print header
         self._print_header(title)
         
@@ -454,6 +460,21 @@ class ModelVisualizer:
         
         # Print summary
         self._print_summary(structure_info)
+        
+        # Reset layer statuses after visualization
+        if architecture_tracker:
+            architecture_tracker.reset_status()
+    
+    def _should_show_visualization(self, model: nn.Module, previous_model: Optional[nn.Module], changed_layers: List[str]) -> bool:
+        """Determine if visualization should be shown based on real changes."""
+        if not previous_model:
+            return True  # First time showing
+        
+        # Check for real parameter changes
+        current_params = sum(p.numel() for p in model.parameters())
+        previous_params = sum(p.numel() for p in previous_model.parameters())
+        
+        return current_params != previous_params or len(changed_layers) > 0
     
     def _print_header(self, title: str):
         """Print visualization header."""
@@ -1137,7 +1158,7 @@ class ModelVisualizer:
 
 # Public API functions that maintain compatibility
 def ascii_model_graph(model, previous_model=None, changed_layers=None, sample_input=None, 
-                     architecture_tracker=None):
+                     architecture_tracker=None, force_show=False):
     """
     Create ASCII visualization of model architecture.
     
@@ -1145,7 +1166,7 @@ def ascii_model_graph(model, previous_model=None, changed_layers=None, sample_in
     """
     visualizer = ModelVisualizer()
     visualizer.visualize_model(model, previous_model, changed_layers, sample_input,
-                             architecture_tracker=architecture_tracker)
+                             architecture_tracker=architecture_tracker, force_show=force_show)
 
 
 def plot_evolution_history(evolution_history: List[Any], save_path: Optional[str] = None):
