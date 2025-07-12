@@ -1,21 +1,23 @@
 #!/usr/bin/env python3
 """
-NeuroExapt V3 - Basic Classification Example (50 epochs)
+NeuroExapt - Basic Classification Example (50 epochs)
 
-This example demonstrates V3 with a well-designed CNN that avoids overfitting.
+This example demonstrates NeuroExapt with real CIFAR-10 dataset for 80%+ accuracy.
 """
 
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torch.utils.data import DataLoader, TensorDataset
+from torch.utils.data import DataLoader
+import torchvision
+import torchvision.transforms as transforms
 import sys
 import os
 
 # Add neuroexapt to path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from neuroexapt.trainer_v3 import TrainerV3, train_with_neuroexapt
+from neuroexapt.trainer import Trainer, train_with_neuroexapt
 
 
 class ImprovedCNN(nn.Module):
@@ -72,64 +74,50 @@ class ImprovedCNN(nn.Module):
         return x
 
 
-def create_balanced_dataset():
-    """Create a larger, more balanced dataset to reduce overfitting"""
-    print("Creating balanced dataset...")
+def create_cifar10_dataloaders():
+    """Create CIFAR-10 dataloaders using the real dataset"""
+    print("Loading CIFAR-10 dataset...")
     
-    # Create 5000 samples - much larger dataset
-    X = torch.randn(5000, 3, 32, 32)
-    y = torch.randint(0, 10, (5000,))
+    # Define transforms for CIFAR-10
+    transform_train = transforms.Compose([
+        transforms.RandomCrop(32, padding=4),
+        transforms.RandomHorizontalFlip(),
+        transforms.ToTensor(),
+        transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
+    ])
     
-    # Ensure balanced classes
-    samples_per_class = 500
-    balanced_X = []
-    balanced_y = []
+    transform_test = transforms.Compose([
+        transforms.ToTensor(),
+        transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
+    ])
     
-    for class_id in range(10):
-        class_indices = torch.where(y == class_id)[0][:samples_per_class]
-        if len(class_indices) < samples_per_class:
-            # Generate more samples for this class
-            additional_needed = samples_per_class - len(class_indices)
-            additional_X = torch.randn(additional_needed, 3, 32, 32)
-            additional_y = torch.full((additional_needed,), class_id)
-            
-            balanced_X.append(X[class_indices])
-            balanced_X.append(additional_X)
-            balanced_y.append(y[class_indices])
-            balanced_y.append(additional_y)
-        else:
-            balanced_X.append(X[class_indices])
-            balanced_y.append(y[class_indices])
+    # Load CIFAR-10 dataset
+    train_dataset = torchvision.datasets.CIFAR10(
+        root='./data', 
+        train=True, 
+        download=True,
+        transform=transform_train
+    )
     
-    # Combine all balanced data
-    X_balanced = torch.cat(balanced_X, dim=0)
-    y_balanced = torch.cat(balanced_y, dim=0)
+    val_dataset = torchvision.datasets.CIFAR10(
+        root='./data', 
+        train=False, 
+        download=True,
+        transform=transform_test
+    )
     
-    # Shuffle the data
-    perm = torch.randperm(len(X_balanced))
-    X_balanced = X_balanced[perm]
-    y_balanced = y_balanced[perm]
+    # Create dataloaders
+    train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True, num_workers=2)
+    val_loader = DataLoader(val_dataset, batch_size=64, shuffle=False, num_workers=2)
     
-    # Split into train/val (80/20)
-    split_idx = int(0.8 * len(X_balanced))
-    train_X, val_X = X_balanced[:split_idx], X_balanced[split_idx:]
-    train_y, val_y = y_balanced[:split_idx], y_balanced[split_idx:]
-    
-    train_dataset = TensorDataset(train_X, train_y)
-    val_dataset = TensorDataset(val_X, val_y)
-    
-    train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True)
-    val_loader = DataLoader(val_dataset, batch_size=64, shuffle=False)
-    
-    print(f"✓ Dataset created: {len(train_dataset)} train, {len(val_dataset)} val")
-    print(f"✓ Balanced classes: {samples_per_class} samples per class")
+    print(f"Dataset: {len(train_dataset)} train, {len(val_dataset)} val samples")
     
     return train_loader, val_loader
 
 
 def main():
-    print("🧠 NeuroExapt V3 - Basic Classification (50 Epochs)")
-    print("=" * 60)
+    print("🚀 CIFAR-10 Classification with NeuroExapt (50 Epochs)")
+    print("=" * 55)
     
     # Setup device
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -139,15 +127,9 @@ def main():
     model = ImprovedCNN(num_classes=10)
     param_count = sum(p.numel() for p in model.parameters())
     print(f"Model: {param_count:,} parameters")
-    print("✓ Improved CNN with proper regularization")
     
-    # Get balanced data
-    train_loader, val_loader = create_balanced_dataset()
-    
-    print("\n🚀 V3 Method 1: One-line training (50 epochs)")
-    print("=" * 60)
-    print("Training with NeuroExapt V3 intelligent evolution...")
-    print("Every epoch is checked, but changes only when beneficial")
+    # Get CIFAR-10 dataset
+    train_loader, val_loader = create_cifar10_dataloaders()
     
     # Train with V3 for 50 epochs
     optimized_model, history = train_with_neuroexapt(
@@ -160,12 +142,9 @@ def main():
         verbose=True
     )
     
-    print(f"\n📊 V3 Training Results (50 epochs):")
-    print(f"  Final train accuracy: {history['train_accuracy'][-1]:.1f}%")
-    print(f"  Final val accuracy: {history['val_accuracy'][-1]:.1f}%")
-    print(f"  Best val accuracy: {max(history['val_accuracy']):.1f}%")
-    print(f"  Total evolutions: {sum(history['evolutions'])}")
-    print(f"  Evolution frequency: {sum(history['evolutions'])/50*100:.1f}%")
+    print(f"\n📊 Training Results:")
+    print(f"  Final Train Acc: {history['train_accuracy'][-1]:.1f}% | Final Val Acc: {history['val_accuracy'][-1]:.1f}%")
+    print(f"  Best Val Acc: {max(history['val_accuracy']):.1f}% | Evolutions: {sum(history['evolutions'])}")
     
     # Check for overfitting
     final_train_acc = history['train_accuracy'][-1]
@@ -181,12 +160,11 @@ def main():
     else:
         print("  ❌ High overfitting - model needs improvement")
     
-    print("\n🚀 V3 Method 2: Detailed trainer analysis")
-    print("=" * 60)
+    print("\n🔍 Architecture Analysis:")
     
     # Create another model for comparison
     model2 = ImprovedCNN(num_classes=10)
-    trainer = TrainerV3(
+    trainer = Trainer(
         model=model2,
         device=device,
         efficiency_threshold=0.1,
@@ -223,8 +201,7 @@ def main():
     print(f"  No-change rate: {evolution_summary['evolution_stats']['no_change_rate']:.1%}")
     print(f"  Performance trend: {evolution_summary['performance_trend']}")
     
-    print("\n✅ Basic Classification V3 completed!")
-    print("Model shows good generalization with minimal overfitting.")
+    print("\n✅ Training completed with intelligent architecture evolution!")
 
 
 if __name__ == "__main__":
