@@ -39,3 +39,11 @@ experience_buffer_*.pkl
 
 # Enhanced results
 results/enhanced_*
+
+# NeuroExapt V3 logs and outputs
+/neuroexapt_logs/
+/test_logs/
+/neuroexapt_demo_logs/
+/neuroexapt_evolution_demo/
+evolution_logs/
+*.evolution.json

@@ -327,40 +327,75 @@ def estimate_flops(
     # Create dummy input
     dummy_input = torch.randn(1, *input_shape)
     
+    # Get the actual model if it's wrapped
+    actual_model = model
+    if hasattr(model, 'model') and isinstance(model.model, nn.Module):
+        actual_model = model.model
+    elif hasattr(model, 'module') and isinstance(model.module, nn.Module):
+        actual_model = model.module
+    
+    # Move dummy input to same device as model
+    try:
+        device = next(actual_model.parameters()).device
+        dummy_input = dummy_input.to(device)
+    except (StopIteration, AttributeError):
+        # No parameters in model or not a valid module
+        device = torch.device('cpu')
+        dummy_input = dummy_input.to(device)
+    
     # Hook to capture layer inputs/outputs
     def hook_fn(module, input, output):
         nonlocal total_flops
         
         if isinstance(module, nn.Conv2d):
-            # Conv2d FLOPs
+            # Conv2d FLOPs: 
+            # output_size * (kernel_ops * in_channels / groups + bias)
+            batch_size = output.shape[0]
             out_h, out_w = output.shape[2:]
             kernel_ops = module.kernel_size[0] * module.kernel_size[1]
             bias_ops = 1 if module.bias is not None else 0
             
-            flops = (kernel_ops * module.in_channels / module.groups + bias_ops) * \
+            flops = batch_size * (kernel_ops * module.in_channels / module.groups + bias_ops) * \
                     module.out_channels * out_h * out_w
             total_flops += flops
             
         elif isinstance(module, nn.Linear):
-            # Linear FLOPs
-            flops = module.in_features * module.out_features
+            # Linear FLOPs: batch_size * (in_features * out_features + bias)
+            batch_size = output.shape[0]
+            flops = batch_size * module.in_features * module.out_features
             if module.bias is not None:
-                flops += module.out_features
+                flops += batch_size * module.out_features
+            total_flops += flops
+            
+        elif isinstance(module, nn.BatchNorm2d):
+            # BatchNorm FLOPs: 2 * num_features * spatial_size (mean + var)
+            batch_size = output.shape[0]
+            num_features = output.shape[1]
+            spatial_size = output.shape[2] * output.shape[3]
+            flops = batch_size * 2 * num_features * spatial_size
             total_flops += flops
     
     # Register hooks
     hooks = []
-    for module in model.modules():
-        if isinstance(module, (nn.Conv2d, nn.Linear)):
+    for module in actual_model.modules():
+        if isinstance(module, (nn.Conv2d, nn.Linear, nn.BatchNorm2d)):
             hooks.append(module.register_forward_hook(hook_fn))
     
     # Forward pass
-    with torch.no_grad():
-        model(dummy_input)
-    
-    # Remove hooks
-    for hook in hooks:
-        hook.remove()
+    try:
+        with torch.no_grad():
+            actual_model.eval()
+            if hasattr(model, 'model'):  # If wrapped, use wrapper's forward
+                _ = model(dummy_input)
+            else:
+                _ = actual_model(dummy_input)
+    except Exception as e:
+        warnings.warn(f"Could not estimate FLOPs due to forward pass error: {str(e)}")
+        total_flops = 0
+    finally:
+        # Remove hooks
+        for hook in hooks:
+            hook.remove()
     
     return int(total_flops)
 

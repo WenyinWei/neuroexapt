@@ -8,7 +8,7 @@ dynamic structural changes.
 
 import matplotlib.pyplot as plt
 import numpy as np
-from typing import List, Dict, Any, Optional, Tuple, Union
+from typing import List, Dict, Any, Optional, Tuple, Union, TYPE_CHECKING
 import seaborn as sns
 from datetime import datetime
 import torch
@@ -16,6 +16,9 @@ import torch.nn as nn
 from dataclasses import dataclass, field
 from collections import defaultdict
 import math
+
+if TYPE_CHECKING:
+    from neuroexapt.core import ArchitectureTracker
 
 
 # ANSI color codes for terminal output
@@ -411,12 +414,14 @@ class ModelVisualizer:
     def __init__(self, terminal_width: int = 120):
         self.layout = AutoLayout(terminal_width)
         self.terminal_width = terminal_width
+        self.architecture_tracker = None
         
     def visualize_model(self, model: nn.Module, 
                        previous_model: Optional[nn.Module] = None,
                        changed_layers: Optional[List[str]] = None,
                        sample_input: Optional[torch.Tensor] = None,
-                       title: str = "Dynamic Architecture Visualization") -> None:
+                       title: str = "Dynamic Architecture Visualization",
+                       architecture_tracker: Optional['ArchitectureTracker'] = None) -> None:
         """
         Visualize model architecture with automatic layout.
         
@@ -426,9 +431,13 @@ class ModelVisualizer:
             changed_layers: List of changed layer names
             sample_input: Sample input for shape inference
             title: Title for the visualization
+            architecture_tracker: Optional architecture tracker for accurate change detection
         """
         if changed_layers is None:
             changed_layers = []
+        
+        # Store architecture tracker for use in layer info methods
+        self.architecture_tracker = architecture_tracker
         
         # Print header
         self._print_header(title)
@@ -956,16 +965,28 @@ class ModelVisualizer:
             layer = self._get_layer_module(layer_name, previous_model)
             info['layer_type'] = type(layer).__name__ if layer else 'Unknown'
         
-        # Determine status
-        if previous_model:
-            if not info['exists_in_current'] and info['exists_in_previous']:
-                info['status'] = 'removed'
-            elif info['exists_in_current'] and not info['exists_in_previous']:
+        # Use architecture tracker if available for accurate status
+        if self.architecture_tracker:
+            tracker_status = self.architecture_tracker.get_layer_status(layer_name, 'initial')
+            if tracker_status == 'new':
                 info['status'] = 'new'
-            elif info['changed'] or info['params'] != info['prev_params']:
+            elif tracker_status == 'removed':
+                info['status'] = 'removed'
+            elif tracker_status == 'modified':
                 info['status'] = 'modified'
-        elif info['changed']:
-            info['status'] = 'modified'
+            elif tracker_status == 'unchanged':
+                info['status'] = 'normal'
+        else:
+            # Fallback to original logic
+            if previous_model:
+                if not info['exists_in_current'] and info['exists_in_previous']:
+                    info['status'] = 'removed'
+                elif info['exists_in_current'] and not info['exists_in_previous']:
+                    info['status'] = 'new'
+                elif info['changed'] or info['params'] != info['prev_params']:
+                    info['status'] = 'modified'
+            elif info['changed']:
+                info['status'] = 'modified'
         
         return info
     
@@ -1115,14 +1136,16 @@ class ModelVisualizer:
 
 
 # Public API functions that maintain compatibility
-def ascii_model_graph(model, previous_model=None, changed_layers=None, sample_input=None):
+def ascii_model_graph(model, previous_model=None, changed_layers=None, sample_input=None, 
+                     architecture_tracker=None):
     """
     Create ASCII visualization of model architecture.
     
     This is the main public API function that maintains backward compatibility.
     """
     visualizer = ModelVisualizer()
-    visualizer.visualize_model(model, previous_model, changed_layers, sample_input)
+    visualizer.visualize_model(model, previous_model, changed_layers, sample_input,
+                             architecture_tracker=architecture_tracker)
 
 
 def plot_evolution_history(evolution_history: List[Any], save_path: Optional[str] = None):
@@ -1395,6 +1418,45 @@ def create_summary_plot(ne_instance, save_path: Optional[str] = None):
         plt.show()
         
     plt.close()
+
+
+def beautify_complexity(complexity_dict: Dict[str, Any]) -> str:
+    """
+    Beautify the complexity analysis output for better readability.
+    
+    Args:
+        complexity_dict: Dictionary from calculate_network_complexity
+        
+    Returns:
+        Formatted string
+    """
+    lines = []
+    
+    # Extract main metrics
+    total_params = complexity_dict.get('total_parameters', 0)
+    trainable_params = complexity_dict.get('trainable_parameters', 0)
+    depth = complexity_dict.get('depth', 0)
+    width_stats = complexity_dict.get('width_stats', {})
+    flops = complexity_dict.get('estimated_flops', None)
+    
+    # Format main stats
+    lines.append(f"   Total parameters: {total_params:,}")
+    lines.append(f"   Trainable parameters: {trainable_params:,}")
+    lines.append(f"   Network depth: {depth} layers")
+    
+    if width_stats:
+        lines.append(f"   Layer width: {int(width_stats.get('mean', 0))} ± {int(width_stats.get('std', 0))} (min: {width_stats.get('min', 0)}, max: {width_stats.get('max', 0)})")
+    
+    if flops is not None and flops > 0:
+        # Convert FLOPs to human-readable format
+        if flops >= 1e9:
+            lines.append(f"   Estimated FLOPs: {flops/1e9:.2f}G")
+        elif flops >= 1e6:
+            lines.append(f"   Estimated FLOPs: {flops/1e6:.2f}M")
+        else:
+            lines.append(f"   Estimated FLOPs: {flops:,}")
+    
+    return '\n'.join(lines)
 
 
 # Convenience function for backward compatibility
