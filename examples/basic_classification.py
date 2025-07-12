@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-NeuroExapt V2 - Basic Classification Example
-This example demonstrates the V2 system with automatic evolution.
+NeuroExapt V3 - Basic Classification Example
+This example demonstrates the V3 system with intelligent evolution.
 """
 
 import torch
@@ -14,8 +14,7 @@ import os
 # Add neuroexapt to path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from neuroexapt.core.dynamic_architecture_v2 import DynamicArchitectureV2
-from neuroexapt.trainer import TrainerV2
+from neuroexapt.trainer_v3 import TrainerV3, train_with_neuroexapt
 
 
 class SimpleCNN(nn.Module):
@@ -59,7 +58,7 @@ def create_dummy_data():
 
 
 def main():
-    print("🧠 NeuroExapt V2 - Basic Classification")
+    print("🧠 NeuroExapt V3 - Basic Classification")
     print("=" * 50)
     
     # Setup device
@@ -67,35 +66,68 @@ def main():
     print(f"Device: {device}")
     
     # Create base model
-    base_model = SimpleCNN()
-    param_count = sum(p.numel() for p in base_model.parameters())
+    model = SimpleCNN()
+    param_count = sum(p.numel() for p in model.parameters())
     print(f"Base model: {param_count:,} parameters")
-    
-    # Wrap with V2 architecture
-    model = DynamicArchitectureV2(base_model, device)
-    model.to(device)
-    print("✓ V2 architecture wrapper created")
+    print("✓ Model created")
     
     # Get data
     train_loader, test_loader = create_dummy_data()
     print("✓ Data loaded (dummy CIFAR-10)")
     
-    # Create trainer
-    optimizer = torch.optim.AdamW(model.parameters(), lr=0.001)
-    trainer = TrainerV2(model, optimizer, device)
-    print("✓ Trainer created")
+    # V3 Method 1: Use convenience function (recommended)
+    print("\n🚀 Method 1: One-line training with NeuroExapt V3")
+    print("=" * 50)
     
-    print("\n🚀 Training for 3 epochs...")
-    print("Evolution checks happen automatically every epoch")
-    print("-" * 50)
+    optimized_model, history = train_with_neuroexapt(
+        model=model,
+        train_loader=train_loader,
+        val_loader=test_loader,
+        epochs=5,
+        learning_rate=0.001,
+        efficiency_threshold=0.05,
+        verbose=True
+    )
     
-    for epoch in range(3):
-        print(f"\nEpoch {epoch + 1}:")
-        train_loss, train_acc = trainer.train_epoch(train_loader, epoch)
-        val_loss, val_acc = trainer.validate(test_loader)
-        print(f"  Train: {train_acc:.1f}% | Val: {val_acc:.1f}% | Loss: {train_loss:.3f}")
+    print(f"\n📊 V3 Training Results:")
+    print(f"  Final train accuracy: {history['train_accuracy'][-1]:.1f}%")
+    print(f"  Final val accuracy: {history['val_accuracy'][-1]:.1f}%")
+    print(f"  Total evolutions: {sum(history['evolutions'])}")
     
-    print("\n✅ V2 example completed!")
+    # V3 Method 2: Detailed control
+    print("\n🚀 Method 2: Detailed control with TrainerV3")
+    print("=" * 50)
+    
+    model2 = SimpleCNN()
+    trainer = TrainerV3(
+        model=model2,
+        device=device,
+        efficiency_threshold=0.1,
+        verbose=True
+    )
+    
+    # Train with custom parameters
+    history2 = trainer.fit(
+        train_loader=train_loader,
+        val_loader=test_loader,
+        epochs=3,
+        learning_rate=0.001,
+        optimizer_type='adam'
+    )
+    
+    print(f"\n📊 Detailed Training Results:")
+    print(f"  Final train accuracy: {history2['train_accuracy'][-1]:.1f}%")
+    print(f"  Final val accuracy: {history2['val_accuracy'][-1]:.1f}%")
+    print(f"  Total evolutions: {sum(history2['evolutions'])}")
+    
+    # Architecture analysis
+    analysis = trainer.analyze_architecture(test_loader)
+    print(f"\n🔍 Architecture Analysis:")
+    print(f"  Total redundancy: {analysis['total_redundancy']:.3f}")
+    print(f"  Computational efficiency: {analysis['computational_efficiency']:.3f}")
+    print(f"  Total parameters: {analysis['total_parameters']:,}")
+    
+    print("\n✅ V3 example completed!")
 
 
 if __name__ == "__main__":

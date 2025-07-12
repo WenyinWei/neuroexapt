@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-NeuroExapt V2 - Deep Classification Example
-This example demonstrates the V2 system with a deeper ResNet-like architecture.
+NeuroExapt V3 - Deep Classification Example
+This example demonstrates the V3 system with a deeper ResNet-like architecture.
 """
 
 import torch
@@ -14,8 +14,7 @@ import os
 # Add neuroexapt to path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from neuroexapt.core.dynamic_architecture_v2 import DynamicArchitectureV2
-from neuroexapt.trainer import TrainerV2
+from neuroexapt.trainer_v3 import TrainerV3, train_with_neuroexapt
 
 
 class ResidualBlock(nn.Module):
@@ -105,7 +104,7 @@ def create_dummy_data():
 
 
 def main():
-    print("🧠 NeuroExapt V2 - Deep Classification")
+    print("🧠 NeuroExapt V3 - Deep Classification")
     print("=" * 50)
     
     # Setup device
@@ -113,36 +112,56 @@ def main():
     print(f"Device: {device}")
     
     # Create base model
-    base_model = DeepCNN(num_classes=10)
-    param_count = sum(p.numel() for p in base_model.parameters())
-    print(f"Base model: {param_count:,} parameters")
-    
-    # Wrap with V2 architecture
-    model = DynamicArchitectureV2(base_model, device)
-    model.to(device)
-    print("✓ V2 architecture wrapper created")
+    model = DeepCNN(num_classes=10)
+    param_count = sum(p.numel() for p in model.parameters())
+    print(f"Deep model: {param_count:,} parameters")
+    print("✓ Deep ResNet-like model created")
     
     # Get data
     train_loader, test_loader = create_dummy_data()
     print("✓ Data loaded (dummy CIFAR-10)")
     
-    # Create trainer
-    optimizer = torch.optim.AdamW(model.parameters(), lr=0.001, weight_decay=1e-4)
-    trainer = TrainerV2(model, optimizer, device)
-    print("✓ Trainer created")
+    # V3 training with intelligent evolution
+    print("\n🚀 Training with NeuroExapt V3 intelligent evolution")
+    print("Evolution checks happen every epoch, but only change when beneficial")
+    print("Deep networks may trigger more sophisticated evolution events")
+    print("=" * 60)
     
-    print("\n🚀 Training for 5 epochs...")
-    print("Evolution checks happen automatically every epoch")
-    print("Deep networks may trigger more evolution events")
-    print("-" * 50)
+    # Use convenience function for deep model training
+    optimized_model, history = train_with_neuroexapt(
+        model=model,
+        train_loader=train_loader,
+        val_loader=test_loader,
+        epochs=8,  # More epochs for deep model
+        learning_rate=0.001,
+        efficiency_threshold=0.08,  # Slightly higher for deep models
+        verbose=True
+    )
     
-    for epoch in range(5):
-        print(f"\nEpoch {epoch + 1}:")
-        train_loss, train_acc = trainer.train_epoch(train_loader, epoch)
-        val_loss, val_acc = trainer.validate(test_loader)
-        print(f"  Train: {train_acc:.1f}% | Val: {val_acc:.1f}% | Loss: {train_loss:.3f}")
+    print(f"\n📊 V3 Deep Training Results:")
+    print(f"  Final train accuracy: {history['train_accuracy'][-1]:.1f}%")
+    print(f"  Final val accuracy: {history['val_accuracy'][-1]:.1f}%")
+    print(f"  Total architecture evolutions: {sum(history['evolutions'])}")
+    print(f"  Evolution frequency: {sum(history['evolutions'])/len(history['evolutions'])*100:.1f}%")
     
-    print("\n✅ Deep V2 example completed!")
+    # Detailed analysis for deep model
+    print("\n🔍 Deep Model Analysis:")
+    trainer = TrainerV3(model=optimized_model, verbose=False)
+    analysis = trainer.analyze_architecture(test_loader)
+    print(f"  Computational efficiency: {analysis['computational_efficiency']:.3f}")
+    print(f"  Total redundancy: {analysis['total_redundancy']:.3f}")
+    print(f"  Conv layers: {analysis['conv_layers']}")
+    print(f"  Linear layers: {analysis['linear_layers']}")
+    print(f"  Final parameters: {analysis['total_parameters']:,}")
+    
+    # Evolution summary
+    evolution_summary = trainer.get_evolution_summary()
+    print(f"\n🧠 Evolution Intelligence Summary:")
+    print(f"  Success rate: {evolution_summary['evolution_stats']['success_rate']:.1%}")
+    print(f"  No-change rate: {evolution_summary['evolution_stats']['no_change_rate']:.1%}")
+    print(f"  Performance trend: {evolution_summary['performance_trend']}")
+    
+    print("\n✅ Deep V3 example completed!")
 
 
 if __name__ == "__main__":
