@@ -14,7 +14,6 @@ class Cell(nn.Module):
     def __init__(self, steps, block_multiplier, C_prev_prev, C_prev, C, reduction, reduction_prev):
         super(Cell, self).__init__()
         self.reduction = reduction
-        self._C_out = C * block_multiplier
 
         # In a reduction cell, the previous cell's output is down-sampled
         if reduction_prev:
@@ -27,12 +26,10 @@ class Cell(nn.Module):
 
         self._ops = nn.ModuleList()
         self._bns = nn.ModuleList()
-        node_C_in = C # Input channels for all nodes in this cell
         for i in range(self._steps):
             for j in range(2 + i):
                 stride = 2 if reduction and j < 2 else 1
-                # The output of each MixedOp is C, ready for the next node
-                op = MixedOp(node_C_in, C, stride)
+                op = MixedOp(C, stride)
                 self._ops.append(op)
 
     def forward(self, s0, s1, weights):
@@ -127,17 +124,10 @@ class Network(nn.Module):
     def _initialize_alphas(self):
         """Initialize the architecture parameters alpha."""
         k = sum(1 for i in range(self._steps) for n in range(2 + i))
-        
-        # Calculate the number of operations in a MixedOp
-        # This is now more complex due to channel variations
-        C_in_for_ops = self._C # An example channel count
-        channel_options_len = 3 # half, same, double
-        num_conv_ops = len([p for p in OPS if 'conv' in p])
-        num_non_conv_ops = len(OPS) - num_conv_ops
-        num_ops_per_mixedop = num_conv_ops * channel_options_len + num_non_conv_ops
+        num_ops = len(OPS)
 
-        self.alphas_normal = nn.Parameter(1e-3 * torch.randn(k, num_ops_per_mixedop))
-        self.alphas_reduce = nn.Parameter(1e-3 * torch.randn(k, num_ops_per_mixedop))
+        self.alphas_normal = nn.Parameter(1e-3 * torch.randn(k, num_ops))
+        self.alphas_reduce = nn.Parameter(1e-3 * torch.randn(k, num_ops))
         
         # Initialize gates for potential cells
         self.alphas_gates = nn.ParameterList(

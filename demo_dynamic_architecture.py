@@ -21,7 +21,7 @@ from neuroexapt.utils.visualization import ascii_model_graph
 
 parser = argparse.ArgumentParser("cifar")
 parser.add_argument('--data', type=str, default='./data', help='location of the data corpus')
-parser.add_argument('--batch_size', type=int, default=64, help='batch size')
+parser.add_argument('--batch_size', type=int, default=32, help='batch size')
 parser.add_argument('--learning_rate', type=float, default=0.025, help='init learning rate')
 parser.add_argument('--learning_rate_min', type=float, default=0.001, help='min learning rate')
 parser.add_argument('--momentum', type=float, default=0.9, help='momentum')
@@ -143,7 +143,6 @@ def main():
 
 
     for epoch in range(start_epoch, args.epochs):
-        scheduler.step()
         lr = scheduler.get_lr()[0]
         logging.info('epoch %d lr %e', epoch, lr)
 
@@ -161,6 +160,9 @@ def main():
         valid_acc, valid_obj = infer(valid_queue, model, criterion)
         logging.info('valid_acc %f', valid_acc)
         
+        # Update learning rate scheduler
+        scheduler.step()
+
         # Visualize and save checkpoint
         logging.info("Visualizing architecture at epoch %d:", epoch)
         ascii_model_graph(model, force_show=False, sample_input=torch.randn(1, 3, 32, 32))
