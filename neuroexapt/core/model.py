@@ -54,11 +54,12 @@ class Network(nn.Module):
     This class also initializes and stores the architecture parameters (alphas).
     """
 
-    def __init__(self, C, num_classes, layers, steps=4, block_multiplier=4):
+    def __init__(self, C, num_classes, layers, potential_layers=4, steps=4, block_multiplier=4):
         super(Network, self).__init__()
         self._C = C
         self._num_classes = num_classes
         self._layers = layers
+        self._potential_layers = potential_layers
         self._steps = steps
         self._block_multiplier = block_multiplier
 
@@ -71,15 +72,21 @@ class Network(nn.Module):
         C_prev_prev, C_prev, C_curr = C_curr, C_curr, C
         self.cells = nn.ModuleList()
         reduction_prev = False
-        for i in range(layers):
-            # Reduction cells are placed at 1/3 and 2/3 of the total depth
-            if i in [layers // 3, 2 * layers // 3]:
+        total_layers = layers + potential_layers
+        for i in range(total_layers):
+            # Reduction cells are placed based on the initial layer count
+            if i < layers and i in [layers // 3, 2 * layers // 3]:
                 C_curr *= 2
                 reduction = True
             else:
                 reduction = False
             
             cell = Cell(steps, block_multiplier, C_prev_prev, C_prev, C_curr, reduction, reduction_prev)
+            
+            # Wrap potential layers in a GatedCell
+            if i >= layers:
+                cell = GatedCell(cell)
+
             reduction_prev = reduction
             self.cells.append(cell)
             C_prev_prev, C_prev = C_prev, self._block_multiplier * C_curr
@@ -91,7 +98,7 @@ class Network(nn.Module):
 
     def new(self):
         """Create a new model with the same architecture but uninitialized weights."""
-        model_new = Network(self._C, self._num_classes, self._layers).cuda()
+        model_new = Network(self._C, self._num_classes, self._layers, self._potential_layers).cuda()
         for x, y in zip(model_new.arch_parameters(), self.arch_parameters()):
             x.data.copy_(y.data)
         return model_new
@@ -99,7 +106,14 @@ class Network(nn.Module):
     def forward(self, input):
         s0 = s1 = self.stem(input)
         for i, cell in enumerate(self.cells):
-            if cell.reduction:
+            if isinstance(cell, GatedCell):
+                # For gated cells, use the same weights as normal cells for now
+                # A more advanced strategy could have separate weights for potential layers
+                if cell.cell.reduction:
+                    weights = torch.softmax(self.alphas_reduce, dim=-1)
+                else:
+                    weights = torch.softmax(self.alphas_normal, dim=-1)
+            elif cell.reduction:
                 weights = torch.softmax(self.alphas_reduce, dim=-1)
             else:
                 weights = torch.softmax(self.alphas_normal, dim=-1)
@@ -123,10 +137,18 @@ class Network(nn.Module):
 
         self.alphas_normal = nn.Parameter(1e-3 * torch.randn(k, num_ops_per_mixedop))
         self.alphas_reduce = nn.Parameter(1e-3 * torch.randn(k, num_ops_per_mixedop))
+        
+        # Initialize gates for potential cells
+        self.alphas_gates = nn.ParameterList(
+            [cell.gate for cell in self.cells if isinstance(cell, GatedCell)]
+        )
+
         self._arch_parameters = [
             self.alphas_normal,
             self.alphas_reduce,
         ]
+        # Register the gate parameters with the architect
+        self._arch_parameters.extend(self.alphas_gates)
 
     def arch_parameters(self):
         return self._arch_parameters
@@ -151,4 +173,22 @@ class Resizing(nn.Module):
     def forward(self, x):
         if self.C_in == self.C_out:
             return x
-        return self.op(x) 
+        return self.op(x)
+
+class GatedCell(nn.Module):
+    """
+    A wrapper for a cell that includes a learnable gate to control its contribution.
+    This allows for differentiable addition or removal of entire layers (cells).
+    """
+    def __init__(self, cell):
+        super(GatedCell, self).__init__()
+        self.cell = cell
+        # The gate is initialized to a small value to keep the cell initially "off".
+        # It will be passed through a sigmoid during the forward pass.
+        self.gate = nn.Parameter(torch.randn(1) * 1e-3)
+
+    def forward(self, s0, s1, weights):
+        # The gate value is squashed between 0 and 1.
+        # This controls the magnitude of the cell's output.
+        output = self.cell(s0, s1, weights)
+        return torch.sigmoid(self.gate) * output 
