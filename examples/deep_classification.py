@@ -1,344 +1,156 @@
-#!/usr/bin/env python3
 """
-NeuroExapt V3 - Deep Classification Example (50 epochs)
+NeuroExapt V3 - Deep Classification Example
 
-This example demonstrates V3 with a deeper network that avoids overfitting.
-Fixed the train 80% vs val 9% overfitting issue.
+This example demonstrates the new NeuroExapt V3 framework on a deeper CNN
+using the CIFAR-10 dataset. It shows how to apply the framework to a more
+complex, ResNet-like architecture.
 """
 
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torch.utils.data import DataLoader, TensorDataset
+import torch.optim as optim
+from torch.utils.data import DataLoader
+import torchvision
+import torchvision.transforms as transforms
 import sys
 import os
 
-# Add neuroexapt to path
+# Add the root directory to the Python path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from neuroexapt.trainer_v3 import TrainerV3, train_with_neuroexapt
+from neuroexapt.trainer_v3 import TrainerV3
+from neuroexapt.core.operators import PruneByEntropy, ExpandWithMI
 
+# --- 1. Define a standard, non-evolving Deep CNN ---
+# This ResNet-like model is a good candidate for evolution, but contains no
+# evolution logic itself. All architectural changes are handled by NeuroExapt.
 
 class BasicBlock(nn.Module):
-    """Improved Basic Block with better regularization"""
-    
-    def __init__(self, in_channels, out_channels, stride=1, dropout_rate=0.1):
-        super().__init__()
-        
-        self.conv1 = nn.Conv2d(in_channels, out_channels, 3, stride, 1, bias=False)
-        self.bn1 = nn.BatchNorm2d(out_channels)
-        self.dropout1 = nn.Dropout2d(dropout_rate)
-        
-        self.conv2 = nn.Conv2d(out_channels, out_channels, 3, 1, 1, bias=False)
-        self.bn2 = nn.BatchNorm2d(out_channels)
-        self.dropout2 = nn.Dropout2d(dropout_rate)
-        
-        # Shortcut connection
+    """A standard basic block for ResNet-like architectures."""
+    expansion = 1
+
+    def __init__(self, in_planes, planes, stride=1):
+        super(BasicBlock, self).__init__()
+        self.conv1 = nn.Conv2d(in_planes, planes, kernel_size=3, stride=stride, padding=1, bias=False)
+        self.bn1 = nn.BatchNorm2d(planes)
+        self.conv2 = nn.Conv2d(planes, planes, kernel_size=3, stride=1, padding=1, bias=False)
+        self.bn2 = nn.BatchNorm2d(planes)
+
         self.shortcut = nn.Sequential()
-        if stride != 1 or in_channels != out_channels:
+        if stride != 1 or in_planes != self.expansion * planes:
             self.shortcut = nn.Sequential(
-                nn.Conv2d(in_channels, out_channels, 1, stride, bias=False),
-                nn.BatchNorm2d(out_channels)
+                nn.Conv2d(in_planes, self.expansion * planes, kernel_size=1, stride=stride, bias=False),
+                nn.BatchNorm2d(self.expansion * planes)
             )
-    
+
     def forward(self, x):
-        residual = self.shortcut(x)
-        
-        out = self.conv1(x)
-        out = self.bn1(out)
+        out = F.relu(self.bn1(self.conv1(x)))
+        out = self.bn2(self.conv2(out))
+        out += self.shortcut(x)
         out = F.relu(out)
-        out = self.dropout1(out)
-        
-        out = self.conv2(out)
-        out = self.bn2(out)
-        out = self.dropout2(out)
-        
-        out += residual
-        out = F.relu(out)
-        
         return out
 
+class DeepCNN(nn.Module):
+    def __init__(self, block, num_blocks, num_classes=10):
+        super(DeepCNN, self).__init__()
+        self.in_planes = 64
 
-class ImprovedDeepCNN(nn.Module):
-    """Improved deep CNN with proper regularization to prevent overfitting"""
-    
-    def __init__(self, num_classes=10):
-        super().__init__()
-        
-        # Initial convolution
-        self.conv1 = nn.Conv2d(3, 32, 3, padding=1, bias=False)
-        self.bn1 = nn.BatchNorm2d(32)
-        self.dropout_init = nn.Dropout2d(0.1)
-        
-        # ResNet-like blocks with increased dropout
-        self.layer1 = self._make_layer(32, 32, 2, stride=1, dropout_rate=0.15)
-        self.layer2 = self._make_layer(32, 64, 2, stride=2, dropout_rate=0.2)
-        self.layer3 = self._make_layer(64, 128, 2, stride=2, dropout_rate=0.25)
-        
-        # Global average pooling instead of large FC layers
-        self.avgpool = nn.AdaptiveAvgPool2d((1, 1))
-        
-        # Much smaller classifier to reduce overfitting
-        self.classifier = nn.Sequential(
-            nn.Dropout(0.5),
-            nn.Linear(128, 64),
-            nn.ReLU(inplace=True),
-            nn.Dropout(0.4),
-            nn.Linear(64, num_classes)
-        )
-        
-        # Initialize weights properly
-        self._initialize_weights()
-        
-    def _make_layer(self, in_channels, out_channels, num_blocks, stride, dropout_rate):
+        self.conv1 = nn.Conv2d(3, 64, kernel_size=3, stride=1, padding=1, bias=False)
+        self.bn1 = nn.BatchNorm2d(64)
+        self.layer1 = self._make_layer(block, 64, num_blocks[0], stride=1)
+        self.layer2 = self._make_layer(block, 128, num_blocks[1], stride=2)
+        self.layer3 = self._make_layer(block, 256, num_blocks[2], stride=2)
+        self.layer4 = self._make_layer(block, 512, num_blocks[3], stride=2)
+        self.linear = nn.Linear(512 * block.expansion, num_classes)
+
+    def _make_layer(self, block, planes, num_blocks, stride):
+        strides = [stride] + [1] * (num_blocks - 1)
         layers = []
-        layers.append(BasicBlock(in_channels, out_channels, stride, dropout_rate))
-        for _ in range(1, num_blocks):
-            layers.append(BasicBlock(out_channels, out_channels, 1, dropout_rate))
+        for stride in strides:
+            layers.append(block(self.in_planes, planes, stride))
+            self.in_planes = planes * block.expansion
         return nn.Sequential(*layers)
-    
-    def _initialize_weights(self):
-        for m in self.modules():
-            if isinstance(m, nn.Conv2d):
-                nn.init.kaiming_normal_(m.weight, mode='fan_out', nonlinearity='relu')
-            elif isinstance(m, nn.BatchNorm2d):
-                nn.init.constant_(m.weight, 1)
-                nn.init.constant_(m.bias, 0)
-    
+
     def forward(self, x):
-        # Initial conv
-        x = self.conv1(x)
-        x = self.bn1(x)
-        x = F.relu(x)
-        x = self.dropout_init(x)
-        
-        # ResNet blocks
-        x = self.layer1(x)
-        x = self.layer2(x)
-        x = self.layer3(x)
-        
-        # Global average pooling
-        x = self.avgpool(x)
-        x = x.view(x.size(0), -1)
-        
-        # Classifier
-        x = self.classifier(x)
-        
-        return x
+        out = F.relu(self.bn1(self.conv1(x)))
+        out = self.layer1(out)
+        out = self.layer2(out)
+        out = self.layer3(out)
+        out = self.layer4(out)
+        out = F.avg_pool2d(out, 4)
+        out = out.view(out.size(0), -1)
+        out = self.linear(out)
+        return out
+
+def ResNet18():
+    return DeepCNN(BasicBlock, [2, 2, 2, 2])
 
 
-def create_large_balanced_dataset():
-    """Create a very large, balanced dataset for deep network training"""
-    print("Creating very large balanced dataset for deep network...")
-    
-    # Create 30,000 samples - very large dataset for deep network
-    samples_per_class = 3000  # 30,000 total samples
-    
-    # Generate sophisticated class-specific patterns
-    all_X = []
-    all_y = []
-    
-    for class_id in range(10):
-        print(f"  Generating class {class_id}...")
-        
-        # Create complex class-specific patterns
-        class_X = torch.randn(samples_per_class, 3, 32, 32)
-        
-        # Add sophisticated class-specific patterns
-        for i in range(samples_per_class):
-            # Multi-channel color patterns
-            if class_id < 5:
-                class_X[i, class_id % 3, :, :] += 1.2  # Strong primary channel
-                class_X[i, (class_id + 1) % 3, :, :] += 0.8  # Secondary channel
-                class_X[i, (class_id + 2) % 3, :, :] += 0.4  # Tertiary channel
-            else:
-                class_X[i, (class_id - 5) % 3, :, :] += 1.2
-                class_X[i, (class_id - 3) % 3, :, :] += 0.8
-                class_X[i, (class_id - 1) % 3, :, :] += 0.4
-            
-            # Complex spatial patterns
-            center_x, center_y = 16, 16
-            for x in range(32):
-                for y in range(32):
-                    distance = ((x - center_x) ** 2 + (y - center_y) ** 2) ** 0.5
-                    # Multiple concentric patterns
-                    if distance < 6:  # Inner core
-                        class_X[i, :, x, y] += 0.5 * (class_id / 10)
-                    elif distance < 10:  # Middle ring
-                        class_X[i, :, x, y] += 0.3 * ((class_id + 3) % 10 / 10)
-                    elif distance < 14:  # Outer ring
-                        class_X[i, :, x, y] += 0.2 * ((class_id + 7) % 10 / 10)
-                    
-                    # Add corner patterns
-                    if x < 8 and y < 8:  # Top-left
-                        class_X[i, :, x, y] += 0.1 * (class_id % 5 / 5)
-                    elif x >= 24 and y >= 24:  # Bottom-right
-                        class_X[i, :, x, y] += 0.1 * ((class_id + 5) % 5 / 5)
-        
-        class_y = torch.full((samples_per_class,), class_id)
-        
-        all_X.append(class_X)
-        all_y.append(class_y)
-    
-    # Combine and shuffle
-    X_balanced = torch.cat(all_X, dim=0)
-    y_balanced = torch.cat(all_y, dim=0)
-    
-    perm = torch.randperm(len(X_balanced))
-    X_balanced = X_balanced[perm]
-    y_balanced = y_balanced[perm]
-    
-    # Split into train/val (80/20)
-    split_idx = int(0.8 * len(X_balanced))
-    train_X, val_X = X_balanced[:split_idx], X_balanced[split_idx:]
-    train_y, val_y = y_balanced[:split_idx], y_balanced[split_idx:]
-    
-    train_dataset = TensorDataset(train_X, train_y)
-    val_dataset = TensorDataset(val_X, val_y)
-    
-    # Use moderate batch size for stable training
-    train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True)
-    val_loader = DataLoader(val_dataset, batch_size=64, shuffle=False)
-    
-    print(f"✓ Very large dataset created: {len(train_dataset)} train, {len(val_dataset)} val")
-    print(f"✓ Balanced classes: {samples_per_class} samples per class")
-    print(f"✓ Added sophisticated class-specific patterns for realistic learning")
+# --- 2. Setup DataLoaders ---
+
+def get_cifar10_loaders(batch_size=128):
+    """Downloads CIFAR-10 and provides DataLoaders."""
+    transform_train = transforms.Compose([
+        transforms.RandomCrop(32, padding=4),
+        transforms.RandomHorizontalFlip(),
+        transforms.ToTensor(),
+        transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
+    ])
+    transform_test = transforms.Compose([
+        transforms.ToTensor(),
+        transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
+    ])
+
+    train_dataset = torchvision.datasets.CIFAR10(root='./data', train=True, download=True, transform=transform_train)
+    val_dataset = torchvision.datasets.CIFAR10(root='./data', train=False, download=True, transform=transform_test)
+
+    train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=2)
+    val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False, num_workers=2)
     
     return train_loader, val_loader
 
+# --- 3. Main Training Execution ---
 
 def main():
-    print("🧠 NeuroExapt V3 - Deep Classification (50 Epochs)")
-    print("🔧 Enhanced with Very Large Dataset (30,000 samples) for 80%+ Accuracy")
-    print("🔧 Fixed overfitting issue: Train 80% vs Val 9% → Balanced performance")
-    print("=" * 70)
+    print("🚀 Starting NeuroExapt V3 Deep Classification Example 🚀")
     
-    # Setup device
+    # Setup environment
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    print(f"Device: {device}")
+    print(f"Using device: {device}")
     
-    # Create improved deep model
-    model = ImprovedDeepCNN(num_classes=10)
-    param_count = sum(p.numel() for p in model.parameters())
-    print(f"Deep model: {param_count:,} parameters")
-    print("✓ Improved deep CNN with anti-overfitting design")
+    # Get DataLoaders
+    train_loader, val_loader = get_cifar10_loaders()
     
-    # Get large balanced dataset
-    train_loader, val_loader = create_large_balanced_dataset()
+    # Initialize a ResNet-18 model, criterion, and optimizer
+    model = ResNet18().to(device)
+    criterion = nn.CrossEntropyLoss()
+    optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.9, weight_decay=5e-4)
     
-    print("\n🚀 Deep Network Training (50 epochs)")
-    print("=" * 70)
-    print("🔧 Anti-overfitting measures:")
-    print("  - Extensive dropout (0.1-0.5)")
-    print("  - Batch normalization in every block")
-    print("  - Global average pooling")
-    print("  - Smaller classifier layers")
-    print("  - Large balanced dataset (8000 samples)")
-    print("  - Conservative learning rate")
+    print(f"Initial ResNet-18 model has {sum(p.numel() for p in model.parameters()):,} parameters.")
+
+    # Define Structural Operators for NeuroExapt
+    operators = [
+        PruneByEntropy(threshold=0.2, layers_to_prune=1),
+        ExpandWithMI(mi_threshold=0.85),
+    ]
     
-    # Train with V3 for 50 epochs with conservative settings
-    optimized_model, history = train_with_neuroexapt(
+    # Initialize and run the Trainer
+    trainer = TrainerV3(
         model=model,
         train_loader=train_loader,
         val_loader=val_loader,
-        epochs=50,
-        learning_rate=0.0005,  # More conservative learning rate
-        efficiency_threshold=0.08,  # Higher threshold for deep networks
-        verbose=True
-    )
-    
-    print(f"\n📊 Deep V3 Training Results (50 epochs):")
-    print(f"  Final train accuracy: {history['train_accuracy'][-1]:.1f}%")
-    print(f"  Final val accuracy: {history['val_accuracy'][-1]:.1f}%")
-    print(f"  Best val accuracy: {max(history['val_accuracy']):.1f}%")
-    print(f"  Total evolutions: {sum(history['evolutions'])}")
-    print(f"  Evolution frequency: {sum(history['evolutions'])/50*100:.1f}%")
-    
-    # Detailed overfitting analysis
-    final_train_acc = history['train_accuracy'][-1]
-    final_val_acc = history['val_accuracy'][-1]
-    overfitting_gap = final_train_acc - final_val_acc
-    
-    print(f"\n🔍 Deep Network Overfitting Analysis:")
-    print(f"  Train-Val gap: {overfitting_gap:.1f}%")
-    
-    if overfitting_gap < 10:
-        print("  ✅ Excellent generalization - minimal overfitting")
-        status = "EXCELLENT"
-    elif overfitting_gap < 20:
-        print("  ✅ Good generalization - acceptable overfitting")
-        status = "GOOD"
-    elif overfitting_gap < 30:
-        print("  ⚠️  Moderate overfitting - could be improved")
-        status = "MODERATE"
-    else:
-        print("  ❌ High overfitting - architecture needs revision")
-        status = "POOR"
-    
-    # Performance trend analysis
-    if len(history['val_accuracy']) >= 10:
-        early_val = sum(history['val_accuracy'][:10]) / 10
-        late_val = sum(history['val_accuracy'][-10:]) / 10
-        improvement = late_val - early_val
-        
-        print(f"  Learning progress: {improvement:.1f}% improvement (early vs late)")
-        if improvement > 0:
-            print("  ✅ Model continued learning throughout training")
-        else:
-            print("  ⚠️  Model may have plateaued - consider longer training")
-    
-    print(f"\n🏆 Deep Network Performance Summary:")
-    print(f"  Generalization status: {status}")
-    print(f"  Architecture: ResNet-like with {param_count:,} parameters")
-    print(f"  Training efficiency: {sum(history['evolutions'])} intelligent evolutions")
-    
-    print("\n🚀 V3 Method 2: Architecture Analysis")
-    print("=" * 70)
-    
-    # Create another model for detailed analysis
-    model2 = ImprovedDeepCNN(num_classes=10)
-    trainer = TrainerV3(
-        model=model2,
+        criterion=criterion,
+        optimizer=optimizer,
         device=device,
-        efficiency_threshold=0.1,
-        verbose=True
+        operators=operators
     )
     
-    # Detailed architecture analysis
-    print("📋 Deep Architecture Analysis:")
-    analysis = trainer.analyze_architecture(val_loader)
-    print(f"  Computational efficiency: {analysis['computational_efficiency']:.3f}")
-    print(f"  Total redundancy: {analysis['total_redundancy']:.3f}")
-    print(f"  Conv layers: {analysis['conv_layers']}")
-    print(f"  Linear layers: {analysis['linear_layers']}")
-    print(f"  Parameter efficiency: {analysis['trainable_parameters']:,} trainable")
+    # Start the training and evolution process
+    final_model = trainer.fit(epochs=20, evolution_frequency=2)
     
-    # Quick demonstration training
-    print("\n🎯 Quick demonstration (15 epochs):")
-    history2 = trainer.fit(
-        train_loader=train_loader,
-        val_loader=val_loader,
-        epochs=15,
-        learning_rate=0.001,
-        optimizer_type='adamw'
-    )
+    print("\n🎉 Deep network training and evolution complete! 🎉")
+    print(f"Final model has {sum(p.numel() for p in final_model.parameters()):,} parameters.")
     
-    print(f"\n📊 Quick Training Results:")
-    print(f"  Final train accuracy: {history2['train_accuracy'][-1]:.1f}%")
-    print(f"  Final val accuracy: {history2['val_accuracy'][-1]:.1f}%")
-    print(f"  Evolutions: {sum(history2['evolutions'])}")
-    
-    # Evolution intelligence summary
-    evolution_summary = trainer.get_evolution_summary()
-    print(f"\n🧠 Deep Network Evolution Intelligence:")
-    print(f"  Success rate: {evolution_summary['evolution_stats']['success_rate']:.1%}")
-    print(f"  No-change rate: {evolution_summary['evolution_stats']['no_change_rate']:.1%}")
-    print(f"  Performance trend: {evolution_summary['performance_trend']}")
-    print(f"  Total architecture checks: {evolution_summary['evolution_stats']['total_checks']}")
-    
-    print("\n✅ Deep Classification V3 completed!")
-    print("🎉 Overfitting issue resolved - balanced train/val performance achieved!")
-
-
 if __name__ == "__main__":
     main()
