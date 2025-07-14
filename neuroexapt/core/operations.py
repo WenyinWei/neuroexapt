@@ -1,6 +1,7 @@
 
 import torch
 import torch.nn as nn
+from .model import Resizing  # Import the Resizing class
 
 # A collection of all possible operations that can be placed on an edge of the network graph
 OPS = {
@@ -103,28 +104,55 @@ class FactorizedReduce(nn.Module):
 
 class MixedOp(nn.Module):
     """
-    A differentiable mixed operation.
+    A differentiable mixed operation that can handle varying channel sizes.
 
     This module represents an edge in the network graph. It maintains a mixture
     of all possible operations, weighted by the architecture parameters alpha.
-    The forward pass computes a weighted sum of the outputs of all operations.
+    It can now handle operations that have different output channel counts.
     """
-    def __init__(self, C, stride):
+    def __init__(self, C_in, C_out, stride):
         super(MixedOp, self).__init__()
         self._ops = nn.ModuleList()
+        self._op_channels = [] # Store output channels for each op
+
+        # Define a set of channel options, e.g., half, same, double
+        # Ensure channels are divisible by 2 for 'half'
+        channel_options = {
+            'half': C_in // 2 if C_in // 2 > 0 else C_in,
+            'same': C_in,
+            'double': C_in * 2
+        }
+
+        # First, add all channel-variant conv operations
         for primitive in OPS:
-            op = OPS[primitive](C, stride, False)
-            if 'pool' in primitive:
-                op = nn.Sequential(op, nn.BatchNorm2d(C, affine=False))
-            self._ops.append(op)
+            if 'conv' in primitive:
+                for size_key, C_op in channel_options.items():
+                    op = OPS[primitive](C_in, C_op, stride, False)
+                    self._ops.append(op)
+                    self._op_channels.append(C_op)
+
+        # Then, add all non-conv operations once
+        for primitive in OPS:
+            if 'conv' not in primitive:
+                op = OPS[primitive](C_in, C_in, stride, False)
+                if 'pool' in primitive:
+                    op = nn.Sequential(op, nn.BatchNorm2d(C_in, affine=False))
+                self._ops.append(op)
+                self._op_channels.append(C_in)
+
+        # Create resizers to unify output channels to C_out
+        self.resizers = nn.ModuleList()
+        for op_C_out in self._op_channels:
+            self.resizers.append(Resizing(op_C_out, C_out, affine=False))
 
     def forward(self, x, weights):
         """
         Args:
             x: input tensor
-            weights: a tensor of shape [num_ops], representing the architecture
-                     parameters (alpha) after applying softmax.
+            weights: a tensor of shape [num_ops], representing arch params.
         Returns:
-            The weighted sum of the outputs of all operations.
+            The weighted sum of the outputs of all operations, resized to a common
+            output channel dimension C_out.
         """
-        return sum(w * op(x) for w, op in zip(weights, self._ops)) 
+        return sum(w * resizer(op(x)) 
+                   for w, op, resizer in zip(weights, self._ops, self.resizers)) 

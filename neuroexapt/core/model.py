@@ -13,6 +13,7 @@ class Cell(nn.Module):
     def __init__(self, steps, block_multiplier, C_prev_prev, C_prev, C, reduction, reduction_prev):
         super(Cell, self).__init__()
         self.reduction = reduction
+        self._C_out = C * block_multiplier
 
         # In a reduction cell, the previous cell's output is down-sampled
         if reduction_prev:
@@ -25,10 +26,12 @@ class Cell(nn.Module):
 
         self._ops = nn.ModuleList()
         self._bns = nn.ModuleList()
+        node_C_in = C # Input channels for all nodes in this cell
         for i in range(self._steps):
             for j in range(2 + i):
                 stride = 2 if reduction and j < 2 else 1
-                op = MixedOp(C, stride)
+                # The output of each MixedOp is C, ready for the next node
+                op = MixedOp(node_C_in, C, stride)
                 self._ops.append(op)
 
     def forward(self, s0, s1, weights):
@@ -109,14 +112,43 @@ class Network(nn.Module):
     def _initialize_alphas(self):
         """Initialize the architecture parameters alpha."""
         k = sum(1 for i in range(self._steps) for n in range(2 + i))
-        num_ops = len(OPS)
+        
+        # Calculate the number of operations in a MixedOp
+        # This is now more complex due to channel variations
+        C_in_for_ops = self._C # An example channel count
+        channel_options_len = 3 # half, same, double
+        num_conv_ops = len([p for p in OPS if 'conv' in p])
+        num_non_conv_ops = len(OPS) - num_conv_ops
+        num_ops_per_mixedop = num_conv_ops * channel_options_len + num_non_conv_ops
 
-        self.alphas_normal = nn.Parameter(1e-3 * torch.randn(k, num_ops))
-        self.alphas_reduce = nn.Parameter(1e-3 * torch.randn(k, num_ops))
+        self.alphas_normal = nn.Parameter(1e-3 * torch.randn(k, num_ops_per_mixedop))
+        self.alphas_reduce = nn.Parameter(1e-3 * torch.randn(k, num_ops_per_mixedop))
         self._arch_parameters = [
             self.alphas_normal,
             self.alphas_reduce,
         ]
 
     def arch_parameters(self):
-        return self._arch_parameters 
+        return self._arch_parameters
+
+
+class Resizing(nn.Module):
+    """
+    A utility module to resize tensors to a target channel count.
+    This is used to match channel dimensions when operations with different
+    channel counts are mixed.
+    """
+    def __init__(self, C_in, C_out, affine=True):
+        super(Resizing, self).__init__()
+        self.C_in = C_in
+        self.C_out = C_out
+        self.op = nn.Sequential(
+            nn.ReLU(inplace=False),
+            nn.Conv2d(C_in, C_out, 1, stride=1, padding=0, bias=False),
+            nn.BatchNorm2d(C_out, affine=affine)
+        )
+    
+    def forward(self, x):
+        if self.C_in == self.C_out:
+            return x
+        return self.op(x) 
