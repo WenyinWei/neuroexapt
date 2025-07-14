@@ -15,8 +15,8 @@ OPS = {
     'dil_conv_5x5': lambda C_in, C_out, stride, affine: DilConv(C_in, C_out, 5, stride, 4, 2, affine=affine),
     'conv_7x1_1x7': lambda C_in, C_out, stride, affine: nn.Sequential(
         nn.ReLU(inplace=False),
-        nn.Conv2d(C_in, C_out, (1, 7), stride=(1, stride), padding=(0, 3), bias=False),
-        nn.Conv2d(C_out, C_out, (7, 1), stride=(1, 1), padding=(3, 0), bias=False), # Note: second stride is 1
+        nn.Conv2d(C_in, C_out, (1, 7), stride=(1, stride) if stride==1 else (stride, stride), padding=(0, 3), bias=False),
+        nn.Conv2d(C_out, C_out, (7, 1), stride=(1, 1), padding=(3, 0), bias=False),
         nn.BatchNorm2d(C_out, affine=affine)
     ),
 }
