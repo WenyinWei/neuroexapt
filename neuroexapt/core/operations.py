@@ -1,7 +1,6 @@
 
 import torch
 import torch.nn as nn
-from .model import Resizing  # Import the Resizing class
 
 # A collection of all possible operations that can be placed on an edge of the network graph
 OPS = {
@@ -101,6 +100,29 @@ class FactorizedReduce(nn.Module):
         out = torch.cat([self.conv_1(x), self.conv_2(x[:, :, 1:, 1:])], dim=1)
         out = self.bn(out)
         return out
+
+
+class Resizing(nn.Module):
+    """
+    A utility module to resize tensors to a target channel count.
+    This is used to match channel dimensions when operations with different
+    channel counts are mixed.
+    """
+    def __init__(self, C_in, C_out, affine=True):
+        super(Resizing, self).__init__()
+        self.C_in = C_in
+        self.C_out = C_out
+        self.op = nn.Sequential(
+            nn.ReLU(inplace=False),
+            nn.Conv2d(C_in, C_out, 1, stride=1, padding=0, bias=False),
+            nn.BatchNorm2d(C_out, affine=affine)
+        )
+    
+    def forward(self, x):
+        if self.C_in == self.C_out:
+            return x
+        return self.op(x)
+
 
 class MixedOp(nn.Module):
     """
