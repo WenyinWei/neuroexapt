@@ -2,6 +2,7 @@
 import torch
 import torch.nn as nn
 from .operations import OPS, FactorizedReduce, ReLUConvBN, MixedOp
+from .genotypes import PRIMITIVES, Genotype
 
 class Cell(nn.Module):
     """
@@ -85,7 +86,7 @@ class Network(nn.Module):
             
             # Wrap potential layers in a GatedCell
             if i >= layers:
-                cell = GatedCell(cell)
+                cell = GatedCell(cell, C_prev_prev, C_curr)
 
             reduction_prev = reduction
             self.cells.append(cell)
@@ -153,6 +154,48 @@ class Network(nn.Module):
     def arch_parameters(self):
         return self._arch_parameters
 
+    def genotype(self):
+        """
+        Decodes the learned architecture parameters (alphas) into a discrete genotype.
+        This method determines the final architecture of the network after search.
+        """
+
+        def _parse(weights):
+            gene = []
+            n = 2
+            start = 0
+            for i in range(self._steps):
+                end = start + n
+                W = weights[start:end].copy()
+                
+                # For each node, find the two strongest predecessor connections
+                edges = sorted(range(i + 2), key=lambda x: -max(W[x][k] for k in range(len(W[x])) if k != PRIMITIVES.index('none')) if any(W[x][k] for k in range(len(W[x])) if k != PRIMITIVES.index('none')) else -1.0)[:2]
+                
+                # For each of the two selected edges, find the best operation
+                for j in edges:
+                    k_best = None
+                    for k in range(len(W[j])):
+                        if k != PRIMITIVES.index('none'):
+                            if k_best is None or W[j][k] > W[j][k_best]:
+                                k_best = k
+                    # Default to a safe choice if all options are zero
+                    if k_best is None:
+                        k_best = 1 # 'max_pool_3x3' as a fallback
+                    gene.append((PRIMITIVES[k_best], j))
+                start = end
+                n += 1
+            return gene
+
+        # Normalize the alpha values using softmax
+        gene_normal = _parse(torch.softmax(self.alphas_normal, dim=-1).data.cpu().numpy())
+        gene_reduce = _parse(torch.softmax(self.alphas_reduce, dim=-1).data.cpu().numpy())
+
+        concat = range(2 + self._steps - self._block_multiplier, self._steps + 2)
+        genotype = Genotype(
+            normal=gene_normal, normal_concat=concat,
+            reduce=gene_reduce, reduce_concat=concat
+        )
+        return genotype
 
 class Resizing(nn.Module):
     """
@@ -178,17 +221,23 @@ class Resizing(nn.Module):
 class GatedCell(nn.Module):
     """
     A wrapper for a cell that includes a learnable gate to control its contribution.
-    This allows for differentiable addition or removal of entire layers (cells).
+    This version implements a function-preserving residual connection, ensuring that
+    when the gate is closed, it acts as an identity connection.
     """
-    def __init__(self, cell):
+    def __init__(self, cell, C_in, C_out):
         super(GatedCell, self).__init__()
         self.cell = cell
-        # The gate is initialized to a small value to keep the cell initially "off".
-        # It will be passed through a sigmoid during the forward pass.
         self.gate = nn.Parameter(torch.randn(1) * 1e-3)
+        # Resizer for the identity path to match the cell's output dimensions
+        self.identity_resizer = Resizing(C_in, C_out, affine=False)
 
     def forward(self, s0, s1, weights):
-        # The gate value is squashed between 0 and 1.
-        # This controls the magnitude of the cell's output.
-        output = self.cell(s0, s1, weights)
-        return torch.sigmoid(self.gate) * output 
+        """
+        Computes: gate * cell(s0, s1) + (1 - gate) * identity(s1)
+        """
+        gate_val = torch.sigmoid(self.gate)
+        cell_out = self.cell(s0, s1, weights)
+        # The identity path is based on the s1 state
+        identity_out = self.identity_resizer(s1)
+        
+        return gate_val * cell_out + (1 - gate_val) * identity_out 

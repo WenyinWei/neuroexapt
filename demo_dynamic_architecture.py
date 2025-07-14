@@ -15,10 +15,12 @@ import torch.backends.cudnn as cudnn
 from torch.autograd import Variable
 from neuroexapt.core.model import Network
 from neuroexapt.core.architect import Architect
-
+# Use the new utils
+from neuroexapt.utils.utils import AvgrageMeter, accuracy
+from neuroexapt.utils.visualization import ascii_model_graph
 
 parser = argparse.ArgumentParser("cifar")
-parser.add_argument('--data', type=str, default='../data', help='location of the data corpus')
+parser.add_argument('--data', type=str, default='./data', help='location of the data corpus')
 parser.add_argument('--batch_size', type=int, default=64, help='batch size')
 parser.add_argument('--learning_rate', type=float, default=0.025, help='init learning rate')
 parser.add_argument('--learning_rate_min', type=float, default=0.001, help='min learning rate')
@@ -41,11 +43,15 @@ parser.add_argument('--unrolled', action='store_true', default=False, help='use 
 parser.add_argument('--arch_learning_rate', type=float, default=3e-4, help='learning rate for arch encoding')
 parser.add_argument('--arch_weight_decay', type=float, default=1e-3, help='weight decay for arch encoding')
 parser.add_argument('--potential_layers', type=int, default=4, help='number of potential layers to add')
+parser.add_argument('--num_workers', type=int, default=2, help='number of data loading workers')
+parser.add_argument('--resume_path', type=str, default=None, help='path to resume from checkpoint')
 
 
 def main():
     args = parser.parse_args()
     args.save = 'search-{}-{}'.format(args.save, time.strftime("%Y%m%d-%H%M%S"))
+    if not os.path.exists(args.save):
+        os.makedirs(args.save)
     
     log_format = '%(asctime)s %(message)s'
     logging.basicConfig(stream=sys.stdout, level=logging.INFO,
@@ -63,6 +69,10 @@ def main():
     torch.cuda.manual_seed(args.seed)
     logging.info('gpu device = %d' % args.gpu)
     logging.info("args = %s", args)
+    if not args.unrolled:
+        logging.warning("Note: DARTS' second-order approximation is disabled (unrolled=False).")
+        logging.warning("This speeds up search but may affect results. For final runs, consider --unrolled.")
+
 
     criterion = nn.CrossEntropyLoss()
     criterion = criterion.cuda()
@@ -100,12 +110,12 @@ def main():
     train_queue = torch.utils.data.DataLoader(
         train_data, batch_size=args.batch_size,
         sampler=torch.utils.data.sampler.SubsetRandomSampler(indices[:split]),
-        pin_memory=True, num_workers=0)
+        pin_memory=True, num_workers=args.num_workers)
 
     valid_queue = torch.utils.data.DataLoader(
         train_data, batch_size=args.batch_size,
         sampler=torch.utils.data.sampler.SubsetRandomSampler(indices[split:num_train]),
-        pin_memory=True, num_workers=0)
+        pin_memory=True, num_workers=args.num_workers)
 
     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
         optimizer, args.epochs, eta_min=args.learning_rate_min)
@@ -114,9 +124,25 @@ def main():
     
     # Attach the loss function to the model instance for the Architect to use
     model._loss = lambda input, target: criterion(model(input), target)
+    
+    start_epoch = 0
+    # Load checkpoint if resume_path is provided
+    if args.resume_path and os.path.exists(args.resume_path):
+        logging.info("Resuming from checkpoint: %s", args.resume_path)
+        checkpoint = torch.load(args.resume_path)
+        start_epoch = checkpoint['epoch'] + 1
+        model.load_state_dict(checkpoint['model_state_dict'])
+        optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+        scheduler.load_state_dict(checkpoint['scheduler_state_dict'])
+        architect.optimizer.load_state_dict(checkpoint['architect_optimizer_state_dict'])
+        logging.info("Resumed from epoch %d", start_epoch)
+    else:
+        # Visualize initial architecture only on a fresh run
+        logging.info("Visualizing initial architecture:")
+        ascii_model_graph(model, force_show=True, sample_input=torch.randn(1, 3, 32, 32))
 
 
-    for epoch in range(args.epochs):
+    for epoch in range(start_epoch, args.epochs):
         scheduler.step()
         lr = scheduler.get_lr()[0]
         logging.info('epoch %d lr %e', epoch, lr)
@@ -134,7 +160,23 @@ def main():
         # validation
         valid_acc, valid_obj = infer(valid_queue, model, criterion)
         logging.info('valid_acc %f', valid_acc)
+        
+        # Visualize and save checkpoint
+        logging.info("Visualizing architecture at epoch %d:", epoch)
+        ascii_model_graph(model, force_show=False, sample_input=torch.randn(1, 3, 32, 32))
+        
+        save_path = os.path.join(args.save, 'checkpoint.pth')
+        torch.save({
+            'epoch': epoch,
+            'model_state_dict': model.state_dict(),
+            'optimizer_state_dict': optimizer.state_dict(),
+            'scheduler_state_dict': scheduler.state_dict(),
+            'architect_optimizer_state_dict': architect.optimizer.state_dict(),
+        }, save_path)
+        logging.info("Checkpoint saved to %s", save_path)
 
+    genotype = model.genotype()
+    logging.info('Final Genotype = %s', genotype)
 
 def train(train_queue, valid_queue, model, architect, criterion, optimizer, lr, args):
     objs = AvgrageMeter()
@@ -200,34 +242,6 @@ def infer(valid_queue, model, criterion):
                 logging.info('valid %03d %e %f %f', step, objs.avg, top1.avg, top5.avg)
 
     return top1.avg, objs.avg
-
-class AvgrageMeter(object):
-    def __init__(self):
-        self.reset()
-
-    def reset(self):
-        self.avg = 0
-        self.sum = 0
-        self.cnt = 0
-
-    def update(self, val, n=1):
-        self.sum += val * n
-        self.cnt += n
-        self.avg = self.sum / self.cnt
-
-def accuracy(output, target, topk=(1,)):
-    maxk = max(topk)
-    batch_size = target.size(0)
-
-    _, pred = output.topk(maxk, 1, True, True)
-    pred = pred.t()
-    correct = pred.eq(target.view(1, -1).expand_as(pred))
-
-    res = []
-    for k in topk:
-        correct_k = correct[:k].reshape(-1).float().sum(0)
-        res.append(correct_k.mul_(100.0/batch_size))
-    return res
 
 if __name__ == '__main__':
     main() 
