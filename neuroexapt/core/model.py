@@ -83,7 +83,7 @@ class Network(nn.Module):
             
             # Wrap potential layers in a GatedCell
             if i >= layers:
-                cell = GatedCell(cell, C_prev_prev, C_curr)
+                cell = GatedCell(cell, C_prev, C_curr * self._block_multiplier)
 
             reduction_prev = reduction
             self.cells.append(cell)
@@ -193,12 +193,12 @@ class GatedCell(nn.Module):
     This version implements a function-preserving residual connection, ensuring that
     when the gate is closed, it acts as an identity connection.
     """
-    def __init__(self, cell, C_in, C_out):
+    def __init__(self, cell, C_in_s1, C_out_cell):
         super(GatedCell, self).__init__()
         self.cell = cell
         self.gate = nn.Parameter(torch.randn(1) * 1e-3)
         # Resizer for the identity path to match the cell's output dimensions
-        self.identity_resizer = Resizing(C_in, C_out, affine=False)
+        self.identity_resizer = Resizing(C_in_s1, C_out_cell, affine=False)
 
     def forward(self, s0, s1, weights):
         """
