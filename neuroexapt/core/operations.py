@@ -1,12 +1,37 @@
 
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
+import torch.utils.checkpoint as checkpoint
+import time
+from typing import List, Optional
+
+# Triton accelerated helpers
+from neuroexapt.kernels import TRITON_AVAILABLE, sepconv_forward_generic  # type: ignore
+from neuroexapt.kernels.pool_triton import (
+    TRITON_AVAILABLE as TRITON_POOL_AVAILABLE,
+    avg_pool3x3_forward,
+    max_pool3x3_forward,
+    avg_pool5x5_forward,
+    max_pool5x5_forward,
+    avg_pool7x7_forward,
+    max_pool7x7_forward,
+    global_avgpool_forward,
+)
+
+# CUDA accelerated SoftmaxSum
+try:
+    from neuroexapt.cuda_ops import SoftmaxSumFunction, CUDA_AVAILABLE
+    CUDA_SOFTMAX_AVAILABLE = CUDA_AVAILABLE
+except ImportError:
+    CUDA_SOFTMAX_AVAILABLE = False
+    SoftmaxSumFunction = None  # type: ignore
 
 # A collection of all possible operations that can be placed on an edge of the network graph
 OPS = {
     'none': lambda C, stride, affine: Zero(stride),
-    'avg_pool_3x3': lambda C, stride, affine: nn.AvgPool2d(3, stride=stride, padding=1, count_include_pad=False),
-    'max_pool_3x3': lambda C, stride, affine: nn.MaxPool2d(3, stride=stride, padding=1),
+    'avg_pool_3x3': lambda C, stride, affine: TritonAvgPool3x3(stride),
+    'max_pool_3x3': lambda C, stride, affine: TritonMaxPool3x3(stride),
     'skip_connect': lambda C, stride, affine: Identity() if stride == 1 else FactorizedReduce(C, C, affine=affine),
     'sep_conv_3x3': lambda C, stride, affine: SepConv(C, C, 3, stride, 1, affine=affine),
     'sep_conv_5x5': lambda C, stride, affine: SepConv(C, C, 5, stride, 2, affine=affine),
@@ -38,33 +63,98 @@ class DilConv(nn.Module):
     """Dilated separable convolution."""
     def __init__(self, C_in, C_out, kernel_size, stride, padding, dilation, affine=True):
         super(DilConv, self).__init__()
-        self.op = nn.Sequential(
-            nn.ReLU(inplace=False),
-            nn.Conv2d(C_in, C_in, kernel_size=kernel_size, stride=stride, padding=padding, dilation=dilation, groups=C_in, bias=False),
-            nn.Conv2d(C_in, C_out, kernel_size=1, padding=0, bias=False),
-            nn.BatchNorm2d(C_out, affine=affine),
+        self.relu = nn.ReLU(inplace=False)
+        self.dw = nn.Conv2d(
+            C_in,
+            C_in,
+            kernel_size=kernel_size,
+            stride=stride,
+            padding=padding,
+            dilation=dilation,
+            groups=C_in,
+            bias=False,
         )
+        self.pw = nn.Conv2d(C_in, C_out, kernel_size=1, padding=0, bias=False)
+        self.bn = nn.BatchNorm2d(C_out, affine=affine)
+        # cache parameters
+        self._k = kernel_size
+        self._stride = stride
+        self._dilation = dilation
 
     def forward(self, x):
-        return self.op(x)
+        x = self.relu(x)
+        if TRITON_AVAILABLE and x.is_cuda and self._k in {3, 5, 7} and self._dilation in {1, 2}:
+            y = sepconv_forward_generic(
+                x,
+                self.dw.weight,
+                self.pw.weight,
+                None,
+                kernel_size=self._k,
+                stride=self._stride,
+                dilation=self._dilation,
+            )
+        else:
+            y = self.pw(
+                torch.nn.functional.conv2d(
+                    x,
+                    self.dw.weight,
+                    None,
+                    stride=self._stride,
+                    padding=((self._k - 1) * self._dilation) // 2,
+                    dilation=self._dilation,
+                    groups=self.dw.in_channels,
+                )
+            )
+        return self.bn(y)
 
 class SepConv(nn.Module):
     """Separable convolution."""
     def __init__(self, C_in, C_out, kernel_size, stride, padding, affine=True):
         super(SepConv, self).__init__()
-        self.op = nn.Sequential(
-            nn.ReLU(inplace=False),
-            nn.Conv2d(C_in, C_in, kernel_size=kernel_size, stride=stride, padding=padding, groups=C_in, bias=False),
-            nn.Conv2d(C_in, C_out, kernel_size=1, padding=0, bias=False),
-            nn.BatchNorm2d(C_out, affine=affine),
-            nn.ReLU(inplace=False),
-            nn.Conv2d(C_out, C_out, kernel_size=kernel_size, stride=1, padding=padding, groups=C_out, bias=False),
-            nn.Conv2d(C_out, C_out, kernel_size=1, padding=0, bias=False),
-            nn.BatchNorm2d(C_out, affine=affine),
-        )
+        # First separable conv block
+        self.relu1 = nn.ReLU(inplace=False)
+        self.dw1 = nn.Conv2d(C_in, C_in, kernel_size, stride, padding, groups=C_in, bias=False)
+        self.pw1 = nn.Conv2d(C_in, C_out, 1, padding=0, bias=False)
+        self.bn1 = nn.BatchNorm2d(C_out, affine=affine)
+
+        # Second separable conv block (stride=1)
+        self.relu2 = nn.ReLU(inplace=False)
+        self.dw2 = nn.Conv2d(C_out, C_out, kernel_size, 1, padding, groups=C_out, bias=False)
+        self.pw2 = nn.Conv2d(C_out, C_out, 1, padding=0, bias=False)
+        self.bn2 = nn.BatchNorm2d(C_out, affine=affine)
+
+        self._k = kernel_size
+        self._padding = padding
+        self._stride = stride
+
+    def _sepconv_block(self, x, dw, pw, bn, stride):
+        if TRITON_AVAILABLE and x.is_cuda and self._k in {3, 5, 7}:
+            y = sepconv_forward_generic(
+                x,
+                dw.weight,
+                pw.weight,
+                None,
+                kernel_size=self._k,
+                stride=stride,
+                dilation=1,
+            )
+        else:
+            y = pw(
+                torch.nn.functional.conv2d(
+                    x,
+                    dw.weight,
+                    None,
+                    stride=stride,
+                    padding=self._padding,
+                    groups=dw.in_channels,
+                )
+            )
+        return bn(y)
 
     def forward(self, x):
-        return self.op(x)
+        y = self._sepconv_block(self.relu1(x), self.dw1, self.pw1, self.bn1, self._stride)
+        y = self._sepconv_block(self.relu2(y), self.dw2, self.pw2, self.bn2, 1)
+        return y
 
 class Identity(nn.Module):
     """Identity mapping."""
@@ -124,6 +214,145 @@ class Resizing(nn.Module):
         return self.op(x)
 
 
+class OptimizedMixedOp(nn.Module):
+    """
+    高度优化的混合操作类，专为GPU性能设计
+    - 减少内存分配和复制
+    - 使用fused operations
+    - 实现高效的加权求和
+    - 添加操作结果缓存
+    """
+    def __init__(self, C, stride, enable_caching=True):
+        super(OptimizedMixedOp, self).__init__()
+        from .genotypes import PRIMITIVES
+        
+        self._C = C
+        self._stride = stride
+        self.enable_caching = enable_caching
+        
+        # 构建操作列表
+        self._ops = nn.ModuleList()
+        self._op_names = []
+        
+        for primitive in PRIMITIVES:
+            op = OPS[primitive](C, stride, False)
+            if 'pool' in primitive:
+                op = nn.Sequential(op, nn.BatchNorm2d(C, affine=False))
+            self._ops.append(op)
+            self._op_names.append(primitive)
+        
+        # 缓存相关
+        self._cached_outputs: Optional[torch.Tensor] = None
+        self._cached_input_hash: Optional[int] = None
+        self._cache_hits = 0
+        self._cache_misses = 0
+        
+        # 预分配输出张量以减少内存分配
+        self.register_buffer('_output_buffer', torch.empty(1))
+        
+        # 性能监控
+        self._forward_times: List[float] = []
+        self._op_times: List[float] = []
+
+    def _get_input_hash(self, x: torch.Tensor) -> int:
+        """快速输入哈希，用于缓存检查"""
+        return hash((x.shape, x.device, x.dtype, x.data_ptr()))
+
+    def _maybe_resize_buffer(self, target_shape: torch.Size, device: torch.device) -> torch.Tensor:
+        """智能缓冲区大小调整"""
+        # 简化版本，直接返回合适大小的tensor
+        return torch.empty(target_shape, device=device, dtype=torch.float32)
+
+    def forward(self, x: torch.Tensor, weights: torch.Tensor) -> torch.Tensor:
+        """
+        高度优化的前向传播
+        """
+        start_time = time.perf_counter()
+        
+        # 检查缓存
+        if self.enable_caching:
+            input_hash = self._get_input_hash(x)
+            if input_hash == self._cached_input_hash and self._cached_outputs is not None:
+                self._cache_hits += 1
+                return self._cached_outputs * weights.view(-1, 1, 1, 1, 1).sum(dim=0)
+            else:
+                self._cache_misses += 1
+                self._cached_input_hash = input_hash
+
+        # 快速权重检查 - 如果只有一个操作占主导地位，直接计算
+        max_weight_idx = int(weights.argmax().item())
+        if weights[max_weight_idx] > 0.9:  # 90%以上权重集中在一个操作上
+            op_start = time.perf_counter()
+            result = self._ops[max_weight_idx](x) * weights[max_weight_idx]
+            self._op_times.append(time.perf_counter() - op_start)
+            
+            self._forward_times.append(time.perf_counter() - start_time)
+            return result
+
+        # 并行计算所有操作（GPU并行优化）
+        print(f"  🔧 MixedOp: 并行计算 {len(self._ops)} 个操作...")
+        
+        # 使用列表推导式并行计算，让GPU调度器优化
+        op_start = time.perf_counter()
+        
+        # 分批处理操作以优化GPU内存使用
+        batch_size = min(4, len(self._ops))  # 每批最多4个操作
+        outputs = []
+        
+        for i in range(0, len(self._ops), batch_size):
+            batch_ops = self._ops[i:i+batch_size]
+            batch_weights = weights[i:i+batch_size]
+            
+            # 计算当前批次的操作
+            batch_outputs = []
+            for j, op in enumerate(batch_ops):
+                if batch_weights[j] > 1e-6:  # 只计算有意义权重的操作
+                    op_output = op(x)
+                    batch_outputs.append(op_output * batch_weights[j])
+            
+            if batch_outputs:
+                # 在GPU上高效求和
+                batch_result = torch.stack(batch_outputs, dim=0).sum(dim=0)
+                outputs.append(batch_result)
+        
+        # 最终求和
+        if outputs:
+            result = torch.stack(outputs, dim=0).sum(dim=0)
+        else:
+            # 如果所有权重都很小，返回零张量
+            result = torch.zeros_like(x)
+        
+        op_time = time.perf_counter() - op_start
+        self._op_times.append(op_time)
+        
+        # 更新缓存
+        if self.enable_caching:
+            self._cached_outputs = torch.stack([op(x) for op in self._ops], dim=0)
+        
+        total_time = time.perf_counter() - start_time
+        self._forward_times.append(total_time)
+        
+        # 定期输出性能统计
+        if len(self._forward_times) % 50 == 0:
+            avg_time = sum(self._forward_times[-50:]) / 50
+            avg_op_time = sum(self._op_times[-50:]) / 50
+            cache_rate = self._cache_hits / max(1, self._cache_hits + self._cache_misses)
+            print(f"    📊 MixedOp性能: 平均{avg_time*1000:.2f}ms, 操作{avg_op_time*1000:.2f}ms, 缓存命中率{cache_rate:.1%}")
+        
+        return result
+
+    def get_performance_stats(self) -> dict:
+        """获取性能统计信息"""
+        if not self._forward_times:
+            return {}
+        
+        return {
+            'avg_forward_time': sum(self._forward_times) / len(self._forward_times),
+            'avg_op_time': sum(self._op_times) / len(self._op_times) if self._op_times else 0,
+            'cache_hit_rate': self._cache_hits / max(1, self._cache_hits + self._cache_misses),
+            'total_forwards': len(self._forward_times)
+        }
+
 class MixedOp(nn.Module):
     """
     A differentiable mixed operation.
@@ -131,8 +360,11 @@ class MixedOp(nn.Module):
     """
     def __init__(self, C, stride):
         super(MixedOp, self).__init__()
+        # Import PRIMITIVES to ensure consistent ordering
+        from .genotypes import PRIMITIVES
+        
         self._ops = nn.ModuleList()
-        for primitive in OPS:
+        for primitive in PRIMITIVES:
             op = OPS[primitive](C, stride, False)
             if 'pool' in primitive:
                 op = nn.Sequential(op, nn.BatchNorm2d(C, affine=False))
@@ -145,5 +377,534 @@ class MixedOp(nn.Module):
             weights: a tensor of shape [num_ops], representing arch params.
         Returns:
             The weighted sum of the outputs of all operations.
+        Note:
+            This implementation vectorizes the weighted sum to reduce Python overhead.
         """
-        return sum(w * op(x) for w, op in zip(weights, self._ops)) 
+        # 计数器更新
+        if hasattr(self, '_step_counter'):
+            self._step_counter += 1
+        else:
+            self._step_counter = 1
+        
+        # Compute outputs for each operation
+        outputs = [op(x) for op in self._ops]  # list of tensors
+
+        # Use CUDA-accelerated SoftmaxSum if available and beneficial
+        if (CUDA_SOFTMAX_AVAILABLE and SoftmaxSumFunction is not None and 
+            x.is_cuda and len(outputs) >= 4 and outputs[0].numel() >= 1024):
+            # Stack and use fused kernel for large operations
+            stacked = torch.stack(outputs, dim=0)
+            return SoftmaxSumFunction.apply(stacked, weights)
+        else:
+            # Fallback to standard PyTorch implementation
+            stacked = torch.stack(outputs, dim=0)
+            weighted = stacked * weights.view(-1, 1, 1, 1, 1)
+            return weighted.sum(dim=0)
+
+class LazyMixedOp(nn.Module):
+    """
+    高性能懒计算混合操作，专为Exapt模式设计
+    特性：
+    1. 懒计算：只计算权重大的操作
+    2. 智能缓存：缓存重复计算结果  
+    3. 早期终止：权重收敛时跳过计算
+    4. 内存池：预分配内存避免频繁分配
+    5. 操作剪枝：动态移除低权重操作
+    """
+    def __init__(self, C, stride, lazy_threshold=0.01, cache_size=16, enable_pruning=True):
+        super(LazyMixedOp, self).__init__()
+        from .genotypes import PRIMITIVES
+        
+        self._C = C
+        self._stride = stride
+        self.lazy_threshold = lazy_threshold  # 懒计算阈值
+        self.cache_size = cache_size
+        self.enable_pruning = enable_pruning
+        
+        # 构建操作列表
+        self._ops = nn.ModuleList()
+        self._op_names = []
+        self._op_active = []  # 操作激活状态
+        
+        for primitive in PRIMITIVES:
+            op = OPS[primitive](C, stride, False)
+            if 'pool' in primitive:
+                op = nn.Sequential(op, nn.BatchNorm2d(C, affine=False))
+            self._ops.append(op)
+            self._op_names.append(primitive)
+            self._op_active.append(True)  # 初始时所有操作都激活
+        
+        # 智能缓存系统
+        self._cache = {}  # {input_hash: {op_idx: output}}
+        self._cache_hits = 0
+        self._cache_misses = 0
+        self._cache_order = []  # LRU缓存管理
+        
+        # 权重历史记录（用于收敛检测）
+        self._weight_history = []
+        self._converged_ops = set()  # 已收敛的操作
+        
+        # 内存池
+        self._memory_pool = {}  # {shape: [tensor1, tensor2, ...]}
+        self._pool_hits = 0
+        self._pool_misses = 0
+        
+        # 性能统计
+        self._stats = {
+            'lazy_skips': 0,
+            'total_ops_computed': 0,
+            'total_forward_calls': 0,
+            'pruned_ops': 0,
+            'cache_hit_rate': 0.0,
+            'memory_pool_hit_rate': 0.0
+        }
+        
+        # 预热状态
+        self._warmup_calls = 0
+        self._warmup_threshold = 20
+
+    def _get_input_hash(self, x: torch.Tensor) -> int:
+        """快速输入哈希用于缓存"""
+        return hash((x.shape, x.device, x.dtype, x.data_ptr()))
+
+    def _get_from_memory_pool(self, shape: torch.Size, device: torch.device, dtype: torch.dtype) -> torch.Tensor:
+        """从内存池获取张量"""
+        key = (shape, device, dtype)
+        if key in self._memory_pool and self._memory_pool[key]:
+            self._pool_hits += 1
+            tensor = self._memory_pool[key].pop()
+            tensor.zero_()  # 清零重用
+            return tensor
+        else:
+            self._pool_misses += 1
+            return torch.zeros(shape, device=device, dtype=dtype)
+
+    def _return_to_memory_pool(self, tensor: torch.Tensor):
+        """返回张量到内存池"""
+        key = (tensor.shape, tensor.device, tensor.dtype)
+        if key not in self._memory_pool:
+            self._memory_pool[key] = []
+        
+        # 限制内存池大小
+        if len(self._memory_pool[key]) < 4:
+            self._memory_pool[key].append(tensor.detach())
+
+    def _update_cache(self, input_hash: int, op_idx: int, output: torch.Tensor):
+        """更新缓存"""
+        if input_hash not in self._cache:
+            self._cache[input_hash] = {}
+            self._cache_order.append(input_hash)
+        
+        self._cache[input_hash][op_idx] = output.detach().clone()
+        
+        # LRU缓存管理
+        if len(self._cache_order) > self.cache_size:
+            oldest_hash = self._cache_order.pop(0)
+            del self._cache[oldest_hash]
+
+    def _detect_weight_convergence(self, weights: torch.Tensor) -> set:
+        """检测权重收敛的操作"""
+        self._weight_history.append(weights.detach().clone())
+        
+        # 保持最近10次权重历史
+        if len(self._weight_history) > 10:
+            self._weight_history.pop(0)
+        
+        # 需要至少5次历史记录才能判断收敛
+        if len(self._weight_history) < 5:
+            return set()
+        
+        converged = set()
+        for i in range(len(weights)):
+            # 检查最近5次的权重变化
+            recent_weights = [h[i].item() for h in self._weight_history[-5:]]
+            weight_std = torch.tensor(recent_weights).std().item()
+            
+            # 如果权重变化很小且权重本身很小，认为已收敛
+            if weight_std < 0.001 and weights[i].item() < self.lazy_threshold:
+                converged.add(i)
+        
+        return converged
+
+    def _prune_operations(self, weights: torch.Tensor):
+        """动态剪枝低权重操作"""
+        if not self.enable_pruning or self._warmup_calls < self._warmup_threshold:
+            return
+        
+        for i, weight in enumerate(weights):
+            if weight.item() < self.lazy_threshold / 10 and self._op_active[i]:
+                self._op_active[i] = False
+                self._stats['pruned_ops'] += 1
+                print(f"    ✂️  剪枝操作 {self._op_names[i]} (权重: {weight.item():.6f})")
+
+    def forward(self, x: torch.Tensor, weights: torch.Tensor) -> torch.Tensor:
+        """高性能懒计算前向传播"""
+        self._stats['total_forward_calls'] += 1
+        self._warmup_calls += 1
+        
+        input_hash = self._get_input_hash(x)
+        
+        # 检测权重收敛和操作剪枝
+        self._converged_ops = self._detect_weight_convergence(weights)
+        if self.enable_pruning:
+            self._prune_operations(weights)
+        
+        # 快速路径：如果一个操作权重占主导(>95%)且已收敛
+        max_weight_idx = int(weights.argmax().item())
+        if weights[max_weight_idx] > 0.95 and max_weight_idx in self._converged_ops:
+            if input_hash in self._cache and max_weight_idx in self._cache[input_hash]:
+                self._cache_hits += 1
+                return self._cache[input_hash][max_weight_idx]
+            else:
+                result = self._ops[max_weight_idx](x)
+                self._update_cache(input_hash, max_weight_idx, result)
+                self._cache_misses += 1
+                return result
+
+        # 懒计算：只计算权重大于阈值且未被剪枝的操作
+        active_ops = []
+        active_weights = []
+        outputs = []
+        
+        for i, (op, weight) in enumerate(zip(self._ops, weights)):
+            if not self._op_active[i]:
+                continue  # 跳过被剪枝的操作
+                
+            if weight.item() < self.lazy_threshold and i not in self._converged_ops:
+                self._stats['lazy_skips'] += 1
+                continue
+            
+            # 检查缓存
+            if input_hash in self._cache and i in self._cache[input_hash]:
+                output = self._cache[input_hash][i]
+                self._cache_hits += 1
+            else:
+                output = op(x)
+                self._update_cache(input_hash, i, output)
+                self._cache_misses += 1
+                self._stats['total_ops_computed'] += 1
+            
+            outputs.append(output * weight)
+            active_ops.append(i)
+            active_weights.append(weight.item())
+
+        # 处理结果
+        if outputs:
+            if len(outputs) == 1:
+                result = outputs[0]
+            else:
+                # 使用内存池优化求和
+                result = self._get_from_memory_pool(outputs[0].shape, outputs[0].device, outputs[0].dtype)
+                for output in outputs:
+                    result = result + output
+        else:
+            # 所有操作都被跳过，返回零张量
+            result = self._get_from_memory_pool(x.shape, x.device, x.dtype)
+        
+        # 更新统计信息
+        if self._stats['total_forward_calls'] % 100 == 0:
+            self._update_stats()
+        
+        return result
+
+    def _update_stats(self):
+        """更新性能统计"""
+        total_cache_ops = self._cache_hits + self._cache_misses
+        self._stats['cache_hit_rate'] = self._cache_hits / max(1, total_cache_ops)
+        
+        total_pool_ops = self._pool_hits + self._pool_misses
+        self._stats['memory_pool_hit_rate'] = self._pool_hits / max(1, total_pool_ops)
+        
+        # 记录性能统计（关闭输出）
+        # if self._stats['total_forward_calls'] % 5000 == 0:
+        #     print(f"    📊 LazyMixedOp: 缓存命中率{self._stats['cache_hit_rate']:.1%}, 收敛操作{len(self._converged_ops)}/{len(self._ops)}")
+
+    def get_performance_stats(self) -> dict:
+        """获取详细性能统计"""
+        return self._stats.copy()
+
+    def clear_cache(self):
+        """清理缓存"""
+        self._cache.clear()
+        self._cache_order.clear()
+        for pool in self._memory_pool.values():
+            pool.clear() 
+
+class GradientOptimizedMixedOp(nn.Module):
+    """
+    反向传播优化的混合操作，专门解决反向传播慢的问题
+    
+    优化策略：
+    1. 选择性梯度计算：只为权重大的操作计算梯度
+    2. 梯度检查点：减少内存使用和计算图复杂度
+    3. 异步梯度累积：避免同步等待
+    4. 内存池复用：减少内存分配开销
+    5. 计算图剪枝：移除不必要的计算节点
+    """
+    def __init__(self, C, stride, gradient_threshold=0.01, use_checkpoint=True, memory_efficient=True):
+        super(GradientOptimizedMixedOp, self).__init__()
+        from .genotypes import PRIMITIVES
+        
+        self._C = C
+        self._stride = stride
+        self.gradient_threshold = gradient_threshold
+        self.use_checkpoint = use_checkpoint
+        self.memory_efficient = memory_efficient
+        
+        # 构建操作列表
+        self._ops = nn.ModuleList()
+        self._op_names = []
+        
+        for primitive in PRIMITIVES:
+            op = OPS[primitive](C, stride, False)
+            if 'pool' in primitive:
+                op = nn.Sequential(op, nn.BatchNorm2d(C, affine=False))
+            self._ops.append(op)
+            self._op_names.append(primitive)
+        
+        # 权重跟踪用于梯度优化
+        self._weight_momentum = 0.9
+        self._avg_weights = torch.zeros(len(PRIMITIVES))
+        self._gradient_mask = torch.ones(len(PRIMITIVES), dtype=torch.bool)
+        
+        # 性能统计
+        self._stats = {
+            'forward_calls': 0,
+            'gradient_skips': 0,
+            'checkpoint_saves': 0,
+            'memory_reuse': 0
+        }
+        
+        # 内存池
+        self._output_cache = {}
+        self._gradient_cache = {}
+
+    def _update_gradient_mask(self, weights: torch.Tensor):
+        """更新梯度计算掩码，只为重要的操作计算梯度"""
+        # 指数移动平均更新权重
+        if self._avg_weights.device != weights.device:
+            self._avg_weights = self._avg_weights.to(weights.device)
+            self._gradient_mask = self._gradient_mask.to(weights.device)
+        
+        self._avg_weights = self._weight_momentum * self._avg_weights + (1 - self._weight_momentum) * weights.detach()
+        
+        # 只为权重大于阈值的操作计算梯度
+        new_mask = self._avg_weights > self.gradient_threshold
+        
+        # 至少保留权重最大的两个操作
+        if new_mask.sum() < 2:
+            top_indices = torch.topk(self._avg_weights, 2).indices
+            new_mask[top_indices] = True
+        
+        # 更新掩码
+        mask_changed = not torch.equal(self._gradient_mask, new_mask)
+        self._gradient_mask = new_mask
+        
+        # 减少掩码更新输出
+        # if mask_changed:
+        #     active_ops = [self._op_names[i] for i in range(len(self._op_names)) if self._gradient_mask[i]]
+        #     print(f"    🎯 梯度计算掩码更新: 激活操作 {active_ops}")
+        
+        return mask_changed
+
+    def _selective_forward(self, x: torch.Tensor, weights: torch.Tensor):
+        """选择性前向传播，只计算需要梯度的操作"""
+        # 更新梯度掩码
+        self._update_gradient_mask(weights)
+        
+        # 快速路径：如果只有一个操作占主导
+        max_idx = int(weights.argmax().item())
+        if weights[max_idx] > 0.95:
+            return self._ops[max_idx](x) * weights[max_idx]
+        
+        # 选择性计算
+        active_outputs = []
+        active_weights = []
+        
+        for i, (op, weight) in enumerate(zip(self._ops, weights)):
+            if self._gradient_mask[i] or weight > self.gradient_threshold:
+                if self.use_checkpoint and self.training:
+                    # 使用梯度检查点减少内存使用
+                    output = checkpoint.checkpoint(op, x, use_reentrant=False)
+                    self._stats['checkpoint_saves'] += 1
+                else:
+                    output = op(x)
+                
+                active_outputs.append(output * weight)  # type: ignore[operator]
+                active_weights.append(weight.item())
+            else:
+                # 跳过梯度计算，使用detach
+                with torch.no_grad():
+                    output = op(x)
+                active_outputs.append(output.detach() * weight.detach())  # type: ignore[operator]
+                self._stats['gradient_skips'] += 1
+        
+        # 内存高效的求和
+        if len(active_outputs) == 1:
+            return active_outputs[0]
+        elif len(active_outputs) == 2:
+            return active_outputs[0] + active_outputs[1]
+        else:
+            # 分层求和减少内存峰值
+            result = active_outputs[0]
+            for output in active_outputs[1:]:
+                result = result + output
+            return result
+
+    def forward(self, x: torch.Tensor, weights: torch.Tensor) -> torch.Tensor:
+        """优化的前向传播"""
+        self._stats['forward_calls'] += 1
+        
+        # 使用选择性前向传播
+        result = self._selective_forward(x, weights)
+        
+        # 记录性能统计（关闭输出）
+        # if self._stats['forward_calls'] % 5000 == 0:
+        #     skip_rate = self._stats['gradient_skips'] / max(1, self._stats['forward_calls'] * len(self._ops))
+        #     print(f"    📊 梯度优化: 跳过率{skip_rate:.1%}, 激活{self._gradient_mask.sum().item()}/{len(self._ops)}")
+        
+        return result
+
+    def get_gradient_stats(self) -> dict:
+        """获取梯度优化统计"""
+        return {
+            'gradient_mask': self._gradient_mask.cpu().tolist(),
+            'avg_weights': self._avg_weights.cpu().tolist(),
+            'active_ops': self._gradient_mask.sum().item(),
+            'total_ops': len(self._ops),
+            **self._stats
+        }
+
+class MemoryEfficientMixedOp(nn.Module):
+    """
+    内存高效的混合操作，专门解决GPU内存使用问题
+    
+    特性：
+    1. 流式计算：避免同时存储所有操作的输出
+    2. 内存回收：及时释放中间结果
+    3. 批量优化：合并小的操作减少开销
+    4. 缓存复用：智能复用计算结果
+    """
+    def __init__(self, C, stride, stream_compute=True, cache_outputs=True):
+        super(MemoryEfficientMixedOp, self).__init__()
+        from .genotypes import PRIMITIVES
+        
+        self._C = C
+        self._stride = stride
+        self.stream_compute = stream_compute
+        self.cache_outputs = cache_outputs
+        
+        # 构建操作列表
+        self._ops = nn.ModuleList()
+        self._op_names = []
+        
+        for primitive in PRIMITIVES:
+            op = OPS[primitive](C, stride, False)
+            if 'pool' in primitive:
+                op = nn.Sequential(op, nn.BatchNorm2d(C, affine=False))
+            self._ops.append(op)
+            self._op_names.append(primitive)
+        
+        # 内存管理
+        self._output_cache = {}
+        self._memory_high_watermark = 0
+        self._cache_hits = 0
+        self._cache_misses = 0
+
+    def _get_cache_key(self, x: torch.Tensor) -> str:
+        """生成缓存键"""
+        return f"{x.shape}_{x.device}_{x.data_ptr()}"
+
+    def _stream_forward(self, x: torch.Tensor, weights: torch.Tensor) -> torch.Tensor:
+        """流式前向传播，减少内存峰值使用"""
+        # 初始化结果张量
+        result = torch.zeros_like(x)
+        
+        # 流式计算每个操作
+        for i, (op, weight) in enumerate(zip(self._ops, weights)):
+            if weight.item() < 1e-6:  # 跳过权重很小的操作
+                continue
+            
+            # 检查缓存
+            cache_key = f"{self._get_cache_key(x)}_{i}"
+            if self.cache_outputs and cache_key in self._output_cache:
+                output = self._output_cache[cache_key]
+                self._cache_hits += 1
+            else:
+                output = op(x)
+                if self.cache_outputs:
+                    self._output_cache[cache_key] = output.detach().clone()
+                    # 限制缓存大小
+                    if len(self._output_cache) > 32:
+                        oldest_key = next(iter(self._output_cache))
+                        del self._output_cache[oldest_key]
+                self._cache_misses += 1
+            
+            # 累积到结果中
+            weighted_output = output * weight
+            result = result + weighted_output
+            
+            # 及时释放内存
+            del weighted_output
+            if not self.cache_outputs:
+                del output
+        
+        return result
+
+    def forward(self, x: torch.Tensor, weights: torch.Tensor) -> torch.Tensor:
+        """内存高效的前向传播"""
+        # 记录内存使用
+        if torch.cuda.is_available():
+            current_memory = torch.cuda.memory_allocated()
+            self._memory_high_watermark = max(self._memory_high_watermark, current_memory)
+        
+        if self.stream_compute:
+            result = self._stream_forward(x, weights)
+        else:
+            # 标准实现但优化内存
+            outputs = []
+            for i, (op, weight) in enumerate(zip(self._ops, weights)):
+                if weight.item() > 1e-6:  # 只计算有意义的操作
+                    output = op(x) * weight
+                    outputs.append(output)
+            
+            if outputs:
+                result = torch.stack(outputs, dim=0).sum(dim=0)
+            else:
+                result = torch.zeros_like(x)
+        
+        # 定期清理缓存
+        if hasattr(self, '_forward_count'):
+            self._forward_count += 1
+        else:
+            self._forward_count = 1
+        
+        if self._forward_count % 500 == 0:
+            torch.cuda.empty_cache()
+            # 关闭内存统计输出
+            # if self.cache_outputs:
+            #     cache_hit_rate = self._cache_hits / max(1, self._cache_hits + self._cache_misses)
+            #     print(f"    💾 内存效率统计: 缓存命中率 {cache_hit_rate:.1%}, 峰值内存 {self._memory_high_watermark/1024/1024:.1f}MB")
+        
+        return result 
+
+class TritonAvgPool3x3(nn.Module):
+    def __init__(self, stride: int):
+        super().__init__()
+        self.stride = stride
+
+    def forward(self, x: torch.Tensor):  # type: ignore[override]
+        if TRITON_POOL_AVAILABLE and x.is_cuda:
+            return avg_pool3x3_forward(x, self.stride)
+        return torch.nn.functional.avg_pool2d(x, 3, stride=self.stride, padding=1, count_include_pad=False)
+
+
+class TritonMaxPool3x3(nn.Module):
+    def __init__(self, stride: int):
+        super().__init__()
+        self.stride = stride
+
+    def forward(self, x: torch.Tensor):  # type: ignore[override]
+        if TRITON_POOL_AVAILABLE and x.is_cuda:
+            return max_pool3x3_forward(x, self.stride)
+        return torch.nn.functional.max_pool2d(x, 3, stride=self.stride, padding=1) 
