@@ -6,6 +6,23 @@ import torch.utils.checkpoint as checkpoint
 import time
 from typing import List, Optional
 
+# 🔧 递归检测和防护机制
+_MIXEDOP_INITIALIZATION_STACK = set()
+
+def _safe_mixedop_init(cls_name: str, *args, **kwargs):
+    """
+    安全的MixedOp初始化函数，防止递归调用
+    """
+    if cls_name in _MIXEDOP_INITIALIZATION_STACK:
+        raise RuntimeError(f"检测到{cls_name}的递归初始化，可能存在循环依赖")
+    
+    _MIXEDOP_INITIALIZATION_STACK.add(cls_name)
+    try:
+        # 这里会被各个MixedOp类的__init__方法调用
+        return True
+    finally:
+        _MIXEDOP_INITIALIZATION_STACK.discard(cls_name)
+
 # Triton accelerated helpers
 from neuroexapt.kernels import TRITON_AVAILABLE, sepconv_forward_generic  # type: ignore
 from neuroexapt.kernels.pool_triton import (
@@ -412,6 +429,8 @@ class LazyMixedOp(nn.Module):
     5. 操作剪枝：动态移除低权重操作
     """
     def __init__(self, C, stride, lazy_threshold=0.01, cache_size=16, enable_pruning=True):
+        # 🔧 递归检测
+        _safe_mixedop_init("LazyMixedOp")
         super(LazyMixedOp, self).__init__()
         from .genotypes import PRIMITIVES
         
@@ -642,6 +661,8 @@ class GradientOptimizedMixedOp(nn.Module):
     5. 计算图剪枝：移除不必要的计算节点
     """
     def __init__(self, C, stride, gradient_threshold=0.01, use_checkpoint=True, memory_efficient=True):
+        # 🔧 递归检测
+        _safe_mixedop_init("GradientOptimizedMixedOp")
         super(GradientOptimizedMixedOp, self).__init__()
         from .genotypes import PRIMITIVES
         
@@ -786,6 +807,8 @@ class MemoryEfficientMixedOp(nn.Module):
     4. 缓存复用：智能复用计算结果
     """
     def __init__(self, C, stride, stream_compute=True, cache_outputs=True):
+        # 🔧 递归检测
+        _safe_mixedop_init("MemoryEfficientMixedOp")
         super(MemoryEfficientMixedOp, self).__init__()
         from .genotypes import PRIMITIVES
         

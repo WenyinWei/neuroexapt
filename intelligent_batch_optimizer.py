@@ -24,6 +24,8 @@ import threading
 import subprocess
 from typing import Optional, Dict, List, Tuple
 import psutil
+from concurrent.futures import ThreadPoolExecutor, TimeoutError, as_completed
+import signal
 
 # Add the project directory to the path
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -277,14 +279,10 @@ def create_test_model() -> nn.Module:
         quiet=True
     ).cuda()
 
-def test_batch_with_monitoring(batch_size: int, model: nn.Module, monitor: GPUMonitor) -> Optional[Dict]:
+def _run_batch_test_core(batch_size: int, model: nn.Module) -> Optional[Dict]:
     """
-    带监控的batch size测试
-    
-    包含智能退出机制检测内存腾挪
+    核心batch size测试函数（在线程中运行）
     """
-    print(f"测试 batch_size={batch_size:3d}... ", end="", flush=True)
-    
     try:
         torch.cuda.empty_cache()
         torch.cuda.reset_peak_memory_stats()
@@ -296,50 +294,111 @@ def test_batch_with_monitoring(batch_size: int, model: nn.Module, monitor: GPUMo
         test_input = torch.randn(batch_size, 3, 32, 32, device='cuda')
         test_target = torch.randint(0, 10, (batch_size,), device='cuda')
         
-        # 开始监控
-        monitor.start_monitoring()
-        
-        # 预热阶段
-        warmup_start = time.time()
+        # 预热一次
         model.train()
-        optimizer.zero_grad()
-        logits = model(test_input)
-        loss = criterion(logits, test_target)
+        output = model(test_input)
+        loss = criterion(output, target=test_target)
         loss.backward()
         optimizer.step()
-        torch.cuda.synchronize()
-        warmup_time = time.time() - warmup_start
+        optimizer.zero_grad()
         
-        # 检查预热阶段是否有内存腾挪
-        time.sleep(0.5)  # 给监控器一些时间收集数据
-        is_thrashing, reason = monitor.detect_memory_thrashing()
-        if is_thrashing:
-            monitor.stop_monitoring()
-            print(f"❌ 内存腾挪 (预热阶段: {reason})")
-            return None
+        torch.cuda.synchronize()  # 确保预热完成
         
-        # 正式测试
+        # 多次测试取平均
+        num_runs = 3
         times = []
-        max_iterations = 5
-        thrashing_check_interval = 2  # 每2次迭代检查一次
         
-        for i in range(max_iterations):
-            start_time = time.time()
+        for i in range(num_runs):
+            torch.cuda.synchronize()
+            start_time = time.perf_counter()
             
-            optimizer.zero_grad()
-            logits = model(test_input)
-            loss = criterion(logits, test_target)
+            model.train()
+            output = model(test_input)
+            loss = criterion(output, target=test_target)
             loss.backward()
             optimizer.step()
+            optimizer.zero_grad()
+            
             torch.cuda.synchronize()
+            end_time = time.perf_counter()
             
-            batch_time = time.time() - start_time
+            batch_time = end_time - start_time
             times.append(batch_time)
+        
+        # 获取内存信息
+        peak_memory_mb = torch.cuda.max_memory_allocated() / 1024 / 1024
+        
+        # 计算统计信息
+        avg_time = sum(times) / len(times)
+        time_std = (sum((t - avg_time) ** 2 for t in times) / len(times)) ** 0.5
+        time_variance = time_std / avg_time if avg_time > 0 else 0
+        samples_per_sec = batch_size / avg_time
+        
+        return {
+            'batch_size': batch_size,
+            'avg_time': avg_time,
+            'time_variance': time_variance,
+            'peak_memory_mb': peak_memory_mb,
+            'samples_per_sec': samples_per_sec,
+            'times': times
+        }
+        
+    except Exception as e:
+        return None
+
+def test_batch_with_monitoring(batch_size: int, model: nn.Module, monitor: GPUMonitor, timeout_seconds: float = 15.0) -> Optional[Dict]:
+    """
+    带监控和超时的batch size测试
+    
+    使用线程池和超时机制避免内存腾挪时长时间等待
+    """
+    print(f"测试 batch_size={batch_size:3d}... ", end="", flush=True)
+    
+    # 开始监控
+    monitor.start_monitoring()
+    
+    try:
+        # 使用线程池执行测试，设置超时
+        with ThreadPoolExecutor(max_workers=1) as executor:
+            # 提交测试任务
+            future = executor.submit(_run_batch_test_core, batch_size, model)
             
-            # 检查是否进入内存腾挪状态
-            if (i + 1) % thrashing_check_interval == 0:
-                is_thrashing, reason = monitor.detect_memory_thrashing()
-                if is_thrashing:
+            try:
+                # 等待结果，设置超时
+                result = future.result(timeout=timeout_seconds)
+                
+                if result is not None:
+                    # 检查是否有内存腾挪
+                    time.sleep(0.3)  # 给监控器收集数据的时间
+                    is_thrashing, reason = monitor.detect_memory_thrashing()
+                    
+                    if is_thrashing:
+                        monitor.stop_monitoring()
+                        print(f"❌ 内存腾挪 ({reason})")
+                        return None
+                    else:
+                        monitor.stop_monitoring()
+                        print(f"✅ {result['avg_time']:.2f}s/batch, {result['samples_per_sec']:4.0f} samples/s, {result['peak_memory_mb']:4.0f}MB")
+                        return result
+                else:
+                    monitor.stop_monitoring()
+                    print(f"❌ 测试失败")
+                    return None
+                    
+            except TimeoutError:
+                # 超时了，强制取消任务
+                future.cancel()
+                monitor.stop_monitoring()
+                print(f"🕒 超时 (>{timeout_seconds:.0f}s, 可能内存腾挪)")
+                
+                # 清理CUDA缓存
+                torch.cuda.empty_cache()
+                return None
+                
+    except Exception as e:
+        monitor.stop_monitoring()
+        print(f"❌ 错误: {str(e)}")
+        return None
                     monitor.stop_monitoring()
                     print(f"❌ 内存腾挪 (第{i+1}次后: {reason})")
                     return None
@@ -437,6 +496,7 @@ def find_optimal_batch_size(quiet: bool = False) -> int:
     results = []
     peak_samples_per_sec = 0  # 记录峰值吞吐量
     declining_count = 0  # 连续下降计数
+    last_two_results = []  # 记录最近两次结果，用于趋势判断
     
     for batch_size in valid_candidates:
         result = test_batch_with_monitoring(batch_size, model, monitor)
@@ -444,8 +504,13 @@ def find_optimal_batch_size(quiet: bool = False) -> int:
         if result is not None:
             results.append(result)
             current_samples_per_sec = result['samples_per_sec']
+            current_time_per_batch = result['avg_time']
             
-            # 智能停止逻辑：检测性能下降
+            # 检测性能下降的多种指标
+            should_stop = False
+            stop_reason = ""
+            
+            # 1. 吞吐量下降检测
             if current_samples_per_sec > peak_samples_per_sec:
                 peak_samples_per_sec = current_samples_per_sec
                 declining_count = 0  # 重置下降计数
@@ -453,13 +518,48 @@ def find_optimal_batch_size(quiet: bool = False) -> int:
                 declining_count += 1
                 decline_ratio = (peak_samples_per_sec - current_samples_per_sec) / peak_samples_per_sec
                 
-                # 如果性能下降超过15%或连续2次下降，智能停止
-                if decline_ratio > 0.15 or declining_count >= 2:
-                    if not quiet:
-                        print(f"🛑 智能停止: 检测到性能下降 ({current_samples_per_sec:.0f} < {peak_samples_per_sec:.0f} samples/s)")
-                        print(f"   下降幅度: {decline_ratio*100:.1f}%, 连续下降: {declining_count}次")
-                        print(f"   跳过剩余更大的batch size测试")
-                    break
+                # 更敏感的早停条件
+                if decline_ratio > 0.12:  # 下降超过12%就停止
+                    should_stop = True
+                    stop_reason = f"吞吐量下降{decline_ratio*100:.1f}%"
+                elif declining_count >= 2:  # 连续2次下降
+                    should_stop = True
+                    stop_reason = f"连续{declining_count}次下降"
+            
+            # 2. 时间剧增检测（内存腾挪的典型表现）
+            if len(last_two_results) >= 2:
+                recent_avg_time = sum(r['avg_time'] for r in last_two_results) / len(last_two_results)
+                time_increase_ratio = (current_time_per_batch - recent_avg_time) / recent_avg_time
+                
+                if time_increase_ratio > 0.5:  # 时间增长超过50%
+                    should_stop = True
+                    stop_reason = f"运行时间剧增{time_increase_ratio*100:.1f}%"
+            
+            # 3. 时间方差检测（不稳定性）
+            if result['time_variance'] > 0.8:  # 时间方差过大，说明内存腾挪严重
+                should_stop = True
+                stop_reason = f"时间方差过大({result['time_variance']:.2f})"
+            
+            # 4. 内存压力检测
+            memory_usage_ratio = result['peak_memory_mb'] / total_mem
+            if memory_usage_ratio > 0.85:  # 内存使用超过85%
+                should_stop = True
+                stop_reason = f"内存压力过大({memory_usage_ratio*100:.1f}%)"
+            
+            # 执行早停
+            if should_stop:
+                if not quiet:
+                    print(f"🛑 智能早停: {stop_reason}")
+                    print(f"   当前: {current_samples_per_sec:.0f} samples/s, {current_time_per_batch:.2f}s/batch")
+                    print(f"   峰值: {peak_samples_per_sec:.0f} samples/s")
+                    print(f"   跳过剩余更大的batch size测试")
+                break
+            
+            # 更新最近结果记录
+            last_two_results.append(result)
+            if len(last_two_results) > 2:
+                last_two_results.pop(0)
+                
         else:
             # 如果失败了，跳过更大的batch size
             if not quiet:
@@ -467,7 +567,7 @@ def find_optimal_batch_size(quiet: bool = False) -> int:
             break
         
         # 短暂休息让GPU冷却
-        time.sleep(0.5)  # 减少等待时间
+        time.sleep(0.3)  # 进一步减少等待时间
     
     # 清理测试模型
     del model

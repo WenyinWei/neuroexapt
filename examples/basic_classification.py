@@ -230,7 +230,27 @@ class CachedNetwork:
         return self.forward(input)
     
     def __getattr__(self, name):
-        return getattr(self.model, name)
+        # 🔧 修复：防止__getattr__无穷递归
+        # 添加黑名单和递归深度检查
+        if name.startswith('_') or name in {'model', 'cached_normal_weights', 'cached_reduce_weights', 'cache_valid'}:
+            raise AttributeError(f"'{type(self).__name__}' object has no attribute '{name}'")
+        
+        # 防止递归：检查是否正在查找model属性
+        if not hasattr(self, '_getattr_in_progress'):
+            self._getattr_in_progress = set()
+        
+        if name in self._getattr_in_progress:
+            raise AttributeError(f"递归调用检测：'{name}' 属性查找循环")
+        
+        try:
+            self._getattr_in_progress.add(name)
+            # 安全地获取model属性
+            if hasattr(self, 'model') and hasattr(self.model, name):
+                return getattr(self.model, name)
+            else:
+                raise AttributeError(f"'{type(self).__name__}' object has no attribute '{name}'")
+        finally:
+            self._getattr_in_progress.discard(name)
 
 def setup_args():
     """Setup command line arguments"""

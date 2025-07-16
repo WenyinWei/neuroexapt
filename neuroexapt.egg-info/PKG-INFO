@@ -21,23 +21,26 @@ Dynamic: home-page
 Dynamic: license-file
 Dynamic: requires-python
 
-# Neuro Exapt: Information-Theoretic Dynamic Architecture Optimization
+# NeuroExapt V3: Information-Theoretic Dynamic Architecture Optimization
 
 [![Python Version](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.0+-red.svg)](https://pytorch.org/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![Documentation](https://img.shields.io/badge/docs-doxygen-blue.svg)](docs/html/index.html)
+[![Version](https://img.shields.io/badge/version-3.0.0-brightgreen.svg)](https://github.com/neuroexapt/neuroexapt)
 
-A revolutionary neural network framework based on information theory for dynamic architecture optimization. Neuro Exapt enables neural networks to adaptively evolve their structure during training using information-theoretic principles and discrete parameter optimization.
+A revolutionary neural network framework that enables adaptive architecture evolution during training using information-theoretic principles. NeuroExapt V3 features intelligent per-epoch checking, subnetwork redundancy analysis, and automatic threshold learning.
 
 ## 🚀 Key Features
 
-- **Information Bottleneck Engine**: Optimize network capacity based on information flow analysis
-- **Adaptive Entropy Control**: Dynamic threshold adjustment for intelligent structural decisions
-- **Structural Evolution**: Information-guided pruning and expansion with convergence guarantees
-- **Discrete Parameter Optimization**: Continuous relaxation of discrete architectural choices
-- **Task-Aware Optimization**: Automatic adaptation to different task complexities and domains
-- **迅雷集成下载**: 为中国用户提供P2P加速下载，支持自动路径配置
+### NeuroExapt V3 Breakthrough Features
+
+- **🧠 Every-Epoch Intelligence**: Automatic architecture checking every epoch, evolving only when beneficial
+- **🧮 Subnetwork Redundancy Analysis**: Analyzes all n(n-1)/2 possible subnetwork combinations for optimal efficiency
+- **🎯 Intelligent Threshold Learning**: Self-learning thresholds based on data patterns, no manual tuning required
+- **⚡ Computational Efficiency Focus**: Evolution triggered by actual efficiency gains, not arbitrary thresholds
+- **📊 Smart Visualization**: Clean, informative output only when architecture changes occur
+- **🔄 Automatic Rollback**: Built-in safety mechanism to revert harmful changes
+- **🚀 One-Line Training**: Deploy with minimal code changes to existing PyTorch workflows
 
 ## 📐 Mathematical Foundation
 
@@ -149,62 +152,62 @@ git clone https://github.com/yourusername/neuroexapt.git
 cd neuroexapt
 pip install -e .
 
-# Install with development dependencies
-pip install -e ".[dev]"
-
-# Build documentation (requires Doxygen)
-doxygen Doxyfile
+# Quick test to verify installation
+python quick_test_v3.py
 ```
 
 ## 🔥 Quick Start
 
-### 迅雷下载配置 (中国用户)
+### One-Line Training (Recommended)
 
-如果您在中国大陆使用，建议先配置迅雷下载路径：
-
-```bash
-# 自动配置迅雷默认下载路径
-python -m neuroexapt.utils.xunlei_config_helper
-
-# 或手动配置：打开迅雷 → 设置 → 下载设置 → 默认下载目录设为 ./datasets
-```
-
-### Basic Usage
+The simplest way to use NeuroExapt V3:
 
 ```python
-import neuroexapt
-import torch
+from neuroexapt.trainer_v3 import train_with_neuroexapt
 import torch.nn as nn
 
-# Initialize Neuro Exapt with information-theoretic parameters
-ne = neuroexapt.NeuroExapt(
-    task_type="classification",        # Task-aware optimization
-    depth=18,                         # Network depth for λ calculation
-    entropy_weight=0.5,               # β parameter in evolution equation
-    initial_threshold=0.5,            # τ₀ for adaptive thresholding
-    alpha=0.7,                        # Information retention coefficient
-    beta=0.3                          # Structure variation coefficient
-)
+# Your existing PyTorch model
+model = YourCNNModel(num_classes=10)
 
-# Wrap your existing PyTorch model
-model = ne.wrap_model(your_pytorch_model)
-
-# Initialize trainer with information-theoretic loss
-trainer = neuroexapt.Trainer(
+# One line to train with intelligent evolution
+optimized_model, history = train_with_neuroexapt(
     model=model,
-    info_weight=0.1,                  # Weight for information bottleneck term
-    entropy_threshold=0.3,            # Initial pruning threshold
-    adaptive_threshold=True           # Enable τ adaptation
+    train_loader=train_loader,
+    val_loader=val_loader,
+    epochs=100
 )
 
-# Train with dynamic architecture evolution
-trainer.fit(
-    train_loader, 
-    val_loader, 
-    epochs=100,
-    evolve_every=5,                   # Evolution frequency
-    monitor_entropy=True              # Enable entropy monitoring
+# That's it! Your model automatically evolves during training
+```
+
+### Detailed Control
+
+For more control over the training process:
+
+```python
+from neuroexapt.trainer_v3 import TrainerV3
+
+# Initialize with custom settings
+trainer = TrainerV3(
+    model=model,
+    efficiency_threshold=0.1,    # Minimum gain required for evolution
+    verbose=True,                # Show evolution events
+    log_directory="./logs"       # Save detailed logs
 )
+
+# Train with custom parameters
+history = trainer.fit(
+    train_loader=train_loader,
+    val_loader=val_loader,
+    epochs=100,
+    learning_rate=0.001,
+    optimizer_type='adam'
+)
+
+# Analyze the evolved architecture
+analysis = trainer.analyze_architecture(val_loader)
+print(f"Efficiency: {analysis['computational_efficiency']:.3f}")
+print(f"Parameters: {analysis['total_parameters']:,}")
 ```
 
 ### Advanced Configuration

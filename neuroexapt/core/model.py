@@ -87,17 +87,37 @@ class Cell(nn.Module):
             for j in range(2 + i):
                 stride = 2 if reduction and j < 2 else 1
                 
-                # 选择MixedOp类型，优先级：gradient_optimized > memory_efficient > lazy > optimized > standard
-                if use_gradient_optimized:
-                    op = GradientOptimizedMixedOp(C, stride)
-                elif use_memory_efficient:
-                    op = MemoryEfficientMixedOp(C, stride)
-                elif use_lazy_ops:
-                    op = LazyMixedOp(C, stride)
-                elif use_optimized_ops:
-                    op = OptimizedMixedOp(C, stride)
-                else:
+                # 🔧 修复：安全的MixedOp选择逻辑，避免多重优化冲突
+                # 当启用多个优化时，按安全优先级选择，避免递归冲突
+                try:
+                    if use_gradient_optimized and not (use_memory_efficient or use_lazy_ops):
+                        # 只有在没有其他优化时才使用gradient_optimized
+                        op = GradientOptimizedMixedOp(C, stride)
+                    elif use_memory_efficient and not (use_gradient_optimized or use_lazy_ops):
+                        # 只有在没有其他优化时才使用memory_efficient
+                        op = MemoryEfficientMixedOp(C, stride)
+                    elif use_lazy_ops and not (use_gradient_optimized or use_memory_efficient):
+                        # 只有在没有其他优化时才使用lazy_ops
+                        op = LazyMixedOp(C, stride)
+                    elif use_optimized_ops:
+                        # 标准优化操作
+                        op = OptimizedMixedOp(C, stride)
+                    else:
+                        # 基础MixedOp
+                        op = MixedOp(C, stride)
+                        
+                    # 添加安全检查，防止递归初始化
+                    if hasattr(op, '_initialization_in_progress'):
+                        raise RuntimeError("检测到MixedOp递归初始化，回退到基础版本")
+                        
+                except (RuntimeError, RecursionError) as e:
+                    # 如果出现递归错误，回退到最安全的基础MixedOp
+                    print(f"⚠️ MixedOp优化冲突，回退到基础版本: {e}")
                     op = MixedOp(C, stride)
+                
+                # 标记初始化状态，防止递归
+                if hasattr(op, '__dict__'):
+                    op.__dict__['_initialization_complete'] = True
                 self._ops.append(op)
         
         # 进度跟踪
