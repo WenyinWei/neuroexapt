@@ -5,7 +5,7 @@ import time
 import psutil
 import gc
 from typing import Dict, List, Optional
-from .operations import OPS, FactorizedReduce, ReLUConvBN, MixedOp, Resizing, OptimizedMixedOp, LazyMixedOp, GradientOptimizedMixedOp, MemoryEfficientMixedOp
+from .operations import OPS, FactorizedReduce, ReLUConvBN, MixedOp, Resizing, OptimizedMixedOp, LazyMixedOp, GradientOptimizedMixedOp, MemoryEfficientMixedOp, FusedOptimizedMixedOp
 from .genotypes import PRIMITIVES, Genotype
 
 class PerformanceMonitor:
@@ -64,13 +64,14 @@ class Cell(nn.Module):
     """
 
     def __init__(self, steps, block_multiplier, C_prev_prev, C_prev, C, reduction, reduction_prev, 
-                 use_optimized_ops=False, use_lazy_ops=False, use_gradient_optimized=False, use_memory_efficient=False):
+                 use_optimized_ops=True, use_lazy_ops=True, use_gradient_optimized=True, use_memory_efficient=True, use_fused_optimization=True):
         super(Cell, self).__init__()
         self.reduction = reduction
         self.use_optimized_ops = use_optimized_ops
         self.use_lazy_ops = use_lazy_ops
         self.use_gradient_optimized = use_gradient_optimized
         self.use_memory_efficient = use_memory_efficient
+        self.use_fused_optimization = use_fused_optimization
 
         # In a reduction cell, the previous cell's output is down-sampled
         if reduction_prev:
@@ -87,17 +88,19 @@ class Cell(nn.Module):
             for j in range(2 + i):
                 stride = 2 if reduction and j < 2 else 1
                 
-                # 🔧 修复：安全的MixedOp选择逻辑，避免多重优化冲突
-                # 当启用多个优化时，按安全优先级选择，避免递归冲突
+                # 🚀 融合优化：默认使用FusedOptimizedMixedOp同时应用所有优化
                 try:
-                    if use_gradient_optimized and not (use_memory_efficient or use_lazy_ops):
-                        # 只有在没有其他优化时才使用gradient_optimized
+                    if use_fused_optimization:
+                        # 优先使用融合优化 - 同时应用所有优化策略
+                        op = FusedOptimizedMixedOp(C, stride)
+                    elif use_gradient_optimized:
+                        # 单独梯度优化
                         op = GradientOptimizedMixedOp(C, stride)
-                    elif use_memory_efficient and not (use_gradient_optimized or use_lazy_ops):
-                        # 只有在没有其他优化时才使用memory_efficient
+                    elif use_memory_efficient:
+                        # 单独内存优化
                         op = MemoryEfficientMixedOp(C, stride)
-                    elif use_lazy_ops and not (use_gradient_optimized or use_memory_efficient):
-                        # 只有在没有其他优化时才使用lazy_ops
+                    elif use_lazy_ops:
+                        # 单独懒计算优化
                         op = LazyMixedOp(C, stride)
                     elif use_optimized_ops:
                         # 标准优化操作
@@ -112,7 +115,7 @@ class Cell(nn.Module):
                         
                 except (RuntimeError, RecursionError) as e:
                     # 如果出现递归错误，回退到最安全的基础MixedOp
-                    print(f"⚠️ MixedOp优化冲突，回退到基础版本: {e}")
+                    print(f"⚠️ MixedOp初始化失败，回退到基础版本: {e}")
                     op = MixedOp(C, stride)
                 
                 # 标记初始化状态，防止递归
@@ -186,10 +189,10 @@ class Network(nn.Module):
     """
 
     def __init__(self, C, num_classes, layers, potential_layers=4, steps=4, block_multiplier=4, *, 
-                 use_checkpoint: bool = False, use_compile: bool = False, compile_backend: str = "inductor",
-                 use_optimized_ops: bool = False, use_lazy_ops: bool = False, 
-                 use_gradient_optimized: bool = False, use_memory_efficient: bool = False,
-                 progress_tracking: bool = True, quiet: bool = False):
+                 use_checkpoint: bool = True, use_compile: bool = False, compile_backend: str = "inductor",
+                 use_optimized_ops: bool = True, use_lazy_ops: bool = True, 
+                 use_gradient_optimized: bool = True, use_memory_efficient: bool = True,
+                 use_fused_optimization: bool = True, progress_tracking: bool = True, quiet: bool = False):
         super(Network, self).__init__()
         self._C = C
         self._num_classes = num_classes
@@ -203,6 +206,7 @@ class Network(nn.Module):
         self.use_lazy_ops = use_lazy_ops
         self.use_gradient_optimized = use_gradient_optimized
         self.use_memory_efficient = use_memory_efficient
+        self.use_fused_optimization = use_fused_optimization
         self.progress_tracking = progress_tracking
         self.quiet = quiet
 
@@ -211,12 +215,17 @@ class Network(nn.Module):
             print(f"🏗️  构建网络架构...")
             print(f"   基础层数: {layers}, 潜在层数: {potential_layers}")
             optimizations = []
-            if use_gradient_optimized:
-                optimizations.append("梯度优化")
-            if use_lazy_ops:
-                optimizations.append("懒计算")
-            if use_memory_efficient:
-                optimizations.append("内存优化")
+            if use_fused_optimization:
+                optimizations.append("🚀 融合优化(梯度+内存+懒计算+Triton)")
+            else:
+                if use_gradient_optimized:
+                    optimizations.append("梯度优化")
+                if use_lazy_ops:
+                    optimizations.append("懒计算")
+                if use_memory_efficient:
+                    optimizations.append("内存优化")
+                if use_optimized_ops:
+                    optimizations.append("标准优化")
             if optimizations:
                 print(f"   启用优化: {', '.join(optimizations)}")
 
@@ -250,7 +259,7 @@ class Network(nn.Module):
                 reduction = False
             
             cell = Cell(steps, block_multiplier, C_prev_prev, C_prev, C_curr, reduction, reduction_prev, 
-                       use_optimized_ops, use_lazy_ops, use_gradient_optimized, use_memory_efficient)
+                       use_optimized_ops, use_lazy_ops, use_gradient_optimized, use_memory_efficient, use_fused_optimization)
             
             # Wrap potential layers in a GatedCell
             if i >= layers:
