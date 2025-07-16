@@ -972,10 +972,10 @@ class FusedOptimizedMixedOp(nn.Module):
             self._ops.append(op)
             self._op_names.append(primitive)
         
-        # 融合优化组件
-        self._gradient_optimizer = self._init_gradient_optimizer()
-        self._memory_manager = self._init_memory_manager()
-        self._lazy_computer = self._init_lazy_computer()
+        # 融合优化组件（延迟初始化）
+        self._gradient_optimizer = None
+        self._memory_manager = None
+        self._lazy_computer = None
         
         # 统计信息
         self._stats = {
@@ -1013,8 +1013,25 @@ class FusedOptimizedMixedOp(nn.Module):
             'early_termination': True
         }
     
+    def _ensure_gradient_optimizer(self):
+        """确保梯度优化器已初始化"""
+        if self._gradient_optimizer is None:
+            self._gradient_optimizer = self._init_gradient_optimizer()
+    
+    def _ensure_memory_manager(self):
+        """确保内存管理器已初始化"""
+        if self._memory_manager is None:
+            self._memory_manager = self._init_memory_manager()
+    
+    def _ensure_lazy_computer(self):
+        """确保懒计算器已初始化"""
+        if self._lazy_computer is None:
+            self._lazy_computer = self._init_lazy_computer()
+    
     def _update_gradient_mask(self, weights: torch.Tensor):
         """更新梯度计算掩码"""
+        self._ensure_gradient_optimizer()
+        
         if self._gradient_optimizer['avg_weights'].device != weights.device:
             self._gradient_optimizer['avg_weights'] = self._gradient_optimizer['avg_weights'].to(weights.device)
             self._gradient_optimizer['gradient_mask'] = self._gradient_optimizer['gradient_mask'].to(weights.device)
@@ -1041,6 +1058,10 @@ class FusedOptimizedMixedOp(nn.Module):
     
     def _memory_efficient_compute(self, x: torch.Tensor, weights: torch.Tensor) -> torch.Tensor:
         """内存高效计算"""
+        self._ensure_memory_manager()
+        self._ensure_gradient_optimizer()
+        self._ensure_lazy_computer()
+        
         cache = self._memory_manager['output_cache']
         result = None
         
@@ -1207,12 +1228,13 @@ class FusedOptimizedMixedOp(nn.Module):
     
     def _cleanup_cache(self):
         """清理缓存"""
-        cache = self._memory_manager['output_cache']
-        if len(cache) > self._memory_manager['max_cache_size']:
-            # 保留最近使用的一半
-            keys_to_remove = list(cache.keys())[::2]
-            for key in keys_to_remove:
-                del cache[key]
+        if self._memory_manager is not None:
+            cache = self._memory_manager['output_cache']
+            if len(cache) > self._memory_manager['max_cache_size']:
+                # 保留最近使用的一半
+                keys_to_remove = list(cache.keys())[::2]
+                for key in keys_to_remove:
+                    del cache[key]
         
         # GPU内存清理
         if torch.cuda.is_available():
@@ -1221,6 +1243,12 @@ class FusedOptimizedMixedOp(nn.Module):
     def get_optimization_stats(self) -> dict:
         """获取优化统计信息"""
         total_calls = max(1, self._stats['forward_calls'])
+        
+        # 只有在初始化后才获取活跃操作数
+        active_ops = 0
+        if self._gradient_optimizer is not None:
+            active_ops = self._gradient_optimizer['gradient_mask'].sum().item()
+        
         return {
             **self._stats,
             'gradient_optimization_rate': self._stats['gradient_optimizations'] / total_calls,
@@ -1228,6 +1256,6 @@ class FusedOptimizedMixedOp(nn.Module):
             'lazy_optimization_rate': self._stats['lazy_optimizations'] / total_calls,
             'cache_hit_rate': self._stats['cache_hits'] / total_calls,
             'triton_usage_rate': self._stats['triton_usage'] / total_calls,
-            'active_operations': self._gradient_optimizer['gradient_mask'].sum().item(),
+            'active_operations': active_ops,
             'total_operations': len(self._ops)
         } 
