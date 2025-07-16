@@ -19,6 +19,15 @@
 *.log
 *.tmp
 *.bak
+
+# Testing temporary files
+test/.temporary/
+test/.temporary/*
+*.temporary
+*.temp
+/performance_logs/
+/triton_benchmarks/
+
 # VSCode/IDE
 .vscode/
 .idea/
