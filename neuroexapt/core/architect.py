@@ -3,6 +3,7 @@ import torch
 import numpy as np
 import torch.nn as nn
 from torch.autograd import Variable
+from typing import Optional
 
 def _concat(xs):
     return torch.cat([x.view(-1) for x in xs])
@@ -20,6 +21,29 @@ class Architect(object):
         self.model = model
         self.optimizer = torch.optim.Adam(self.model.arch_parameters(),
             lr=args.arch_learning_rate, betas=(0.5, 0.999), weight_decay=args.arch_weight_decay)
+        self.criterion: Optional[nn.Module] = None  # Will be set during training
+        
+        # Add compatibility with SimpleArchitect interface
+        self.arch_update_freq = getattr(args, 'arch_update_freq', 50)
+        self.warmup_epochs = getattr(args, 'warmup_epochs', 5)
+        self.current_epoch = 0
+        self.step_count = 0
+    
+    def set_epoch(self, epoch: int):
+        """设置当前epoch"""
+        self.current_epoch = epoch
+    
+    def should_update_arch(self) -> bool:
+        """判断是否应该更新架构"""
+        # 预热期跳过
+        if self.current_epoch < self.warmup_epochs:
+            self.step_count += 1  # 仍然增加计数但不更新
+            return False
+        
+        # 简单的频率控制
+        self.step_count += 1
+        should_update = self.step_count % self.arch_update_freq == 0
+        return should_update
 
     def _compute_unrolled_model(self, input, target, eta, network_optimizer):
         """
@@ -28,7 +52,12 @@ class Architect(object):
         of gradient descent, and then computes the loss on this virtual model.
         This is the core of the gradient approximation in DARTS.
         """
-        loss = self.model._loss(input, target)
+        # Clear any existing gradients
+        self.model.zero_grad()
+        
+        if self.criterion is None:
+            raise ValueError("Criterion not set")
+        loss = self.criterion(self.model(input), target)
         theta = _concat(self.model.parameters()).data
         try:
             moment = _concat(network_optimizer.state[v]['momentum_buffer'] for v in self.model.parameters()).mul_(self.network_momentum)
@@ -38,7 +67,7 @@ class Architect(object):
         dtheta = _concat(torch.autograd.grad(loss, self.model.parameters())).data + self.network_weight_decay * theta
         
         # Create a virtual model with one-step updated weights
-        unrolled_model = self._construct_model_from_theta(theta.sub(eta, moment + dtheta))
+        unrolled_model = self._construct_model_from_theta(theta.sub(moment + dtheta, alpha=eta))
         return unrolled_model
 
     def step(self, input_train, target_train, input_valid, target_valid, eta, network_optimizer, unrolled):
@@ -59,7 +88,9 @@ class Architect(object):
         self.optimizer.step()
 
     def _backward_step(self, input_valid, target_valid):
-        loss = self.model._loss(input_valid, target_valid)
+        if self.criterion is None:
+            raise ValueError("Criterion not set")
+        loss = self.criterion(self.model(input_valid), target_valid)
         loss.backward()
 
     def _backward_step_unrolled(self, input_train, target_train, input_valid, target_valid, eta, network_optimizer):
@@ -70,7 +101,9 @@ class Architect(object):
         # Create the virtual model
         unrolled_model = self._compute_unrolled_model(input_train, target_train, eta, network_optimizer)
         # Compute the loss on the virtual model using validation data
-        unrolled_loss = unrolled_model._loss(input_valid, target_valid)
+        if self.criterion is None:
+            raise ValueError("Criterion not set")
+        unrolled_loss = self.criterion(unrolled_model(input_valid), target_valid)
 
         unrolled_loss.backward()
         dalpha = [v.grad for v in unrolled_model.arch_parameters()]
@@ -106,28 +139,58 @@ class Architect(object):
         model_new.load_state_dict(model_dict)
         return model_new.cuda()
 
-    def _hessian_vector_product(self, vector, input, target, r=1e-2):
+    def _hessian_vector_product(self, vector, input, target):
+        """Efficient Hessian-vector product via automatic differentiation.
+
+        This version avoids the two extra forward passes of the finite-difference
+        approximation used previously, reducing both compute time and memory
+        pressure. The algorithm follows:
+
+            1. Compute first-order gradients of the loss w.r.t. *weights* with
+               ``create_graph=True`` so that a subsequent backward pass can
+               construct the Hessian.
+            2. Form the dot-product of these gradients and the supplied vector.
+            3. Take gradients of the dot-product w.r.t. *architecture* params to
+               obtain the Hessian-vector product.
         """
-        Computes the product of the Hessian of the training loss w.r.t. the weights
-        and a given vector. This is used to approximate the second-order term in the
-        architectural gradient.
-        """
-        R = r / _concat(vector).norm()
+
+        if self.criterion is None:
+            raise ValueError("Criterion not set")
+
+        # Forward + first backward pass to obtain gradients wrt network weights
+        loss = self.criterion(self.model(input), target)
+        grads = torch.autograd.grad(loss, self.model.parameters(), create_graph=True)
+
+        # Dot product between gradient list and the provided vector
+        # Ensure we start accumulation with a tensor, not a Python int, to satisfy type checkers
+        grad_dot = torch.zeros(1, device=loss.device, dtype=loss.dtype)
+        for g, v in zip(grads, vector):
+            grad_dot = grad_dot + (g * v).sum()
+
+        # Second backward: gradients of dot product wrt architecture parameters
+        hvp = torch.autograd.grad(grad_dot, self.model.arch_parameters(), retain_graph=False)
+
+        # Detach to avoid bloating the autograd graph in the caller
+        return [h.detach() for h in hvp]
+
+    def cleanup_gradients(self):
+        """清理梯度以防止内存泄漏（安全版本）"""
+        try:
+            # 清理主模型梯度
+            self.model.zero_grad()
+            
+            # 清理架构参数梯度
+            for param in self.model.arch_parameters():
+                if param.grad is not None:
+                    param.grad.data.zero_()
+            
+            # 清理优化器状态（如果需要）
+            if hasattr(self.optimizer, 'state') and len(self.optimizer.state) > 100:
+                self.optimizer.state.clear()
+            
+        except Exception as e:
+            # 静默处理清理错误，避免影响训练
+            pass
         
-        # First-order gradient w.r.t. weights at W + R*vector
-        for p, v in zip(self.model.parameters(), vector):
-            p.data.add_(R, v)
-        loss = self.model._loss(input, target)
-        grads_p = torch.autograd.grad(loss, self.model.arch_parameters())
-
-        # First-order gradient w.r.t. weights at W - R*vector
-        for p, v in zip(self.model.parameters(), vector):
-            p.data.sub_(2 * R, v)
-        loss = self.model._loss(input, target)
-        grads_n = torch.autograd.grad(loss, self.model.arch_parameters())
-
-        # Restore original weights
-        for p, v in zip(self.model.parameters(), vector):
-            p.data.add_(R, v)
-
-        return [(x - y).div_(2 * R) for x, y in zip(grads_p, grads_n)] 
+        # 不调用torch.cuda.empty_cache()以避免死锁
+        # 让PyTorch自动管理GPU内存 
