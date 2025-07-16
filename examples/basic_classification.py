@@ -572,40 +572,27 @@ def create_model(args, mode='exapt'):
     elif mode == 'exapt':
         # Exapt mode with intelligent neural architecture evolution
         if not getattr(args, 'quiet', False):
-            optimizations = []
-            if getattr(args, 'lazy_computation', False):
-                optimizations.append("懒计算")
-            if getattr(args, 'gradient_optimized', True):
-                optimizations.append("梯度优化")
-            if getattr(args, 'memory_efficient', False):
-                optimizations.append("内存优化")
-            if optimizations:
-                print(f"  🧬 智能演化模式: {', '.join(optimizations)}")
+            print(f"  🚀 融合优化模式：自动启用所有优化策略")
         
         model = Network(
             C=args.init_channels,
             num_classes=10,
             layers=args.layers,
             potential_layers=args.potential_layers,
-            use_checkpoint=getattr(args, 'use_checkpoint', False),
+            # 🚀 融合优化：默认启用所有优化，用户无需配置
             use_compile=getattr(args, 'use_model_compile', False),
-            use_optimized_ops=getattr(args, 'use_optimized_ops', False),
-            use_lazy_ops=getattr(args, 'lazy_computation', False),
-            use_gradient_optimized=getattr(args, 'gradient_optimized', True),
-            use_memory_efficient=getattr(args, 'memory_efficient', False),
             progress_tracking=not getattr(args, 'disable_progress_spam', False),
             quiet=getattr(args, 'quiet', False)
         )
     else:
-        # Legacy search mode (fallback)
+        # Legacy search mode (fallback) - 也使用融合优化
         model = Network(
             C=args.init_channels,
             num_classes=10,
             layers=args.layers,
             potential_layers=args.potential_layers,
-            use_checkpoint=getattr(args, 'use_checkpoint', False),
+            # 🚀 融合优化：默认启用所有优化
             use_compile=getattr(args, 'use_model_compile', False),
-            use_optimized_ops=getattr(args, 'use_optimized_ops', False),
             progress_tracking=getattr(args, 'progress_tracking', True),
             quiet=getattr(args, 'quiet', False)
         )

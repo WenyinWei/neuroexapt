@@ -145,12 +145,8 @@ def create_model(args):
         num_classes=10,
         layers=args.layers,
         potential_layers=args.potential_layers,
-        use_gradient_optimized=True,  # 启用梯度优化MixedOp
-        use_optimized_ops=True,       # 启用优化操作
-        use_lazy_ops=True,            # 启用懒计算
-        use_memory_efficient=True,    # 启用内存高效操作
+        # 🚀 融合优化：默认启用所有优化策略，无需手动配置
         use_compile=True,             # 启用torch.compile加速
-        use_checkpoint=False,         # 训练时关闭checkpoint以加速
         progress_tracking=False,      # 关闭详细跟踪以提升性能
         quiet=True                    # 静默模式
     )
