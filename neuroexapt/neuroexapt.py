@@ -5,6 +5,7 @@ Dynamic Neural Network Architecture Optimization.
 
 import torch
 import torch.nn as nn
+from torch.cuda.amp import autocast, GradScaler
 from torch.utils.data import DataLoader
 from typing import Dict, List, Optional, Any, Callable, Tuple
 
@@ -45,6 +46,7 @@ class NeuroExapt:
         input_shape: Tuple[int, ...] = (3, 32, 32),
         enable_validation: bool = True,
         evolution_mode: str = "structural",
+        use_amp: bool = False,
         evolution_kwargs: Optional[Dict[str, Any]] = None
     ):
         """
@@ -75,6 +77,9 @@ class NeuroExapt:
         self.enable_validation = enable_validation
         
         self.lambda_entropy = lambda_entropy
+        # AMP settings
+        self.use_amp = use_amp and torch.cuda.is_available()
+        self.scaler = GradScaler(enabled=self.use_amp)
         self.lambda_bayesian = lambda_bayesian
 
         # Initialize the chosen evolution engine
@@ -173,16 +178,19 @@ class NeuroExapt:
             for data, targets in self.dataloader:
                 data, targets = data.to(self.device), targets.to(self.device)
 
-                optimizer.zero_grad()
-                
-                # Standard forward pass
-                predictions = self.model(data)
+                optimizer.zero_grad(set_to_none=True)
 
-                # Calculate the comprehensive loss
-                loss = self._calculate_objective(predictions, targets)
-                
-                loss.backward()
-                optimizer.step()
+                with autocast(enabled=self.use_amp):
+                    predictions = self.model(data)
+                    loss = self._calculate_objective(predictions, targets)
+
+                if self.use_amp:
+                    self.scaler.scale(loss).backward()
+                    self.scaler.step(optimizer)
+                    self.scaler.update()
+                else:
+                    loss.backward()
+                    optimizer.step()
 
                 total_loss += loss.item()
                 _, predicted = torch.max(predictions.data, 1)
