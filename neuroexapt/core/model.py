@@ -1,11 +1,12 @@
 
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 import time
 import psutil
 import gc
 from typing import Dict, List, Optional
-from .operations import OPS, FactorizedReduce, ReLUConvBN, MixedOp, Resizing, OptimizedMixedOp, LazyMixedOp, GradientOptimizedMixedOp, MemoryEfficientMixedOp, FusedOptimizedMixedOp
+from .operations import OPS, FactorizedReduce, ReLUConvBN, MixedOp
 from .genotypes import PRIMITIVES, Genotype
 
 class PerformanceMonitor:
@@ -56,22 +57,57 @@ class PerformanceMonitor:
 # 全局性能监控器
 _global_monitor = PerformanceMonitor()
 
+class Resizing(nn.Module):
+    """
+    A utility module to resize tensors to a target channel count.
+    This is used to match channel dimensions when operations with different
+    channel counts are mixed.
+    """
+    def __init__(self, C_in, C_out, affine=True):
+        super(Resizing, self).__init__()
+        self.C_in = C_in
+        self.C_out = C_out
+        self.op = nn.Sequential(
+            nn.ReLU(inplace=False),
+            nn.Conv2d(C_in, C_out, 1, stride=1, padding=0, bias=False),
+            nn.BatchNorm2d(C_out, affine=affine)
+        )
+    
+    def forward(self, x):
+        if self.C_in == self.C_out:
+            return x
+        return self.op(x)
+
+class GatedCell(nn.Module):
+    """A cell wrapped in a gate for dynamic depth."""
+    def __init__(self, cell, C_in, C_out):
+        super(GatedCell, self).__init__()
+        self.cell = cell
+        self.gate = nn.Parameter(1e-3 * torch.randn(1))
+        self.resize = Resizing(C_in, C_out) if C_in != C_out else None
+
+    def forward(self, s0, s1, weights):
+        cell_out = self.cell(s0, s1, weights)
+        gated_out = self.gate.sigmoid() * cell_out
+        
+        # Adjust s1 to match output dimension if necessary
+        s1_resized = self.resize(s1) if self.resize else s1
+        
+        return s1_resized + gated_out
+
 class Cell(nn.Module):
     """
     A single cell in the network, represented as a DAG.
-    Each cell consists of a set of nodes, where each node computes a feature map
-    by applying mixed operations to the feature maps of its predecessors.
+    This is the searchable version of the cell, using MixedOp.
     """
 
-    def __init__(self, steps, block_multiplier, C_prev_prev, C_prev, C, reduction, reduction_prev, 
-                 use_optimized_ops=True, use_lazy_ops=True, use_gradient_optimized=True, use_memory_efficient=True, use_fused_optimization=True):
+    def __init__(self, steps, block_multiplier, C_prev_prev, C_prev, C, reduction, reduction_prev):
         super(Cell, self).__init__()
         self.reduction = reduction
-        self.use_optimized_ops = use_optimized_ops
-        self.use_lazy_ops = use_lazy_ops
-        self.use_gradient_optimized = use_gradient_optimized
-        self.use_memory_efficient = use_memory_efficient
-        self.use_fused_optimization = use_fused_optimization
+        
+        # 性能监控属性
+        self._forward_count = 0
+        self._step_times = []
 
         # In a reduction cell, the previous cell's output is down-sampled
         if reduction_prev:
@@ -83,49 +119,11 @@ class Cell(nn.Module):
         self._block_multiplier = block_multiplier
 
         self._ops = nn.ModuleList()
-        self._bns = nn.ModuleList()
         for i in range(self._steps):
             for j in range(2 + i):
                 stride = 2 if reduction and j < 2 else 1
-                
-                # 🚀 融合优化：默认使用FusedOptimizedMixedOp同时应用所有优化
-                try:
-                    if use_fused_optimization:
-                        # 优先使用融合优化 - 同时应用所有优化策略
-                        op = FusedOptimizedMixedOp(C, stride)
-                    elif use_gradient_optimized:
-                        # 单独梯度优化
-                        op = GradientOptimizedMixedOp(C, stride)
-                    elif use_memory_efficient:
-                        # 单独内存优化
-                        op = MemoryEfficientMixedOp(C, stride)
-                    elif use_lazy_ops:
-                        # 单独懒计算优化
-                        op = LazyMixedOp(C, stride)
-                    elif use_optimized_ops:
-                        # 标准优化操作
-                        op = OptimizedMixedOp(C, stride)
-                    else:
-                        # 基础MixedOp
-                        op = MixedOp(C, stride)
-                        
-                    # 添加安全检查，防止递归初始化
-                    if hasattr(op, '_initialization_in_progress'):
-                        raise RuntimeError("检测到MixedOp递归初始化，回退到基础版本")
-                        
-                except (RuntimeError, RecursionError) as e:
-                    # 如果出现递归错误，回退到最安全的基础MixedOp
-                    print(f"⚠️ MixedOp初始化失败，回退到基础版本: {e}")
-                    op = MixedOp(C, stride)
-                
-                # 标记初始化状态，防止递归
-                if hasattr(op, '__dict__'):
-                    op.__dict__['_initialization_complete'] = True
+                op = MixedOp(C, stride)
                 self._ops.append(op)
-        
-        # 进度跟踪
-        self._forward_count = 0
-        self._step_times: List[float] = []
 
     def forward(self, s0, s1, weights):
         """增强的前向传播，包含详细进度跟踪"""
@@ -186,50 +184,22 @@ class Network(nn.Module):
     """
     The full neural network model, composed of a stack of cells.
     This class also initializes and stores the architecture parameters (alphas).
+    This version is simplified to remove all optimization flags.
     """
 
-    def __init__(self, C, num_classes, layers, potential_layers=4, steps=4, block_multiplier=4, *, 
-                 use_checkpoint: bool = True, use_compile: bool = False, compile_backend: str = "inductor",
-                 use_optimized_ops: bool = True, use_lazy_ops: bool = True, 
-                 use_gradient_optimized: bool = True, use_memory_efficient: bool = True,
-                 use_fused_optimization: bool = True, progress_tracking: bool = True, quiet: bool = False):
+    def __init__(self, C, num_classes, layers, steps=4, block_multiplier=4, stem_multiplier=3, quiet=False):
         super(Network, self).__init__()
         self._C = C
         self._num_classes = num_classes
         self._layers = layers
-        self._potential_layers = potential_layers
         self._steps = steps
         self._block_multiplier = block_multiplier
-        self.use_checkpoint = use_checkpoint
-        self.use_compile = use_compile
-        self.use_optimized_ops = use_optimized_ops
-        self.use_lazy_ops = use_lazy_ops
-        self.use_gradient_optimized = use_gradient_optimized
-        self.use_memory_efficient = use_memory_efficient
-        self.use_fused_optimization = use_fused_optimization
-        self.progress_tracking = progress_tracking
         self.quiet = quiet
 
-        # 网络结构构建进度（简化输出）
-        if not quiet and progress_tracking:
-            print(f"🏗️  构建网络架构...")
-            print(f"   基础层数: {layers}, 潜在层数: {potential_layers}")
-            optimizations = []
-            if use_fused_optimization:
-                optimizations.append("🚀 融合优化(梯度+内存+懒计算+Triton)")
-            else:
-                if use_gradient_optimized:
-                    optimizations.append("梯度优化")
-                if use_lazy_ops:
-                    optimizations.append("懒计算")
-                if use_memory_efficient:
-                    optimizations.append("内存优化")
-                if use_optimized_ops:
-                    optimizations.append("标准优化")
-            if optimizations:
-                print(f"   启用优化: {', '.join(optimizations)}")
+        if not quiet:
+            print("🏗️  Building Search Network...")
 
-        C_curr = self._block_multiplier * C
+        C_curr = stem_multiplier * C
         self.stem = nn.Sequential(
             nn.Conv2d(3, C_curr, 3, padding=1, bias=False),
             nn.BatchNorm2d(C_curr)
@@ -238,33 +208,14 @@ class Network(nn.Module):
         C_prev_prev, C_prev, C_curr = C_curr, C_curr, C
         self.cells = nn.ModuleList()
         reduction_prev = False
-        total_layers = layers + potential_layers
-        
-        # 只显示总数，不逐个显示cell
-        if not quiet and progress_tracking:
-            print(f"   📐 创建 {total_layers} 个Cell...")
-        
-        for i in range(total_layers):
-            # Reduction cells are placed based on the initial layer count
-            if i < layers and i in [layers // 3, 2 * layers // 3]:
+        for i in range(layers):
+            if i in [layers // 3, 2 * layers // 3]:
                 C_curr *= 2
                 reduction = True
             else:
                 reduction = False
             
-            # For potential layers, ensure they don't break the channel progression
-            if i >= layers:
-                # Keep potential layers at the same channel count as the last regular layer
-                # to avoid shape mismatches
-                reduction = False
-            
-            cell = Cell(steps, block_multiplier, C_prev_prev, C_prev, C_curr, reduction, reduction_prev, 
-                       use_optimized_ops, use_lazy_ops, use_gradient_optimized, use_memory_efficient, use_fused_optimization)
-            
-            # Wrap potential layers in a GatedCell
-            if i >= layers:
-                cell = GatedCell(cell, C_prev, C_curr * self._block_multiplier)
-
+            cell = Cell(steps, block_multiplier, C_prev_prev, C_prev, C_curr, reduction, reduction_prev)
             reduction_prev = reduction
             self.cells.append(cell)
             C_prev_prev, C_prev = C_prev, self._block_multiplier * C_curr
@@ -274,147 +225,39 @@ class Network(nn.Module):
 
         self._initialize_alphas()
 
-        # 网络前向传播计数
-        self._forward_count = 0
-        self._epoch_forward_count = 0
-
-        # Optionally compile the full model (PyTorch 2.0+)
-        if self.use_compile and hasattr(torch, "compile"):
-            if not quiet:
-                print(f"   ⚡ 启用torch.compile优化...")
-            # torch.compile returns a new compiled module; swap forward to point to it
-            compiled_self = torch.compile(self, backend=compile_backend, fullgraph=False)
-            # Keep reference to avoid GC
-            self._compiled_impl = compiled_self
-            self.forward = compiled_self.forward  # type: ignore[method-assign]
-
-        if not quiet and progress_tracking:
-            print(f"✅ 网络构建完成!")
-
     def new(self):
         """Create a new model with the same architecture but uninitialized weights."""
-        model_new = Network(self._C, self._num_classes, self._layers, self._potential_layers, 
-                          use_checkpoint=self.use_checkpoint, use_compile=self.use_compile, 
-                          compile_backend="inductor", use_optimized_ops=self.use_optimized_ops,
-                          quiet=True).cuda()  # 新建模型时默认安静模式
+        model_new = Network(self._C, self._num_classes, self._layers, self._steps, self._block_multiplier, quiet=True).cuda()
         for x, y in zip(model_new.arch_parameters(), self.arch_parameters()):
             x.data.copy_(y.data)
         return model_new
 
     def forward(self, input):
-        """增强的前向传播，包含详细进度跟踪"""
-        self._forward_count += 1
-        self._epoch_forward_count += 1
-        
-        _global_monitor.start_timer("network_forward")
+        weights_normal = F.softmax(self.alphas_normal, dim=-1)
+        weights_reduce = F.softmax(self.alphas_reduce, dim=-1)
 
-        # Precompute softmax-ed architecture weights once per forward pass
-        _global_monitor.start_timer("softmax_weights")
-        weights_normal = torch.softmax(self.alphas_normal, dim=-1)
-        weights_reduce = torch.softmax(self.alphas_reduce, dim=-1)
-        weights_time = _global_monitor.end_timer("softmax_weights")
-
-        import torch.utils.checkpoint as cp
-
-        # Stem处理
-        _global_monitor.start_timer("stem")
         s0 = s1 = self.stem(input)
-        stem_time = _global_monitor.end_timer("stem")
-        
-        # 关闭Stem输出
-        # if self.progress_tracking and self._forward_count % 200 == 1:
-        #     print(f"     ✅ Stem完成: {stem_time*1000:.2f}ms")
-
-        # 逐层处理（仅在非安静模式且启用进度跟踪时显示）
-        if not self.quiet and self.progress_tracking and self._forward_count <= 3:  # 只在前几次forward时显示
-            print(f"  🔗 开始处理 {len(self.cells)} 个Cell...")
-        
         for i, cell in enumerate(self.cells):
-            layer_start = time.perf_counter()
-            
-            # 只在非安静模式、启用进度跟踪且前几次forward时显示详细信息
-            if not self.quiet and self.progress_tracking and self._forward_count <= 2:
-                cell_type = "GatedCell" if isinstance(cell, GatedCell) else "Cell"
-                is_reduction = (isinstance(cell, GatedCell) and cell.cell.reduction) or (hasattr(cell, 'reduction') and cell.reduction)
-                reduction_info = "Reduction" if is_reduction else "Normal"
-                print(f"    🏭 第{i+1}/{len(self.cells)}层 [{cell_type}-{reduction_info}]...")
-
-            # Determine which set of precomputed weights to use
-            if isinstance(cell, GatedCell):
-                if cell.cell.reduction:
-                    weights = weights_reduce
-                else:
-                    weights = weights_normal
+            if cell.reduction:
+                weights = weights_reduce
             else:
-                weights = weights_reduce if cell.reduction else weights_normal
-
-            _global_monitor.start_timer(f"layer_{i}")
-
-            if self.use_checkpoint and self.training:
-                # Wrap cell forward in checkpoint to save memory
-                def _cell_forward(a, b):
-                    return cell(a, b, weights)
-
-                s1_new = cp.checkpoint(_cell_forward, s0, s1)
-                checkpoint_info = " (checkpointed)"
-            else:
-                s1_new = cell(s0, s1, weights)
-                checkpoint_info = ""
-
-            layer_time = _global_monitor.end_timer(f"layer_{i}")
-
-            # 关闭层级输出
-            # if self.progress_tracking and (i % 6 == 0 or self._forward_count % 50 == 1):
-            #     shape_info = s1_new.shape if hasattr(s1_new, 'shape') else 'unknown'
-            #     print(f"       ✅ 第{i+1}层完成: {layer_time*1000:.2f}ms{checkpoint_info}")
-
-            s0, s1 = s1, s1_new
-        
-        # 全局池化和分类
-        _global_monitor.start_timer("classification")
+                weights = weights_normal
+            s0, s1 = s1, cell(s0, s1, weights)
         out = self.global_pooling(s1)
         logits = self.classifier(out.view(out.size(0), -1))
-        classification_time = _global_monitor.end_timer("classification")
-
-        total_time = _global_monitor.end_timer("network_forward")
-        
-        # 关闭前向传播输出
-        # if self.progress_tracking and self._forward_count % 50 == 1:
-        #     print(f"  📊 前向传播完成: {total_time*1000:.2f}ms")
-        
-        # 关闭详细统计输出
-        # if self._forward_count % 200 == 0:
-        #     stats = _global_monitor.get_stats()
-        #     torch.cuda.empty_cache()
-        #     gc.collect()
-
         return logits
-
-    def reset_epoch_counters(self):
-        """重置epoch计数器"""
-        self._epoch_forward_count = 0
-        if not self.quiet and self.progress_tracking:
-            print(f"🔄 重置epoch计数器")
 
     def _initialize_alphas(self):
         """Initialize the architecture parameters alpha."""
         k = sum(1 for i in range(self._steps) for n in range(2 + i))
-        num_ops = len(OPS)
+        num_ops = len(PRIMITIVES)
 
         self.alphas_normal = nn.Parameter(1e-3 * torch.randn(k, num_ops))
         self.alphas_reduce = nn.Parameter(1e-3 * torch.randn(k, num_ops))
-        
-        # Initialize gates for potential cells
-        self.alphas_gates = nn.ParameterList(
-            [cell.gate for cell in self.cells if isinstance(cell, GatedCell)]
-        )
-
         self._arch_parameters = [
             self.alphas_normal,
             self.alphas_reduce,
         ]
-        # Register the gate parameters with the architect
-        self._arch_parameters.extend(self.alphas_gates)
 
     def arch_parameters(self):
         return self._arch_parameters
@@ -460,33 +303,4 @@ class Network(nn.Module):
             normal=gene_normal, normal_concat=concat,
             reduce=gene_reduce, reduce_concat=concat
         )
-        return genotype
-
-class GatedCell(nn.Module):
-    """
-    A wrapper for a cell that includes a learnable gate to control its contribution.
-    This version implements a function-preserving residual connection, ensuring that
-    when the gate is closed, it acts as an identity connection.
-    """
-    def __init__(self, cell, C_in_s1, C_out_cell):
-        super(GatedCell, self).__init__()
-        self.cell = cell
-        self.gate = nn.Parameter(torch.randn(1) * 1e-3)
-        # Resizer for the identity path to match the cell's output dimensions
-        self.identity_resizer = Resizing(C_in_s1, C_out_cell, affine=False)
-
-    def forward(self, s0, s1, weights):
-        """
-        Computes: gate * cell(s0, s1) + (1 - gate) * identity(s1)
-        """
-        gate_val = torch.sigmoid(self.gate)
-        
-        cell_out = self.cell(s0, s1, weights)
-        identity_out = self.identity_resizer(s1)
-        
-        # 确保形状匹配
-        if cell_out.shape != identity_out.shape:
-            # 使用identity输出的形状作为目标
-            cell_out = self.identity_resizer(s1)
-        
-        return gate_val * cell_out + (1 - gate_val) * identity_out 
+        return genotype 
