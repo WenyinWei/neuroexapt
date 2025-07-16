@@ -1113,7 +1113,8 @@ class FusedOptimizedMixedOp(nn.Module):
                         pass
             
             # 更新懒计算统计
-            self._lazy_computer['op_usage_count'][i] += 1
+            if self._lazy_computer is not None:
+                self._lazy_computer['op_usage_count'][i] += 1
         
         # 如果没有有效输出，返回零张量
         if result is None:
@@ -1209,6 +1210,11 @@ class FusedOptimizedMixedOp(nn.Module):
                     return result
         
         # 🔧 复杂优化路径：仅在必要时使用
+        # 确保所有组件已初始化
+        self._ensure_memory_manager()
+        self._ensure_gradient_optimizer()
+        self._ensure_lazy_computer()
+        
         # 更新梯度掩码
         self._update_gradient_mask(weights)
         
