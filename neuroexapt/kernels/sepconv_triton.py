@@ -22,209 +22,188 @@ if TRITON_AVAILABLE:
         y_ptr,
         B, C, H, W,
         stride: tl.constexpr,
-        BLOCK_C: tl.constexpr,
+        BLOCK_SIZE: tl.constexpr,
     ):
-        """Depth-wise 3×3 conv (padding=1) with optional stride 2."""
-        c_block = tl.program_id(0)
-        batch = tl.program_id(1)
-
-        offs_c = c_block * BLOCK_C + tl.arange(0, BLOCK_C)
-        mask_c = offs_c < C
-
-        # Pointers offset
-        x_ptr = x_ptr + batch * C * H * W + offs_c[:, None, None] * H * W
-        w_ptr = w_ptr + offs_c[:, None, None] * 9  # 3*3 kernel size = 9
-
+        """Depth-wise 3×3 conv (padding=1) with optional stride."""
+        pid = tl.program_id(0)
+        
         OH = (H + 2 - 3) // stride + 1
         OW = (W + 2 - 3) // stride + 1
+        total_outputs = B * C * OH * OW
+        
+        offsets = pid * BLOCK_SIZE + tl.arange(0, BLOCK_SIZE)
+        mask = offsets < total_outputs
+        
+        # 将1D索引转换为4D坐标 (b, c, oh, ow)
+        ow = offsets % OW
+        oh = (offsets // OW) % OH
+        c = (offsets // (OW * OH)) % C
+        b = offsets // (OW * OH * C)
+        
+        acc = tl.zeros((BLOCK_SIZE,), dtype=tl.float32)
+        
+        # 3x3深度卷积
+        for kh in tl.static_range(3):
+            for kw in tl.static_range(3):
+                ih = oh * stride + kh - 1  # padding=1
+                iw = ow * stride + kw - 1
+                
+                # 边界检查
+                valid = mask & (ih >= 0) & (ih < H) & (iw >= 0) & (iw < W)
+                
+                # 输入索引
+                input_idx = b * C * H * W + c * H * W + ih * W + iw
+                # 权重索引 (每个通道有自己的3x3权重)
+                weight_idx = c * 9 + kh * 3 + kw  # 9 = 3*3
+                
+                x_val = tl.load(x_ptr + input_idx, mask=valid, other=0.0)
+                w_val = tl.load(w_ptr + weight_idx, mask=(c < C), other=0.0)
+                
+                acc += x_val * w_val
+        
+        # 存储结果
+        output_idx = b * C * OH * OW + c * OH * OW + oh * OW + ow
+        tl.store(y_ptr + output_idx, acc, mask=mask)
 
-        for oh in range(OH):
-            ih_base = oh * stride - 1
-            for ow in range(OW):
-                iw_base = ow * stride - 1
-
-                acc = tl.zeros([BLOCK_C], dtype=tl.float32)
-                for kh in range(3):
-                    ih = ih_base + kh
-                    valid_h = (0 <= ih) & (ih < H)
-                    for kw in range(3):
-                        iw = iw_base + kw
-                        valid_w = (0 <= iw) & (iw < W)
-                        valid = valid_h & valid_w & mask_c
-
-                        x_idx = ih * W + iw
-                        w_idx = kh * 3 + kw
-
-                        x_val = tl.load(x_ptr + x_idx, mask=valid, other=0.0)
-                        w_val = tl.load(w_ptr + w_idx, mask=mask_c, other=0.0)
-                        acc += x_val * w_val
-
-                # Store result
-                y_ptr_base = y_ptr + batch * C * OH * OW + offs_c * OH * OW + oh * OW + ow
-                tl.store(y_ptr_base, acc, mask=mask_c)
-
-    ######################################################################
-    # Generic KxK depth-wise kernel (K in {3,5,7})                       #
-    ######################################################################
-
-    @triton.jit
-    def _dwconv_generic_kernel(
-        x_ptr,
-        w_ptr,
-        y_ptr,
-        B, C, H, W,
-        K: tl.constexpr,
-        stride: tl.constexpr,
-        dilation: tl.constexpr,
-        BLOCK_C: tl.constexpr,
+    @triton.jit  
+    def _pointwise_conv_kernel(
+        x_ptr,  # [B, C_in, H, W]
+        w_ptr,  # [C_out, C_in, 1, 1]
+        bias_ptr,  # [C_out]
+        y_ptr,  # [B, C_out, H, W]
+        B, C_in, C_out, H, W,
+        BLOCK_SIZE: tl.constexpr,
     ):
-        pad = ((K - 1) * dilation) // 2
+        """Point-wise 1×1 conv."""
+        pid = tl.program_id(0)
+        
+        total_outputs = B * C_out * H * W
+        
+        offsets = pid * BLOCK_SIZE + tl.arange(0, BLOCK_SIZE)
+        mask = offsets < total_outputs
+        
+        # 将1D索引转换为4D坐标 (b, c_out, h, w)
+        w_idx = offsets % W
+        h_idx = (offsets // W) % H
+        c_out = (offsets // (W * H)) % C_out
+        b = offsets // (W * H * C_out)
+        
+        acc = tl.zeros((BLOCK_SIZE,), dtype=tl.float32)
+        
+        # 点卷积：对所有输入通道求和
+        for c_in in range(C_in):
+            input_idx = b * C_in * H * W + c_in * H * W + h_idx * W + w_idx
+            weight_idx = c_out * C_in + c_in  # 1x1卷积权重
+            
+            x_val = tl.load(x_ptr + input_idx, mask=mask, other=0.0)
+            w_val = tl.load(w_ptr + weight_idx, mask=(c_out < C_out), other=0.0)
+            
+            acc += x_val * w_val
+        
+        # 加bias
+        if bias_ptr is not None:
+            bias_val = tl.load(bias_ptr + c_out, mask=(c_out < C_out), other=0.0)
+            acc += bias_val
+        
+        # 存储结果
+        output_idx = b * C_out * H * W + c_out * H * W + h_idx * W + w_idx
+        tl.store(y_ptr + output_idx, acc, mask=mask)
 
-        c_block = tl.program_id(0)
-        batch = tl.program_id(1)
+######################################################################
+#                    Separable Convolution Functions                 #
+######################################################################
 
-        offs_c = c_block * BLOCK_C + tl.arange(0, BLOCK_C)
-        mask_c = offs_c < C
-
-        x_ptr = x_ptr + batch * C * H * W + offs_c[:, None, None] * H * W
-        w_ptr = w_ptr + offs_c[:, None, None] * (K * K)
-
-        OH = (H + 2 * pad - dilation * (K - 1) - 1) // stride + 1
-        OW = (W + 2 * pad - dilation * (K - 1) - 1) // stride + 1
-
-        for oh in range(OH):
-            ih_base = oh * stride - pad
-            for ow in range(OW):
-                iw_base = ow * stride - pad
-
-                acc = tl.zeros([BLOCK_C], dtype=tl.float32)
-
-                for kh in tl.static_range(K):
-                    ih = ih_base + kh * dilation
-                    valid_h = (0 <= ih) & (ih < H)
-                    for kw in tl.static_range(K):
-                        iw = iw_base + kw * dilation
-                        valid_w = (0 <= iw) & (iw < W)
-                        valid = valid_h & valid_w & mask_c
-
-                        x_idx = ih * W + iw
-                        w_idx = kh * K + kw
-
-                        x_val = tl.load(x_ptr + x_idx, mask=valid, other=0.0)
-                        w_val = tl.load(w_ptr + w_idx, mask=mask_c, other=0.0)
-                        acc += x_val * w_val
-
-                y_ptr_base = y_ptr + batch * C * OH * OW + offs_c * OH * OW + oh * OW + ow
-                tl.store(y_ptr_base, acc, mask=mask_c)
-
-    def sepconv_forward(
-        x: torch.Tensor,
-        dw_weight: torch.Tensor,
-        pw_weight: torch.Tensor,
-        bias: Optional[torch.Tensor] = None,
-        *,
-        kernel_size: int = 3,
-        stride: int = 1,
-        dilation: int = 1,
-    ) -> torch.Tensor:
-        """Fused separable conv using Triton depth-wise kernel + PyTorch pointwise."""
-        if x.is_cpu or dilation not in {1, 2}:
-            # Fallback on CPU regardless of Triton availability.
-            pad = ((kernel_size - 1) * dilation) // 2
-            y = torch.nn.functional.conv2d(
-                x,
-                dw_weight,
-                None,
-                stride=stride,
-                padding=pad,
-                dilation=dilation,
-                groups=x.shape[1],
-            )
-            y = torch.nn.functional.conv2d(y, pw_weight, bias, stride=1, padding=0)
-            return y
-
-        B, C, H, W = x.shape
-        # compute output size for generic K,dil
-        pad = ((kernel_size - 1) * dilation) // 2
-        OH = (H + 2 * pad - dilation * (kernel_size - 1) - 1) // stride + 1
-        OW = (W + 2 * pad - dilation * (kernel_size - 1) - 1) // stride + 1
-
-        y_dw = torch.empty((B, C, OH, OW), device=x.device, dtype=x.dtype)
-
-        # Choose kernel according to size
-        if kernel_size in {3, 5, 7} and dilation in {1, 2}:
-            BLOCK_C = 32
-            grid = (triton.cdiv(C, BLOCK_C), B)
-            if kernel_size == 3 and dilation == 1:
-                _dwconv3x3_kernel[grid](  # type: ignore[arg-type]
-                    x,
-                    dw_weight,
-                    y_dw,
-                    B,
-                    C,
-                    H,
-                    W,
-                    stride,
-                    BLOCK_C=BLOCK_C,
-                    num_warps=4,
-                )
-            else:
-                _dwconv_generic_kernel[grid](  # type: ignore[arg-type]
-                    x,
-                    dw_weight,
-                    y_dw,
-                    B,
-                    C,
-                    H,
-                    W,
-                    K=kernel_size,
-                    stride=stride,
-                    dilation=dilation,
-                    BLOCK_C=BLOCK_C,
-                    num_warps=4,
-                )
-        else:
-            # Fallback to PyTorch for unsupported kernel sizes currently
-            pad = ((kernel_size - 1) * dilation) // 2
-            y_dw = torch.nn.functional.conv2d(
-                x,
-                dw_weight,
-                None,
-                stride=stride,
-                padding=pad,
-                dilation=dilation,
-                groups=C,
-            )
-
-        # Pointwise conv (1×1) – negligible cost compared to depth-wise
-        y_out = torch.nn.functional.conv2d(y_dw, pw_weight, bias, stride=1, padding=0)
-        return y_out
-
-# ----------------------- Fallback implementation --------------------
-else:
-
-    def _sepconv_forward_fallback(
-        x: torch.Tensor,
-        dw_weight: torch.Tensor,
-        pw_weight: torch.Tensor,
-        bias: Optional[torch.Tensor] = None,
-        *,
-        kernel_size: int = 3,
-        stride: int = 1,
-        dilation: int = 1,
-    ) -> torch.Tensor:
-        """Fallback PyTorch implementation when Triton is unavailable."""
+def sepconv_forward_generic(
+    x: torch.Tensor,
+    dw_weight: torch.Tensor,
+    pw_weight: torch.Tensor,
+    bias: Optional[torch.Tensor] = None,
+    kernel_size: int = 3,
+    stride: int = 1,
+    dilation: int = 1,
+) -> torch.Tensor:
+    """Generic separable convolution: depth-wise + point-wise."""
+    
+    # 如果Triton不可用或参数不支持，使用PyTorch fallback
+    if not TRITON_AVAILABLE or kernel_size != 3 or stride != 1 or dilation != 1:
+        # PyTorch fallback implementation
         y = torch.nn.functional.conv2d(
-            x,
-            dw_weight,
-            None,
-            stride=stride,
-            padding=((kernel_size - 1) * dilation) // 2,
-            dilation=dilation,
-            groups=x.shape[1],
+            x, dw_weight, bias=None, stride=stride, 
+            padding=((kernel_size - 1) * dilation) // 2, 
+            dilation=dilation, groups=x.size(1)
         )
-        y = torch.nn.functional.conv2d(y, pw_weight, bias, stride=1, padding=0)
+        y = torch.nn.functional.conv2d(y, pw_weight, bias=bias)
         return y
+    
+    B, C, H, W = x.shape
+    C_out = pw_weight.size(0)
+    
+    # 第一步: 深度卷积
+    OH = (H + 2 - 3) // stride + 1
+    OW = (W + 2 - 3) // stride + 1
+    dw_out = torch.empty(B, C, OH, OW, device=x.device, dtype=x.dtype)
+    
+    total_outputs = B * C * OH * OW
+    BLOCK_SIZE = 256
+    grid = (triton.cdiv(total_outputs, BLOCK_SIZE),)
+    
+    _dwconv3x3_kernel[grid](
+        x, dw_weight, dw_out, B, C, H, W, stride, BLOCK_SIZE
+    )
+    
+    # 第二步: 点卷积
+    pw_out = torch.empty(B, C_out, OH, OW, device=x.device, dtype=x.dtype)
+    
+    total_outputs = B * C_out * OH * OW
+    grid = (triton.cdiv(total_outputs, BLOCK_SIZE),)
+    
+    _pointwise_conv_kernel[grid](
+        dw_out, pw_weight, bias, pw_out, B, C, C_out, OH, OW, BLOCK_SIZE
+    )
+    
+    return pw_out
 
-    # expose under common name
-    sepconv_forward = _sepconv_forward_fallback  # type: ignore[assignment] 
+# 为了保持向后兼容，提供一些特化版本
+def sepconv3x3_forward(
+    x: torch.Tensor,
+    dw_weight: torch.Tensor,
+    pw_weight: torch.Tensor,
+    bias: Optional[torch.Tensor] = None,
+    stride: int = 1,
+) -> torch.Tensor:
+    """3x3 separable convolution."""
+    return sepconv_forward_generic(x, dw_weight, pw_weight, bias, 3, stride, 1)
+
+def sepconv5x5_forward(
+    x: torch.Tensor,
+    dw_weight: torch.Tensor,
+    pw_weight: torch.Tensor,
+    bias: Optional[torch.Tensor] = None,
+    stride: int = 1,
+) -> torch.Tensor:
+    """5x5 separable convolution (fallback to PyTorch)."""
+    return sepconv_forward_generic(x, dw_weight, pw_weight, bias, 5, stride, 1)
+
+def sepconv7x7_forward(
+    x: torch.Tensor,
+    dw_weight: torch.Tensor, 
+    pw_weight: torch.Tensor,
+    bias: Optional[torch.Tensor] = None,
+    stride: int = 1,
+) -> torch.Tensor:
+    """7x7 separable convolution (fallback to PyTorch)."""
+    return sepconv_forward_generic(x, dw_weight, pw_weight, bias, 7, stride, 1)
+
+# 为了向后兼容，提供原始的函数名
+def sepconv_forward(
+    x: torch.Tensor,
+    dw_weight: torch.Tensor,
+    pw_weight: torch.Tensor,
+    bias: Optional[torch.Tensor] = None,
+    *,
+    kernel_size: int = 3,
+    stride: int = 1,
+    dilation: int = 1,
+) -> torch.Tensor:
+    """Backward compatibility alias for sepconv_forward_generic."""
+    return sepconv_forward_generic(x, dw_weight, pw_weight, bias, kernel_size, stride, dilation) 
