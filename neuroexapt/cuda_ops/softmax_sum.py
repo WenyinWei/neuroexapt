@@ -8,7 +8,7 @@ from typing import Any
 # Build only once and cache
 _module = None
 
-_src = r"""
+_cuda_src = r"""
 #include <torch/extension.h>
 #include <cuda.h>
 #include <cuda_runtime.h>
@@ -110,11 +110,11 @@ std::vector<torch::Tensor> softmax_sum_backward(torch::Tensor grad_out,
     }));
     return {grad_x, grad_logits};
 }
+"""
 
-PYBIND11_MODULE(TORCH_EXTENSION_NAME, m){
-    m.def("forward", &softmax_sum_forward, "SoftmaxSum forward");
-    m.def("backward", &softmax_sum_backward, "SoftmaxSum backward");
-}
+_cpp_src = r"""
+std::vector<torch::Tensor> softmax_sum_forward(torch::Tensor x, torch::Tensor logits);
+std::vector<torch::Tensor> softmax_sum_backward(torch::Tensor grad_out, torch::Tensor x, torch::Tensor weights);
 """
 
 def _get_module():
@@ -122,11 +122,11 @@ def _get_module():
     if _module is None:
         _module = load_inline(
             name="softmax_sum_cuda",
-            cpp_sources="",
-            cuda_sources=_src,
-            functions=["forward", "backward"],
+            cpp_sources=_cpp_src,
+            cuda_sources=_cuda_src,
+            functions=["softmax_sum_forward", "softmax_sum_backward"],
             extra_cuda_cflags=["-lineinfo"],
-            verbose=False,
+            verbose=True,  # Enable verbose for debugging
         )
     return _module
 
@@ -138,7 +138,7 @@ def softmax_sum(x: torch.Tensor, logits: torch.Tensor):
         weights = torch.softmax(logits, 0)
         return (x * weights.view(-1, 1, 1, 1, 1)).sum(dim=0)
     mod: Any = _get_module()
-    out, _ = mod.forward(x.contiguous(), logits.contiguous())
+    out, _ = mod.softmax_sum_forward(x.contiguous(), logits.contiguous())
     return out
 
 
@@ -167,7 +167,7 @@ class SoftmaxSumFunction(torch.autograd.Function):
         
         # CUDA accelerated path
         mod: Any = _get_module()
-        out, weights = mod.forward(x.contiguous(), logits.contiguous())
+        out, weights = mod.softmax_sum_forward(x.contiguous(), logits.contiguous())
         ctx.save_for_backward(x, weights)
         ctx.use_cuda = True
         return out
@@ -195,7 +195,7 @@ class SoftmaxSumFunction(torch.autograd.Function):
         
         # CUDA accelerated backward
         mod: Any = _get_module()
-        grad_x, grad_w = mod.backward(grad_out.contiguous(), x, weights)
+        grad_x, grad_w = mod.softmax_sum_backward(grad_out.contiguous(), x, weights)
         
         # Convert grad_w to grad_logits
         grad_logits = weights * (grad_w - (grad_w * weights).sum())
