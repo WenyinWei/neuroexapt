@@ -435,12 +435,31 @@ def find_optimal_batch_size(quiet: bool = False) -> int:
         print("=" * 60)
     
     results = []
+    peak_samples_per_sec = 0  # 记录峰值吞吐量
+    declining_count = 0  # 连续下降计数
     
     for batch_size in valid_candidates:
         result = test_batch_with_monitoring(batch_size, model, monitor)
         
         if result is not None:
             results.append(result)
+            current_samples_per_sec = result['samples_per_sec']
+            
+            # 智能停止逻辑：检测性能下降
+            if current_samples_per_sec > peak_samples_per_sec:
+                peak_samples_per_sec = current_samples_per_sec
+                declining_count = 0  # 重置下降计数
+            else:
+                declining_count += 1
+                decline_ratio = (peak_samples_per_sec - current_samples_per_sec) / peak_samples_per_sec
+                
+                # 如果性能下降超过15%或连续2次下降，智能停止
+                if decline_ratio > 0.15 or declining_count >= 2:
+                    if not quiet:
+                        print(f"🛑 智能停止: 检测到性能下降 ({current_samples_per_sec:.0f} < {peak_samples_per_sec:.0f} samples/s)")
+                        print(f"   下降幅度: {decline_ratio*100:.1f}%, 连续下降: {declining_count}次")
+                        print(f"   跳过剩余更大的batch size测试")
+                    break
         else:
             # 如果失败了，跳过更大的batch size
             if not quiet:
