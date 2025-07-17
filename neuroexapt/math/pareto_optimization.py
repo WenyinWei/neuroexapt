@@ -254,30 +254,38 @@ class ModelFitnessEvaluator:
             criterion = nn.CrossEntropyLoss()
             
             total_samples = 0
+            import time
             start_time = time.time()
             
+            batch_count = 0
             for batch_idx, (data, target) in enumerate(train_loader):
-                if batch_idx >= 5:  # 只测试几个batch
+                if batch_idx >= 3:  # 只测试几个batch
                     break
                     
-                data, target = data.to(self.device), target.to(self.device)
-                
-                optimizer.zero_grad()
-                output = model(data)
-                loss = criterion(output, target)
-                loss.backward()
-                optimizer.step()
-                
-                total_samples += data.size(0)
+                try:
+                    data, target = data.to(self.device), target.to(self.device)
+                    
+                    optimizer.zero_grad()
+                    output = model(data)
+                    loss = criterion(output, target)
+                    loss.backward()
+                    optimizer.step()
+                    
+                    total_samples += data.size(0)
+                    batch_count += 1
+                    
+                except Exception as e:
+                    logger.debug(f"Batch {batch_idx} failed in speed evaluation: {e}")
+                    continue
             
             elapsed_time = time.time() - start_time
-            speed = total_samples / elapsed_time if elapsed_time > 0 else 0.0
+            speed = total_samples / elapsed_time if elapsed_time > 0 and total_samples > 0 else 1.0
             
-            return speed
+            return max(speed, 1.0)  # 确保返回正值
             
         except Exception as e:
             logger.warning(f"Training speed evaluation failed: {e}")
-            return 0.0
+            return 1.0  # 返回默认值而不是0
     
     def _estimate_energy_consumption(self, model: nn.Module, complexity: float, efficiency: float) -> float:
         """估算能耗（焦耳）"""

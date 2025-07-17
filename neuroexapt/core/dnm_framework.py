@@ -245,15 +245,17 @@ class DNMFramework:
                             self.statistics['total_optimizations'] += 1
                         
                         # 更新优化器以包含新参数
-                        self._update_optimizer(optimizer, model)
+                        optimizer = self._update_optimizer(optimizer, model)
                         
                         # 更新模型种群
                         if optimization_result.get('optimized', False) and optimization_result.get('best_models'):
                             self.model_population = optimization_result['best_models'][:3]
                             # 选择最好的模型继续训练
-                            model = self._select_best_model_for_training(optimization_result['best_models'], 
-                                                                        optimization_result['best_fitness'])
-                            self._update_optimizer(optimizer, model)
+                            new_model = self._select_best_model_for_training(optimization_result['best_models'], 
+                                                                           optimization_result['best_fitness'])
+                            if new_model is not None:
+                                model = new_model
+                                optimizer = self._update_optimizer(optimizer, model)
                 
                 # 5. 输出状态
                 current_params = sum(p.numel() for p in model.parameters())
@@ -396,24 +398,58 @@ class DNMFramework:
         accuracy = 100.0 * correct / total
         return avg_loss, accuracy
     
-    def _update_optimizer(self, optimizer: torch.optim.Optimizer, model: nn.Module) -> None:
+    def _update_optimizer(self, optimizer: torch.optim.Optimizer, model: nn.Module) -> torch.optim.Optimizer:
         """更新优化器参数组以包含新参数"""
-        # 简单重建优化器
-        state_dict = optimizer.state_dict()
-        lr = optimizer.param_groups[0]['lr']
-        
-        # 创建新优化器
-        new_optimizer = type(optimizer)(model.parameters(), lr=lr)
-        
-        # 尝试恢复状态（对于新参数，状态将为空）
         try:
-            new_optimizer.load_state_dict(state_dict)
+            # 保存当前优化器配置
+            state_dict = optimizer.state_dict()
+            lr = optimizer.param_groups[0]['lr']
+            momentum = optimizer.param_groups[0].get('momentum', 0.9)
+            weight_decay = optimizer.param_groups[0].get('weight_decay', 0)
+            
+            # 创建新优化器以包含所有当前参数
+            if isinstance(optimizer, torch.optim.SGD):
+                new_optimizer = torch.optim.SGD(
+                    model.parameters(), lr=lr, momentum=momentum, weight_decay=weight_decay
+                )
+            elif isinstance(optimizer, torch.optim.Adam):
+                betas = optimizer.param_groups[0].get('betas', (0.9, 0.999))
+                eps = optimizer.param_groups[0].get('eps', 1e-8)
+                new_optimizer = torch.optim.Adam(
+                    model.parameters(), lr=lr, betas=betas, eps=eps, weight_decay=weight_decay
+                )
+            else:
+                # 通用处理
+                new_optimizer = type(optimizer)(model.parameters(), lr=lr)
+            
+            # 尝试恢复状态（只针对存在的参数）
+            try:
+                old_state = state_dict.get('state', {})
+                new_state = {}
+                
+                # 遍历新优化器的参数
+                param_mapping = {}
+                for group_idx, group in enumerate(new_optimizer.param_groups):
+                    for param_idx, param in enumerate(group['params']):
+                        param_id = id(param)
+                        param_mapping[param_id] = param
+                
+                # 恢复可以恢复的状态
+                for old_param_id, old_param_state in old_state.items():
+                    if old_param_id in param_mapping:
+                        new_state[old_param_id] = old_param_state
+                
+                new_optimizer.state = new_state
+                
+            except Exception as e:
+                logger.debug(f"Could not restore optimizer state: {e}")
+            
+            return new_optimizer
+            
         except Exception as e:
-            logger.warning(f"Could not restore optimizer state: {e}")
-        
-        # 更新原优化器的引用
-        optimizer.param_groups = new_optimizer.param_groups
-        optimizer.state = new_optimizer.state
+            logger.warning(f"Failed to update optimizer: {e}")
+            # 如果失败，返回原优化器
+            return optimizer
     
     def _select_best_model_for_training(self, models: List[nn.Module], fitness_list: List) -> nn.Module:
         """从候选模型中选择最佳的用于继续训练"""

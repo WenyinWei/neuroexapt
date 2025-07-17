@@ -40,26 +40,47 @@ class NeuronInformationAnalyzer:
         Returns:
             每个神经元/通道的信息熵
         """
+        # 安全处理激活张量
+        if not isinstance(activations, torch.Tensor) or activations.numel() == 0:
+            return torch.zeros(1, device=activations.device if isinstance(activations, torch.Tensor) else torch.device('cpu'))
+        
+        # 确保激活张量是连续的
+        activations = activations.contiguous()
+        
         if len(activations.shape) == 4:  # Conv2D层
             return self._analyze_conv_entropy(activations)
         elif len(activations.shape) == 2:  # Linear层
             return self._analyze_linear_entropy(activations)
+        elif len(activations.shape) == 3:  # 可能是展平后的卷积层
+            # 尝试将其视为2D进行处理
+            reshaped = activations.view(activations.shape[0], -1)
+            return self._analyze_linear_entropy(reshaped)
         else:
-            logger.warning(f"Unsupported activation shape: {activations.shape}")
-            return torch.zeros(activations.shape[1])
+            logger.warning(f"Unsupported activation shape: {activations.shape} for layer {layer_name}")
+            # 返回安全的默认值
+            return torch.zeros(activations.shape[1] if len(activations.shape) > 1 else 1, 
+                             device=activations.device)
     
     def _analyze_conv_entropy(self, activations: torch.Tensor) -> torch.Tensor:
         """分析卷积层的通道熵"""
+        if len(activations.shape) < 4:
+            # 处理不规则的激活形状
+            return torch.zeros(activations.shape[1] if len(activations.shape) > 1 else 1, device=activations.device)
+        
         B, C, H, W = activations.shape
         channel_entropies = []
         
         for c in range(C):
-            # 获取该通道的所有激活值
-            channel_data = activations[:, c, :, :].reshape(-1)
-            
-            # 计算信息熵
-            entropy = self._calculate_entropy(channel_data)
-            channel_entropies.append(entropy)
+            try:
+                # 安全地获取该通道的所有激活值
+                channel_data = activations[:, c, :, :].contiguous().view(-1)
+                
+                # 计算信息熵
+                entropy = self._calculate_entropy(channel_data)
+                channel_entropies.append(entropy)
+            except Exception as e:
+                # 如果出现错误，使用默认熵值
+                channel_entropies.append(0.0)
         
         return torch.tensor(channel_entropies, device=activations.device)
     
