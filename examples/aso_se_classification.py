@@ -221,17 +221,43 @@ class ArchitectureManager(nn.Module):
             weights[3] = 1.0  # 强制使用skip_connect (index 3)
             return weights.detach()  # 不需要梯度
         else:
-            # 在搜索阶段使用Gumbel-Softmax，但保持温和过渡
+            # 在搜索阶段使用更保守的策略
             if training_phase == 'search':
-                # 平滑过渡：混合learned logits和Gumbel采样
+                # 首先获取当前最优操作
                 with torch.no_grad():
-                    # 从当前学到的参数开始，避免突然跳跃
-                    current_best = torch.argmax(logits).item()
-                    if current_best == 3:  # 如果当前最优是skip_connect
-                        # 给其他操作一些机会，但不要完全随机
-                        logits = logits + torch.randn_like(logits) * 0.1
+                    current_best_idx = torch.argmax(logits).item()
+                    
+                    # 如果当前最优不是skip_connect，并且其权重不够高，进行调整
+                    if current_best_idx != 3:  # 不是skip_connect
+                        softmax_weights = F.softmax(logits, dim=0)
+                        max_weight = softmax_weights[current_best_idx].item()
+                        
+                        # 如果最大权重太低，增强信号
+                        if max_weight < 0.4:  # 权重太分散
+                            # 增强最有希望的几个操作
+                            enhanced_logits = logits.clone()
+                            # 找到top-3操作
+                            _, top_indices = torch.topk(logits, 3)
+                            for idx in top_indices:
+                                if idx != 0:  # 不增强none操作
+                                    enhanced_logits[idx] += 0.5
+                            logits = enhanced_logits
                 
-            return selector(logits.unsqueeze(0)).squeeze(0)
+                # 保存原始温度
+                original_temp = selector.temperature
+                # 临时设置更保守的温度
+                selector.temperature = max(0.5, original_temp)
+                
+                try:
+                    result = selector(logits.unsqueeze(0)).squeeze(0)
+                finally:
+                    # 恢复原始温度
+                    selector.temperature = original_temp
+                
+                return result
+            else:
+                # growth和optimize阶段正常使用
+                return selector(logits.unsqueeze(0)).squeeze(0)
     
     def preserve_architecture_knowledge(self):
         """保存当前架构知识，用于平滑过渡"""
@@ -642,22 +668,23 @@ class ASOSETrainer:
         
         for batch_idx, (data, targets) in enumerate(pbar):
             data, targets = data.to(self.device), targets.to(self.device)
+            batch_outputs = None  # 用于追踪当前batch的输出
             
             # 在warmup和optimize阶段，只优化权重参数
             if self.current_phase in ['warmup', 'optimize']:
                 self.weight_optimizer.zero_grad()
-                outputs = self.network(data)
-                loss = F.cross_entropy(outputs, targets)
+                batch_outputs = self.network(data)
+                loss = F.cross_entropy(batch_outputs, targets)
                 loss.backward()
                 self.weight_optimizer.step()
                 
             # 在search和growth阶段，交替优化权重和架构参数（避免干扰）
             elif self.current_phase in ['search', 'growth']:
-                if batch_idx % 3 == 0:  # 架构优化频率降低，避免过度干扰
+                if batch_idx % 5 == 0:  # 进一步降低架构优化频率
                     # 架构参数优化
                     self.arch_optimizer.zero_grad()
-                    arch_outputs = self.network(data)
-                    arch_loss = F.cross_entropy(arch_outputs, targets)
+                    batch_outputs = self.network(data)
+                    arch_loss = F.cross_entropy(batch_outputs, targets)
                     arch_loss.backward()
                     self.arch_optimizer.step()
                     
@@ -667,17 +694,26 @@ class ASOSETrainer:
                 else:
                     # 权重参数优化
                     self.weight_optimizer.zero_grad()
-                    outputs = self.network(data)
-                    loss = F.cross_entropy(outputs, targets)
+                    batch_outputs = self.network(data)
+                    loss = F.cross_entropy(batch_outputs, targets)
                     loss.backward()
                     self.weight_optimizer.step()
             
-            # 统计（使用最后的前向传播结果）
+            # 统计（使用当前batch的输出，确保batch size匹配）
             with torch.no_grad():
-                if 'outputs' not in locals():
-                    outputs = self.network(data)
-                total_loss += F.cross_entropy(outputs, targets).item()
-                _, predicted = outputs.max(1)
+                if batch_outputs is None:
+                    batch_outputs = self.network(data)
+                
+                # 确保输出和目标的batch size匹配
+                if batch_outputs.size(0) != targets.size(0):
+                    print(f"⚠️ Batch size不匹配: outputs={batch_outputs.size(0)}, targets={targets.size(0)}")
+                    # 截取到最小的batch size
+                    min_batch = min(batch_outputs.size(0), targets.size(0))
+                    batch_outputs = batch_outputs[:min_batch]
+                    targets = targets[:min_batch]
+                
+                total_loss += F.cross_entropy(batch_outputs, targets).item()
+                _, predicted = batch_outputs.max(1)
                 total += targets.size(0)
                 correct += predicted.eq(targets).sum().item()
             
@@ -728,8 +764,9 @@ class ASOSETrainer:
             # 实现平滑过渡到搜索阶段
             self.network.arch_manager.smooth_transition_to_search(preserved_knowledge)
             
-            # 重置Gumbel温度为搜索阶段适合的值
-            self.network.gumbel_selector.temperature = 0.8  # 适中的温度开始搜索
+            # 设置更保守的搜索温度，从较高温度开始
+            self.network.gumbel_selector.temperature = 1.5  # 更高的起始温度
+            self.network.gumbel_selector.anneal_rate = 0.995  # 更慢的退火
             print(f"🌡️ 重置Gumbel温度为 {self.network.gumbel_selector.temperature}")
         
         elif self.current_phase == 'search' and self.phase_epochs >= self.phase_durations['search']:
@@ -743,7 +780,7 @@ class ASOSETrainer:
             print(f"🔄 进入最终优化阶段")
             
             # 在优化阶段固定架构，专注于权重优化
-            self.network.gumbel_selector.temperature = 0.01  # 极低温度，几乎确定性
+            self.network.gumbel_selector.temperature = 0.1  # 低温度，接近确定性
         
         # 同步网络的训练阶段
         if old_phase != self.current_phase:
