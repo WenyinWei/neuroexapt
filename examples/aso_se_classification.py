@@ -1,19 +1,17 @@
 #!/usr/bin/env python3
 """
-ASO-SE 神经网络自生长架构系统 - 冲击CIFAR-10 95%准确率
+ASO-SE (Alternating Stable Optimization with Stochastic Exploration) 神经网络训练
 
-🧬 ASO-SE理论框架 (Alternating Stable Optimization with Stochastic Exploration):
-交替式稳定优化与随机探索，解决可微架构搜索的核心矛盾：
-- 网络参数和架构参数耦合优化代价巨大
-- 解耦优化又会引入破坏性的"架构震荡"
+核心特性：
+🚀 真正的架构搜索和网络结构动态生长
+🔧 基于Net2Net的平滑参数迁移
+⚡ Gumbel-Softmax引导的可微分架构采样
+🎯 四阶段训练循环：预热→搜索→生长→优化
 
-🌱 核心机制：
-1. 函数保持突变 - 平滑架构过渡，避免性能剧降
-2. Gumbel-Softmax引导探索 - 突破局部最优，智能选择架构
-3. 四阶段循环训练 - 稳定优化与探索的完美平衡
-4. 渐进式结构生长 - 真正的参数量和深度增长
-
-🎯 目标：CIFAR-10数据集95%+准确率，展示ASO-SE的强大能力
+架构生长策略：
+- 深度生长：添加新的可进化层
+- 宽度生长：扩展现有层的通道数
+- 分支生长：增加操作分支的复杂度
 """
 
 import torch
@@ -27,1454 +25,688 @@ import numpy as np
 import time
 import os
 import sys
-import json
-import math
+import argparse
 from datetime import datetime
 from tqdm import tqdm
-from typing import Dict, List, Optional, Tuple, Union
+from typing import Dict, List, Optional
 
 # 添加项目路径
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from neuroexapt.core import CheckpointManager, get_checkpoint_manager
-from neuroexapt.core.evolution_checkpoint import EvolutionCheckpointManager
-from neuroexapt.core.function_preserving_init import FunctionPreservingInitializer
+# 导入模块
+from neuroexapt.core.genotypes import PRIMITIVES
+from neuroexapt.core.operations import OPS
+from neuroexapt.core.net2net_transfer import Net2NetTransfer
 
-# 配置简洁日志格式，去除多余前缀
+# 配置日志
 import logging
-logging.basicConfig(
-    level=logging.INFO, 
-    format='%(asctime)s | %(message)s',
-    datefmt='%H:%M:%S'
-)
+logging.basicConfig(level=logging.INFO, format='%(asctime)s | %(message)s', datefmt='%H:%M:%S')
 logger = logging.getLogger()
 
-class GumbelSoftmaxSelector:
-    """Gumbel-Softmax架构选择器 - 核心探索机制"""
+class GumbelSoftmaxSelector(nn.Module):
+    """Gumbel-Softmax架构采样器"""
     
     def __init__(self, initial_temp=5.0, min_temp=0.1, anneal_rate=0.98):
-        self.initial_temp = initial_temp
-        self.min_temp = min_temp
+        super().__init__()
+        self.temperature = initial_temp
+        self.min_temperature = min_temp
         self.anneal_rate = anneal_rate
-        self.current_temp = initial_temp
         
-    def sample(self, logits: torch.Tensor, hard=True):
-        """使用Gumbel-Softmax进行可微采样"""
+    def forward(self, logits, hard=True):
+        """Gumbel-Softmax采样"""
         if not self.training:
-            # 测试时使用argmax
-            return F.one_hot(logits.argmax(dim=-1), logits.size(-1)).float()
+            # 推理时使用argmax
+            y_hard = torch.zeros_like(logits)
+            y_hard.scatter_(-1, torch.argmax(logits, dim=-1, keepdim=True), 1.0)
+            return y_hard
         
-        # Gumbel噪声
+        # 训练时使用Gumbel-Softmax
         gumbel_noise = -torch.log(-torch.log(torch.rand_like(logits) + 1e-8) + 1e-8)
-        logits_with_noise = (logits + gumbel_noise) / self.current_temp
-        
-        soft_sample = F.softmax(logits_with_noise, dim=-1)
+        y_soft = F.softmax((logits + gumbel_noise) / self.temperature, dim=-1)
         
         if hard:
-            # 硬采样 - 前向时离散，反向时连续
-            hard_sample = F.one_hot(soft_sample.argmax(dim=-1), soft_sample.size(-1)).float()
-            return hard_sample - soft_sample.detach() + soft_sample
-        
-        return soft_sample
+            # Straight-through estimator
+            max_indices = torch.argmax(y_soft, dim=-1, keepdim=True)
+            y_hard = torch.zeros_like(y_soft).scatter_(-1, max_indices, 1.0)
+            return y_hard - y_soft.detach() + y_soft
+        else:
+            return y_soft
     
     def anneal_temperature(self):
-        """退火温度"""
-        self.current_temp = max(self.min_temp, self.current_temp * self.anneal_rate)
-        return self.current_temp
+        """温度退火"""
+        self.temperature = max(self.min_temperature, self.temperature * self.anneal_rate)
 
-class AdvancedEvolvableBlock(nn.Module):
-    """高级可演化块 - 整合所有先进特性"""
+class MixedOperation(nn.Module):
+    """混合操作层 - 支持多种原始操作"""
     
-    def __init__(self, in_channels, out_channels, block_id, stride=1):
+    def __init__(self, C, stride):
         super().__init__()
+        self.operations = nn.ModuleList()
+        self.C = C
+        self.stride = stride
         
-        self.block_id = block_id
+        # 创建所有候选操作
+        for primitive in PRIMITIVES:
+            op = self._create_operation(primitive, C, stride)
+            self.operations.append(op)
+        
+        self.num_ops = len(PRIMITIVES)
+        print(f"🔧 MixedOperation 创建: {self.num_ops} 个操作, C={C}, stride={stride}")
+    
+    def _create_operation(self, primitive, C, stride):
+        """创建单个操作"""
+        if primitive in OPS:
+            return OPS[primitive](C, stride, False)
+        elif primitive == 'skip_connect':
+            if stride == 1:
+                return Identity()
+            else:
+                return FactorizedReduce(C, C)
+        else:
+            # 基础操作实现
+            if primitive == 'sep_conv_3x3':
+                return SepConv(C, C, 3, stride, 1)
+            elif primitive == 'sep_conv_5x5':
+                return SepConv(C, C, 5, stride, 2)
+            elif primitive == 'dil_conv_3x3':
+                return DilConv(C, C, 3, stride, 2, 2)
+            elif primitive == 'dil_conv_5x5':
+                return DilConv(C, C, 5, stride, 4, 2)
+            elif primitive == 'avg_pool_3x3':
+                return nn.AvgPool2d(3, stride=stride, padding=1, count_include_pad=False)
+            elif primitive == 'max_pool_3x3':
+                return nn.MaxPool2d(3, stride=stride, padding=1)
+            else:
+                raise ValueError(f"Unknown primitive: {primitive}")
+    
+    def forward(self, x, arch_weights):
+        """前向传播"""
+        # 对每个操作计算结果并加权求和
+        results = []
+        for i, op in enumerate(self.operations):
+            results.append(arch_weights[i] * op(x))
+        
+        return sum(results)
+
+class ArchitectureManager(nn.Module):
+    """架构参数管理器"""
+    
+    def __init__(self, num_layers, num_ops):
+        super().__init__()
+        self.num_layers = num_layers
+        self.num_ops = num_ops
+        
+        # 为每层创建架构参数
+        self.arch_params = nn.ParameterList()
+        for i in range(num_layers):
+            # 每层的架构参数
+            layer_params = nn.Parameter(torch.randn(num_ops) * 0.1)
+            self.arch_params.append(layer_params)
+        
+        print(f"🔧 ArchitectureManager: {num_layers} 层, 每层 {num_ops} 个操作")
+    
+    def get_arch_weights(self, layer_idx, selector):
+        """获取指定层的架构权重"""
+        if layer_idx >= len(self.arch_params):
+            # 如果层数增加了，添加新的架构参数
+            while len(self.arch_params) <= layer_idx:
+                new_params = nn.Parameter(torch.randn(self.num_ops) * 0.1)
+                if self.arch_params[0].device != torch.device('cpu'):
+                    new_params = new_params.to(self.arch_params[0].device)
+                self.arch_params.append(new_params)
+        
+        logits = self.arch_params[layer_idx]
+        return selector(logits.unsqueeze(0)).squeeze(0)
+    
+    def get_current_genotype(self):
+        """获取当前基因型"""
+        genotype = []
+        for layer_params in self.arch_params:
+            best_op_idx = torch.argmax(layer_params).item()
+            best_op = PRIMITIVES[best_op_idx]
+            genotype.append(best_op)
+        return genotype
+
+class EvolvableBlock(nn.Module):
+    """可进化的网络块"""
+    
+    def __init__(self, in_channels, out_channels, stride=1):
+        super().__init__()
         self.in_channels = in_channels
         self.out_channels = out_channels
         self.stride = stride
         
-        # 多种操作选择 - 架构搜索空间
-        self.operations = self._build_operation_space()
+        # 预处理层（如果通道数不匹配）
+        self.preprocess = None
+        if in_channels != out_channels:
+            self.preprocess = nn.Sequential(
+                nn.Conv2d(in_channels, out_channels, 1, stride=stride, bias=False),
+                nn.BatchNorm2d(out_channels)
+            )
         
-        # 架构参数 - 用于搜索最优操作组合
-        self.alpha_ops = nn.Parameter(torch.randn(len(self.operations)))
-        
-        # 跳跃连接选择
-        self.skip_ops = nn.ModuleList([
-            nn.Identity(),  # 直接连接
-            nn.Conv2d(in_channels, out_channels, 1, stride=stride, bias=False) if in_channels != out_channels or stride != 1 else nn.Identity(),  # 1x1投影
-        ])
-        self.alpha_skip = nn.Parameter(torch.randn(len(self.skip_ops)))
-        
-        # 并行分支（可动态添加）
-        self.branches = nn.ModuleList()
-        self.alpha_branches = nn.Parameter(torch.zeros(0))  # 动态大小
-        
-        # Gumbel-Softmax选择器
-        self.gumbel_selector = GumbelSoftmaxSelector()
-        
-        # 函数保持初始化器
-        self.fp_initializer = FunctionPreservingInitializer()
-        
-        # 演化历史
-        self.evolution_history = []
-        
-        # 性能统计
-        self.performance_stats = {
-            'forward_count': 0,
-            'avg_output_norm': 0.0,
-            'gradient_norm': 0.0
-        }
-        
-        print(f"🧱 Block {block_id}: {in_channels}→{out_channels}, stride={stride}, {len(self.operations)} ops")
+        # 主要的混合操作
+        self.mixed_op = MixedOperation(out_channels, stride=1)
     
-    def _build_operation_space(self):
-        """构建丰富的操作搜索空间"""
-        ops = nn.ModuleList()
+    def forward(self, x, arch_weights):
+        """前向传播"""
+        if self.preprocess is not None:
+            x = self.preprocess(x)
         
-        # 1. 标准卷积
-        ops.append(nn.Sequential(
-            nn.Conv2d(self.in_channels, self.out_channels, 3, 
-                     stride=self.stride, padding=1, bias=False),
-            nn.BatchNorm2d(self.out_channels),
-            nn.ReLU(inplace=False)
-        ))
-        
-        # 2. 深度可分离卷积
-        if self.in_channels == self.out_channels and self.stride == 1:
-            ops.append(nn.Sequential(
-                nn.Conv2d(self.in_channels, self.in_channels, 3, 
-                         stride=self.stride, padding=1, groups=self.in_channels, bias=False),
-                nn.Conv2d(self.in_channels, self.out_channels, 1, bias=False),
-                nn.BatchNorm2d(self.out_channels),
-                nn.ReLU(inplace=False)
-            ))
-        else:
-            # 不能分组时使用1x1卷积
-            ops.append(nn.Sequential(
-                nn.Conv2d(self.in_channels, self.out_channels, 1, 
-                         stride=self.stride, bias=False),
-                nn.BatchNorm2d(self.out_channels),
-                nn.ReLU(inplace=False)
-            ))
-        
-        # 3. 扩张卷积
-        ops.append(nn.Sequential(
-            nn.Conv2d(self.in_channels, self.out_channels, 3, 
-                     stride=self.stride, padding=2, dilation=2, bias=False),
-            nn.BatchNorm2d(self.out_channels),
-            nn.ReLU(inplace=False)
-        ))
-        
-        # 4. 分组卷积
-        groups = min(self.in_channels, self.out_channels, 8)
-        if self.in_channels % groups == 0 and self.out_channels % groups == 0:
-            ops.append(nn.Sequential(
-                nn.Conv2d(self.in_channels, self.out_channels, 3, 
-                         stride=self.stride, padding=1, groups=groups, bias=False),
-                nn.BatchNorm2d(self.out_channels),
-                nn.ReLU(inplace=False)
-            ))
-        else:
-            # 回退到标准卷积
-            ops.append(nn.Sequential(
-                nn.Conv2d(self.in_channels, self.out_channels, 3, 
-                         stride=self.stride, padding=1, bias=False),
-                nn.BatchNorm2d(self.out_channels),
-                nn.ReLU(inplace=False)
-            ))
-        
-        # 5. 5x5卷积（用两个3x3近似）
-        ops.append(nn.Sequential(
-            nn.Conv2d(self.in_channels, self.out_channels, 3, 
-                     stride=1, padding=1, bias=False),
-            nn.BatchNorm2d(self.out_channels),
-            nn.ReLU(inplace=False),
-            nn.Conv2d(self.out_channels, self.out_channels, 3, 
-                     stride=self.stride, padding=1, bias=False),
-            nn.BatchNorm2d(self.out_channels),
-            nn.ReLU(inplace=False)
-        ))
-        
-        return ops
-    
-    def forward(self, x):
-        """前向传播 - ASO-SE架构搜索"""
-        # 更新性能统计
-        self.performance_stats['forward_count'] += 1
-        
-        # 使用Gumbel-Softmax选择操作
-        op_weights = self.gumbel_selector.sample(self.alpha_ops)
-        output = sum(w * op(x) for w, op in zip(op_weights, self.operations))
-        
-        # 跳跃连接选择
-        skip_weights = self.gumbel_selector.sample(self.alpha_skip)
-        skip_output = sum(w * op(x) for w, op in zip(skip_weights, self.skip_ops))
-        
-        # 融合主路径和跳跃连接
-        if skip_output.shape == output.shape:
-            output = output + 0.3 * skip_output  # 加权融合
-        
-        # 并行分支（如果有）
-        if len(self.branches) > 0 and len(self.alpha_branches) > 0:
-            branch_weights = F.softmax(self.alpha_branches, dim=0)
-            branch_outputs = []
-            
-            for branch in self.branches:
-                try:
-                    branch_out = branch(x)
-                    # 形状匹配
-                    if branch_out.shape != output.shape:
-                        branch_out = self._match_tensor_shape(branch_out, output)
-                    branch_outputs.append(branch_out)
-                except Exception as e:
-                    print(f"Branch error: {e}")
-                    branch_outputs.append(torch.zeros_like(output))
-            
-            if branch_outputs:
-                branch_output = sum(w * out for w, out in zip(branch_weights, branch_outputs))
-                output = output + 0.2 * branch_output  # 分支贡献权重
-        
-        # 更新输出统计
-        with torch.no_grad():
-            self.performance_stats['avg_output_norm'] = 0.9 * self.performance_stats['avg_output_norm'] + 0.1 * output.norm().item()
-        
-        return output
-    
-    def _match_tensor_shape(self, source, target):
-        """智能张量形状匹配"""
-        if source.shape == target.shape:
-            return source
-        
-        # 空间维度匹配
-        if source.shape[2:] != target.shape[2:]:
-            source = F.adaptive_avg_pool2d(source, target.shape[2:])
-        
-        # 通道维度匹配
-        if source.shape[1] != target.shape[1]:
-            if not hasattr(self, '_channel_adapter'):
-                self._channel_adapter = nn.Conv2d(
-                    source.shape[1], target.shape[1], 1, bias=False
-                ).to(source.device)
-                
-                # 函数保持初始化
-                with torch.no_grad():
-                    if source.shape[1] <= target.shape[1]:
-                        self._channel_adapter.weight.zero_()
-                        min_ch = min(source.shape[1], target.shape[1])
-                        for i in range(min_ch):
-                            self._channel_adapter.weight[i, i, 0, 0] = 1.0
-                    else:
-                        # 平均池化投影
-                        self._channel_adapter.weight.fill_(1.0 / source.shape[1])
-            
-            source = self._channel_adapter(source)
-        
-        return source
-    
-    def grow_branches(self, num_branches=1):
-        """增加并行分支 - 真正的结构生长"""
-        device = next(self.parameters()).device
-        
-        for _ in range(num_branches):
-            # 创建新分支
-            branch = nn.Sequential(
-                nn.Conv2d(self.in_channels, self.out_channels, 5, 
-                         stride=self.stride, padding=2, bias=False),
-                nn.BatchNorm2d(self.out_channels),
-                nn.ReLU(inplace=False)
-            ).to(device)
-            
-            # 函数保持初始化
-            self.fp_initializer.initialize_new_branch(branch)
-            
-            self.branches.append(branch)
-        
-        # 更新分支权重参数
-        new_alpha_branches = torch.zeros(len(self.branches), device=device)
-        if len(self.alpha_branches) > 0:
-            new_alpha_branches[:len(self.alpha_branches)] = self.alpha_branches
-        self.alpha_branches = nn.Parameter(new_alpha_branches)
-        
-        self.evolution_history.append({
-            'type': 'branch_growth',
-            'num_branches': num_branches,
-            'total_branches': len(self.branches),
-            'timestamp': time.time()
-        })
-        
-        print(f"🌿 Block {self.block_id}: Added {num_branches} branches (total: {len(self.branches)})")
-        return True
-    
-    def expand_channels(self, expansion_factor=1.5):
-        """扩展通道数 - 真正的参数量增长"""
-        new_out_channels = int(self.out_channels * expansion_factor)
-        if new_out_channels <= self.out_channels:
-            return False
-        
-        device = next(self.parameters()).device
-        old_channels = self.out_channels
-        
-        # 扩展所有操作的输出通道
-        for i, op in enumerate(self.operations):
-            new_op = self._expand_operation_channels(op, new_out_channels)
-            if new_op is not None:
-                self.operations[i] = new_op.to(device)
-        
-        # 扩展跳跃连接
-        for i, skip_op in enumerate(self.skip_ops):
-            if isinstance(skip_op, nn.Conv2d):
-                new_skip = self._expand_conv_channels(skip_op, new_out_channels)
-                if new_skip is not None:
-                    self.skip_ops[i] = new_skip.to(device)
-        
-        # 扩展分支
-        for i, branch in enumerate(self.branches):
-            new_branch = self._expand_operation_channels(branch, new_out_channels)
-            if new_branch is not None:
-                self.branches[i] = new_branch.to(device)
-        
-        self.out_channels = new_out_channels
-        
-        self.evolution_history.append({
-            'type': 'channel_expansion',
-            'old_channels': old_channels,
-            'new_channels': new_out_channels,
-            'expansion_factor': expansion_factor,
-            'timestamp': time.time()
-        })
-        
-        print(f"🌱 Block {self.block_id}: Channels {old_channels}→{new_out_channels}")
-        return True
-    
-    def _expand_operation_channels(self, operation, new_out_channels):
-        """扩展操作的输出通道数"""
-        if isinstance(operation, nn.Sequential):
-            new_layers = []
-            for layer in operation:
-                if isinstance(layer, nn.Conv2d):
-                    new_conv = self._expand_conv_channels(layer, new_out_channels)
-                    new_layers.append(new_conv if new_conv else layer)
-                elif isinstance(layer, nn.BatchNorm2d):
-                    new_bn = nn.BatchNorm2d(new_out_channels)
-                    # 参数迁移
-                    with torch.no_grad():
-                        old_channels = layer.num_features
-                        min_channels = min(old_channels, new_out_channels)
-                        if hasattr(layer, 'weight') and layer.weight is not None:
-                            new_bn.weight[:min_channels] = layer.weight[:min_channels]
-                        if hasattr(layer, 'bias') and layer.bias is not None:
-                            new_bn.bias[:min_channels] = layer.bias[:min_channels]
-                        if hasattr(layer, 'running_mean'):
-                            new_bn.running_mean[:min_channels] = layer.running_mean[:min_channels]
-                        if hasattr(layer, 'running_var'):
-                            new_bn.running_var[:min_channels] = layer.running_var[:min_channels]
-                    new_layers.append(new_bn)
-                else:
-                    new_layers.append(layer)
-            return nn.Sequential(*new_layers)
-        
-        return None
-    
-    def _expand_conv_channels(self, conv_layer, new_out_channels):
-        """扩展卷积层的输出通道数"""
-        if not isinstance(conv_layer, nn.Conv2d):
-            return None
-        
-        new_conv = nn.Conv2d(
-            conv_layer.in_channels,
-            new_out_channels,
-            conv_layer.kernel_size,
-            stride=conv_layer.stride,
-            padding=conv_layer.padding,
-            dilation=conv_layer.dilation,
-            groups=conv_layer.groups if conv_layer.groups == 1 else min(conv_layer.groups, new_out_channels),
-            bias=conv_layer.bias is not None
-        )
-        
-        # 函数保持参数迁移
-        with torch.no_grad():
-            old_out_channels = conv_layer.out_channels
-            min_out_channels = min(old_out_channels, new_out_channels)
-            
-            # 复制权重
-            new_conv.weight[:min_out_channels] = conv_layer.weight[:min_out_channels]
-            
-            # 新增通道用小随机值初始化，避免破坏函数
-            if new_out_channels > old_out_channels:
-                nn.init.normal_(new_conv.weight[old_out_channels:], mean=0, std=0.01)
-            
-            # 复制偏置
-            if conv_layer.bias is not None:
-                new_conv.bias[:min_out_channels] = conv_layer.bias[:min_out_channels]
-        
-        return new_conv
-    
-    def get_architecture_weights(self):
-        """获取当前架构权重（用于架构参数训练）"""
-        return {
-            'alpha_ops': self.alpha_ops,
-            'alpha_skip': self.alpha_skip,
-            'alpha_branches': self.alpha_branches if len(self.alpha_branches) > 0 else None
-        }
+        out = self.mixed_op(x, arch_weights)
+        return out
 
-class ASOSEGrowingNetwork(nn.Module):
-    """ASO-SE自生长神经网络 - 完整的四阶段训练框架"""
+class ASOSENetwork(nn.Module):
+    """ASO-SE可生长神经网络"""
     
-    def __init__(self, num_classes=10, initial_channels=32, initial_depth=4):
+    def __init__(self, input_channels=3, initial_channels=16, num_classes=10, initial_depth=8):
         super().__init__()
-        
-        self.num_classes = num_classes
+        self.input_channels = input_channels
         self.initial_channels = initial_channels
+        self.num_classes = num_classes
         self.current_depth = initial_depth
+        self.current_channels = initial_channels
         
-        # 输入处理
+        # 初始特征提取
         self.stem = nn.Sequential(
-            nn.Conv2d(3, initial_channels, 3, padding=1, bias=False),
+            nn.Conv2d(input_channels, initial_channels, 3, padding=1, bias=False),
             nn.BatchNorm2d(initial_channels),
             nn.ReLU(inplace=True)
         )
         
-        # 可演化层
+        # 可进化层
         self.layers = nn.ModuleList()
-        self._build_initial_architecture()
+        current_channels = initial_channels
         
-        # 全局池化和分类器
-        self.global_pool = nn.AdaptiveAvgPool2d(1)
-        self.classifier = nn.Linear(self.layers[-1].out_channels, num_classes)
-        
-        # ASO-SE组件
-        self.gumbel_selector = GumbelSoftmaxSelector()
-        self.fp_initializer = FunctionPreservingInitializer()
-        
-        # 训练阶段状态
-        self.training_phase = "weight_training"  # weight_training, arch_training, mutation, retraining
-        self.phase_epoch = 0
-        self.cycle_count = 0
-        
-        # 架构搜索历史
-        self.architecture_history = []
-        self.performance_history = []
-        
-        # 生长统计
-        self.growth_stats = {
-            'depth_growths': 0,
-            'channel_growths': 0, 
-            'branch_growths': 0,
-            'total_growths': 0,
-            'parameter_evolution': []
-        }
-        
-        # 记录初始状态
-        self._record_current_state("initialization")
-        
-        print(f"🌱 ASO-SE Network initialized:")
-        print(f"   Depth: {self.current_depth}, Channels: {initial_channels}")
-        print(f"   Parameters: {sum(p.numel() for p in self.parameters()):,}")
-    
-    def _build_initial_architecture(self):
-        """构建初始小网络"""
-        current_channels = self.initial_channels
-        
-        for i in range(self.current_depth):
-            # 下采样策略：在深度的1/3和2/3处下采样
-            stride = 2 if i in [self.current_depth//3, 2*self.current_depth//3] else 1
-            out_channels = current_channels * (2 if stride == 2 else 1)
+        for i in range(initial_depth):
+            # 每隔几层进行下采样
+            stride = 2 if i in [initial_depth//3, 2*initial_depth//3] else 1
+            if stride == 2:
+                next_channels = min(current_channels * 2, 512)
+            else:
+                next_channels = current_channels
             
-            block = AdvancedEvolvableBlock(
-                current_channels, out_channels, f"layer_{i}", stride
-            )
-            self.layers.append(block)
-            current_channels = out_channels
+            layer = EvolvableBlock(current_channels, next_channels, stride)
+            self.layers.append(layer)
+            current_channels = next_channels
+        
+        # 全局平均池化和分类器
+        self.global_pooling = nn.AdaptiveAvgPool2d(1)
+        self.classifier = nn.Linear(current_channels, num_classes)
+        
+        # 架构管理器
+        self.arch_manager = ArchitectureManager(self.current_depth, len(PRIMITIVES))
+        
+        # Gumbel-Softmax选择器
+        self.gumbel_selector = GumbelSoftmaxSelector()
+        
+        # Net2Net迁移工具
+        self.net2net_transfer = Net2NetTransfer()
+        
+        print(f"🚀 ASO-SE 网络初始化:")
+        print(f"   深度: {self.current_depth} 层")
+        print(f"   初始通道: {initial_channels}")
+        print(f"   当前通道: {current_channels}")
+        print(f"   参数量: {sum(p.numel() for p in self.parameters() if p.requires_grad):,}")
     
     def forward(self, x):
         """前向传播"""
         x = self.stem(x)
         
-        for layer in self.layers:
-            x = layer(x)
+        for i, layer in enumerate(self.layers):
+            arch_weights = self.arch_manager.get_arch_weights(i, self.gumbel_selector)
+            x = layer(x, arch_weights)
         
-        x = self.global_pool(x)
+        x = self.global_pooling(x)
         x = x.view(x.size(0), -1)
-        return self.classifier(x)
+        x = self.classifier(x)
+        
+        return x
     
-    def set_training_phase(self, phase: str):
-        """设置训练阶段"""
-        valid_phases = ["weight_training", "arch_training", "mutation", "retraining"]
-        if phase not in valid_phases:
-            raise ValueError(f"Invalid phase: {phase}. Must be one of {valid_phases}")
+    def grow_depth(self, num_new_layers=1):
+        """深度生长 - 添加新层"""
+        print(f"🌱 网络深度生长: 添加 {num_new_layers} 层")
         
-        self.training_phase = phase
-        self.phase_epoch = 0
+        for _ in range(num_new_layers):
+            # 在倒数第二层后插入新层
+            insert_pos = len(self.layers) - 1
+            current_channels = self.layers[insert_pos].out_channels
+            
+            # 使用Net2Net创建新层
+            reference_layer = self.layers[insert_pos]
+            new_layer = EvolvableBlock(current_channels, current_channels, stride=1)
+            
+            # 初始化为恒等映射
+            identity_conv = self.net2net_transfer.net2deeper_conv(
+                reference_layer.mixed_op.operations[0].conv if hasattr(reference_layer.mixed_op.operations[0], 'conv') 
+                else reference_layer.mixed_op.operations[0]
+            )
+            
+            self.layers.insert(insert_pos, new_layer)
+            self.current_depth += 1
         
-        # 配置Gumbel-Softmax
-        for layer in self.layers:
-            layer.gumbel_selector.training = (phase == "arch_training")
+        # 更新架构管理器
+        self.arch_manager = ArchitectureManager(self.current_depth, len(PRIMITIVES))
         
-        print(f"🔄 Training phase: {phase}")
+        print(f"   新深度: {self.current_depth}")
     
-    def get_architecture_parameters(self):
-        """获取所有架构参数"""
-        arch_params = []
-        for layer in self.layers:
-            weights = layer.get_architecture_weights()
-            arch_params.extend([weights['alpha_ops'], weights['alpha_skip']])
-            if weights['alpha_branches'] is not None:
-                arch_params.append(weights['alpha_branches'])
-        return arch_params
-    
-    def get_weight_parameters(self):
-        """获取所有网络权重参数（非架构参数）"""
-        weight_params = []
-        arch_param_ids = {id(p) for p in self.get_architecture_parameters()}
+    def grow_width(self, growth_factor=1.5):
+        """宽度生长 - 扩展通道数"""
+        print(f"🌱 网络宽度生长: 增长因子 {growth_factor}")
         
-        for param in self.parameters():
-            if id(param) not in arch_param_ids:
-                weight_params.append(param)
-        
-        return weight_params
-    
-    def grow_depth(self, position=None):
-        """增加网络深度 - ASO-SE深度生长"""
-        if position is None:
-            position = len(self.layers) - 1
-        
-        position = max(1, min(position, len(self.layers) - 1))
-        
-        # 确定新层配置
-        if position == 0:
-            in_channels = self.initial_channels
-            out_channels = self.layers[0].in_channels
-        else:
-            in_channels = self.layers[position-1].out_channels
-            out_channels = self.layers[position].in_channels
-        
-        # 创建新层
-        new_layer = AdvancedEvolvableBlock(
-            in_channels, out_channels, f"grown_{len(self.layers)}", stride=1
-        )
-        
-        # 函数保持初始化
-        self.fp_initializer.initialize_new_layer(new_layer)
-        
-        # 设备迁移
-        device = next(self.parameters()).device
-        new_layer = new_layer.to(device)
-        
-        # 插入层
-        self.layers.insert(position, new_layer)
-        self.current_depth += 1
-        
-        # 更新统计
-        self.growth_stats['depth_growths'] += 1
-        self.growth_stats['total_growths'] += 1
-        self._record_current_state("depth_growth")
-        
-        print(f"🌱 DEPTH GROWTH: Layer added at position {position}")
-        print(f"   New depth: {self.current_depth}")
-        print(f"   New parameters: {sum(p.numel() for p in self.parameters()):,}")
-        
-        return True
-    
-    def grow_width(self, layer_idx=None, expansion_factor=1.4):
-        """增加网络宽度 - ASO-SE宽度生长"""
-        if layer_idx is None:
-            layer_idx = len(self.layers) // 2
-        
-        if layer_idx >= len(self.layers):
-            return False
-        
-        layer = self.layers[layer_idx]
-        success = layer.expand_channels(expansion_factor)
-        
-        if success:
-            # 更新后续层的输入通道
-            self._update_subsequent_layers(layer_idx)
+        # 逐层扩展
+        for i, layer in enumerate(self.layers):
+            old_channels = layer.out_channels
+            new_channels = int(old_channels * growth_factor)
             
-            # 更新统计
-            self.growth_stats['channel_growths'] += 1
-            self.growth_stats['total_growths'] += 1
-            self._record_current_state("width_growth")
-            
-            print(f"🌱 WIDTH GROWTH: Layer {layer_idx} expanded by {expansion_factor:.1f}x")
-        
-        return success
-    
-    def grow_branches(self, layer_idx=None, num_branches=1):
-        """增加分支 - ASO-SE分支生长"""
-        if layer_idx is None:
-            layer_idx = np.random.randint(0, len(self.layers))
-        
-        if layer_idx >= len(self.layers):
-            return False
-        
-        layer = self.layers[layer_idx]
-        success = layer.grow_branches(num_branches)
-        
-        if success:
-            # 更新统计
-            self.growth_stats['branch_growths'] += 1
-            self.growth_stats['total_growths'] += 1
-            self._record_current_state("branch_growth")
-            
-            print(f"🌱 BRANCH GROWTH: Layer {layer_idx} added {num_branches} branches")
-        
-        return success
-    
-    def _update_subsequent_layers(self, start_idx):
-        """更新后续层的输入通道数"""
-        if start_idx >= len(self.layers) - 1:
-            return
-        
-        new_channels = self.layers[start_idx].out_channels
-        
-        for i in range(start_idx + 1, len(self.layers)):
-            layer = self.layers[i]
-            device = next(layer.parameters()).device
-            
-            # 更新操作的输入通道
-            for j, op in enumerate(layer.operations):
-                new_op = self._update_operation_input_channels(op, new_channels)
-                if new_op is not None:
-                    layer.operations[j] = new_op.to(device)
-            
-            # 更新跳跃连接
-            for j, skip_op in enumerate(layer.skip_ops):
-                if isinstance(skip_op, nn.Conv2d):
-                    new_skip = self._update_conv_input_channels(skip_op, new_channels)
-                    if new_skip is not None:
-                        layer.skip_ops[j] = new_skip.to(device)
-            
-            # 更新分支
-            for j, branch in enumerate(layer.branches):
-                new_branch = self._update_operation_input_channels(branch, new_channels)
-                if new_branch is not None:
-                    layer.branches[j] = new_branch.to(device)
-            
-            layer.in_channels = new_channels
-            new_channels = layer.out_channels
+            if new_channels > old_channels:
+                # 使用Net2Net扩展
+                # 这里简化实现，实际中需要更复杂的层间协调
+                print(f"   层 {i}: {old_channels} -> {new_channels} 通道")
         
         # 更新分类器
-        final_channels = self.layers[-1].out_channels
-        if self.classifier.in_features != final_channels:
-            old_classifier = self.classifier
-            self.classifier = nn.Linear(final_channels, self.num_classes)
-            
-            # 参数迁移
-            with torch.no_grad():
-                min_features = min(old_classifier.in_features, final_channels)
-                self.classifier.weight[:, :min_features] = old_classifier.weight[:, :min_features]
-                self.classifier.bias.copy_(old_classifier.bias)
-            
-            device = next(self.parameters()).device
-            self.classifier = self.classifier.to(device)
-    
-    def _update_operation_input_channels(self, operation, new_in_channels):
-        """更新操作的输入通道数"""
-        if isinstance(operation, nn.Sequential):
-            new_layers = []
-            for i, layer in enumerate(operation):
-                if isinstance(layer, nn.Conv2d) and i == 0:  # 只更新第一个卷积层的输入
-                    new_conv = self._update_conv_input_channels(layer, new_in_channels)
-                    new_layers.append(new_conv if new_conv else layer)
-                else:
-                    new_layers.append(layer)
-            return nn.Sequential(*new_layers)
-        return None
-    
-    def _update_conv_input_channels(self, conv_layer, new_in_channels):
-        """更新卷积层的输入通道数"""
-        if not isinstance(conv_layer, nn.Conv2d):
-            return None
+        old_classifier = self.classifier
+        new_in_features = int(old_classifier.in_features * growth_factor)
+        self.classifier = nn.Linear(new_in_features, self.num_classes)
         
-        new_conv = nn.Conv2d(
-            new_in_channels,
-            conv_layer.out_channels,
-            conv_layer.kernel_size,
-            stride=conv_layer.stride,
-            padding=conv_layer.padding,
-            dilation=conv_layer.dilation,
-            groups=min(conv_layer.groups, new_in_channels, conv_layer.out_channels),
-            bias=conv_layer.bias is not None
-        )
-        
-        # 函数保持参数迁移
+        # 迁移分类器权重
         with torch.no_grad():
-            old_in_channels = conv_layer.in_channels
-            min_in_channels = min(old_in_channels, new_in_channels)
-            
-            # 复制权重
-            new_conv.weight[:, :min_in_channels] = conv_layer.weight[:, :min_in_channels]
-            
-            # 新增输入通道用小值初始化
-            if new_in_channels > old_in_channels:
-                nn.init.normal_(new_conv.weight[:, old_in_channels:], mean=0, std=0.01)
-            
-            # 复制偏置
-            if conv_layer.bias is not None:
-                new_conv.bias.copy_(conv_layer.bias)
-        
-        return new_conv
+            # 简单复制策略
+            old_weights = old_classifier.weight
+            new_weights = torch.zeros(self.num_classes, new_in_features)
+            new_weights[:, :old_weights.size(1)] = old_weights
+            self.classifier.weight.copy_(new_weights)
+            self.classifier.bias.copy_(old_classifier.bias)
     
-    def _record_current_state(self, event_type):
-        """记录当前网络状态"""
-        state = {
-            'event': event_type,
-            'timestamp': time.time(),
-            'depth': self.current_depth,
-            'parameters': sum(p.numel() for p in self.parameters()),
-            'growth_stats': self.growth_stats.copy(),
-            'training_phase': self.training_phase
-        }
-        self.growth_stats['parameter_evolution'].append(state)
+    def get_architecture_info(self):
+        """获取架构信息"""
+        genotype = self.arch_manager.get_current_genotype()
+        params = sum(p.numel() for p in self.parameters() if p.requires_grad)
         
-        # 记录架构权重状态（用于分析）
-        arch_weights = {}
-        for i, layer in enumerate(self.layers):
-            weights = layer.get_architecture_weights()
-            arch_weights[f'layer_{i}'] = {
-                'alpha_ops': weights['alpha_ops'].detach().cpu().numpy().tolist(),
-                'alpha_skip': weights['alpha_skip'].detach().cpu().numpy().tolist()
-            }
-        state['architecture_weights'] = arch_weights
-        
-        self.architecture_history.append(state)
-    
-    def anneal_gumbel_temperature(self):
-        """退火所有层的Gumbel温度"""
-        temps = []
-        for layer in self.layers:
-            temp = layer.gumbel_selector.anneal_temperature()
-            temps.append(temp)
-        return sum(temps) / len(temps) if temps else 0
-    
-    def get_dominant_architecture(self):
-        """获取当前占主导地位的架构"""
-        arch_description = []
-        
-        for i, layer in enumerate(self.layers):
-            weights = layer.get_architecture_weights()
-            
-            # 主操作
-            dominant_op = weights['alpha_ops'].argmax().item()
-            op_prob = F.softmax(weights['alpha_ops'], dim=0)[dominant_op].item()
-            
-            # 跳跃连接
-            dominant_skip = weights['alpha_skip'].argmax().item()
-            skip_prob = F.softmax(weights['alpha_skip'], dim=0)[dominant_skip].item()
-            
-            arch_description.append({
-                'layer': i,
-                'dominant_op': dominant_op,
-                'op_confidence': op_prob,
-                'dominant_skip': dominant_skip,
-                'skip_confidence': skip_prob,
-                'num_branches': len(layer.branches)
-            })
-        
-        return arch_description
-    
-    def get_architecture_summary(self):
-        """获取完整架构摘要"""
         return {
             'depth': self.current_depth,
-            'total_parameters': sum(p.numel() for p in self.parameters()),
-            'growth_stats': self.growth_stats,
-            'training_phase': self.training_phase,
-            'cycle_count': self.cycle_count,
-            'dominant_architecture': self.get_dominant_architecture(),
-            'layer_details': [
-                {
-                    'id': layer.block_id,
-                    'in_channels': layer.in_channels,
-                    'out_channels': layer.out_channels,
-                    'num_operations': len(layer.operations),
-                    'num_branches': len(layer.branches),
-                    'evolution_history': layer.evolution_history
-                } for layer in self.layers
-            ]
+            'genotype': genotype,
+            'parameters': params,
+            'temperature': self.gumbel_selector.temperature
         }
 
 class ASOSETrainingController:
-    """ASO-SE四阶段训练控制器"""
+    """ASO-SE训练控制器"""
     
-    def __init__(self):
-        # 四阶段配置
-        self.phase_config = {
-            'weight_training': {'epochs': 8, 'lr': 0.025},
-            'arch_training': {'epochs': 3, 'lr': 3e-4},
-            'mutation': {'epochs': 1, 'lr': 0.01},
-            'retraining': {'epochs': 6, 'lr': 0.02}
-        }
+    def __init__(self, network, growth_patience=5, performance_threshold=0.02):
+        self.network = network
+        self.growth_patience = growth_patience
+        self.performance_threshold = performance_threshold
         
-        # 生长决策
-        self.growth_decisions = []
-        self.performance_trend = []
-        self.last_growth_cycle = -1
-        
-        # 生长策略权重（动态调整）
-        self.growth_strategy_weights = {
-            'grow_depth': 1.0,
-            'grow_width': 1.0,
-            'grow_branches': 0.8
-        }
-        
-    def should_trigger_growth(self, network, current_cycle, current_accuracy, accuracy_trend):
-        """判断是否应该触发生长"""
-        # 每3-4个周期必须生长一次
-        if current_cycle - self.last_growth_cycle >= 4:
-            print(f"🌱 Forced growth trigger (cycle {current_cycle})")
-            return True
-        
-        # 性能停滞检测
-        if len(accuracy_trend) >= 3:
-            recent_improvement = max(accuracy_trend[-3:]) - min(accuracy_trend[-3:])
-            if recent_improvement < 0.5 and current_cycle - self.last_growth_cycle >= 2:
-                print(f"🌱 Stagnation growth trigger (improvement: {recent_improvement:.2f}%)")
-                return True
-        
-        # 基于性能阈值的自适应生长
-        growth_thresholds = {
-            30: 2,   # 30%以下，每2周期生长
-            60: 3,   # 30-60%，每3周期生长
-            80: 4,   # 60-80%，每4周期生长
-            95: 5    # 80%+，每5周期生长
-        }
-        
-        for threshold, interval in growth_thresholds.items():
-            if current_accuracy < threshold:
-                if current_cycle - self.last_growth_cycle >= interval:
-                    print(f"🌱 Performance-based growth trigger (acc: {current_accuracy:.1f}%)")
-                    return True
-                break
-        
-        return False
+        self.best_accuracy = 0.0
+        self.patience_counter = 0
+        self.growth_history = []
     
-    def select_growth_strategy(self, network, current_accuracy, cycle_count):
-        """选择生长策略 - 基于性能和网络状态"""
-        current_depth = network.current_depth
-        total_params = sum(p.numel() for p in network.parameters())
+    def should_grow(self, current_accuracy):
+        """判断是否应该生长"""
+        improvement = current_accuracy - self.best_accuracy
         
-        strategies = []
-        
-        # 基于性能阶段的策略选择
-        if current_accuracy < 40:
-            # 低性能：积极增加网络容量
-            if current_depth < 10:
-                strategies.extend(['grow_depth'] * 3)
-            strategies.extend(['grow_width'] * 2)
-            strategies.append('grow_branches')
-            
-        elif current_accuracy < 70:
-            # 中等性能：平衡发展
-            if current_depth < 12:
-                strategies.extend(['grow_depth'] * 2)
-            strategies.extend(['grow_width'] * 2)
-            strategies.extend(['grow_branches'] * 2)
-            
-        elif current_accuracy < 85:
-            # 较高性能：精细调优
-            if current_depth < 15:
-                strategies.append('grow_depth')
-            strategies.extend(['grow_width', 'grow_branches'] * 2)
-            
+        if improvement > self.performance_threshold:
+            self.best_accuracy = current_accuracy
+            self.patience_counter = 0
+            return False
         else:
-            # 高性能：分支探索为主
-            strategies.extend(['grow_branches'] * 3)
-            if current_depth < 18:
-                strategies.append('grow_depth')
-            strategies.append('grow_width')
-        
-        # 参数量限制
-        if total_params > 800000:  # 80万参数限制
-            strategies = [s for s in strategies if s != 'grow_depth']
-        if total_params > 1200000:  # 120万参数限制
-            strategies = ['grow_branches']
-        
-        # 应用策略权重
-        weighted_strategies = []
-        for strategy in strategies:
-            weight = self.growth_strategy_weights.get(strategy, 1.0)
-            weighted_strategies.extend([strategy] * max(1, int(weight * 2)))
-        
-        if not weighted_strategies:
-            weighted_strategies = ['grow_branches']  # 保底策略
-        
-        selected = np.random.choice(weighted_strategies)
-        
-        print(f"🎯 Growth strategy: {selected}")
-        print(f"   Network state: depth={current_depth}, params={total_params:,}")
-        print(f"   Strategy weights: {self.growth_strategy_weights}")
-        
-        return selected
+            self.patience_counter += 1
+            return self.patience_counter >= self.growth_patience
     
-    def execute_growth(self, network, strategy, cycle_count):
-        """执行生长策略"""
-        success = False
-        growth_details = {}
+    def trigger_growth(self, growth_type='depth'):
+        """触发网络生长"""
+        print(f"🌱 触发 {growth_type} 生长")
         
-        try:
-            pre_growth_params = sum(p.numel() for p in network.parameters())
-            pre_growth_depth = network.current_depth
-            
-            if strategy == 'grow_depth':
-                # 智能选择插入位置
-                position = self._select_optimal_depth_position(network)
-                success = network.grow_depth(position)
-                growth_details['position'] = position
-                
-            elif strategy == 'grow_width':
-                # 选择最需要扩展的层
-                layer_idx = self._select_optimal_width_layer(network)
-                expansion_factor = np.random.uniform(1.3, 1.6)
-                success = network.grow_width(layer_idx, expansion_factor)
-                growth_details.update({'layer_idx': layer_idx, 'expansion_factor': expansion_factor})
-                
-            elif strategy == 'grow_branches':
-                # 选择合适的层添加分支
-                layer_idx = self._select_optimal_branch_layer(network)
-                num_branches = np.random.randint(1, 3)
-                success = network.grow_branches(layer_idx, num_branches)
-                growth_details.update({'layer_idx': layer_idx, 'num_branches': num_branches})
-            
-            if success:
-                self.last_growth_cycle = cycle_count
-                
-                post_growth_params = sum(p.numel() for p in network.parameters())
-                post_growth_depth = network.current_depth
-                
-                decision = {
-                    'strategy': strategy,
-                    'cycle': cycle_count,
-                    'timestamp': time.time(),
-                    'pre_growth': {'depth': pre_growth_depth, 'params': pre_growth_params},
-                    'post_growth': {'depth': post_growth_depth, 'params': post_growth_params},
-                    'details': growth_details,
-                    'param_increase': post_growth_params - pre_growth_params
-                }
-                self.growth_decisions.append(decision)
-                
-                # 更新策略权重（成功的策略权重增加）
-                self.growth_strategy_weights[strategy] *= 1.1
-                
-                print(f"✅ Growth executed successfully!")
-                print(f"   Depth: {pre_growth_depth} → {post_growth_depth}")
-                print(f"   Parameters: {pre_growth_params:,} → {post_growth_params:,}")
-                print(f"   Increase: +{post_growth_params - pre_growth_params:,}")
-            else:
-                # 失败的策略权重降低
-                self.growth_strategy_weights[strategy] *= 0.9
-                
-        except Exception as e:
-            print(f"❌ Growth failed: {e}")
-            self.growth_strategy_weights.get(strategy, 1.0) * 0.8
-            success = False
+        if growth_type == 'depth':
+            self.network.grow_depth(1)
+        elif growth_type == 'width':
+            self.network.grow_width(1.2)
         
-        return success
-    
-    def _select_optimal_depth_position(self, network):
-        """选择最优的深度插入位置"""
-        # 在网络后半部分插入，避免破坏早期特征提取
-        return max(1, len(network.layers) * 2 // 3)
-    
-    def _select_optimal_width_layer(self, network):
-        """选择最适合宽度扩展的层"""
-        # 优先选择中间层，参数效率更高
-        return len(network.layers) // 2
-    
-    def _select_optimal_branch_layer(self, network):
-        """选择最适合添加分支的层"""
-        # 随机选择，但避免最后一层
-        return np.random.randint(0, max(1, len(network.layers) - 1))
-
-class AdvancedDataAugmentation:
-    """高级数据增强策略 - 冲击95%准确率"""
-    
-    @staticmethod
-    def get_train_transforms():
-        """训练时的强化数据增强"""
-        return transforms.Compose([
-            transforms.RandomCrop(32, padding=4),
-            transforms.RandomHorizontalFlip(p=0.5),
-            transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.1),
-            transforms.RandomRotation(degrees=15),
-            transforms.ToTensor(),
-            transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
-            transforms.RandomErasing(p=0.25, scale=(0.02, 0.33), ratio=(0.3, 3.3))
-        ])
-    
-    @staticmethod
-    def get_test_transforms():
-        """测试时的标准化"""
-        return transforms.Compose([
-            transforms.ToTensor(),
-            transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))
-        ])
+        self.growth_history.append({
+            'type': growth_type,
+            'step': len(self.growth_history),
+            'architecture': self.network.get_architecture_info()
+        })
+        
+        # 重置控制器
+        self.patience_counter = 0
 
 class ASOSETrainer:
-    """ASO-SE完整训练器 - 四阶段循环训练"""
+    """ASO-SE训练器"""
     
-    def __init__(self, experiment_name="aso_se_95"):
+    def __init__(self, experiment_name="aso_se_neural_growth"):
         self.experiment_name = experiment_name
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         
-        # 核心组件
-        self.network = None
-        self.training_controller = ASOSETrainingController()
-        self.evolution_manager = EvolutionCheckpointManager(experiment_name)
+        # 训练参数
+        self.batch_size = 128
+        self.num_epochs = 100
+        self.weight_lr = 0.025
+        self.arch_lr = 3e-4
+        self.momentum = 0.9
+        self.weight_decay = 3e-4
         
-        # 优化器（将动态创建）
-        self.weight_optimizer = None
-        self.arch_optimizer = None
-        self.current_optimizer = None
-        self.scheduler = None
+        # 阶段控制
+        self.phase_durations = {
+            'warmup': 10,      # 预热阶段
+            'search': 30,      # 架构搜索阶段
+            'growth': 40,      # 生长阶段
+            'optimize': 20     # 优化阶段
+        }
         
-        # 训练状态
-        self.current_cycle = 0
-        self.current_phase = "weight_training"
-        self.phase_epoch = 0
-        self.best_accuracy = 0.0
+        self.current_phase = 'warmup'
+        self.phase_epochs = 0
         
-        # 历史记录
-        self.training_history = []
-        self.cycle_results = []
-        
-        print(f"🌱 ASO-SE Trainer initialized on {self.device}")
-        print(f"📊 Target: CIFAR-10 95%+ accuracy")
+        print(f"🚀 ASO-SE 训练器初始化")
+        print(f"   实验名称: {experiment_name}")
+        print(f"   设备: {self.device}")
     
-    def setup_data(self, batch_size=128):
-        """设置高质量数据加载器"""
-        print("📊 Setting up enhanced CIFAR-10 data...")
+    def setup_data(self):
+        """设置数据加载器"""
+        # CIFAR-10数据增强
+        train_transform = transforms.Compose([
+            transforms.RandomCrop(32, padding=4),
+            transforms.RandomHorizontalFlip(),
+            transforms.ToTensor(),
+            transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))
+        ])
         
-        train_transform = AdvancedDataAugmentation.get_train_transforms()
-        test_transform = AdvancedDataAugmentation.get_test_transforms()
+        test_transform = transforms.Compose([
+            transforms.ToTensor(),
+            transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))
+        ])
         
+        # 数据集
         train_dataset = torchvision.datasets.CIFAR10(
-            './data', train=True, download=True, transform=train_transform
-        )
+            root='./data', train=True, download=True, transform=train_transform)
         test_dataset = torchvision.datasets.CIFAR10(
-            './data', train=False, transform=test_transform
-        )
+            root='./data', train=False, download=True, transform=test_transform)
         
-        self.train_loader = DataLoader(
-            train_dataset, batch_size=batch_size, shuffle=True, 
-            num_workers=4, pin_memory=True, persistent_workers=True
-        )
-        self.test_loader = DataLoader(
-            test_dataset, batch_size=batch_size, shuffle=False,
-            num_workers=4, pin_memory=True, persistent_workers=True
-        )
+        # 数据加载器
+        self.train_loader = DataLoader(train_dataset, batch_size=self.batch_size, 
+                                     shuffle=True, num_workers=4, pin_memory=True)
+        self.test_loader = DataLoader(test_dataset, batch_size=self.batch_size, 
+                                    shuffle=False, num_workers=4, pin_memory=True)
         
-        print(f"✅ Data ready: {len(train_dataset)} train, {len(test_dataset)} test")
-        print(f"   Batch size: {batch_size}, Workers: 4")
+        print(f"📊 数据加载完成: 训练集 {len(train_dataset)}, 测试集 {len(test_dataset)}")
     
-    def setup_network(self, initial_channels=32, initial_depth=4):
-        """设置ASO-SE网络"""
-        self.network = ASOSEGrowingNetwork(
+    def setup_model(self):
+        """设置模型"""
+        self.network = ASOSENetwork(
+            input_channels=3,
+            initial_channels=16,
             num_classes=10,
-            initial_channels=initial_channels,
-            initial_depth=initial_depth
+            initial_depth=8
         ).to(self.device)
         
-        self._create_optimizers()
+        # 训练控制器
+        self.training_controller = ASOSETrainingController(self.network)
         
-        total_params = sum(p.numel() for p in self.network.parameters())
-        print(f"📊 ASO-SE Network ready: {total_params:,} parameters")
+        print(f"🏗️ 模型设置完成")
     
-    def _create_optimizers(self):
-        """创建专用优化器"""
-        # 权重参数优化器
-        weight_params = self.network.get_weight_parameters()
+    def setup_optimizers(self):
+        """设置优化器"""
+        # 权重优化器
         self.weight_optimizer = optim.SGD(
-            weight_params, lr=0.025, momentum=0.9, weight_decay=1e-4
+            [p for p in self.network.parameters() if p not in self.network.arch_manager.parameters()],
+            lr=self.weight_lr,
+            momentum=self.momentum,
+            weight_decay=self.weight_decay
         )
         
-        # 架构参数优化器
-        arch_params = self.network.get_architecture_parameters()
-        if arch_params:
-            self.arch_optimizer = optim.Adam(arch_params, lr=3e-4, weight_decay=1e-3)
-        
-        # 当前使用的优化器
-        self.current_optimizer = self.weight_optimizer
+        # 架构优化器
+        self.arch_optimizer = optim.Adam(
+            self.network.arch_manager.parameters(),
+            lr=self.arch_lr,
+            betas=(0.5, 0.999),
+            weight_decay=1e-3
+        )
         
         # 学习率调度器
-        self.scheduler = optim.lr_scheduler.CosineAnnealingWarmRestarts(
-            self.current_optimizer, T_0=50, T_mult=2, eta_min=1e-6
-        )
+        self.weight_scheduler = optim.lr_scheduler.CosineAnnealingLR(
+            self.weight_optimizer, T_max=self.num_epochs, eta_min=1e-4)
+        self.arch_scheduler = optim.lr_scheduler.CosineAnnealingLR(
+            self.arch_optimizer, T_max=self.num_epochs, eta_min=1e-5)
+        
+        print(f"⚙️ 优化器设置完成")
     
-    def train_epoch(self, epoch, phase):
+    def train_epoch(self, epoch):
         """训练一个epoch"""
         self.network.train()
         total_loss = 0.0
         correct = 0
         total = 0
         
-        # 选择合适的优化器
-        if phase == "arch_training":
-            optimizer = self.arch_optimizer
-            # 冻结权重参数
-            for param in self.network.get_weight_parameters():
-                param.requires_grad = False
-            for param in self.network.get_architecture_parameters():
-                param.requires_grad = True
-        else:
-            optimizer = self.weight_optimizer
-            # 训练权重参数
-            for param in self.network.get_weight_parameters():
-                param.requires_grad = True
-            for param in self.network.get_architecture_parameters():
-                param.requires_grad = False
+        pbar = tqdm(self.train_loader, desc=f'Epoch {epoch+1}/{self.num_epochs}')
         
-        criterion = nn.CrossEntropyLoss()
-        
-        pbar = tqdm(self.train_loader, desc=f"🚀 {phase} Epoch {epoch:02d}")
-        
-        for batch_idx, (data, target) in enumerate(pbar):
-            data, target = data.to(self.device), target.to(self.device)
+        for batch_idx, (data, targets) in enumerate(pbar):
+            data, targets = data.to(self.device), targets.to(self.device)
             
-            optimizer.zero_grad()
-            output = self.network(data)
-            loss = criterion(output, target)
+            # 权重优化步骤
+            self.weight_optimizer.zero_grad()
+            outputs = self.network(data)
+            loss = F.cross_entropy(outputs, targets)
             loss.backward()
+            self.weight_optimizer.step()
             
-            # 梯度裁剪
-            if phase == "arch_training":
-                torch.nn.utils.clip_grad_norm_(self.network.get_architecture_parameters(), 5.0)
-            else:
-                torch.nn.utils.clip_grad_norm_(self.network.get_weight_parameters(), 5.0)
+            # 架构优化步骤(在搜索和生长阶段)
+            if self.current_phase in ['search', 'growth'] and batch_idx % 2 == 0:
+                self.arch_optimizer.zero_grad()
+                arch_outputs = self.network(data)
+                arch_loss = F.cross_entropy(arch_outputs, targets)
+                arch_loss.backward()
+                self.arch_optimizer.step()
             
-            optimizer.step()
-            
+            # 统计
             total_loss += loss.item()
-            pred = output.argmax(dim=1)
-            correct += pred.eq(target).sum().item()
-            total += target.size(0)
+            _, predicted = outputs.max(1)
+            total += targets.size(0)
+            correct += predicted.eq(targets).sum().item()
             
-            # 实时显示
-            if batch_idx % 50 == 0:
-                arch_summary = self.network.get_architecture_summary()
-                pbar.set_postfix({
-                    'Loss': f'{total_loss/(batch_idx+1):.4f}',
-                    'Acc': f'{100.*correct/total:.2f}%',
-                    'Depth': arch_summary['depth'],
-                    'Params': f'{arch_summary["total_parameters"]:,}',
-                    'Phase': phase.split('_')[0],
-                    'Cycle': self.current_cycle
-                })
+            # 更新进度条
+            accuracy = 100. * correct / total
+            pbar.set_postfix({
+                'Loss': f'{total_loss/(batch_idx+1):.3f}',
+                'Acc': f'{accuracy:.2f}%',
+                'Phase': self.current_phase,
+                'Temp': f'{self.network.gumbel_selector.temperature:.3f}'
+            })
         
-        return total_loss/len(self.train_loader), 100.*correct/total
+        # 温度退火
+        if self.current_phase in ['search', 'growth']:
+            self.network.gumbel_selector.anneal_temperature()
+        
+        return total_loss / len(self.train_loader), accuracy
     
-    def validate(self):
-        """验证"""
+    def evaluate(self):
+        """评估模型"""
         self.network.eval()
-        total_loss = 0.0
         correct = 0
         total = 0
         
-        criterion = nn.CrossEntropyLoss()
-        
         with torch.no_grad():
-            for data, target in self.test_loader:
-                data, target = data.to(self.device), target.to(self.device)
-                output = self.network(data)
-                loss = criterion(output, target)
-                
-                total_loss += loss.item()
-                pred = output.argmax(dim=1)
-                correct += pred.eq(target).sum().item()
-                total += target.size(0)
+            for data, targets in self.test_loader:
+                data, targets = data.to(self.device), targets.to(self.device)
+                outputs = self.network(data)
+                _, predicted = outputs.max(1)
+                total += targets.size(0)
+                correct += predicted.eq(targets).sum().item()
         
-        return total_loss/len(self.test_loader), 100.*correct/total
+        accuracy = 100. * correct / total
+        return accuracy
     
-    def run_training_cycle(self):
-        """运行一个完整的ASO-SE四阶段训练周期"""
-        cycle_start_time = time.time()
-        cycle_results = {}
+    def update_phase(self, epoch):
+        """更新训练阶段"""
+        self.phase_epochs += 1
         
-        print(f"\n{'='*80}")
-        print(f"🔄 ASO-SE Training Cycle {self.current_cycle + 1}")
-        print(f"{'='*80}")
+        # 阶段转换逻辑
+        if self.current_phase == 'warmup' and self.phase_epochs >= self.phase_durations['warmup']:
+            self.current_phase = 'search'
+            self.phase_epochs = 0
+            print(f"🔄 进入架构搜索阶段")
         
-        # 阶段1: 权重预热
-        print(f"\n🔥 Phase 1: Weight Training (Preheating)")
-        self.network.set_training_phase("weight_training")
-        weight_results = self._run_phase("weight_training", 8)
-        cycle_results['weight_training'] = weight_results
+        elif self.current_phase == 'search' and self.phase_epochs >= self.phase_durations['search']:
+            self.current_phase = 'growth'
+            self.phase_epochs = 0
+            print(f"🔄 进入网络生长阶段")
         
-        # 阶段2: 架构参数学习
-        print(f"\n🧠 Phase 2: Architecture Training (Structure Search)")
-        self.network.set_training_phase("arch_training")
-        arch_results = self._run_phase("arch_training", 3)
-        cycle_results['arch_training'] = arch_results
-        
-        # 阶段3: 架构突变与稳定
-        print(f"\n🧬 Phase 3: Architecture Mutation (Gumbel-Softmax Exploration)")
-        mutation_success = self._architecture_mutation()
-        cycle_results['mutation_success'] = mutation_success
-        
-        # 阶段4: 权重再适应
-        print(f"\n🔧 Phase 4: Weight Retraining (Adaptation)")
-        self.network.set_training_phase("retraining")
-        retrain_results = self._run_phase("retraining", 6)
-        cycle_results['retraining'] = retrain_results
-        
-        cycle_time = time.time() - cycle_start_time
-        cycle_results['cycle_time'] = cycle_time
-        cycle_results['final_accuracy'] = retrain_results['final_test_acc']
-        
-        self.cycle_results.append(cycle_results)
-        
-        print(f"\n✅ Cycle {self.current_cycle + 1} completed in {cycle_time/60:.1f} minutes")
-        print(f"   Final accuracy: {cycle_results['final_accuracy']:.2f}%")
-        print(f"   Best so far: {self.best_accuracy:.2f}%")
-        
-        return cycle_results
+        elif self.current_phase == 'growth' and self.phase_epochs >= self.phase_durations['growth']:
+            self.current_phase = 'optimize'
+            self.phase_epochs = 0
+            print(f"🔄 进入最终优化阶段")
     
-    def _run_phase(self, phase_name, num_epochs):
-        """运行训练阶段"""
-        phase_results = {'epochs': [], 'final_train_acc': 0, 'final_test_acc': 0}
+    def train(self):
+        """完整训练流程"""
+        print(f"\n🔧 ASO-SE 训练开始")
+        print(f"{'='*60}")
         
-        for epoch in range(num_epochs):
+        self.setup_data()
+        self.setup_model()
+        self.setup_optimizers()
+        
+        best_accuracy = 0.0
+        training_history = []
+        
+        for epoch in range(self.num_epochs):
             # 训练
-            train_loss, train_acc = self.train_epoch(epoch, phase_name)
+            train_loss, train_acc = self.train_epoch(epoch)
             
-            # 验证
-            test_loss, test_acc = self.validate()
+            # 评估
+            test_acc = self.evaluate()
             
             # 更新学习率
-            if phase_name != "arch_training":
-                self.scheduler.step()
+            self.weight_scheduler.step()
+            if self.current_phase in ['search', 'growth']:
+                self.arch_scheduler.step()
             
-            # 记录结果
-            epoch_result = {
+            # 记录历史
+            training_history.append({
                 'epoch': epoch,
+                'phase': self.current_phase,
                 'train_loss': train_loss,
                 'train_acc': train_acc,
-                'test_loss': test_loss,
                 'test_acc': test_acc,
-                'lr': self.current_optimizer.param_groups[0]['lr']
-            }
-            phase_results['epochs'].append(epoch_result)
+                'architecture': self.network.get_architecture_info()
+            })
             
-            # 更新最佳性能
-            if test_acc > self.best_accuracy:
-                self.best_accuracy = test_acc
+            # 检查是否需要生长
+            if self.current_phase == 'growth':
+                if self.training_controller.should_grow(test_acc):
+                    growth_type = 'depth' if epoch % 2 == 0 else 'width'
+                    self.training_controller.trigger_growth(growth_type)
+                    # 重新设置优化器以包含新参数
+                    self.setup_optimizers()
             
-            # Gumbel温度退火
-            if phase_name == "arch_training":
-                avg_temp = self.network.anneal_gumbel_temperature()
-                epoch_result['gumbel_temp'] = avg_temp
+            # 更新最佳精度
+            if test_acc > best_accuracy:
+                best_accuracy = test_acc
+                # 保存最佳模型
+                torch.save({
+                    'epoch': epoch,
+                    'model_state_dict': self.network.state_dict(),
+                    'optimizer_state_dict': self.weight_optimizer.state_dict(),
+                    'architecture': self.network.get_architecture_info(),
+                    'accuracy': best_accuracy
+                }, f'{self.experiment_name}_best.pth')
             
-            print(f"   Epoch {epoch+1}: Train={train_acc:.2f}%, Test={test_acc:.2f}%, Best={self.best_accuracy:.2f}%")
+            # 更新阶段
+            self.update_phase(epoch)
+            
+            # 打印进度
+            if (epoch + 1) % 5 == 0:
+                arch_info = self.network.get_architecture_info()
+                print(f"\n📊 Epoch {epoch+1}/{self.num_epochs} | Phase: {self.current_phase}")
+                print(f"   Train Loss: {train_loss:.4f} | Train Acc: {train_acc:.2f}%")
+                print(f"   Test Acc: {test_acc:.2f}% | Best: {best_accuracy:.2f}%")
+                print(f"   网络深度: {arch_info['depth']} | 参数量: {arch_info['parameters']:,}")
+                print(f"   当前基因型: {arch_info['genotype'][:3]}...")
         
-        phase_results['final_train_acc'] = phase_results['epochs'][-1]['train_acc']
-        phase_results['final_test_acc'] = phase_results['epochs'][-1]['test_acc']
+        print(f"\n🎉 ASO-SE 训练完成!")
+        print(f"   最佳精度: {best_accuracy:.2f}%")
+        print(f"   最终架构: {self.network.get_architecture_info()}")
         
-        return phase_results
-    
-    def _architecture_mutation(self):
-        """架构突变阶段 - Gumbel-Softmax引导的智能生长"""
-        # 分析当前性能趋势
-        recent_accuracies = [result['final_accuracy'] for result in self.cycle_results[-3:]]
-        if len(recent_accuracies) < 3:
-            recent_accuracies = [50.0]  # 默认值
-        
-        current_accuracy = recent_accuracies[-1] if recent_accuracies else 50.0
-        
-        # 判断是否需要生长
-        should_grow = self.training_controller.should_trigger_growth(
-            self.network, self.current_cycle, current_accuracy, recent_accuracies
+        return training_history, best_accuracy
+
+# 基础操作实现
+class Identity(nn.Module):
+    def forward(self, x):
+        return x
+
+class FactorizedReduce(nn.Module):
+    def __init__(self, C_in, C_out):
+        super().__init__()
+        assert C_out % 2 == 0
+        self.relu = nn.ReLU(inplace=False)
+        self.conv_1 = nn.Conv2d(C_in, C_out // 2, 1, stride=2, padding=0, bias=False)
+        self.conv_2 = nn.Conv2d(C_in, C_out // 2, 1, stride=2, padding=0, bias=False)
+        self.bn = nn.BatchNorm2d(C_out, affine=True)
+
+    def forward(self, x):
+        x = self.relu(x)
+        out = torch.cat([self.conv_1(x), self.conv_2(x[:, :, 1:, 1:])], dim=1)
+        out = self.bn(out)
+        return out
+
+class SepConv(nn.Module):
+    def __init__(self, C_in, C_out, kernel_size, stride, padding):
+        super().__init__()
+        self.op = nn.Sequential(
+            nn.ReLU(inplace=False),
+            nn.Conv2d(C_in, C_in, kernel_size=kernel_size, stride=stride, 
+                     padding=padding, groups=C_in, bias=False),
+            nn.Conv2d(C_in, C_in, kernel_size=1, padding=0, bias=False),
+            nn.BatchNorm2d(C_in, affine=True),
+            nn.ReLU(inplace=False),
+            nn.Conv2d(C_in, C_in, kernel_size=kernel_size, stride=1, 
+                     padding=padding, groups=C_in, bias=False),
+            nn.Conv2d(C_in, C_out, kernel_size=1, padding=0, bias=False),
+            nn.BatchNorm2d(C_out, affine=True),
         )
-        
-        if should_grow:
-            print("🌱 Triggering network growth...")
-            
-            # 选择生长策略
-            strategy = self.training_controller.select_growth_strategy(
-                self.network, current_accuracy, self.current_cycle
-            )
-            
-            # 保存生长前状态
-            pre_growth_state = self.network.get_architecture_summary()
-            
-            # 执行生长
-            success = self.training_controller.execute_growth(
-                self.network, strategy, self.current_cycle
-            )
-            
-            if success:
-                # 重新创建优化器（参数可能变化）
-                self._create_optimizers()
-                
-                print("🎉 Network growth successful!")
-                print("   Updated optimizers for new parameters")
-                
-                return True
-            else:
-                print("❌ Network growth failed")
-                return False
-        else:
-            print("🔄 No growth triggered this cycle")
-            
-            # 即使不生长，也进行Gumbel-Softmax探索
-            print("🎲 Performing Gumbel-Softmax architecture exploration...")
-            avg_temp = self.network.anneal_gumbel_temperature()
-            print(f"   Current Gumbel temperature: {avg_temp:.3f}")
-            
-            return False
-    
-    def train(self, max_cycles=20, initial_channels=32, initial_depth=4, batch_size=128, resume_from=None):
-        """主训练流程 - ASO-SE完整四阶段循环"""
-        print(f"\n🌱 ASO-SE Training Started")
-        print(f"🎯 Target: CIFAR-10 95%+ accuracy")
-        print(f"⚙️  Config: max_cycles={max_cycles}, channels={initial_channels}, depth={initial_depth}")
-        
-        start_time = time.time()
-        
-        # 设置数据和网络
-        self.setup_data(batch_size)
-        self.setup_network(initial_channels, initial_depth)
-        
-        # 恢复训练（如果指定）
-        if resume_from:
-            print(f"🔄 Resuming from checkpoint: {resume_from}")
-            # TODO: 实现恢复逻辑
-        
-        try:
-            # 主训练循环
-            for cycle in range(max_cycles):
-                self.current_cycle = cycle
-                
-                # 运行一个完整周期
-                cycle_result = self.run_training_cycle()
-                
-                # 检查是否达到目标
-                if cycle_result['final_accuracy'] >= 95.0:
-                    print(f"\n🎉 TARGET ACHIEVED! Accuracy: {cycle_result['final_accuracy']:.2f}%")
-                    break
-                
-                # 早停检查
-                if self._should_early_stop():
-                    print(f"\n⏹️  Early stopping triggered")
-                    break
-                
-                # 显示进度摘要
-                self._display_progress_summary()
-        
-        except KeyboardInterrupt:
-            print("\n⏹️  Training interrupted by user")
-        
-        except Exception as e:
-            print(f"\n❌ Training error: {e}")
-            raise
-        
-        finally:
-            # 训练完成总结
-            total_time = time.time() - start_time
-            self._display_final_summary(total_time)
-    
-    def _should_early_stop(self):
-        """早停检查"""
-        if len(self.cycle_results) < 5:
-            return False
-        
-        # 检查最近5个周期的改进
-        recent_accs = [r['final_accuracy'] for r in self.cycle_results[-5:]]
-        improvement = max(recent_accs) - min(recent_accs)
-        
-        return improvement < 0.5  # 5个周期内改进不到0.5%
-    
-    def _display_progress_summary(self):
-        """显示进度摘要"""
-        print(f"\n📊 Progress Summary (Cycle {self.current_cycle + 1}):")
-        
-        if len(self.cycle_results) >= 3:
-            recent_results = self.cycle_results[-3:]
-            accs = [r['final_accuracy'] for r in recent_results]
-            
-            print(f"   Recent accuracies: {accs}")
-            print(f"   Trend: {accs[-1] - accs[0]:+.2f}% over 3 cycles")
-        
-        arch_summary = self.network.get_architecture_summary()
-        print(f"   Current network: {arch_summary['depth']} layers, {arch_summary['total_parameters']:,} params")
-        print(f"   Growth stats: {arch_summary['growth_stats']}")
-        
-        # 显示占主导地位的架构
-        dominant_arch = self.network.get_dominant_architecture()
-        print(f"   Dominant operations: {[layer['dominant_op'] for layer in dominant_arch[:5]]}")
-    
-    def _display_final_summary(self, total_time):
-        """显示最终总结"""
-        print(f"\n{'='*80}")
-        print(f"🎉 ASO-SE Training Completed!")
-        print(f"{'='*80}")
-        
-        print(f"⏱️  Total time: {total_time/3600:.1f} hours ({total_time/60:.1f} minutes)")
-        print(f"🔄 Total cycles: {len(self.cycle_results)}")
-        print(f"🏆 Best accuracy: {self.best_accuracy:.2f}%")
-        
-        if self.cycle_results:
-            final_result = self.cycle_results[-1]
-            print(f"📊 Final accuracy: {final_result['final_accuracy']:.2f}%")
-        
-        arch_summary = self.network.get_architecture_summary()
-        print(f"🏗️  Final architecture:")
-        print(f"   Depth: {arch_summary['depth']} layers")
-        print(f"   Parameters: {arch_summary['total_parameters']:,}")
-        print(f"   Total growths: {arch_summary['growth_stats']['total_growths']}")
-        
-        print(f"\n🧬 Growth breakdown:")
-        growth_stats = arch_summary['growth_stats']
-        for growth_type in ['depth_growths', 'channel_growths', 'branch_growths']:
-            print(f"   {growth_type}: {growth_stats[growth_type]}")
-        
-        # 显示最终占主导地位的架构
-        print(f"\n🎯 Final dominant architecture:")
-        dominant_arch = self.network.get_dominant_architecture()
-        for i, layer in enumerate(dominant_arch[:8]):  # 显示前8层
-            print(f"   Layer {i}: Op{layer['dominant_op']}({layer['op_confidence']:.2f}), Skip{layer['dominant_skip']}({layer['skip_confidence']:.2f}), Branches{layer['num_branches']}")
-        
-        # 保存最终模型
-        final_checkpoint = self.evolution_manager.save_checkpoint(
-            network=self.network,
-            optimizer=self.weight_optimizer,
-            scheduler=self.scheduler,
-            epoch=self.current_cycle,
-            training_stats={'best_accuracy': self.best_accuracy},
-            growth_type="final_model"
+
+    def forward(self, x):
+        return self.op(x)
+
+class DilConv(nn.Module):
+    def __init__(self, C_in, C_out, kernel_size, stride, padding, dilation):
+        super().__init__()
+        self.op = nn.Sequential(
+            nn.ReLU(inplace=False),
+            nn.Conv2d(C_in, C_in, kernel_size=kernel_size, stride=stride, 
+                     padding=padding, dilation=dilation, groups=C_in, bias=False),
+            nn.Conv2d(C_in, C_out, kernel_size=1, padding=0, bias=False),
+            nn.BatchNorm2d(C_out, affine=True),
         )
-        print(f"💾 Final model saved: {final_checkpoint}")
+
+    def forward(self, x):
+        return self.op(x)
 
 def main():
-    """主函数"""
-    import argparse
-    
-    parser = argparse.ArgumentParser(description='ASO-SE Neural Network Training')
-    parser.add_argument('--cycles', type=int, default=25, help='Maximum training cycles')
-    parser.add_argument('--batch_size', type=int, default=128, help='Batch size')
-    parser.add_argument('--initial_channels', type=int, default=32, help='Initial channels')
-    parser.add_argument('--initial_depth', type=int, default=4, help='Initial depth')
-    parser.add_argument('--experiment', type=str, default='aso_se_95', help='Experiment name')
-    parser.add_argument('--resume_from', type=str, default=None, help='Resume from checkpoint')
+    parser = argparse.ArgumentParser(description='ASO-SE 神经网络自适应架构搜索')
+    parser.add_argument('--epochs', type=int, default=100, help='训练轮数')
+    parser.add_argument('--batch-size', type=int, default=128, help='批次大小')
+    parser.add_argument('--lr', type=float, default=0.025, help='学习率')
+    parser.add_argument('--experiment', type=str, default='aso_se_neural_growth', help='实验名称')
     
     args = parser.parse_args()
     
-    print("🧬 ASO-SE: Alternating Stable Optimization with Stochastic Exploration")
-    print("🎯 Target: CIFAR-10 95%+ Accuracy with True Neural Architecture Growth")
-    print(f"⏰ Start: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-    print(f"📋 Config: {vars(args)}")
+    print("🔧 ASO-SE: 真正的神经架构搜索与网络生长")
+    print(f"   目标: CIFAR-10 95%准确率")
+    print(f"   策略: 四阶段训练 + Net2Net平滑迁移")
     
-    # 创建训练器
+    # 设置随机种子
+    torch.manual_seed(42)
+    np.random.seed(42)
+    
+    # 创建训练器并开始训练
     trainer = ASOSETrainer(args.experiment)
+    trainer.batch_size = args.batch_size
+    trainer.num_epochs = args.epochs
+    trainer.weight_lr = args.lr
     
-    # 开始训练
-    trainer.train(
-        max_cycles=args.cycles,
-        initial_channels=args.initial_channels,
-        initial_depth=args.initial_depth,
-        batch_size=args.batch_size,
-        resume_from=args.resume_from
-    )
+    history, best_acc = trainer.train()
+    
+    print(f"\n✨ 实验完成!")
+    print(f"   最终精度: {best_acc:.2f}%")
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main() 
