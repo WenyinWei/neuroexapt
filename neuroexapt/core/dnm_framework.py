@@ -787,6 +787,13 @@ class DNMFramework:
                 # 确保新模型在正确的设备上
                 device = next(self.model.parameters()).device
                 self.model = new_model.to(device)
+                
+                # 验证所有参数都在正确的设备上
+                for name, param in self.model.named_parameters():
+                    if param.device != device:
+                        logger.warning(f"参数 {name} 在设备 {param.device}，期望在 {device}")
+                        param.data = param.data.to(device)
+                
                 divisions_executed += 1
                 results['parameters_added'] += params_added
                 

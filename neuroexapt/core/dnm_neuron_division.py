@@ -178,9 +178,12 @@ class AdaptiveNeuronDivision:
         
         # 更新层参数（确保在正确设备上）
         layer.out_features = new_out_features
-        layer.weight = nn.Parameter(new_weight.to(device))
+        # 确保参数在正确设备上并且requires_grad=True
+        new_weight_param = nn.Parameter(new_weight.to(device).detach().requires_grad_(True))
+        layer.weight = new_weight_param
         if layer.bias is not None:
-            layer.bias = nn.Parameter(new_bias.to(device))
+            new_bias_param = nn.Parameter(new_bias.to(device).detach().requires_grad_(True))
+            layer.bias = new_bias_param
             
         # 更新下一层的输入维度（如果存在且不是最后一层）
         if not self._is_final_layer(model, layer_name):
@@ -445,9 +448,18 @@ class AdaptiveNeuronDivision:
         if not layer_names:
             return True
             
-        # 特殊处理：如果层名称包含数字且是Sequential中的最后一个，则认为是最后一层
-        if 'classifier' in layer_name and layer_name.endswith('.6'):
-            return True
+        # 特殊处理：如果是分类器的输出层，则认为是最后一层
+        if 'classifier' in layer_name:
+            # 检查是否是分类器中的最后一个Linear层
+            parts = layer_name.split('.')
+            if len(parts) >= 2:
+                try:
+                    layer_idx = int(parts[-1])
+                    # 对于我们的分类器结构，第6层（索引6）是最后的Linear层
+                    if layer_idx == 6:
+                        return True
+                except ValueError:
+                    pass
             
         # 找到当前层在列表中的位置
         try:
