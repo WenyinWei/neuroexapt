@@ -542,6 +542,8 @@ class DNMNeuronDivision:
                     self._sync_downstream_conv_input_channels(model, layer_name, target_module.out_channels, new_module.out_channels, split_indices)
                     # 🎯 最终修复：级联更新下游Linear层的输入特征
                     self._sync_downstream_linear_input_features(model, layer_name, target_module.out_channels, new_module.out_channels, split_indices)
+                    # 🔗 残差连接修复：更新ResidualBlock的shortcut层
+                    self._sync_residual_shortcut_channels(model, layer_name, target_module.out_channels, new_module.out_channels, split_indices)
                 
                 total_splits += len(split_indices)
                 
@@ -713,14 +715,32 @@ class DNMNeuronDivision:
     
     def _is_likely_downstream_layer(self, upstream_parts: List[str], downstream_parts: List[str]) -> bool:
         """判断是否为下游层"""
-        # 针对我们的测试网络：stem.0 -> layer1.0
+        # 🔧 修复：正确识别跨block的连接模式
+        
+        # stem.0 -> block1.main_path.0 或 block1.shortcut.0
+        if upstream_parts[0] == 'stem' and len(downstream_parts) >= 2:
+            if downstream_parts[0] == 'block1':
+                return True
+        
+        # stem.0 -> layer1.0 这种模式（旧的命名）
         if len(upstream_parts) == 2 and len(downstream_parts) == 2:
-            # stem.0 -> layer1.0 这种模式
             if upstream_parts[0] == 'stem' and downstream_parts[0] == 'layer1':
                 return True
         
-        # Sequential层内的连接: layer1.0 -> layer1.3 (跳过BN和ReLU)
-        if len(upstream_parts) == len(downstream_parts):
+        # block间的连接: block1 -> block2, block2 -> block3, etc.
+        if len(upstream_parts) >= 2 and len(downstream_parts) >= 2:
+            if upstream_parts[0].startswith('block') and downstream_parts[0].startswith('block'):
+                try:
+                    up_block_num = int(upstream_parts[0].replace('block', ''))
+                    down_block_num = int(downstream_parts[0].replace('block', ''))
+                    # 连续的block
+                    if down_block_num == up_block_num + 1:
+                        return True
+                except ValueError:
+                    pass
+        
+        # Sequential层内的连接: block1.main_path.0 -> block1.main_path.3 (跳过BN和ReLU)
+        if len(upstream_parts) == len(downstream_parts) and len(upstream_parts) >= 3:
             # 同一个模块内的后续层
             if upstream_parts[:-1] == downstream_parts[:-1]:
                 try:
@@ -797,6 +817,90 @@ class DNMNeuronDivision:
                         
                     except Exception as e:
                         logger.error(f"Failed to update downstream Linear {name}: {e}")
+    
+    def _sync_residual_shortcut_channels(self, model: nn.Module, conv_layer_name: str,
+                                       old_out_channels: int, new_out_channels: int,
+                                       split_indices: List[int]) -> None:
+        """
+        🔗 残差连接修复：更新ResidualBlock的shortcut层
+        
+        当main_path中的Conv层通道发生变化时，对应的shortcut层也需要相应更新
+        以确保残差相加时通道数匹配
+        """
+        logger.debug(f"🔍 Checking residual shortcut for {conv_layer_name}")
+        
+        # 解析层名以找到对应的ResidualBlock
+        parts = conv_layer_name.split('.')
+        
+        # 检查是否是ResidualBlock内的main_path层
+        if len(parts) >= 3 and parts[-2] == 'main_path':
+            # 构造对应的shortcut层名
+            block_name = '.'.join(parts[:-2])  # 例如：block1
+            shortcut_layer_name = f"{block_name}.shortcut.0"
+            
+            try:
+                shortcut_conv = self._get_module_by_name(model, shortcut_layer_name)
+                
+                # 如果shortcut是Conv层且输出通道匹配，需要更新
+                if isinstance(shortcut_conv, nn.Conv2d) and shortcut_conv.out_channels == old_out_channels:
+                    logger.info(f"🔄 Updating residual shortcut {shortcut_layer_name}: out_channels {old_out_channels} -> {new_out_channels}")
+                    
+                    # 创建新的shortcut Conv层
+                    new_shortcut_conv = self._expand_conv_output_channels(
+                        shortcut_conv, old_out_channels, new_out_channels, split_indices
+                    )
+                    
+                    # 替换模型中的层
+                    self._replace_module_in_model(model, shortcut_layer_name, new_shortcut_conv)
+                    
+                    # 同步对应的BatchNorm
+                    shortcut_bn_name = f"{block_name}.shortcut.1"
+                    self._sync_batchnorm_after_conv_split(model, shortcut_layer_name, old_out_channels, new_out_channels, split_indices)
+                    
+                    logger.info(f"✅ Successfully updated residual shortcut {shortcut_layer_name}")
+                    
+            except Exception as e:
+                logger.error(f"Failed to update residual shortcut for {conv_layer_name}: {e}")
+    
+    def _expand_conv_output_channels(self, conv_layer: nn.Conv2d, old_out_channels: int,
+                                   new_out_channels: int, split_indices: List[int]) -> nn.Conv2d:
+        """扩展Conv层的输出通道（用于shortcut层更新）"""
+        # 创建新的Conv层
+        new_conv = nn.Conv2d(
+            in_channels=conv_layer.in_channels,
+            out_channels=new_out_channels,
+            kernel_size=conv_layer.kernel_size,
+            stride=conv_layer.stride,
+            padding=conv_layer.padding,
+            dilation=conv_layer.dilation,
+            groups=conv_layer.groups,
+            bias=conv_layer.bias is not None,
+            padding_mode=conv_layer.padding_mode
+        ).to(conv_layer.weight.device)
+        
+        # 权重继承策略
+        with torch.no_grad():
+            # 复制原始权重 [out_channels, in_channels, kernel_h, kernel_w]
+            new_conv.weight[:old_out_channels, :, :, :] = conv_layer.weight.data
+            
+            # 为新的输出通道初始化权重（继承自分裂的父通道）
+            for i, split_idx in enumerate(split_indices):
+                new_out_idx = old_out_channels + i
+                # 继承父通道的权重并添加少量噪声
+                parent_weight = conv_layer.weight.data[split_idx, :, :, :]
+                noise_scale = 0.01 * torch.std(parent_weight)
+                noise = torch.randn_like(parent_weight) * noise_scale
+                new_conv.weight[new_out_idx, :, :, :] = parent_weight + noise
+            
+            # 复制bias
+            if conv_layer.bias is not None:
+                new_conv.bias[:old_out_channels] = conv_layer.bias.data
+                # 为新通道初始化bias
+                for i, split_idx in enumerate(split_indices):
+                    new_out_idx = old_out_channels + i
+                    new_conv.bias[new_out_idx] = conv_layer.bias.data[split_idx]
+        
+        return new_conv
     
     def _expand_linear_input_features(self, linear_layer: nn.Linear, old_in_features: int,
                                     new_in_features: int, split_indices: List[int]) -> nn.Linear:
