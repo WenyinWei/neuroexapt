@@ -215,6 +215,16 @@ class IntelligentNeuronSplitter:
         self.analyzer = NeuronInformationAnalyzer()
         self.split_history = defaultdict(list)
         
+        # 导入Net2Net变换器
+        try:
+            from .dnm_net2net import Net2NetTransformer, DNMArchitectureMutator
+            self.net2net_transformer = Net2NetTransformer(noise_scale=inheritance_noise)
+            self.architecture_mutator = DNMArchitectureMutator(self.net2net_transformer)
+        except ImportError:
+            logger.warning("Net2Net transformer not available, using simple splitting")
+            self.net2net_transformer = None
+            self.architecture_mutator = None
+        
     def decide_split_candidates(self, 
                               activations: torch.Tensor, 
                               layer_name: str) -> List[int]:
