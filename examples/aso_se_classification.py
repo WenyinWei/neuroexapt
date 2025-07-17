@@ -43,19 +43,22 @@ import logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s | %(message)s', datefmt='%H:%M:%S')
 logger = logging.getLogger()
 
-class GumbelSoftmaxSelector(nn.Module):
-    """Gumbel-Softmax架构采样器"""
+class GumbelSoftmax(nn.Module):
+    """Gumbel-Softmax采样器"""
     
-    def __init__(self, initial_temp=5.0, min_temp=0.1, anneal_rate=0.98):
+    def __init__(self, hard=True, temperature=1.0, min_temperature=0.1):  # 降低初始温度
         super().__init__()
-        self.temperature = initial_temp
-        self.min_temperature = min_temp
-        self.anneal_rate = anneal_rate
+        self.hard = hard
+        self.temperature = temperature
+        self.min_temperature = min_temperature
+        self.anneal_rate = 0.98  # 更慢的退火速度
+    
+    def forward(self, logits):
+        """前向传播"""
+        hard = self.hard and self.training
         
-    def forward(self, logits, hard=True):
-        """Gumbel-Softmax采样"""
         if not self.training:
-            # 推理时使用argmax
+            # 推理时直接返回one-hot
             y_hard = torch.zeros_like(logits)
             y_hard.scatter_(-1, torch.argmax(logits, dim=-1, keepdim=True), 1.0)
             return y_hard
@@ -125,22 +128,49 @@ class MixedOperation(nn.Module):
     
     def forward(self, x, arch_weights):
         """前向传播"""
-        # 智能操作选择：如果某个操作权重接近1，只计算该操作
+        # 检查权重有效性
+        if torch.isnan(arch_weights).any() or torch.isinf(arch_weights).any():
+            # 如果权重无效，使用skip连接作为安全回退
+            return self.operations[3](x)  # skip_connect
+        
+        # 智能操作选择：如果某个操作权重占主导，优先计算该操作
         max_weight_idx = torch.argmax(arch_weights).item()
         max_weight = arch_weights[max_weight_idx].item()
         
-        # 如果有操作权重超过0.9，只计算该操作（高效模式）
-        if max_weight > 0.9:
-            return self.operations[max_weight_idx](x)
+        # 如果有操作权重超过0.8，主要计算该操作（高效模式）
+        if max_weight > 0.8:
+            dominant_result = self.operations[max_weight_idx](x)
+            
+            # 仍然计算其他有意义的操作，但权重较低
+            if max_weight < 0.95:  # 不是完全确定的情况下
+                other_results = []
+                for i, op in enumerate(self.operations):
+                    if i != max_weight_idx and arch_weights[i] > 0.05:
+                        other_results.append(arch_weights[i] * op(x))
+                
+                if other_results:
+                    other_contribution = sum(other_results)
+                    return max_weight * dominant_result + other_contribution
+            
+            return dominant_result
         
-        # 否则计算所有非零权重操作（搜索模式）
+        # 否则计算所有有意义权重的操作（搜索模式）
         results = []
+        total_computed_weight = 0.0
+        
         for i, op in enumerate(self.operations):
             weight = arch_weights[i]
-            if weight > 0.01:  # 只计算权重超过1%的操作
-                results.append(weight * op(x))
+            if weight > 0.02:  # 只计算权重超过2%的操作
+                try:
+                    op_result = op(x)
+                    results.append(weight * op_result)
+                    total_computed_weight += weight
+                except Exception as e:
+                    # 如果某个操作失败，跳过它
+                    print(f"⚠️ 操作 {i} 计算失败: {e}")
+                    continue
         
-        if not results:
+        if not results or total_computed_weight < 0.1:
             # 回退：如果没有足够权重的操作，使用skip连接
             return self.operations[3](x)  # skip_connect
         
@@ -191,16 +221,75 @@ class ArchitectureManager(nn.Module):
             weights[3] = 1.0  # 强制使用skip_connect (index 3)
             return weights.detach()  # 不需要梯度
         else:
-            # 在搜索和生长阶段使用Gumbel-Softmax
+            # 在搜索阶段使用Gumbel-Softmax，但保持温和过渡
+            if training_phase == 'search':
+                # 平滑过渡：混合learned logits和Gumbel采样
+                with torch.no_grad():
+                    # 从当前学到的参数开始，避免突然跳跃
+                    current_best = torch.argmax(logits).item()
+                    if current_best == 3:  # 如果当前最优是skip_connect
+                        # 给其他操作一些机会，但不要完全随机
+                        logits = logits + torch.randn_like(logits) * 0.1
+                
             return selector(logits.unsqueeze(0)).squeeze(0)
+    
+    def preserve_architecture_knowledge(self):
+        """保存当前架构知识，用于平滑过渡"""
+        preserved_logits = []
+        for params in self.arch_params:
+            preserved_logits.append(params.data.clone())
+        return preserved_logits
+    
+    def smooth_transition_to_search(self, preserved_logits=None):
+        """平滑过渡到搜索阶段"""
+        if preserved_logits is not None:
+            for i, preserved in enumerate(preserved_logits):
+                if i < len(self.arch_params):
+                    # 保持学到的知识，但增加少量探索噪声
+                    with torch.no_grad():
+                        self.arch_params[i].data = preserved + torch.randn_like(preserved) * 0.05
     
     def get_current_genotype(self):
         """获取当前基因型"""
         genotype = []
-        for layer_params in self.arch_params:
+        arch_weights_info = []  # 添加架构权重信息
+        for i, layer_params in enumerate(self.arch_params):
             best_op_idx = torch.argmax(layer_params).item()
-            best_op = PRIMITIVES[best_op_idx]
-            genotype.append(best_op)
+            best_op_name = PRIMITIVES[best_op_idx]
+            genotype.append(best_op_name)
+            
+            # 收集权重信息用于调试
+            weights = F.softmax(layer_params, dim=0)
+            max_weight = weights[best_op_idx].item()
+            arch_weights_info.append({
+                'layer': i,
+                'best_op': best_op_name,
+                'weight': max_weight,
+                'entropy': -torch.sum(weights * torch.log(weights + 1e-8)).item()
+            })
+        
+        return genotype, arch_weights_info
+    
+    def print_architecture_analysis(self):
+        """打印架构分析信息"""
+        genotype, weights_info = self.get_current_genotype()
+        
+        print(f"\n🔍 架构分析:")
+        op_counts = {}
+        avg_entropy = 0.0
+        
+        for info in weights_info:
+            op = info['best_op']
+            op_counts[op] = op_counts.get(op, 0) + 1
+            avg_entropy += info['entropy']
+            
+            if info['weight'] < 0.5:  # 权重不确定的层
+                print(f"  ⚠️ 层 {info['layer']}: {op} (权重: {info['weight']:.3f}, 熵: {info['entropy']:.3f})")
+        
+        avg_entropy /= len(weights_info)
+        print(f"  📊 操作分布: {op_counts}")
+        print(f"  🎲 平均架构熵: {avg_entropy:.3f}")
+        
         return genotype
 
 class EvolvableBlock(nn.Module):
@@ -287,7 +376,7 @@ class ASOSENetwork(nn.Module):
         self.arch_manager = ArchitectureManager(self.current_depth, len(PRIMITIVES))
         
         # Gumbel-Softmax选择器
-        self.gumbel_selector = GumbelSoftmaxSelector()
+        self.gumbel_selector = GumbelSoftmax(hard=True, temperature=1.0, min_temperature=0.1)
         
         # Net2Net迁移工具
         self.net2net_transfer = Net2NetTransfer()
@@ -364,7 +453,7 @@ class ASOSENetwork(nn.Module):
     
     def get_architecture_info(self):
         """获取架构信息"""
-        genotype = self.arch_manager.get_current_genotype()
+        genotype, _ = self.arch_manager.get_current_genotype()  # 解包元组
         params = sum(p.numel() for p in self.parameters() if p.requires_grad)
         
         return {
@@ -554,39 +643,53 @@ class ASOSETrainer:
         for batch_idx, (data, targets) in enumerate(pbar):
             data, targets = data.to(self.device), targets.to(self.device)
             
-            # 权重优化步骤
-            self.weight_optimizer.zero_grad()
-            outputs = self.network(data)
-            loss = F.cross_entropy(outputs, targets)
-            loss.backward()
-            self.weight_optimizer.step()
+            # 在warmup和optimize阶段，只优化权重参数
+            if self.current_phase in ['warmup', 'optimize']:
+                self.weight_optimizer.zero_grad()
+                outputs = self.network(data)
+                loss = F.cross_entropy(outputs, targets)
+                loss.backward()
+                self.weight_optimizer.step()
+                
+            # 在search和growth阶段，交替优化权重和架构参数（避免干扰）
+            elif self.current_phase in ['search', 'growth']:
+                if batch_idx % 3 == 0:  # 架构优化频率降低，避免过度干扰
+                    # 架构参数优化
+                    self.arch_optimizer.zero_grad()
+                    arch_outputs = self.network(data)
+                    arch_loss = F.cross_entropy(arch_outputs, targets)
+                    arch_loss.backward()
+                    self.arch_optimizer.step()
+                    
+                    # 每次架构更新后进行温度退火
+                    self.network.gumbel_selector.anneal_temperature()
+                    
+                else:
+                    # 权重参数优化
+                    self.weight_optimizer.zero_grad()
+                    outputs = self.network(data)
+                    loss = F.cross_entropy(outputs, targets)
+                    loss.backward()
+                    self.weight_optimizer.step()
             
-            # 架构优化步骤(在搜索和生长阶段)
-            if self.current_phase in ['search', 'growth'] and batch_idx % 2 == 0:
-                self.arch_optimizer.zero_grad()
-                arch_outputs = self.network(data)
-                arch_loss = F.cross_entropy(arch_outputs, targets)
-                arch_loss.backward()
-                self.arch_optimizer.step()
-            
-            # 统计
-            total_loss += loss.item()
-            _, predicted = outputs.max(1)
-            total += targets.size(0)
-            correct += predicted.eq(targets).sum().item()
+            # 统计（使用最后的前向传播结果）
+            with torch.no_grad():
+                if 'outputs' not in locals():
+                    outputs = self.network(data)
+                total_loss += F.cross_entropy(outputs, targets).item()
+                _, predicted = outputs.max(1)
+                total += targets.size(0)
+                correct += predicted.eq(targets).sum().item()
             
             # 更新进度条
             accuracy = 100. * correct / total
+            current_temp = self.network.gumbel_selector.temperature
             pbar.set_postfix({
                 'Loss': f'{total_loss/(batch_idx+1):.3f}',
                 'Acc': f'{accuracy:.2f}%',
                 'Phase': self.current_phase,
-                'Temp': f'{self.network.gumbel_selector.temperature:.3f}'
+                'Temp': f'{current_temp:.3f}'
             })
-        
-        # 温度退火
-        if self.current_phase in ['search', 'growth']:
-            self.network.gumbel_selector.anneal_temperature()
         
         return total_loss / len(self.train_loader), accuracy
     
@@ -615,9 +718,19 @@ class ASOSETrainer:
         old_phase = self.current_phase
         
         if self.current_phase == 'warmup' and self.phase_epochs >= self.phase_durations['warmup']:
+            # 保存warmup阶段学到的架构知识
+            preserved_knowledge = self.network.arch_manager.preserve_architecture_knowledge()
+            
             self.current_phase = 'search'
             self.phase_epochs = 0
             print(f"🔄 进入架构搜索阶段")
+            
+            # 实现平滑过渡到搜索阶段
+            self.network.arch_manager.smooth_transition_to_search(preserved_knowledge)
+            
+            # 重置Gumbel温度为搜索阶段适合的值
+            self.network.gumbel_selector.temperature = 0.8  # 适中的温度开始搜索
+            print(f"🌡️ 重置Gumbel温度为 {self.network.gumbel_selector.temperature}")
         
         elif self.current_phase == 'search' and self.phase_epochs >= self.phase_durations['search']:
             self.current_phase = 'growth'
@@ -628,10 +741,18 @@ class ASOSETrainer:
             self.current_phase = 'optimize'
             self.phase_epochs = 0
             print(f"🔄 进入最终优化阶段")
+            
+            # 在优化阶段固定架构，专注于权重优化
+            self.network.gumbel_selector.temperature = 0.01  # 极低温度，几乎确定性
         
         # 同步网络的训练阶段
         if old_phase != self.current_phase:
             self.network.set_training_phase(self.current_phase)
+            print(f"✅ 阶段转换: {old_phase} → {self.current_phase}")
+            
+            # 打印当前架构状态
+            genotype = self.network.arch_manager.print_architecture_analysis()
+            print(f"📋 当前基因型: {genotype[:5]}...")  # 显示前5个操作
     
     def train(self):
         """完整训练流程"""
@@ -698,6 +819,10 @@ class ASOSETrainer:
                 print(f"   Test Acc: {test_acc:.2f}% | Best: {best_accuracy:.2f}%")
                 print(f"   网络深度: {arch_info['depth']} | 参数量: {arch_info['parameters']:,}")
                 print(f"   当前基因型: {arch_info['genotype'][:3]}...")
+                
+                # 在搜索阶段打印详细架构分析
+                if self.current_phase == 'search':
+                    self.network.arch_manager.print_architecture_analysis()
         
         print(f"\n🎉 ASO-SE 训练完成!")
         print(f"   最佳精度: {best_accuracy:.2f}%")
