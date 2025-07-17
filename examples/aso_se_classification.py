@@ -143,24 +143,42 @@ class ArchitectureManager(nn.Module):
         # 为每层创建架构参数
         self.arch_params = nn.ParameterList()
         for i in range(num_layers):
-            # 每层的架构参数
-            layer_params = nn.Parameter(torch.randn(num_ops) * 0.1)
+            # 每层的架构参数 - 避免none操作被选中，给skip_connect更高的初始权重
+            layer_params = nn.Parameter(torch.randn(num_ops) * 0.5)
+            # 给skip_connect(索引3)更高的初始值，避免none(索引0)
+            with torch.no_grad():
+                layer_params[0] = -2.0  # none操作权重降低
+                if num_ops > 3:
+                    layer_params[3] = 1.0   # skip_connect权重提高
             self.arch_params.append(layer_params)
         
         print(f"🔧 ArchitectureManager: {num_layers} 层, 每层 {num_ops} 个操作")
     
-    def get_arch_weights(self, layer_idx, selector):
+    def get_arch_weights(self, layer_idx, selector, training_phase='warmup'):
         """获取指定层的架构权重"""
         if layer_idx >= len(self.arch_params):
             # 如果层数增加了，添加新的架构参数
             while len(self.arch_params) <= layer_idx:
-                new_params = nn.Parameter(torch.randn(self.num_ops) * 0.1)
-                if self.arch_params[0].device != torch.device('cpu'):
+                new_params = nn.Parameter(torch.randn(self.num_ops) * 0.5)
+                with torch.no_grad():
+                    new_params[0] = -2.0  # none操作权重降低
+                    if self.num_ops > 3:
+                        new_params[3] = 1.0   # skip_connect权重提高
+                if len(self.arch_params) > 0 and self.arch_params[0].device != torch.device('cpu'):
                     new_params = new_params.to(self.arch_params[0].device)
                 self.arch_params.append(new_params)
         
         logits = self.arch_params[layer_idx]
-        return selector(logits.unsqueeze(0)).squeeze(0)
+        
+        # 在warmup阶段使用固定架构（softmax without gumbel noise）
+        if training_phase == 'warmup':
+            # 在warmup阶段强制使用skip连接，避免none操作
+            weights = torch.zeros_like(logits)
+            weights[3] = 1.0  # 强制使用skip_connect (index 3)
+            return weights.detach()  # 不需要梯度
+        else:
+            # 在搜索和生长阶段使用Gumbel-Softmax
+            return selector(logits.unsqueeze(0)).squeeze(0)
     
     def get_current_genotype(self):
         """获取当前基因型"""
@@ -246,6 +264,9 @@ class ASOSENetwork(nn.Module):
         # Net2Net迁移工具
         self.net2net_transfer = Net2NetTransfer()
         
+        # 训练阶段状态
+        self.training_phase = 'warmup'
+        
         print(f"🚀 ASO-SE 网络初始化:")
         print(f"   深度: {self.current_depth} 层")
         print(f"   初始通道: {initial_channels}")
@@ -257,7 +278,7 @@ class ASOSENetwork(nn.Module):
         x = self.stem(x)
         
         for i, layer in enumerate(self.layers):
-            arch_weights = self.arch_manager.get_arch_weights(i, self.gumbel_selector)
+            arch_weights = self.arch_manager.get_arch_weights(i, self.gumbel_selector, self.training_phase)
             x = layer(x, arch_weights)
         
         x = self.global_pooling(x)
@@ -265,6 +286,11 @@ class ASOSENetwork(nn.Module):
         x = self.classifier(x)
         
         return x
+    
+    def set_training_phase(self, phase):
+        """设置训练阶段"""
+        self.training_phase = phase
+        print(f"🔄 设置训练阶段: {phase}")
     
     def grow_depth(self, num_new_layers=1):
         """深度生长 - 添加新层"""
@@ -558,6 +584,8 @@ class ASOSETrainer:
         self.phase_epochs += 1
         
         # 阶段转换逻辑
+        old_phase = self.current_phase
+        
         if self.current_phase == 'warmup' and self.phase_epochs >= self.phase_durations['warmup']:
             self.current_phase = 'search'
             self.phase_epochs = 0
@@ -572,6 +600,10 @@ class ASOSETrainer:
             self.current_phase = 'optimize'
             self.phase_epochs = 0
             print(f"🔄 进入最终优化阶段")
+        
+        # 同步网络的训练阶段
+        if old_phase != self.current_phase:
+            self.network.set_training_phase(self.current_phase)
     
     def train(self):
         """完整训练流程"""
