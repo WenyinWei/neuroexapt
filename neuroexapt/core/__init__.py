@@ -29,6 +29,10 @@ from .evolution_checkpoint import EvolutionCheckpointManager
 from .architect import Architect
 from .separated_training import SeparatedTrainer, SeparatedOptimizer
 
+# DNM (Dynamic Neural Morphogenesis) Framework
+from .dnm_framework import DNMFramework, MorphogenesisEvent
+from .dnm_neuron_division import AdaptiveNeuronDivision, NeuronDivisionStrategies
+
 __all__ = [
     'Network', 'OPS', 'PRIMITIVES', 'Genotype',
     'EvolvableNetwork', 'EvolvableCell',
@@ -41,5 +45,7 @@ __all__ = [
     # Device & Checkpoint Management
     'DeviceManager', 'get_device_manager', 'register_model',
     'auto_device', 'optimize_memory', 'CheckpointManager', 'get_checkpoint_manager',
-    'EvolutionCheckpointManager', 'Architect', 'SeparatedTrainer', 'SeparatedOptimizer'
+    'EvolutionCheckpointManager', 'Architect', 'SeparatedTrainer', 'SeparatedOptimizer',
+    # DNM Framework
+    'DNMFramework', 'MorphogenesisEvent', 'AdaptiveNeuronDivision', 'NeuronDivisionStrategies'
 ]
