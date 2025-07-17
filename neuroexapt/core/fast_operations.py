@@ -14,6 +14,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from typing import Dict, List, Optional, Tuple, Union
 import math
+import time
 from collections import OrderedDict
 import numpy as np
 
@@ -387,14 +388,15 @@ class MemoryEfficientCell(nn.Module):
         
         for j, state in enumerate(states):
             op_idx = start_op_idx + j
-            weight = arch_weights[op_idx]
-            
-            # 使用FastMixedOp
-            op_output = self.ops[op_idx](state, weight, self.training)
-            node_inputs.append(op_output)
+            if op_idx < len(arch_weights) and op_idx < len(self.ops):
+                weight = arch_weights[op_idx]
+                
+                # 使用FastMixedOp
+                op_output = self.ops[op_idx](state, weight, self.training)
+                node_inputs.append(op_output)
         
         # 求和所有输入
-        return sum(node_inputs)
+        return sum(node_inputs) if node_inputs else states[0]
     
     def get_memory_usage(self):
         """获取内存使用情况"""

@@ -13,6 +13,7 @@ import torch
 import torch.nn.functional as F
 import math
 import numpy as np
+import time
 from typing import Tuple, Optional, Union, List
 from torch import special
 
@@ -76,7 +77,7 @@ class FastGradients:
             return torch.tensor(0.0)
         
         device = parameters[0].device
-        if norm_type == math.inf:
+        if norm_type == float('inf'):
             norms = [p.grad.abs().max() for p in parameters if p.grad is not None]
             return torch.stack(norms).max() if norms else torch.tensor(0.0, device=device)
         else:
@@ -127,9 +128,9 @@ class FastSimilarity:
     @torch.jit.script
     def cosine_similarity_matrix(x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
         """JIT优化的余弦相似度矩阵"""
-        # 归一化
-        x_norm = F.normalize(x, p=2, dim=-1)
-        y_norm = F.normalize(y, p=2, dim=-1)
+        # 归一化 - JIT需要明确的float类型
+        x_norm = F.normalize(x, p=2.0, dim=-1)
+        y_norm = F.normalize(y, p=2.0, dim=-1)
         
         # 计算相似度矩阵
         return torch.mm(x_norm, y_norm.t())
@@ -146,7 +147,7 @@ class FastSimilarity:
             q = F.softmax(arch2.flatten(), dim=0)
             return -torch.sum(p * torch.log(q / p + 1e-8))
         elif method == 'l2':
-            return -torch.norm(arch1 - arch2, p=2)
+            return -torch.norm(arch1 - arch2, p=2.0)
         else:
             raise ValueError(f"Unknown similarity method: {method}")
     
