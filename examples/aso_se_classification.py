@@ -125,10 +125,24 @@ class MixedOperation(nn.Module):
     
     def forward(self, x, arch_weights):
         """前向传播"""
-        # 对每个操作计算结果并加权求和
+        # 智能操作选择：如果某个操作权重接近1，只计算该操作
+        max_weight_idx = torch.argmax(arch_weights).item()
+        max_weight = arch_weights[max_weight_idx].item()
+        
+        # 如果有操作权重超过0.9，只计算该操作（高效模式）
+        if max_weight > 0.9:
+            return self.operations[max_weight_idx](x)
+        
+        # 否则计算所有非零权重操作（搜索模式）
         results = []
         for i, op in enumerate(self.operations):
-            results.append(arch_weights[i] * op(x))
+            weight = arch_weights[i]
+            if weight > 0.01:  # 只计算权重超过1%的操作
+                results.append(weight * op(x))
+        
+        if not results:
+            # 回退：如果没有足够权重的操作，使用skip连接
+            return self.operations[3](x)  # skip_connect
         
         return sum(results)
 
@@ -198,29 +212,43 @@ class EvolvableBlock(nn.Module):
         self.out_channels = out_channels
         self.stride = stride
         
-        # 预处理层（如果通道数不匹配）
+        # 预处理层（如果通道数不匹配或需要下采样）
         self.preprocess = None
-        if in_channels != out_channels:
+        if in_channels != out_channels or stride != 1:
             self.preprocess = nn.Sequential(
                 nn.Conv2d(in_channels, out_channels, 1, stride=stride, bias=False),
                 nn.BatchNorm2d(out_channels)
             )
         
-        # 主要的混合操作
-        self.mixed_op = MixedOperation(out_channels, stride=1)
+        # 主要的混合操作 - 传递正确的stride
+        self.mixed_op = MixedOperation(out_channels, stride=1)  # 混合操作内部不下采样
+        
+        # 残差连接
+        self.use_residual = (in_channels == out_channels and stride == 1)
     
     def forward(self, x, arch_weights):
         """前向传播"""
+        # 保存输入用于残差连接
+        identity = x
+        
+        # 预处理（下采样和通道调整）
         if self.preprocess is not None:
             x = self.preprocess(x)
+            identity = x  # 更新残差连接的基准
         
+        # 混合操作
         out = self.mixed_op(x, arch_weights)
+        
+        # 残差连接（仅在维度匹配时）
+        if self.use_residual:
+            out = out + identity
+        
         return out
 
 class ASOSENetwork(nn.Module):
     """ASO-SE可生长神经网络"""
     
-    def __init__(self, input_channels=3, initial_channels=16, num_classes=10, initial_depth=8):
+    def __init__(self, input_channels=3, initial_channels=64, num_classes=10, initial_depth=6):
         super().__init__()
         self.input_channels = input_channels
         self.initial_channels = initial_channels
@@ -228,7 +256,7 @@ class ASOSENetwork(nn.Module):
         self.current_depth = initial_depth
         self.current_channels = initial_channels
         
-        # 初始特征提取
+        # 改进的初始特征提取
         self.stem = nn.Sequential(
             nn.Conv2d(input_channels, initial_channels, 3, padding=1, bias=False),
             nn.BatchNorm2d(initial_channels),
@@ -240,10 +268,10 @@ class ASOSENetwork(nn.Module):
         current_channels = initial_channels
         
         for i in range(initial_depth):
-            # 每隔几层进行下采样
-            stride = 2 if i in [initial_depth//3, 2*initial_depth//3] else 1
+            # 改进的下采样策略：只在第2层和第4层下采样
+            stride = 2 if i in [1, 3] else 1
             if stride == 2:
-                next_channels = min(current_channels * 2, 512)
+                next_channels = min(current_channels * 2, 256)
             else:
                 next_channels = current_channels
             
@@ -451,9 +479,9 @@ class ASOSETrainer:
         """设置模型"""
         self.network = ASOSENetwork(
             input_channels=3,
-            initial_channels=16,
+            initial_channels=64,
             num_classes=10,
-            initial_depth=8
+            initial_depth=6
         ).to(self.device)
         
         # 训练控制器
