@@ -189,6 +189,81 @@ The fix was verified using a comprehensive test that demonstrated successful:
 3. **Monitoring**: Add runtime validation checks for channel consistency
 4. **Future Enhancement**: Consider automatic architecture analysis for more robust downstream detection
 
+## Additional Fix: Optimizer State Management
+
+During testing, a secondary issue was discovered where the optimizer would crash after morphogenesis due to inconsistent parameter states:
+
+```
+KeyError: Parameter containing: tensor([[[...
+```
+
+### Problem
+When new parameters are created during morphogenesis, the optimizer's internal state becomes inconsistent with the model's parameters, leading to KeyError during optimization steps.
+
+### Solution
+**File**: `neuroexapt/core/dnm_framework.py`
+**Method**: `_update_optimizer()`
+
+**Fix**: Implemented robust optimizer recreation after morphogenesis:
+
+```python
+def _update_optimizer(self, optimizer: torch.optim.Optimizer, model: nn.Module) -> torch.optim.Optimizer:
+    """
+    🔧 修复优化器状态管理：在形态发生后创建新的优化器
+    
+    当模型结构发生变化时，需要重新创建优化器以包含新参数。
+    为简化起见，我们创建一个全新的优化器，保持相同的超参数。
+    """
+    try:
+        # 保存当前优化器配置
+        lr = optimizer.param_groups[0]['lr']
+        momentum = optimizer.param_groups[0].get('momentum', 0.9)
+        weight_decay = optimizer.param_groups[0].get('weight_decay', 0)
+        
+        # 根据优化器类型创建新优化器
+        if isinstance(optimizer, torch.optim.SGD):
+            new_optimizer = torch.optim.SGD(
+                model.parameters(), lr=lr, momentum=momentum, weight_decay=weight_decay
+            )
+        elif isinstance(optimizer, torch.optim.Adam):
+            betas = optimizer.param_groups[0].get('betas', (0.9, 0.999))
+            eps = optimizer.param_groups[0].get('eps', 1e-8)
+            new_optimizer = torch.optim.Adam(
+                model.parameters(), lr=lr, betas=betas, eps=eps, weight_decay=weight_decay
+            )
+        # ... additional optimizer types
+        
+        logger.info(f"✅ Optimizer updated after morphogenesis: {type(new_optimizer).__name__} with lr={lr}")
+        return new_optimizer
+    except Exception as e:
+        logger.error(f"Failed to update optimizer: {e}")
+        # Fallback to simple SGD
+        return torch.optim.SGD(model.parameters(), lr=0.01)
+```
+
+### Identity Layer Handling
+**File**: `neuroexapt/core/dnm_neuron_division.py`
+**Method**: `_sync_residual_shortcut_channels()`
+
+**Fix**: Added proper handling for Identity shortcut layers:
+
+```python
+# 首先检查shortcut是否为Identity
+shortcut_module = self._get_module_by_name(model, block_name + '.shortcut')
+if isinstance(shortcut_module, nn.Identity):
+    logger.debug(f"Shortcut is Identity for {block_name}, no update needed")
+    return
+```
+
+This prevents the error: `'Identity' object has no attribute '0'`
+
 ## Conclusion
 
-The channel mismatch issue has been successfully resolved through enhanced downstream layer detection, comprehensive synchronization mechanisms, and proper handling of residual connections. The DNM framework can now successfully perform neuron division operations without encountering dimensional inconsistencies.
+The DNM framework issues have been comprehensively resolved:
+
+1. **Channel Mismatch**: Enhanced downstream layer detection and synchronization
+2. **Residual Connections**: Proper handling of shortcut paths during morphogenesis  
+3. **Optimizer State**: Robust optimizer recreation after parameter changes
+4. **Identity Layers**: Correct handling of Identity shortcuts in ResidualBlocks
+
+The DNM framework can now successfully perform dynamic neural morphogenesis without encountering dimensional inconsistencies or optimizer state conflicts. Both the channel propagation and optimizer state management work seamlessly together to enable continuous neural evolution during training.

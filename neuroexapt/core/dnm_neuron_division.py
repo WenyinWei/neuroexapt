@@ -839,7 +839,18 @@ class DNMNeuronDivision:
             shortcut_layer_name = f"{block_name}.shortcut.0"
             
             try:
+                # 首先检查shortcut是否为Identity
+                shortcut_module = self._get_module_by_name(model, block_name + '.shortcut')
+                if isinstance(shortcut_module, nn.Identity):
+                    logger.debug(f"Shortcut is Identity for {block_name}, no update needed")
+                    return
+                
                 shortcut_conv = self._get_module_by_name(model, shortcut_layer_name)
+                
+                # 检查shortcut是否存在且是Conv层
+                if shortcut_conv is None:
+                    logger.debug(f"No shortcut conv layer found at {shortcut_layer_name}")
+                    return
                 
                 # 如果shortcut是Conv层且输出通道匹配，需要更新
                 if isinstance(shortcut_conv, nn.Conv2d) and shortcut_conv.out_channels == old_out_channels:
