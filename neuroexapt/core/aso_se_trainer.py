@@ -1,425 +1,433 @@
 """
-ASO-SE训练器 (ASO-SE Trainer)
-
-重构后的ASO-SE训练器，基于新的ASO-SE框架实现。
-保持向后兼容性，同时提供增强的功能和更好的架构设计。
+ASO-SE 稳定训练器
+重新设计的四阶段训练流程
 """
 
 import torch
 import torch.nn as nn
-try:
-    import torch.nn.functional as F
-except ImportError:
-    from torch.nn import functional as F
-import numpy as np
-import logging
-from typing import Dict, List, Optional, Tuple, Union, Any
+import torch.optim as optim
+import torch.nn.functional as F
+from torch.utils.data import DataLoader
+import torchvision
+import torchvision.transforms as transforms
+from tqdm import tqdm
+import time
+import math
+from .aso_se_architecture import ProgressiveArchitectureNetwork
 
-from .model import Network as SearchNetwork
-from .evolvable_model import EvolvableNetwork
-from .genotypes import Genotype, PRIMITIVES
-from .aso_se_framework import ASOSEFramework, ASOSEConfig
-from .function_preserving_init import FunctionPreservingInitializer
-from .gumbel_softmax_explorer import GumbelSoftmaxExplorer
-from .architecture_mutator import ArchitectureMutator
 
-logger = logging.getLogger(__name__)
-
-def _derive_genotype(alphas_normal, alphas_reduce, steps=4):
-    """
-    从连续的alpha参数导出离散基因型（使用argmax）
-    兼容旧接口的辅助函数
-    """
+class StableASO_SETrainer:
+    """稳定的ASO-SE训练器"""
     
-    def _parse(weights):
-        gene = []
-        n = 2
-        start = 0
-        for i in range(steps):
-            end = start + n
-            W = weights[start:end].copy()
+    def __init__(self, config=None):
+        self.config = config or self._default_config()
+        self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        
+        # 训练状态
+        self.current_epoch = 0
+        self.current_phase = 'warmup'
+        self.phase_epochs = 0
+        self.best_accuracy = 0.0
+        self.training_history = []
+        
+        # 数据加载器
+        self.train_loader = None
+        self.test_loader = None
+        
+        # 模型和优化器
+        self.network = None
+        self.weight_optimizer = None
+        self.arch_optimizer = None
+        self.scheduler = None
+        
+        print(f"🚀 稳定ASO-SE训练器初始化完成")
+        print(f"   设备: {self.device}")
+        print(f"   配置: {self.config}")
+    
+    def _default_config(self):
+        """默认配置"""
+        return {
+            'dataset': 'CIFAR-10',
+            'batch_size': 128,
+            'num_epochs': 100,
+            'init_channels': 32,
+            'init_depth': 4,
+            'max_depth': 8,
             
-            # 为当前节点找到最好的2条边
-            edges = sorted(range(i + 2), 
-                         key=lambda x: -max(W[x][k] for k in range(len(W[x])) 
-                                           if k != PRIMITIVES.index('none')))[:2]
+            # 学习率设置
+            'weight_lr': 0.025,
+            'arch_lr': 3e-4,
+            'momentum': 0.9,
+            'weight_decay': 3e-4,
             
-            # 为选中的2条边各自找到最好的操作
-            for j in edges:
-                k_best = None
-                for k in range(len(W[j])):
-                    if k != PRIMITIVES.index('none'):
-                        if k_best is None or W[j][k] > W[j][k_best]:
-                            k_best = k
-                gene.append((PRIMITIVES[k_best], j))
-            start = end
-            n += 1
-        return gene
-
-    gene_normal = _parse(F.softmax(alphas_normal, dim=-1).data.cpu().numpy())
-    gene_reduce = _parse(F.softmax(alphas_reduce, dim=-1).data.cpu().numpy())
+            # 阶段设置
+            'warmup_epochs': 15,
+            'search_epochs': 30,
+            'growth_epochs': 35,
+            'optimize_epochs': 20,
+            
+            # 搜索控制
+            'arch_update_freq': 5,  # 每5个batch更新一次架构
+            'growth_patience': 8,   # 性能停滞8个epoch后生长
+            'growth_threshold': 0.01,  # 性能提升阈值
+        }
     
-    concat = range(2, 2 + steps)
+    def setup_data(self):
+        """设置数据加载器"""
+        if self.config['dataset'] == 'CIFAR-10':
+            # 数据增强
+            train_transform = transforms.Compose([
+                transforms.RandomCrop(32, padding=4),
+                transforms.RandomHorizontalFlip(),
+                transforms.ToTensor(),
+                transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))
+            ])
+            
+            test_transform = transforms.Compose([
+                transforms.ToTensor(),
+                transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))
+            ])
+            
+            train_dataset = torchvision.datasets.CIFAR10(
+                root='./data', train=True, download=True, transform=train_transform
+            )
+            test_dataset = torchvision.datasets.CIFAR10(
+                root='./data', train=False, download=True, transform=test_transform
+            )
+            
+            self.train_loader = DataLoader(
+                train_dataset, batch_size=self.config['batch_size'], 
+                shuffle=True, num_workers=2, pin_memory=True
+            )
+            self.test_loader = DataLoader(
+                test_dataset, batch_size=self.config['batch_size'], 
+                shuffle=False, num_workers=2, pin_memory=True
+            )
+            
+            print(f"📊 CIFAR-10数据加载完成: 训练集 {len(train_dataset)}, 测试集 {len(test_dataset)}")
+        else:
+            raise ValueError(f"不支持的数据集: {self.config['dataset']}")
     
-    genotype = Genotype(
-        normal=gene_normal, normal_concat=concat,
-        reduce=gene_reduce, reduce_concat=concat
-    )
-    return genotype
-
-class ASOSETrainer:
-    """
-    重构的ASO-SE训练器
+    def setup_model(self):
+        """设置模型"""
+        self.network = ProgressiveArchitectureNetwork(
+            input_channels=3,
+            init_channels=self.config['init_channels'],
+            num_classes=10,
+            init_depth=self.config['init_depth'],
+            max_depth=self.config['max_depth']
+        ).to(self.device)
+        
+        # 使用skip_biased初始化
+        self.network.arch_manager.init_strategy = 'skip_biased'
+        
+        print(f"🏗️ 网络初始化完成:")
+        info = self.network.get_architecture_info()
+        print(f"   深度: {info['depth']}")
+        print(f"   参数量: {info['parameters']:,}")
+        print(f"   初始架构: {info['architecture']}")
     
-    基于新的ASO-SE框架，提供四阶段训练流程：
-    1. 权重预热 (W-Training)
-    2. 架构参数学习 (α-Training)  
-    3. 架构突变与稳定 (Architecture Mutation & Stabilization)
-    4. 权重再适应 (W-Retraining)
-    """
+    def setup_optimizers(self):
+        """设置优化器"""
+        # 分离权重参数和架构参数
+        weight_params = []
+        arch_params = []
+        
+        for name, param in self.network.named_parameters():
+            if 'arch_manager.alpha' in name:
+                arch_params.append(param)
+            else:
+                weight_params.append(param)
+        
+        # 权重优化器
+        self.weight_optimizer = optim.SGD(
+            weight_params,
+            lr=self.config['weight_lr'],
+            momentum=self.config['momentum'],
+            weight_decay=self.config['weight_decay']
+        )
+        
+        # 架构优化器
+        self.arch_optimizer = optim.Adam(
+            arch_params,
+            lr=self.config['arch_lr'],
+            betas=(0.5, 0.999),
+            weight_decay=1e-3
+        )
+        
+        # 学习率调度器
+        self.scheduler = optim.lr_scheduler.CosineAnnealingLR(
+            self.weight_optimizer,
+            T_max=self.config['num_epochs'],
+            eta_min=1e-4
+        )
+        
+        print(f"⚙️ 优化器设置完成:")
+        print(f"   权重参数: {len(weight_params)}")
+        print(f"   架构参数: {len(arch_params)}")
     
-    def __init__(self, search_model_args: Dict, model_args: Dict, training_args: Dict):
-        """
-        Args:
-            search_model_args: 搜索模型参数
-            model_args: 可进化模型参数
-            training_args: 训练参数
-        """
-        # 1. 创建搜索模型
-        self.search_model = SearchNetwork(**search_model_args)
+    def train_epoch(self):
+        """训练一个epoch"""
+        self.network.train()
+        total_loss = 0.0
+        correct = 0
+        total = 0
         
-        # 2. 创建ASO-SE配置
-        self.config = self._create_config_from_args(training_args)
+        pbar = tqdm(self.train_loader, desc=f'Epoch {self.current_epoch+1}')
         
-        # 3. 初始化ASO-SE框架
-        self.framework = ASOSEFramework(self.search_model, self.config)
+        for batch_idx, (data, targets) in enumerate(pbar):
+            data, targets = data.to(self.device), targets.to(self.device)
+            
+            # 根据训练阶段选择优化策略
+            if self.current_phase == 'warmup':
+                # warmup阶段只优化权重
+                self._optimize_weights(data, targets)
+            
+            elif self.current_phase in ['search', 'growth']:
+                # 搜索和生长阶段交替优化
+                if batch_idx % self.config['arch_update_freq'] == 0:
+                    # 优化架构参数
+                    self._optimize_architecture(data, targets)
+                else:
+                    # 优化权重参数
+                    self._optimize_weights(data, targets)
+            
+            elif self.current_phase == 'optimize':
+                # 优化阶段只优化权重
+                self._optimize_weights(data, targets)
+            
+            # 统计
+            with torch.no_grad():
+                outputs = self.network(data)
+                loss = F.cross_entropy(outputs, targets)
+                total_loss += loss.item()
+                
+                _, predicted = outputs.max(1)
+                total += targets.size(0)
+                correct += predicted.eq(targets).sum().item()
+            
+            # 更新进度条
+            accuracy = 100. * correct / total
+            arch_info = self.network.get_architecture_info()
+            
+            pbar.set_postfix({
+                'Loss': f'{total_loss/(batch_idx+1):.3f}',
+                'Acc': f'{accuracy:.2f}%',
+                'Phase': self.current_phase,
+                'Temp': f'{arch_info["temperature"]:.3f}',
+                'Entropy': f'{arch_info["entropy"]:.2f}'
+            })
         
-        # 4. 保存参数以便兼容性
-        self.model_args = model_args
-        self.training_args = training_args
+        return total_loss / len(self.train_loader), accuracy
+    
+    def _optimize_weights(self, data, targets):
+        """优化权重参数"""
+        self.weight_optimizer.zero_grad()
+        outputs = self.network(data)
+        loss = F.cross_entropy(outputs, targets)
+        loss.backward()
         
-        # 5. 向后兼容的属性
-        self.criterion = nn.CrossEntropyLoss()
-        self.w_optimizer = None
-        self.alpha_optimizer = None
+        # 梯度裁剪
+        torch.nn.utils.clip_grad_norm_(self.network.parameters(), 5.0)
         
-        # 6. 当前状态（向后兼容）
-        self.current_genotype = None
-        self.evolvable_model = None
+        self.weight_optimizer.step()
+        return loss.item()
+    
+    def _optimize_architecture(self, data, targets):
+        """优化架构参数"""
+        self.arch_optimizer.zero_grad()
+        outputs = self.network(data)
+        loss = F.cross_entropy(outputs, targets)
+        loss.backward()
         
-        # 7. 训练统计
-        self.training_stats = {
-            "epoch_stats": [],
-            "phase_transitions": [],
-            "best_accuracy": 0.0
+        # 梯度裁剪
+        arch_params = [p for name, p in self.network.named_parameters() if 'arch_manager.alpha' in name]
+        torch.nn.utils.clip_grad_norm_(arch_params, 5.0)
+        
+        self.arch_optimizer.step()
+        
+        # 温度退火
+        self.network.arch_manager.anneal_temperature()
+        
+        return loss.item()
+    
+    def evaluate(self):
+        """评估模型"""
+        self.network.eval()
+        correct = 0
+        total = 0
+        
+        with torch.no_grad():
+            for data, targets in self.test_loader:
+                data, targets = data.to(self.device), targets.to(self.device)
+                outputs = self.network(data)
+                _, predicted = outputs.max(1)
+                total += targets.size(0)
+                correct += predicted.eq(targets).sum().item()
+        
+        accuracy = 100. * correct / total
+        return accuracy
+    
+    def update_phase(self):
+        """更新训练阶段"""
+        self.phase_epochs += 1
+        old_phase = self.current_phase
+        
+        # 阶段转换逻辑
+        if (self.current_phase == 'warmup' and 
+            self.phase_epochs >= self.config['warmup_epochs']):
+            self.current_phase = 'search'
+            self.phase_epochs = 0
+            self.network.set_training_phase('search')
+            self.network.arch_manager.smooth_transition_to_search()
+            print(f"🔄 进入搜索阶段，温度: {self.network.arch_manager.sampler.tau:.3f}")
+        
+        elif (self.current_phase == 'search' and 
+              self.phase_epochs >= self.config['search_epochs']):
+            self.current_phase = 'growth'
+            self.phase_epochs = 0
+            self.network.set_training_phase('growth')
+            print(f"🔄 进入生长阶段")
+        
+        elif (self.current_phase == 'growth' and 
+              self.phase_epochs >= self.config['growth_epochs']):
+            self.current_phase = 'optimize'
+            self.phase_epochs = 0
+            self.network.set_training_phase('optimize')
+            print(f"🔄 进入优化阶段")
+        
+        # 如果阶段发生变化，打印架构信息
+        if old_phase != self.current_phase:
+            self._print_architecture_analysis()
+    
+    def _print_architecture_analysis(self):
+        """打印架构分析"""
+        info = self.network.get_architecture_info()
+        print(f"\n🔍 架构分析:")
+        print(f"   深度: {info['depth']}")
+        print(f"   参数量: {info['parameters']:,}")
+        print(f"   架构熵: {info['entropy']:.3f}")
+        print(f"   置信度: {info['confidence']:.3f}")
+        print(f"   当前架构: {info['architecture']}")
+    
+    def _should_grow(self, current_accuracy):
+        """判断是否应该生长"""
+        if len(self.training_history) < self.config['growth_patience']:
+            return False
+        
+        # 检查最近几个epoch的性能
+        recent_accuracies = [h['test_acc'] for h in self.training_history[-self.config['growth_patience']:]]
+        improvement = max(recent_accuracies) - min(recent_accuracies)
+        
+        return improvement < self.config['growth_threshold']
+    
+    def train(self):
+        """完整训练流程"""
+        print(f"\n🔧 开始ASO-SE训练")
+        print(f"{'='*60}")
+        
+        # 设置
+        self.setup_data()
+        self.setup_model()
+        self.setup_optimizers()
+        
+        start_time = time.time()
+        
+        for epoch in range(self.config['num_epochs']):
+            self.current_epoch = epoch
+            
+            # 训练
+            train_loss, train_acc = self.train_epoch()
+            
+            # 评估
+            test_acc = self.evaluate()
+            
+            # 更新学习率
+            self.scheduler.step()
+            
+            # 记录历史
+            epoch_info = {
+                'epoch': epoch,
+                'phase': self.current_phase,
+                'train_loss': train_loss,
+                'train_acc': train_acc,
+                'test_acc': test_acc,
+                'architecture': self.network.get_architecture_info()
+            }
+            self.training_history.append(epoch_info)
+            
+            # 生长控制
+            if (self.current_phase == 'growth' and 
+                self._should_grow(test_acc) and 
+                self.network.current_depth < self.network.max_depth):
+                
+                print(f"🌱 触发网络生长")
+                self.network.grow_depth(1)
+                self._update_optimizers_after_growth()
+            
+            # 更新最佳精度
+            if test_acc > self.best_accuracy:
+                self.best_accuracy = test_acc
+                self._save_checkpoint('best')
+            
+            # 更新阶段
+            self.update_phase()
+            
+            # 定期汇报
+            if (epoch + 1) % 5 == 0:
+                elapsed = time.time() - start_time
+                print(f"\n📊 Epoch {epoch+1}/{self.config['num_epochs']} | 阶段: {self.current_phase}")
+                print(f"   训练损失: {train_loss:.4f} | 训练精度: {train_acc:.2f}%")
+                print(f"   测试精度: {test_acc:.2f}% | 最佳: {self.best_accuracy:.2f}%")
+                print(f"   耗时: {elapsed/60:.1f}分钟")
+                
+                if self.current_phase == 'search':
+                    self._print_architecture_analysis()
+        
+        # 训练完成
+        total_time = time.time() - start_time
+        print(f"\n🎉 训练完成!")
+        print(f"   最佳精度: {self.best_accuracy:.2f}%")
+        print(f"   总耗时: {total_time/60:.1f}分钟")
+        print(f"   最终架构: {self.network.get_architecture_info()['architecture']}")
+        
+        return self.training_history, self.best_accuracy
+    
+    def _update_optimizers_after_growth(self):
+        """生长后更新优化器"""
+        try:
+            # 重新设置优化器以包含新参数
+            self.setup_optimizers()
+            print(f"✅ 优化器已更新")
+        except Exception as e:
+            print(f"⚠️ 优化器更新失败: {e}")
+    
+    def _save_checkpoint(self, name):
+        """保存检查点"""
+        checkpoint = {
+            'epoch': self.current_epoch,
+            'phase': self.current_phase,
+            'model_state_dict': self.network.state_dict(),
+            'optimizer_state_dict': self.weight_optimizer.state_dict(),
+            'arch_optimizer_state_dict': self.arch_optimizer.state_dict(),
+            'best_accuracy': self.best_accuracy,
+            'config': self.config,
+            'training_history': self.training_history
         }
         
-        logger.info(f"🚀 ASO-SE Trainer initialized with framework integration")
-        logger.info(f"   Config: {self.config.total_cycles} cycles, "
-                   f"warmup={self.config.warmup_epochs}, "
-                   f"arch={self.config.arch_training_epochs}")
+        torch.save(checkpoint, f'aso_se_{name}.pth')
     
-    def _create_config_from_args(self, training_args: Dict) -> ASOSEConfig:
-        """从训练参数创建ASO-SE配置"""
-        return ASOSEConfig(
-            # 从training_args提取参数，提供默认值
-            warmup_epochs=int(training_args.get('warmup_epochs', 10)),
-            arch_training_epochs=int(training_args.get('arch_epochs', 3)),
-            weight_training_epochs=int(training_args.get('weight_epochs', 8)),
-            total_cycles=int(training_args.get('total_cycles', 5)),
-            
-            # Gumbel-Softmax参数
-            initial_temp=training_args.get('initial_temp', 5.0),
-            min_temp=training_args.get('min_temp', 0.1),
-            anneal_rate=training_args.get('temp_annealing_rate', 0.98),
-            
-            # 架构突变参数
-            mutation_strength=training_args.get('mutation_strength', 0.3),
-            mutation_frequency=training_args.get('mutation_frequency', 2),
-            
-            # 优化器参数
-            weight_lr=training_args.get('learning_rate', 0.025),
-            arch_lr=training_args.get('arch_learning_rate', 3e-4),
-            weight_momentum=training_args.get('momentum', 0.9),
-            weight_decay=training_args.get('weight_decay', 3e-4)
-        )
-    
-    def initialize_optimizers(self):
-        """初始化优化器（保持向后兼容）"""
-        self.framework.initialize_optimizers()
-        
-        # 为向后兼容性提供访问
-        self.w_optimizer = self.framework.weight_optimizer
-        self.alpha_optimizer = self.framework.arch_optimizer
-        
-        logger.info("✅ Optimizers initialized through framework")
-    
-    def train_epoch(self, train_loader, valid_loader, epoch: int) -> Dict[str, float]:
-        """
-        训练一个epoch（新的统一接口）
-        
-        Args:
-            train_loader: 训练数据加载器
-            valid_loader: 验证数据加载器
-            epoch: 当前epoch
-            
-        Returns:
-            训练统计信息
-        """
-        if self.w_optimizer is None:
-            self.initialize_optimizers()
-        
-        # 使用框架进行训练
-        stats = self.framework.train_cycle(train_loader, valid_loader, self.criterion, epoch)
-        
-        # 更新向后兼容的状态
-        self._update_legacy_state()
-        
-        # 记录统计信息
-        self.training_stats["epoch_stats"].append(stats)
-        
-        # 更新最佳准确率
-        if "valid_accuracy" in stats:
-            self.training_stats["best_accuracy"] = max(
-                self.training_stats["best_accuracy"], 
-                stats["valid_accuracy"]
-            )
-        
-        return stats
-    
-    def train_weights(self, train_queue, epoch: int):
-        """
-        阶段1：权重训练（向后兼容接口）
-        
-        Args:
-            train_queue: 训练数据队列
-            epoch: 当前epoch
-        """
-        logger.info(f"🔥 Epoch {epoch}: [W-Training] Training weights of current model")
-        
-        # 如果框架处于权重训练阶段，进行训练
-        if self.framework.current_phase in ["warmup", "weight_retraining"]:
-            if hasattr(train_queue, '__iter__'):
-                # 如果是数据加载器，直接使用
-                train_loader = train_queue
-                valid_loader = train_queue  # 简化，实际应该有单独的验证集
-                
-                stats = self.framework.train_cycle(train_loader, valid_loader, self.criterion, epoch)
-                return stats
-        
-        logger.warning(f"Weight training called but framework is in {self.framework.current_phase} phase")
-    
-    def train_alphas(self, valid_queue, epoch: int):
-        """
-        阶段2：架构参数训练（向后兼容接口）
-        
-        Args:
-            valid_queue: 验证数据队列
-            epoch: 当前epoch
-        """
-        logger.info(f"🔍 Epoch {epoch}: [α-Training] Searching for better architecture")
-        
-        # 如果框架处于架构训练阶段，进行训练
-        if self.framework.current_phase == "arch_training":
-            if hasattr(valid_queue, '__iter__'):
-                train_loader = valid_queue  # 简化，实际应该有单独的训练集
-                valid_loader = valid_queue
-                
-                stats = self.framework.train_cycle(train_loader, valid_loader, self.criterion, epoch)
-                return stats
-        
-        logger.warning(f"Alpha training called but framework is in {self.framework.current_phase} phase")
-    
-    def mutate_architecture(self) -> Genotype:
-        """
-        阶段3：架构突变（向后兼容接口）
-        
-        Returns:
-            新的基因型
-        """
-        logger.info("🧬 [Mutation] Performing architecture mutation using enhanced ASO-SE")
-        
-        # 触发框架的突变阶段
-        if self.framework.current_phase == "mutation":
-            # 框架会自动处理突变
-            new_genotype = self.framework.current_genotype or self.derive_best_genotype(use_gumbel=True)
-        else:
-            # 手动触发突变（如果需要）
-            new_genotype = self.derive_best_genotype(use_gumbel=True)
-        
-        # 更新当前状态
-        self.current_genotype = new_genotype
-        self.evolvable_model = self.framework.evolvable_model
-        
-        logger.info(f"✅ [Stabilization] Architecture mutated successfully")
-        return new_genotype
-    
-    def derive_best_genotype(self, use_gumbel: bool = False) -> Genotype:
-        """
-        从搜索模型的alphas导出最佳基因型
-        
-        Args:
-            use_gumbel: 是否使用Gumbel-Softmax采样
-            
-        Returns:
-            导出的基因型
-        """
-        if use_gumbel and hasattr(self.framework, 'explorer'):
-            # 使用框架的Gumbel-Softmax探索器
-            try:
-                return self.framework._gumbel_sample_architecture()
-            except Exception as e:
-                logger.warning(f"Gumbel sampling failed: {e}, falling back to argmax")
-        
-        # 回退到确定性argmax导出
-        return _derive_genotype(
-            self.search_model.alphas_normal,
-            self.search_model.alphas_reduce
-        )
-    
-    def run_training_loop(self, train_queue, valid_queue, epochs: int, 
-                         w_epochs: int = None, alpha_epochs: int = None):
-        """
-        主要的ASO-SE训练循环（向后兼容接口）
-        
-        Args:
-            train_queue: 训练数据队列
-            valid_queue: 验证数据队列
-            epochs: 总epoch数
-            w_epochs: 权重训练epoch数（可选，会使用配置中的值）
-            alpha_epochs: 架构训练epoch数（可选，会使用配置中的值）
-        """
-        logger.info(f"🚀 Starting ASO-SE training loop for {epochs} epochs")
-        
-        # 初始化优化器
-        if self.w_optimizer is None:
-            self.initialize_optimizers()
-        
-        # 运行训练循环
-        for epoch in range(epochs):
-            try:
-                # 使用新的统一训练接口
-                stats = self.train_epoch(train_queue, valid_queue, epoch)
-                
-                # 日志记录
-                self._log_epoch_stats(epoch, stats)
-                
-                # 检查早停
-                if self.framework.should_early_stop():
-                    logger.info(f"🛑 Early stopping at epoch {epoch}")
-                    break
-                    
-            except Exception as e:
-                logger.error(f"❌ Error in epoch {epoch}: {e}")
-                break
-        
-        # 训练完成后的总结
-        self._log_training_summary()
-    
-    def _create_evolvable_model(self, genotype: Genotype) -> EvolvableNetwork:
-        """
-        基于基因型创建可进化模型（向后兼容）
-        
-        Args:
-            genotype: 目标基因型
-            
-        Returns:
-            可进化网络模型
-        """
-        return EvolvableNetwork(**self.model_args, genotype=genotype)
-    
-    def _update_legacy_state(self):
-        """更新向后兼容的状态变量"""
-        # 从框架同步状态
-        self.current_genotype = self.framework.current_genotype
-        self.evolvable_model = self.framework.evolvable_model
-    
-    def _log_epoch_stats(self, epoch: int, stats: Dict[str, float]):
-        """记录epoch统计信息"""
-        phase = stats.get("phase", "unknown")
-        
-        if "train_accuracy" in stats and "valid_accuracy" in stats:
-            logger.info(f"📊 Epoch {epoch:3d} [{phase:>12s}] "
-                       f"Train: {stats['train_accuracy']:.2f}% "
-                       f"Valid: {stats['valid_accuracy']:.2f}%")
-        elif "valid_accuracy" in stats:
-            logger.info(f"📊 Epoch {epoch:3d} [{phase:>12s}] "
-                       f"Valid: {stats['valid_accuracy']:.2f}%")
-        
-        # 记录阶段转换
-        if "phase" in stats:
-            last_phase = (self.training_stats["epoch_stats"][-1]["phase"] 
-                         if self.training_stats["epoch_stats"] else None)
-            if phase != last_phase:
-                self.training_stats["phase_transitions"].append({
-                    "epoch": epoch,
-                    "phase": phase
-                })
-    
-    def _log_training_summary(self):
-        """记录训练总结"""
-        logger.info("=" * 60)
-        logger.info("🎉 ASO-SE Training Completed!")
-        logger.info(f"📈 Best Accuracy: {self.training_stats['best_accuracy']:.2f}%")
-        
-        # 获取框架报告
-        framework_report = self.framework.get_training_report()
-        logger.info(f"🔬 Total Cycles: {framework_report['current_cycle']}")
-        logger.info(f"🧬 Total Mutations: {framework_report['total_mutations']}")
-        
-        # 探索报告
-        exploration_report = framework_report.get("exploration_report", {})
-        if "current_temperature" in exploration_report:
-            logger.info(f"🌡️ Final Temperature: {exploration_report['current_temperature']:.3f}")
-        
-        logger.info("=" * 60)
-    
-    # 新增的便利方法
-    
-    def get_current_architecture(self) -> Optional[Genotype]:
-        """获取当前架构"""
-        return self.current_genotype
-    
-    def get_search_model(self) -> nn.Module:
-        """获取搜索模型"""
-        return self.search_model
-    
-    def get_evolvable_model(self) -> Optional[nn.Module]:
-        """获取可进化模型"""
-        return self.evolvable_model
-    
-    def get_training_stats(self) -> Dict:
-        """获取训练统计"""
-        return self.training_stats
-    
-    def save_checkpoint(self, filepath: str):
-        """保存检查点"""
-        self.framework.save_checkpoint(filepath)
-        logger.info(f"💾 Trainer checkpoint saved to {filepath}")
-    
-    def load_checkpoint(self, filepath: str):
+    def load_checkpoint(self, path):
         """加载检查点"""
-        self.framework.load_checkpoint(filepath)
-        self._update_legacy_state()
-        logger.info(f"📂 Trainer checkpoint loaded from {filepath}")
-    
-    def get_framework_report(self) -> Dict:
-        """获取框架详细报告"""
-        return self.framework.get_training_report()
-
-# 向后兼容的工厂函数
-def create_aso_se_trainer(search_model_args: Dict, model_args: Dict, 
-                         training_args: Dict) -> ASOSETrainer:
-    """
-    创建ASO-SE训练器的工厂函数
-    
-    Args:
-        search_model_args: 搜索模型参数
-        model_args: 可进化模型参数
-        training_args: 训练参数
+        checkpoint = torch.load(path, map_location=self.device)
         
-    Returns:
-        配置好的ASO-SE训练器
-    """
-    trainer = ASOSETrainer(search_model_args, model_args, training_args)
-    return trainer 
+        self.network.load_state_dict(checkpoint['model_state_dict'])
+        self.weight_optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+        self.arch_optimizer.load_state_dict(checkpoint['arch_optimizer_state_dict'])
+        
+        self.current_epoch = checkpoint['epoch']
+        self.current_phase = checkpoint['phase']
+        self.best_accuracy = checkpoint['best_accuracy']
+        self.training_history = checkpoint['training_history']
+        
+        print(f"✅ 检查点加载完成: {path}") 
