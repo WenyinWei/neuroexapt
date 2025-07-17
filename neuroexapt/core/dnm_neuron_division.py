@@ -29,13 +29,15 @@ class NeuronDivisionStrategies:
     @staticmethod
     def symmetric_division(original_weights: torch.Tensor, division_ratio: float = 0.5) -> Tuple[torch.Tensor, torch.Tensor]:
         """对称分裂：将一个神经元分裂为两个相似的神经元"""
+        device = original_weights.device
+        dtype = original_weights.dtype
         noise_scale = torch.std(original_weights) * 0.1
         
         # 第一个神经元：保持大部分原始权重
-        neuron1 = original_weights + torch.normal(0, noise_scale, size=original_weights.shape)
+        neuron1 = original_weights + torch.normal(0, noise_scale, size=original_weights.shape, device=device, dtype=dtype)
         
         # 第二个神经元：稍微不同的权重
-        neuron2 = original_weights * division_ratio + torch.normal(0, noise_scale, size=original_weights.shape)
+        neuron2 = original_weights * division_ratio + torch.normal(0, noise_scale, size=original_weights.shape, device=device, dtype=dtype)
         
         return neuron1, neuron2
     
@@ -130,9 +132,13 @@ class AdaptiveNeuronDivision:
         expansion_size = max(1, int(original_out_features * target_expansion))
         new_out_features = original_out_features + expansion_size
         
-        # 创建新的权重和偏置张量
-        new_weight = torch.zeros(new_out_features, layer.in_features, dtype=layer.weight.dtype)
-        new_bias = torch.zeros(new_out_features, dtype=layer.weight.dtype) if layer.bias is not None else None
+        # 获取原始设备和数据类型
+        device = layer.weight.device
+        dtype = layer.weight.dtype
+        
+        # 创建新的权重和偏置张量（确保在正确的设备上）
+        new_weight = torch.zeros(new_out_features, layer.in_features, dtype=dtype, device=device)
+        new_bias = torch.zeros(new_out_features, dtype=dtype, device=device) if layer.bias is not None else None
         
         # 复制原始权重
         new_weight[:original_out_features] = layer.weight.data
@@ -150,7 +156,7 @@ class AdaptiveNeuronDivision:
                 break
                 
             original_weights = layer.weight.data[neuron_idx]
-            original_bias = layer.bias.data[neuron_idx] if layer.bias is not None else torch.tensor(0.0)
+            original_bias = layer.bias.data[neuron_idx] if layer.bias is not None else torch.tensor(0.0, device=device)
             
             # 执行分裂
             if division_strategy == 'symmetric':
@@ -173,8 +179,9 @@ class AdaptiveNeuronDivision:
         if layer.bias is not None:
             layer.bias = nn.Parameter(new_bias)
             
-        # 更新下一层的输入维度（如果存在）
-        self._update_next_layer_input(model, layer_name, expansion_size)
+        # 更新下一层的输入维度（如果存在且不是最后一层）
+        if not self._is_final_layer(model, layer_name):
+            self._update_next_layer_input(model, layer_name, expansion_size)
         
         # 记录分裂历史
         self.division_history[layer_name].append({
@@ -194,6 +201,9 @@ class AdaptiveNeuronDivision:
         expansion_size = max(1, int(original_out_channels * target_expansion))
         new_out_channels = original_out_channels + expansion_size
         
+        # 获取原始设备
+        device = layer.weight.device
+        
         # 创建新的卷积层
         new_conv = nn.Conv2d(
             layer.in_channels,
@@ -205,7 +215,7 @@ class AdaptiveNeuronDivision:
             layer.groups,
             layer.bias is not None,
             layer.padding_mode
-        )
+        ).to(device)  # 确保在正确的设备上
         
         # 复制原始权重
         with torch.no_grad():
@@ -222,7 +232,7 @@ class AdaptiveNeuronDivision:
                 break
                 
             original_kernel = layer.weight.data[channel_idx]
-            original_bias = layer.bias.data[channel_idx] if layer.bias is not None else torch.tensor(0.0)
+            original_bias = layer.bias.data[channel_idx] if layer.bias is not None else torch.tensor(0.0, device=device)
             
             # 分裂卷积核
             if division_strategy == 'symmetric':
@@ -239,8 +249,9 @@ class AdaptiveNeuronDivision:
         # 替换层
         self._replace_layer(model, layer_name, new_conv)
         
-        # 更新下一层的输入通道数
-        self._update_next_conv_layer_input(model, layer_name, expansion_size)
+        # 更新下一层的输入通道数（如果不是最后一层）
+        if not self._is_final_layer(model, layer_name):
+            self._update_next_conv_layer_input(model, layer_name, expansion_size)
         
         # 记录分裂历史
         self.division_history[layer_name].append({
@@ -323,8 +334,11 @@ class AdaptiveNeuronDivision:
     
     def _divide_conv_kernel(self, kernel: torch.Tensor, strategy: str) -> Tuple[torch.Tensor, torch.Tensor]:
         """分裂卷积核"""
+        device = kernel.device
+        dtype = kernel.dtype
+        
         if strategy == 'symmetric':
-            noise = torch.normal(0, torch.std(kernel) * 0.1, size=kernel.shape)
+            noise = torch.normal(0, torch.std(kernel) * 0.1, size=kernel.shape, device=device, dtype=dtype)
             kernel1 = kernel + noise
             kernel2 = kernel - noise
             return kernel1, kernel2
@@ -335,11 +349,13 @@ class AdaptiveNeuronDivision:
             # 在kernel2中增强边缘检测
             if kernel.size(-1) >= 3 and kernel.size(-2) >= 3:
                 edge_kernel = torch.tensor([[-1, -1, -1], [-1, 8, -1], [-1, -1, -1]], 
-                                         dtype=kernel.dtype, device=kernel.device)
+                                         dtype=dtype, device=device)
                 kernel2[:, :, :3, :3] += edge_kernel.unsqueeze(0).unsqueeze(0) * 0.1
             return kernel1, kernel2
         else:
-            return NeuronDivisionStrategies.symmetric_division(kernel.view(-1)).view(kernel.shape)
+            flattened = kernel.view(-1)
+            result1, result2 = NeuronDivisionStrategies.symmetric_division(flattened)
+            return result1.view(kernel.shape), result2.view(kernel.shape)
     
     def _update_next_layer_input(self, model: nn.Module, current_layer_name: str, expansion_size: int):
         """更新下一层的输入维度"""
@@ -355,8 +371,12 @@ class AdaptiveNeuronDivision:
                     old_in_features = next_layer.in_features
                     new_in_features = old_in_features + expansion_size
                     
+                    # 获取设备信息
+                    device = next_layer.weight.device
+                    dtype = next_layer.weight.dtype
+                    
                     # 创建新的权重矩阵
-                    new_weight = torch.zeros(next_layer.out_features, new_in_features, dtype=next_layer.weight.dtype)
+                    new_weight = torch.zeros(next_layer.out_features, new_in_features, dtype=dtype, device=device)
                     new_weight[:, :old_in_features] = next_layer.weight.data
                     
                     # 初始化新的连接权重
@@ -383,6 +403,9 @@ class AdaptiveNeuronDivision:
                     old_in_channels = module.in_channels
                     new_in_channels = old_in_channels + expansion_size
                     
+                    # 获取设备信息
+                    device = module.weight.device
+                    
                     new_conv = nn.Conv2d(
                         new_in_channels,
                         module.out_channels,
@@ -393,7 +416,7 @@ class AdaptiveNeuronDivision:
                         module.groups,
                         module.bias is not None,
                         module.padding_mode
-                    )
+                    ).to(device)  # 确保在正确的设备上
                     
                     # 复制权重并扩展
                     with torch.no_grad():
@@ -410,6 +433,25 @@ class AdaptiveNeuronDivision:
                 
             if name == current_layer_name:
                 found_current = True
+    
+    def _is_final_layer(self, model: nn.Module, layer_name: str) -> bool:
+        """检查是否为最后一层"""
+        layer_names = [name for name, module in model.named_modules() 
+                      if isinstance(module, (nn.Linear, nn.Conv2d)) and name != '']
+        
+        if not layer_names:
+            return True
+            
+        # 特殊处理：如果层名称包含数字且是Sequential中的最后一个，则认为是最后一层
+        if 'classifier' in layer_name and layer_name.endswith('.6'):
+            return True
+            
+        # 找到当前层在列表中的位置
+        try:
+            current_idx = layer_names.index(layer_name)
+            return current_idx == len(layer_names) - 1
+        except ValueError:
+            return True  # 如果找不到，假设是最后一层
     
     def _replace_layer(self, model: nn.Module, layer_name: str, new_layer: nn.Module):
         """替换模型中的层"""

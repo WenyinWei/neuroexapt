@@ -122,9 +122,12 @@ class ActivationHook:
     
     def register_hooks(self, model):
         for name, module in model.named_modules():
-            if isinstance(module, (nn.Conv2d, nn.Linear)) and 'classifier' in name:
-                hook = module.register_forward_hook(self.hook_fn(name))
-                self.hooks.append(hook)
+            if isinstance(module, (nn.Conv2d, nn.Linear)):
+                # 只为主要层注册钩子，避免过多的激活值
+                if ('classifier' in name and isinstance(module, nn.Linear)) or \
+                   ('features' in name and isinstance(module, nn.Conv2d) and 'features.17' in name):
+                    hook = module.register_forward_hook(self.hook_fn(name))
+                    self.hooks.append(hook)
     
     def remove_hooks(self):
         for hook in self.hooks:
@@ -317,7 +320,7 @@ def main():
                 
                 # 重新设置优化器（因为模型参数变了）
                 optimizer = optim.SGD(model.parameters(), lr=current_lr, momentum=0.9, weight_decay=5e-4)
-                scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=100-epoch)
+                scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=max(1, 100-epoch))
                 
                 # 重新注册钩子
                 activation_hook.remove_hooks()
@@ -344,13 +347,13 @@ def main():
         else:
             patience_counter += 1
         
+        # 学习率调度（在早停检查之前）
+        scheduler.step()
+        
         # 早停检查
         if patience_counter >= patience:
             print(f"  🛑 Early stopping triggered (patience: {patience})")
             break
-            
-        # 学习率调度
-        scheduler.step()
     
     # 训练完成
     print("✅ DNM training completed")
