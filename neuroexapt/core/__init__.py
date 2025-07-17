@@ -12,6 +12,12 @@ from .gumbel_softmax_explorer import GumbelSoftmaxExplorer
 from .architecture_mutator import ArchitectureMutator
 from .stability_monitor import StabilityMonitor
 
+# High-Performance Components - NEW!
+from .fast_operations import (
+    FastMixedOp, BatchedArchitectureUpdate, MemoryEfficientCell,
+    FastDeviceManager, get_fast_device_manager, OperationProfiler
+)
+
 # Device management
 from .device_manager import DeviceManager, get_device_manager, register_model, auto_device, optimize_memory
 
@@ -28,7 +34,12 @@ __all__ = [
     'EvolvableNetwork', 'EvolvableCell',
     'ASOSEFramework', 'ASOSEConfig', 'ASOSETrainer',
     'FunctionPreservingInitializer', 'GumbelSoftmaxExplorer', 'ArchitectureMutator',
-    'StabilityMonitor', 'DeviceManager', 'get_device_manager', 'register_model',
+    'StabilityMonitor', 
+    # High-Performance Components
+    'FastMixedOp', 'BatchedArchitectureUpdate', 'MemoryEfficientCell',
+    'FastDeviceManager', 'get_fast_device_manager', 'OperationProfiler',
+    # Device & Checkpoint Management
+    'DeviceManager', 'get_device_manager', 'register_model',
     'auto_device', 'optimize_memory', 'CheckpointManager', 'get_checkpoint_manager',
     'EvolutionCheckpointManager', 'Architect', 'SeparatedTrainer', 'SeparatedOptimizer'
 ]

@@ -61,13 +61,31 @@ def gradient_norm(parameters) -> float:
             total_norm += param_norm.item() ** 2
     return total_norm ** 0.5
 
+# High-Performance Math Components - NEW!
+from .fast_math import (
+    FastEntropy, FastGradients, FastSimilarity, FastStatistics,
+    FastNumerical, MemoryEfficientOperations, PerformanceProfiler,
+    profile_op, _global_profiler
+)
+
 # 导出常用函数
 __all__ = [
+    # 基础数学函数
     'entropy',
     'mutual_information', 
     'kl_divergence',
     'cosine_similarity',
     'gradient_norm',
     'EPS',
-    'PI'
+    'PI',
+    # 高性能数学组件
+    'FastEntropy',
+    'FastGradients', 
+    'FastSimilarity',
+    'FastStatistics',
+    'FastNumerical',
+    'MemoryEfficientOperations',
+    'PerformanceProfiler',
+    'profile_op',
+    '_global_profiler'
 ]
