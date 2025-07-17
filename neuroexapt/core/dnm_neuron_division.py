@@ -534,6 +534,15 @@ class DNMNeuronDivision:
                 
                 # 替换模型中的层
                 self._replace_module_in_model(model, layer_name, new_module)
+                
+                # 🔧 关键修复：同步更新相关BatchNorm层和下游层
+                if isinstance(target_module, nn.Conv2d):
+                    self._sync_batchnorm_after_conv_split(model, layer_name, target_module.out_channels, new_module.out_channels, split_indices)
+                    # 🚀 新增：级联更新下游Conv层的输入通道
+                    self._sync_downstream_conv_input_channels(model, layer_name, target_module.out_channels, new_module.out_channels, split_indices)
+                    # 🎯 最终修复：级联更新下游Linear层的输入特征
+                    self._sync_downstream_linear_input_features(model, layer_name, target_module.out_channels, new_module.out_channels, split_indices)
+                
                 total_splits += len(split_indices)
                 
                 logger.info(f"Successfully split layer {layer_name}: {len(split_indices)} new neurons/channels")
@@ -570,6 +579,374 @@ class DNMNeuronDivision:
         # 替换目标模块
         setattr(parent, parts[-1], new_module)
     
+    def _sync_batchnorm_after_conv_split(self, model: nn.Module, conv_layer_name: str, 
+                                        old_channels: int, new_channels: int, split_indices: List[int]) -> None:
+        """
+        🔧 关键修复：Conv层分裂后同步相关BatchNorm层
+        
+        这是最容易忽略但极其重要的步骤！
+        当Conv层通道数改变时，对应的BatchNorm层必须同步更新：
+        - num_features
+        - running_mean
+        - running_var  
+        - weight (gamma)
+        - bias (beta)
+        """
+        # 查找对应的BatchNorm层
+        bn_layer_name = self._find_corresponding_batchnorm(model, conv_layer_name)
+        if not bn_layer_name:
+            logger.warning(f"No corresponding BatchNorm found for {conv_layer_name}")
+            return
+        
+        try:
+            bn_module = self._get_module_by_name(model, bn_layer_name)
+            if not isinstance(bn_module, (nn.BatchNorm2d, nn.BatchNorm1d)):
+                return
+            
+            logger.info(f"Syncing BatchNorm {bn_layer_name}: {old_channels} -> {new_channels} features")
+            
+            # 创建新的BatchNorm层
+            if isinstance(bn_module, nn.BatchNorm2d):
+                new_bn = nn.BatchNorm2d(
+                    num_features=new_channels,
+                    eps=bn_module.eps,
+                    momentum=bn_module.momentum,
+                    affine=bn_module.affine,
+                    track_running_stats=bn_module.track_running_stats
+                ).to(bn_module.weight.device if bn_module.weight is not None else 'cpu')
+            else:  # BatchNorm1d
+                new_bn = nn.BatchNorm1d(
+                    num_features=new_channels,
+                    eps=bn_module.eps,
+                    momentum=bn_module.momentum,
+                    affine=bn_module.affine,
+                    track_running_stats=bn_module.track_running_stats
+                ).to(bn_module.weight.device if bn_module.weight is not None else 'cpu')
+            
+            # 继承原始参数
+            with torch.no_grad():
+                if bn_module.affine:
+                    # 复制原始weight (gamma) 和 bias (beta)
+                    new_bn.weight[:old_channels] = bn_module.weight.data
+                    new_bn.bias[:old_channels] = bn_module.bias.data
+                    
+                    # 为新通道初始化参数
+                    for i, split_idx in enumerate(split_indices):
+                        new_idx = old_channels + i
+                        # gamma继承父通道值
+                        new_bn.weight[new_idx] = bn_module.weight.data[split_idx]
+                        # beta继承父通道值
+                        new_bn.bias[new_idx] = bn_module.bias.data[split_idx]
+                
+                if bn_module.track_running_stats:
+                    # 复制running_mean和running_var
+                    new_bn.running_mean[:old_channels] = bn_module.running_mean
+                    new_bn.running_var[:old_channels] = bn_module.running_var
+                    new_bn.num_batches_tracked = bn_module.num_batches_tracked
+                    
+                    # 为新通道初始化running stats
+                    for i, split_idx in enumerate(split_indices):
+                        new_idx = old_channels + i
+                        new_bn.running_mean[new_idx] = bn_module.running_mean[split_idx]
+                        new_bn.running_var[new_idx] = bn_module.running_var[split_idx]
+            
+            # 替换BatchNorm层
+            self._replace_module_in_model(model, bn_layer_name, new_bn)
+            logger.info(f"✅ BatchNorm {bn_layer_name} successfully synced!")
+            
+        except Exception as e:
+            logger.error(f"Failed to sync BatchNorm {bn_layer_name}: {e}")
+    
+    def _sync_downstream_conv_input_channels(self, model: nn.Module, conv_layer_name: str,
+                                           old_out_channels: int, new_out_channels: int, 
+                                           split_indices: List[int]) -> None:
+        """
+        🚀 级联同步：更新下游Conv层的输入通道
+        
+        当一个Conv层的输出通道增加时，所有以它为输入的Conv层都需要相应更新输入通道
+        这是解决 "weight of size [69, 64, 3, 3], expected input to have 64 channels, but got 69" 的关键！
+        """
+        logger.debug(f"🔍 Finding downstream Conv layers for {conv_layer_name}")
+        
+        # 查找所有可能受影响的下游Conv层
+        downstream_conv_layers = self._find_downstream_conv_layers(model, conv_layer_name)
+        
+        for downstream_name in downstream_conv_layers:
+            try:
+                downstream_conv = self._get_module_by_name(model, downstream_name)
+                if not isinstance(downstream_conv, nn.Conv2d):
+                    continue
+                
+                # 检查输入通道是否匹配
+                if downstream_conv.in_channels == old_out_channels:
+                    logger.info(f"🔄 Updating downstream Conv {downstream_name}: in_channels {old_out_channels} -> {new_out_channels}")
+                    
+                    # 创建新的Conv层，扩展输入通道
+                    new_downstream_conv = self._expand_conv_input_channels(
+                        downstream_conv, old_out_channels, new_out_channels, split_indices
+                    )
+                    
+                    # 替换模型中的层
+                    self._replace_module_in_model(model, downstream_name, new_downstream_conv)
+                    logger.info(f"✅ Successfully updated downstream Conv {downstream_name}")
+                    
+            except Exception as e:
+                logger.error(f"Failed to update downstream Conv {downstream_name}: {e}")
+    
+    def _find_downstream_conv_layers(self, model: nn.Module, conv_layer_name: str) -> List[str]:
+        """查找可能受影响的下游Conv层"""
+        downstream_layers = []
+        
+        # 简单的启发式方法：查找后续的Conv层
+        conv_parts = conv_layer_name.split('.')
+        
+        for name, module in model.named_modules():
+            if isinstance(module, nn.Conv2d) and name != conv_layer_name:
+                name_parts = name.split('.')
+                
+                # 检查是否为序列中的下一层
+                if self._is_likely_downstream_layer(conv_parts, name_parts):
+                    downstream_layers.append(name)
+        
+        logger.debug(f"Found potential downstream Conv layers: {downstream_layers}")
+        return downstream_layers
+    
+    def _is_likely_downstream_layer(self, upstream_parts: List[str], downstream_parts: List[str]) -> bool:
+        """判断是否为下游层"""
+        # 针对我们的测试网络：stem.0 -> layer1.0
+        if len(upstream_parts) == 2 and len(downstream_parts) == 2:
+            # stem.0 -> layer1.0 这种模式
+            if upstream_parts[0] == 'stem' and downstream_parts[0] == 'layer1':
+                return True
+        
+        # Sequential层内的连接: layer1.0 -> layer1.3 (跳过BN和ReLU)
+        if len(upstream_parts) == len(downstream_parts):
+            # 同一个模块内的后续层
+            if upstream_parts[:-1] == downstream_parts[:-1]:
+                try:
+                    up_idx = int(upstream_parts[-1])
+                    down_idx = int(downstream_parts[-1])
+                    # 考虑中间可能有BN和ReLU，所以允许间隔
+                    if down_idx > up_idx and down_idx - up_idx <= 6:
+                        return True
+                except ValueError:
+                    pass
+        
+        return False
+    
+    def _expand_conv_input_channels(self, conv_layer: nn.Conv2d, old_in_channels: int, 
+                                  new_in_channels: int, split_indices: List[int]) -> nn.Conv2d:
+        """扩展Conv层的输入通道"""
+        # 创建新的Conv层
+        new_conv = nn.Conv2d(
+            in_channels=new_in_channels,
+            out_channels=conv_layer.out_channels,
+            kernel_size=conv_layer.kernel_size,
+            stride=conv_layer.stride,
+            padding=conv_layer.padding,
+            dilation=conv_layer.dilation,
+            groups=conv_layer.groups,
+            bias=conv_layer.bias is not None,
+            padding_mode=conv_layer.padding_mode
+        ).to(conv_layer.weight.device)
+        
+        # 权重继承策略
+        with torch.no_grad():
+            # 复制原始权重 [out_channels, in_channels, kernel_h, kernel_w]
+            new_conv.weight[:, :old_in_channels, :, :] = conv_layer.weight.data
+            
+            # 为新的输入通道初始化权重（继承自分裂的父通道）
+            for i, split_idx in enumerate(split_indices):
+                new_in_idx = old_in_channels + i
+                # 继承父通道的权重
+                new_conv.weight[:, new_in_idx, :, :] = conv_layer.weight.data[:, split_idx, :, :]
+            
+            # 复制bias
+            if conv_layer.bias is not None:
+                new_conv.bias.data = conv_layer.bias.data
+        
+        return new_conv
+    
+    def _sync_downstream_linear_input_features(self, model: nn.Module, conv_layer_name: str,
+                                             old_out_channels: int, new_out_channels: int,
+                                             split_indices: List[int]) -> None:
+        """
+        🎯 最终修复：更新下游Linear层的输入特征数
+        
+        当最后一个Conv层通道增加时，后续的Linear层(classifier)需要相应更新输入特征数
+        解决: "mat1 and mat2 shapes cannot be multiplied (4x69 and 64x15)"
+        """
+        logger.debug(f"🔍 Finding downstream Linear layers for {conv_layer_name}")
+        
+        # 查找所有Linear层
+        for name, module in model.named_modules():
+            if isinstance(module, nn.Linear):
+                # 检查输入特征是否匹配（考虑可能通过Global Average Pooling）
+                if module.in_features == old_out_channels:
+                    logger.info(f"🔄 Updating downstream Linear {name}: in_features {old_out_channels} -> {new_out_channels}")
+                    
+                    try:
+                        # 创建新的Linear层，扩展输入特征
+                        new_linear = self._expand_linear_input_features(
+                            module, old_out_channels, new_out_channels, split_indices
+                        )
+                        
+                        # 替换模型中的层
+                        self._replace_module_in_model(model, name, new_linear)
+                        logger.info(f"✅ Successfully updated downstream Linear {name}")
+                        
+                    except Exception as e:
+                        logger.error(f"Failed to update downstream Linear {name}: {e}")
+    
+    def _expand_linear_input_features(self, linear_layer: nn.Linear, old_in_features: int,
+                                    new_in_features: int, split_indices: List[int]) -> nn.Linear:
+        """扩展Linear层的输入特征数"""
+        # 创建新的Linear层
+        new_linear = nn.Linear(
+            in_features=new_in_features,
+            out_features=linear_layer.out_features,
+            bias=linear_layer.bias is not None
+        ).to(linear_layer.weight.device)
+        
+        # 权重继承策略
+        with torch.no_grad():
+            # 复制原始权重 [out_features, in_features]
+            new_linear.weight[:, :old_in_features] = linear_layer.weight.data
+            
+            # 为新的输入特征初始化权重（继承自分裂的父特征）
+            for i, split_idx in enumerate(split_indices):
+                new_in_idx = old_in_features + i
+                # 继承父特征的权重
+                new_linear.weight[:, new_in_idx] = linear_layer.weight.data[:, split_idx]
+            
+            # 复制bias
+            if linear_layer.bias is not None:
+                new_linear.bias.data = linear_layer.bias.data
+        
+        return new_linear
+    
+    def _find_corresponding_batchnorm(self, model: nn.Module, conv_layer_name: str) -> Optional[str]:
+        """查找Conv层对应的BatchNorm层 - 增强版本支持ResNet架构"""
+        
+        # 首先尝试直接匹配的模式
+        direct_patterns = [
+            # 标准模式: conv1 -> bn1
+            conv_layer_name.replace('conv', 'bn'),
+            # norm变体: conv1 -> norm1  
+            conv_layer_name.replace('conv', 'norm'),
+            # 后缀模式
+            conv_layer_name + '.bn',
+            conv_layer_name + '.norm',
+        ]
+        
+        # 收集所有BatchNorm层用于调试
+        all_bn_layers = []
+        for name, module in model.named_modules():
+            if isinstance(module, (nn.BatchNorm2d, nn.BatchNorm1d)):
+                all_bn_layers.append(name)
+        
+        logger.debug(f"Looking for BatchNorm for Conv layer: {conv_layer_name}")
+        logger.debug(f"Available BatchNorm layers: {all_bn_layers}")
+        
+        # 1. 检查直接模式匹配
+        for pattern in direct_patterns:
+            if pattern in all_bn_layers:
+                logger.info(f"✅ Found BatchNorm by direct pattern: {conv_layer_name} -> {pattern}")
+                return pattern
+        
+        # 2. 解析层级结构进行智能匹配
+        conv_parts = conv_layer_name.split('.')
+        
+        for bn_name in all_bn_layers:
+            bn_parts = bn_name.split('.')
+            
+            # ResNet模式匹配
+            if self._is_resnet_bn_match(conv_parts, bn_parts):
+                logger.info(f"✅ Found BatchNorm by ResNet pattern: {conv_layer_name} -> {bn_name}")
+                return bn_name
+            
+            # 序列模式匹配 (用于shortcut等序列)
+            if self._is_sequential_bn_match(conv_parts, bn_parts):
+                logger.info(f"✅ Found BatchNorm by sequential pattern: {conv_layer_name} -> {bn_name}")
+                return bn_name
+        
+        # 3. 按距离查找最近的BatchNorm
+        nearest_bn = self._find_nearest_batchnorm(model, conv_layer_name)
+        if nearest_bn:
+            logger.info(f"✅ Found BatchNorm by proximity: {conv_layer_name} -> {nearest_bn}")
+            return nearest_bn
+        
+        logger.warning(f"❌ No corresponding BatchNorm found for {conv_layer_name}")
+        logger.warning(f"Available BatchNorm layers: {all_bn_layers}")
+        return None
+    
+    def _is_resnet_bn_match(self, conv_parts: List[str], bn_parts: List[str]) -> bool:
+        """检查是否为ResNet风格的BatchNorm匹配"""
+        if len(conv_parts) != len(bn_parts):
+            return False
+        
+        # 检查所有部分except最后一个是否相同
+        if conv_parts[:-1] != bn_parts[:-1]:
+            return False
+        
+        conv_final = conv_parts[-1]
+        bn_final = bn_parts[-1]
+        
+        # 标准匹配: conv1 -> bn1, conv2 -> bn2
+        if conv_final.replace('conv', 'bn') == bn_final:
+            return True
+        
+        return False
+    
+    def _is_sequential_bn_match(self, conv_parts: List[str], bn_parts: List[str]) -> bool:
+        """检查是否为Sequential序列中的BatchNorm匹配"""
+        # 用于处理序列: stem.0 (Conv) -> stem.1 (BN), layer1.0.shortcut.0 (Conv) -> layer1.0.shortcut.1 (BN)
+        if len(conv_parts) != len(bn_parts):
+            return False
+        
+        # 检查前面的路径是否相同
+        if conv_parts[:-1] != bn_parts[:-1]:
+            return False
+        
+        try:
+            conv_idx = int(conv_parts[-1])
+            bn_idx = int(bn_parts[-1])
+            # BatchNorm通常紧跟在Conv后面
+            if bn_idx == conv_idx + 1:
+                return True
+        except ValueError:
+            # 处理非数字的情况，如果最后一部分相似
+            conv_final = conv_parts[-1].lower()
+            bn_final = bn_parts[-1].lower()
+            
+            # 检查是否是conv->bn的变体
+            if ('conv' in conv_final and 'bn' in bn_final) or ('conv' in conv_final and 'norm' in bn_final):
+                return True
+        
+        return False
+    
+    def _find_nearest_batchnorm(self, model: nn.Module, conv_layer_name: str) -> Optional[str]:
+        """按模块遍历顺序查找最近的BatchNorm层"""
+        modules_list = list(model.named_modules())
+        conv_index = None
+        
+        # 找到Conv层的位置
+        for i, (name, module) in enumerate(modules_list):
+            if name == conv_layer_name:
+                conv_index = i
+                break
+        
+        if conv_index is None:
+            return None
+        
+        # 在Conv层后面查找最近的BatchNorm
+        for i in range(conv_index + 1, min(conv_index + 5, len(modules_list))):
+            name, module = modules_list[i]
+            if isinstance(module, (nn.BatchNorm2d, nn.BatchNorm1d)):
+                return name
+        
+        return None
+
     def get_split_summary(self) -> Dict[str, Any]:
         """获取分裂操作的总结"""
         return {

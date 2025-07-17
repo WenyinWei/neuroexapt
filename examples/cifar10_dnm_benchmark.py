@@ -15,6 +15,7 @@ from torch.utils.data import DataLoader
 import time
 import os
 import sys
+import logging
 
 # 添加项目路径
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -24,6 +25,19 @@ from neuroexapt.core.dnm_framework import train_with_dnm
 from neuroexapt.core.dnm_neuron_division import DNMNeuronDivision
 from neuroexapt.core.dnm_connection_growth import DNMConnectionGrowth
 from neuroexapt.math.pareto_optimization import DNMMultiObjectiveOptimization
+
+
+# 配置日志
+logging.basicConfig(
+    level=logging.INFO,  # 改为INFO级别以显示BatchNorm同步日志
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler('dnm_benchmark.log'),
+        logging.StreamHandler()
+    ]
+)
+
+logger = logging.getLogger(__name__)
 
 
 class EvolvableResNet18(nn.Module):
