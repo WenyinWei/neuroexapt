@@ -97,8 +97,11 @@ class AdaptiveNeuronDivision:
                         target_expansion: float = 0.2) -> Tuple[nn.Module, int]:
         """执行神经元分裂"""
         
-        # 深拷贝模型
-        new_model = copy.deepcopy(model)
+        # 获取原始设备
+        original_device = next(model.parameters()).device
+        
+        # 深拷贝模型并确保在正确设备上
+        new_model = copy.deepcopy(model).to(original_device)
         
         # 找到目标层
         target_layer = self._find_layer(new_model, layer_name)
@@ -173,11 +176,11 @@ class AdaptiveNeuronDivision:
             if new_bias is not None:
                 new_bias[original_out_features + i] = original_bias * 0.9
         
-        # 更新层参数
+        # 更新层参数（确保在正确设备上）
         layer.out_features = new_out_features
-        layer.weight = nn.Parameter(new_weight)
+        layer.weight = nn.Parameter(new_weight.to(device))
         if layer.bias is not None:
-            layer.bias = nn.Parameter(new_bias)
+            layer.bias = nn.Parameter(new_bias.to(device))
             
         # 更新下一层的输入维度（如果存在且不是最后一层）
         if not self._is_final_layer(model, layer_name):

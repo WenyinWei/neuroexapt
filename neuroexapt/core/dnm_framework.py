@@ -784,7 +784,9 @@ class DNMFramework:
             )
             
             if params_added > 0:
-                self.model = new_model
+                # 确保新模型在正确的设备上
+                device = next(self.model.parameters()).device
+                self.model = new_model.to(device)
                 divisions_executed += 1
                 results['parameters_added'] += params_added
                 

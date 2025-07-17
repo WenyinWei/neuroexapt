@@ -320,7 +320,11 @@ def main():
                 
                 # 重新设置优化器（因为模型参数变了）
                 optimizer = optim.SGD(model.parameters(), lr=current_lr, momentum=0.9, weight_decay=5e-4)
+                # 创建新的调度器，但要保持当前的步数
                 scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=max(1, 100-epoch))
+                # 快进调度器到当前epoch
+                for _ in range(epoch + 1):
+                    scheduler.step()
                 
                 # 重新注册钩子
                 activation_hook.remove_hooks()
