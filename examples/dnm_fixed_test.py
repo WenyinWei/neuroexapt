@@ -180,9 +180,13 @@ def train_epoch(model, train_loader, optimizer, criterion, device, activation_ho
     correct = 0
     total = 0
     
+    # 保存最后一个batch的target用于分析
+    last_targets = None
+    
     pbar = tqdm(train_loader, desc="Training")
     for batch_idx, (data, target) in enumerate(pbar):
         data, target = data.to(device), target.to(device)
+        last_targets = target  # 保存用于后续分析
         
         optimizer.zero_grad()
         output = model(data)
@@ -207,6 +211,9 @@ def train_epoch(model, train_loader, optimizer, criterion, device, activation_ho
                 'Loss': f'{running_loss/(batch_idx+1):.4f}',
                 'Acc': f'{100.*correct/total:.2f}%'
             })
+    
+    # 将最后一个batch的targets存储到gradient_hook中供后续使用
+    gradient_hook.last_targets = last_targets
     
     return running_loss / len(train_loader), 100. * correct / total
 
@@ -298,7 +305,8 @@ def main():
         val_loss, val_acc = validate_epoch(model, val_loader, criterion, device)
         
         # 更新DNM框架状态
-        dnm.update_caches(activation_hook.activations, gradient_hook.gradients)
+        targets_for_analysis = getattr(gradient_hook, 'last_targets', None)
+        dnm.update_caches(activation_hook.activations, gradient_hook.gradients, targets_for_analysis)
         dnm.record_performance(val_acc)
         
         # 检查是否需要形态发生

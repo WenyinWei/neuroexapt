@@ -706,11 +706,22 @@ class DNMFramework:
         # 执行器
         self.executor = NeuronDivisionExecutor()
         
+        # 层级分析器（新增）
+        try:
+            from .dnm_layer_analyzer import LayerPerformanceAnalyzer, SmartLayerSelector
+            self.layer_analyzer = LayerPerformanceAnalyzer(model)
+            self.layer_selector = SmartLayerSelector(self.layer_analyzer)
+            self.smart_analysis_enabled = True
+        except ImportError:
+            self.smart_analysis_enabled = False
+            logger.warning("层级分析器不可用，将使用简单的分裂策略")
+        
         # 状态追踪
         self.morphogenesis_events = []
         self.performance_history = deque(maxlen=100)
         self.activation_cache = {}
         self.gradient_cache = {}
+        self.target_cache = None
         
         # 配置参数
         self.morphogenesis_interval = self.config.get('morphogenesis_interval', 4)
@@ -818,8 +829,40 @@ class DNMFramework:
     
     def _identify_optimal_division_layers(self) -> List[Tuple[str, float]]:
         """识别最佳分裂层"""
-        layer_scores = []
         
+        # 如果启用了智能分析，使用层级分析器
+        if self.smart_analysis_enabled and self.target_cache is not None:
+            try:
+                current_accuracy = self.performance_history[-1] if self.performance_history else 0.0
+                
+                # 执行全层分析
+                layer_analysis = self.layer_analyzer.analyze_all_layers(
+                    self.activation_cache,
+                    self.gradient_cache, 
+                    self.target_cache,
+                    current_accuracy
+                )
+                
+                # 智能选择最优层
+                optimal_selections = self.layer_selector.select_optimal_division_layers(
+                    layer_analysis, 
+                    max_selections=self.max_morphogenesis_per_epoch
+                )
+                
+                # 转换为原有格式并添加详细信息
+                result = []
+                for layer_name, score, issue in optimal_selections:
+                    logger.info(f"🎯 推荐分裂层: {layer_name} (分数: {score:.3f}, 问题: {issue})")
+                    result.append((layer_name, score))
+                
+                if result:
+                    return result
+                    
+            except Exception as e:
+                logger.warning(f"智能层分析失败，使用简单策略: {e}")
+        
+        # 备用：简单的分数计算
+        layer_scores = []
         for name, module in self.model.named_modules():
             if isinstance(module, (nn.Linear, nn.Conv2d)):
                 score = self._compute_division_score(name, module)
@@ -861,11 +904,14 @@ class DNMFramework:
         return score
     
     def update_caches(self, activations: Dict[str, torch.Tensor], 
-                      gradients: Dict[str, torch.Tensor]):
+                      gradients: Dict[str, torch.Tensor],
+                      targets: Optional[torch.Tensor] = None):
         """更新激活值和梯度缓存"""
         self.activation_cache = {k: v.detach().clone() for k, v in activations.items()}
         self.gradient_cache = {k: v.detach().clone() if v is not None else None 
                               for k, v in gradients.items()}
+        if targets is not None:
+            self.target_cache = targets.detach().clone()
     
     def record_performance(self, performance: float):
         """记录性能"""

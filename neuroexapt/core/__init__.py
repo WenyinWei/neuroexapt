@@ -32,6 +32,7 @@ from .separated_training import SeparatedTrainer, SeparatedOptimizer
 # DNM (Dynamic Neural Morphogenesis) Framework
 from .dnm_framework import DNMFramework, MorphogenesisEvent
 from .dnm_neuron_division import AdaptiveNeuronDivision, NeuronDivisionStrategies
+from .dnm_layer_analyzer import LayerPerformanceAnalyzer, SmartLayerSelector
 
 __all__ = [
     'Network', 'OPS', 'PRIMITIVES', 'Genotype',
@@ -47,5 +48,6 @@ __all__ = [
     'auto_device', 'optimize_memory', 'CheckpointManager', 'get_checkpoint_manager',
     'EvolutionCheckpointManager', 'Architect', 'SeparatedTrainer', 'SeparatedOptimizer',
     # DNM Framework
-    'DNMFramework', 'MorphogenesisEvent', 'AdaptiveNeuronDivision', 'NeuronDivisionStrategies'
+    'DNMFramework', 'MorphogenesisEvent', 'AdaptiveNeuronDivision', 'NeuronDivisionStrategies',
+    'LayerPerformanceAnalyzer', 'SmartLayerSelector'
 ]
