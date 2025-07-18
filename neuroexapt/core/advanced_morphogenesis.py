@@ -131,9 +131,21 @@ class AdvancedBottleneckAnalyzer:
         morpho_debug.exit_section("网络瓶颈分析")
         return analysis
     
-    def _analyze_depth_bottlenecks(self, activations: Dict[str, torch.Tensor], 
-                                 gradients: Dict[str, torch.Tensor]) -> Dict[str, float]:
-        """分析深度瓶颈 - 需要增加层数的位置"""
+    def _analyze_depth_bottlenecks(self, 
+                                   activations: Dict[str, torch.Tensor], 
+                                   gradients: Dict[str, torch.Tensor],
+                                   perform_gc: bool = False,
+                                   memory_threshold_mb: Optional[int] = None) -> Dict[str, float]:
+        """分析深度瓶颈 - 需要增加层数的位置
+        
+        Args:
+            activations: 层名到激活的映射
+            gradients: 层名到梯度的映射
+            perform_gc: 是否在每层后执行垃圾回收和CUDA缓存清理
+            memory_threshold_mb: 仅当内存使用超过此阈值（MB）时才执行清理
+        """
+        import gc
+        
         depth_scores = {}
         
         layer_names = list(activations.keys())
@@ -170,6 +182,32 @@ class AdvancedBottleneckAnalyzer:
             )
             
             depth_scores[layer_name] = depth_score
+            
+            # 可选的垃圾回收和CUDA缓存清理
+            do_cleanup = False
+            if perform_gc:
+                if memory_threshold_mb is not None:
+                    # 仅当内存使用超过阈值时才清理
+                    if torch.cuda.is_available():
+                        mem_mb = torch.cuda.memory_allocated() / 1024 / 1024
+                        if mem_mb > memory_threshold_mb:
+                            do_cleanup = True
+                    else:
+                        try:
+                            import psutil
+                            mem_mb = psutil.Process().memory_info().rss / 1024 / 1024
+                            if mem_mb > memory_threshold_mb:
+                                do_cleanup = True
+                        except ImportError:
+                            # psutil not available, fallback to always clean if requested
+                            do_cleanup = True
+                else:
+                    do_cleanup = True
+                    
+            if do_cleanup:
+                gc.collect()
+                if torch.cuda.is_available():
+                    torch.cuda.empty_cache()
             
         return depth_scores
     
@@ -247,12 +285,30 @@ class AdvancedBottleneckAnalyzer:
                 morpho_debug.print_debug(f"❌ 层{layer_name}分析失败: {e}", "ERROR")
                 flow_scores[layer_name] = 0.0
                 
-            # 强制垃圾回收，释放内存
-            if i % 5 == 0:  # 每5层清理一次
+            # 可配置的垃圾回收，仅在需要时执行以避免性能损失
+            # 注意：频繁的垃圾回收可能影响性能，建议设置memory_threshold_mb参数
+            if i % 5 == 0 and getattr(self, 'enable_gc', False):  # 每5层清理一次，默认关闭
                 import gc
-                gc.collect()
+                memory_threshold = getattr(self, 'gc_memory_threshold_mb', 1024)  # 默认1GB阈值
+                
+                do_cleanup = False
                 if torch.cuda.is_available():
-                    torch.cuda.empty_cache()
+                    mem_mb = torch.cuda.memory_allocated() / 1024 / 1024
+                    if mem_mb > memory_threshold:
+                        do_cleanup = True
+                else:
+                    try:
+                        import psutil
+                        mem_mb = psutil.Process().memory_info().rss / 1024 / 1024
+                        if mem_mb > memory_threshold:
+                            do_cleanup = True
+                    except ImportError:
+                        do_cleanup = True  # fallback if psutil unavailable
+                
+                if do_cleanup:
+                    gc.collect()
+                    if torch.cuda.is_available():
+                        torch.cuda.empty_cache()
                     
         morpho_debug.print_debug(f"信息流分析完成，共{len(flow_scores)}层", "SUCCESS")
         morpho_debug.exit_section("信息流瓶颈分析")
@@ -965,17 +1021,19 @@ class AdvancedMorphogenesisExecutor:
     
     def _execute_skip_connection(self, model: nn.Module, target_location: str) -> Tuple[nn.Module, int]:
         """执行跳跃连接添加"""
-        logger.info(f"执行跳跃连接: {target_location}")
-        # 这个实现较为复杂，需要修改模型的forward方法
-        # 暂时返回原模型
-        return model, 0
+        logger.warning(f"跳跃连接功能尚未实现: {target_location}")
+        # 跳跃连接实现较为复杂，需要修改模型的forward方法
+        # 当前版本暂不支持此功能
+        raise NotImplementedError("Skip connection morphogenesis is not yet implemented. "
+                                "This requires complex model architecture modification.")
     
     def _execute_attention_injection(self, model: nn.Module, target_location: str) -> Tuple[nn.Module, int]:
         """执行注意力机制注入"""
-        logger.info(f"执行注意力注入: {target_location}")
-        # 具体实现注意力机制的注入
-        # 暂时返回原模型
-        return model, 0
+        logger.warning(f"注意力注入功能尚未实现: {target_location}")
+        # 注意力机制注入需要仔细的架构设计
+        # 当前版本暂不支持此功能
+        raise NotImplementedError("Attention injection morphogenesis is not yet implemented. "
+                                "This requires careful attention mechanism design and integration.")
     
     def _execute_width_expansion(self, model: nn.Module, target_location: str) -> Tuple[nn.Module, int]:
         """执行宽度扩展（兜底策略）"""

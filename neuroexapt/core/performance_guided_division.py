@@ -261,7 +261,7 @@ class PerformanceGuidedDivision:
         # 处理偏置
         if layer.bias is not None:
             new_layer.bias.data[:out_channels] = layer.bias.data
-            new_layer.bias.data[out_channels] = layer.bias.data[neuron_idx] + torch.randn(1) * self.noise_scale
+            new_layer.bias.data[out_channels] = layer.bias.data[neuron_idx] + (torch.randn(1) * self.noise_scale).item()
         
         # 替换层
         self._replace_layer_in_model(layer, new_layer)
@@ -347,13 +347,15 @@ class PerformanceGuidedDivision:
             else:
                 return 0.0
             
-            # 使用简单的分箱方法估计互信息
-            # 这里使用相关系数作为互信息的近似
+                        # 使用相关系数作为互信息的近似
+            # 注意：相关系数仅能捕捉线性关系，作为互信息的代理可能会导致误导性结论。
+            # 更健壮的信息传递估计方法（如基于分箱的互信息估计、sklearn 的 mutual_info_regression/mutual_info_classif 等）可用于更准确的评估。
+            # 具体实现可根据需求替换此处相关系数的计算。
             if targets.dim() > 1:
                 targets_flat = targets.argmax(dim=1).float()
             else:
                 targets_flat = targets.float()
-            
+
             correlation = torch.corrcoef(torch.stack([neuron_activations, targets_flat]))[0, 1]
             return abs(correlation.item()) if not torch.isnan(correlation) else 0.0
             
