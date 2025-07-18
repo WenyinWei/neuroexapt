@@ -417,22 +417,32 @@ class AdvancedMorphogenesisExecutor:
     def execute_morphogenesis(self, model: nn.Module, decision: MorphogenesisDecision) -> Tuple[nn.Module, int]:
         """执行形态发生"""
         try:
+            # 获取模型设备
+            device = next(model.parameters()).device
+            
             if decision.morphogenesis_type == MorphogenesisType.SERIAL_DIVISION:
-                return self._execute_serial_division(model, decision.target_location)
+                new_model, params_added = self._execute_serial_division(model, decision.target_location)
             elif decision.morphogenesis_type == MorphogenesisType.PARALLEL_DIVISION:
-                return self._execute_parallel_division(model, decision.target_location)
+                new_model, params_added = self._execute_parallel_division(model, decision.target_location)
             elif decision.morphogenesis_type == MorphogenesisType.HYBRID_DIVISION:
-                return self._execute_hybrid_division(model, decision.target_location)
+                new_model, params_added = self._execute_hybrid_division(model, decision.target_location)
             elif decision.morphogenesis_type == MorphogenesisType.SKIP_CONNECTION:
-                return self._execute_skip_connection(model, decision.target_location)
+                new_model, params_added = self._execute_skip_connection(model, decision.target_location)
             elif decision.morphogenesis_type == MorphogenesisType.ATTENTION_INJECTION:
-                return self._execute_attention_injection(model, decision.target_location)
+                new_model, params_added = self._execute_attention_injection(model, decision.target_location)
             else:
                 # 默认使用宽度扩展
-                return self._execute_width_expansion(model, decision.target_location)
+                new_model, params_added = self._execute_width_expansion(model, decision.target_location)
+            
+            # 确保新模型在正确的设备上
+            new_model = new_model.to(device)
+            
+            return new_model, params_added
                 
         except Exception as e:
             logger.error(f"形态发生执行失败: {e}")
+            import traceback
+            traceback.print_exc()
             return model, 0
     
     def _execute_serial_division(self, model: nn.Module, target_location: str) -> Tuple[nn.Module, int]:
@@ -466,12 +476,15 @@ class AdvancedMorphogenesisExecutor:
             return model, 0
         
         if isinstance(target_module, nn.Linear):
+            # 获取设备信息
+            device = target_module.weight.device
+            
             # 在全连接层后插入新的全连接层
             hidden_size = max(target_module.out_features // 2, 64)
             
             # 创建新的中间层
-            intermediate_layer = nn.Linear(target_module.out_features, hidden_size)
-            output_layer = nn.Linear(hidden_size, target_module.out_features)
+            intermediate_layer = nn.Linear(target_module.out_features, hidden_size).to(device)
+            output_layer = nn.Linear(hidden_size, target_module.out_features).to(device)
             
             # 初始化权重使新层组合接近原层
             with torch.no_grad():
@@ -499,6 +512,9 @@ class AdvancedMorphogenesisExecutor:
                                   target_module.out_features * hidden_size + target_module.out_features)
                 
         elif isinstance(target_module, nn.Conv2d):
+            # 获取设备信息
+            device = target_module.weight.device
+            
             # 在卷积层后插入新的卷积层
             intermediate_channels = max(target_module.out_channels // 2, 32)
             
@@ -508,13 +524,13 @@ class AdvancedMorphogenesisExecutor:
                 intermediate_channels,
                 kernel_size=3, 
                 padding=1
-            )
+            ).to(device)
             output_conv = nn.Conv2d(
                 intermediate_channels,
                 target_module.out_channels,
                 kernel_size=3,
                 padding=1
-            )
+            ).to(device)
             
             # 初始化权重
             with torch.no_grad():
@@ -576,25 +592,28 @@ class AdvancedMorphogenesisExecutor:
             return model, 0
         
         if isinstance(target_module, nn.Linear):
+            # 获取设备信息
+            device = target_module.weight.device
+            
             # 创建并行分支
             branch_size = target_module.out_features // 3
             
             # 三个并行分支：不同的特征提取策略
-            branch1 = nn.Linear(target_module.in_features, branch_size)  # 标准线性变换
+            branch1 = nn.Linear(target_module.in_features, branch_size).to(device)  # 标准线性变换
             branch2 = nn.Sequential(  # 深度分支
                 nn.Linear(target_module.in_features, branch_size),
                 nn.ReLU(),
                 nn.Linear(branch_size, branch_size)
-            )
+            ).to(device)
             branch3 = nn.Sequential(  # 残差分支
                 nn.Linear(target_module.in_features, branch_size),
                 nn.ReLU(),
                 nn.Dropout(0.1),
                 nn.Linear(branch_size, branch_size)
-            )
+            ).to(device)
             
             # 融合层
-            fusion_layer = nn.Linear(branch_size * 3, target_module.out_features)
+            fusion_layer = nn.Linear(branch_size * 3, target_module.out_features).to(device)
             
             # 初始化权重
             for branch in [branch1, branch2, branch3]:
@@ -642,20 +661,23 @@ class AdvancedMorphogenesisExecutor:
                 parameters_added = params1 + params2 + params3 + params_fusion
                 
         elif isinstance(target_module, nn.Conv2d):
+            # 获取设备信息
+            device = target_module.weight.device
+            
             # 创建卷积并行分支
             branch_channels = target_module.out_channels // 3
             
             # 三个不同尺度的卷积分支
             branch1 = nn.Conv2d(target_module.in_channels, branch_channels, 
-                              kernel_size=1, padding=0)  # 1x1卷积
+                              kernel_size=1, padding=0).to(device)  # 1x1卷积
             branch2 = nn.Conv2d(target_module.in_channels, branch_channels, 
-                              kernel_size=3, padding=1)  # 3x3卷积
+                              kernel_size=3, padding=1).to(device)  # 3x3卷积
             branch3 = nn.Conv2d(target_module.in_channels, branch_channels, 
-                              kernel_size=5, padding=2)  # 5x5卷积
+                              kernel_size=5, padding=2).to(device)  # 5x5卷积
             
             # 融合卷积
             fusion_conv = nn.Conv2d(branch_channels * 3, target_module.out_channels, 
-                                  kernel_size=1, padding=0)
+                                  kernel_size=1, padding=0).to(device)
             
             # 初始化权重
             for branch in [branch1, branch2, branch3, fusion_conv]:
@@ -729,22 +751,25 @@ class AdvancedMorphogenesisExecutor:
             return model, 0
         
         if isinstance(target_module, nn.Linear):
+            # 获取设备信息
+            device = target_module.weight.device
+            
             # 创建混合结构：线性层 + 注意力机制 + 残差连接
             hidden_size = target_module.out_features
             
             # 主要变换
-            main_transform = nn.Linear(target_module.in_features, hidden_size)
+            main_transform = nn.Linear(target_module.in_features, hidden_size).to(device)
             
             # 注意力机制
             attention = nn.MultiheadAttention(
                 embed_dim=target_module.in_features,
                 num_heads=max(1, target_module.in_features // 64),
                 batch_first=True
-            )
-            attention_projection = nn.Linear(target_module.in_features, hidden_size)
+            ).to(device)
+            attention_projection = nn.Linear(target_module.in_features, hidden_size).to(device)
             
             # 输出融合
-            output_layer = nn.Linear(hidden_size * 2, target_module.out_features)
+            output_layer = nn.Linear(hidden_size * 2, target_module.out_features).to(device)
             
             # 初始化
             nn.init.kaiming_normal_(main_transform.weight)
@@ -835,13 +860,16 @@ class AdvancedMorphogenesisExecutor:
             return model, 0
         
         if isinstance(target_module, nn.Linear):
+            # 获取设备信息
+            device = target_module.weight.device
+            
             old_out = target_module.out_features
             new_out = int(old_out * 1.2)
             expansion = new_out - old_out
             
             # 扩展当前层的权重
-            new_weight = torch.zeros(new_out, target_module.in_features)
-            new_bias = torch.zeros(new_out) if target_module.bias is not None else None
+            new_weight = torch.zeros(new_out, target_module.in_features, device=device)
+            new_bias = torch.zeros(new_out, device=device) if target_module.bias is not None else None
             
             # 复制原权重
             new_weight[:old_out] = target_module.weight.data
@@ -880,7 +908,7 @@ class AdvancedMorphogenesisExecutor:
                         new_in = new_out
                         
                         # 扩展下一层的权重
-                        next_weight = torch.zeros(next_module.out_features, new_in)
+                        next_weight = torch.zeros(next_module.out_features, new_in, device=device)
                         
                         # 复制原有权重到对应位置
                         next_weight[:, :old_in] = next_module.weight.data
