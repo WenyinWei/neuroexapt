@@ -549,9 +549,9 @@ def prepare_data():
         root='./data', train=False, download=True, transform=transform_test
     )
     
-    # 增加批次大小以提升训练效率
-    train_loader = DataLoader(train_dataset, batch_size=256, shuffle=True, num_workers=4, pin_memory=True)
-    test_loader = DataLoader(test_dataset, batch_size=200, shuffle=False, num_workers=4, pin_memory=True)
+    # 🚀 平衡性能和稳定性的配置
+    train_loader = DataLoader(train_dataset, batch_size=128, shuffle=True, num_workers=2, pin_memory=False)
+    test_loader = DataLoader(test_dataset, batch_size=100, shuffle=False, num_workers=2, pin_memory=False)
     
     return train_loader, test_loader
 
