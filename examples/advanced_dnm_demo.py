@@ -40,60 +40,110 @@ from neuroexapt.core import (
 logging.basicConfig(level=logging.INFO)
 
 class AdaptiveResNet(nn.Module):
-    """自适应ResNet - 为高级形态发生设计"""
+    """增强的自适应ResNet - 冲刺95%准确率"""
     
     def __init__(self, num_classes=10):
         super(AdaptiveResNet, self).__init__()
         
-        # 初始卷积层
-        self.conv1 = nn.Conv2d(3, 32, 3, padding=1)
-        self.bn1 = nn.BatchNorm2d(32)
+        # 🚀 增强的初始特征提取
+        self.conv1 = nn.Conv2d(3, 64, 3, padding=1, bias=False)  # 增加初始通道数
+        self.bn1 = nn.BatchNorm2d(64)
+        self.relu = nn.ReLU(inplace=True)
         
-        # 特征提取块
-        self.feature_block1 = self._make_block(32, 64, 2)
-        self.feature_block2 = self._make_block(64, 128, 2)
-        self.feature_block3 = self._make_block(128, 256, 2)
+        # 🚀 更深的特征提取网络
+        self.feature_block1 = self._make_resnet_block(64, 128, 2, 2)    # 2个残差块
+        self.feature_block2 = self._make_resnet_block(128, 256, 2, 2)   # 2个残差块  
+        self.feature_block3 = self._make_resnet_block(256, 512, 2, 2)   # 2个残差块
+        self.feature_block4 = self._make_resnet_block(512, 512, 1, 2)   # 2个残差块，不降采样
         
-        # 全局平均池化
+        # 🚀 增强的全局特征聚合
         self.global_pool = nn.AdaptiveAvgPool2d((1, 1))
+        self.global_max_pool = nn.AdaptiveMaxPool2d((1, 1))
         
-        # 分类器
+        # 🚀 更强的分类器
         self.classifier = nn.Sequential(
             nn.Flatten(),
-            nn.Linear(256, 128),
-            nn.ReLU(),
+            nn.Linear(512 * 2, 1024),  # 结合avg和max pooling
+            nn.BatchNorm1d(1024),
+            nn.ReLU(inplace=True),
+            nn.Dropout(0.5),
+            
+            nn.Linear(1024, 512),
+            nn.BatchNorm1d(512),
+            nn.ReLU(inplace=True),
             nn.Dropout(0.3),
-            nn.Linear(128, 64),
-            nn.ReLU(),
+            
+            nn.Linear(512, 256),
+            nn.BatchNorm1d(256),
+            nn.ReLU(inplace=True),
             nn.Dropout(0.2),
-            nn.Linear(64, num_classes)
+            
+            nn.Linear(256, num_classes)
         )
         
-    def _make_block(self, in_channels, out_channels, stride):
-        """创建特征提取块"""
-        return nn.Sequential(
-            nn.Conv2d(in_channels, out_channels, 3, stride=stride, padding=1),
-            nn.BatchNorm2d(out_channels),
-            nn.ReLU(),
-            nn.Conv2d(out_channels, out_channels, 3, padding=1),
-            nn.BatchNorm2d(out_channels),
-            nn.ReLU()
-        )
+    def _make_resnet_block(self, in_channels, out_channels, stride, num_blocks):
+        """创建残差块组"""
+        layers = []
+        
+        # 第一个块可能有降采样
+        layers.append(ResidualBlock(in_channels, out_channels, stride))
+        
+        # 后续块保持相同尺寸
+        for _ in range(1, num_blocks):
+            layers.append(ResidualBlock(out_channels, out_channels, 1))
+            
+        return nn.Sequential(*layers)
     
     def forward(self, x):
-        # 初始特征提取
-        x = F.relu(self.bn1(self.conv1(x)))
+        # 🚀 增强的初始特征提取
+        x = self.relu(self.bn1(self.conv1(x)))
         
-        # 特征提取块
+        # 🚀 深度残差特征提取
         x = self.feature_block1(x)
         x = self.feature_block2(x)
         x = self.feature_block3(x)
+        x = self.feature_block4(x)
         
-        # 全局池化和分类
-        x = self.global_pool(x)
+        # 🚀 双重全局池化特征聚合
+        avg_pool = self.global_pool(x)
+        max_pool = self.global_max_pool(x)
+        x = torch.cat([avg_pool, max_pool], dim=1)  # 特征融合
+        
+        # 分类
         x = self.classifier(x)
         
         return x
+
+class ResidualBlock(nn.Module):
+    """残差块实现"""
+    
+    def __init__(self, in_channels, out_channels, stride=1):
+        super(ResidualBlock, self).__init__()
+        
+        self.conv1 = nn.Conv2d(in_channels, out_channels, 3, stride=stride, padding=1, bias=False)
+        self.bn1 = nn.BatchNorm2d(out_channels)
+        self.conv2 = nn.Conv2d(out_channels, out_channels, 3, stride=1, padding=1, bias=False)
+        self.bn2 = nn.BatchNorm2d(out_channels)
+        self.relu = nn.ReLU(inplace=True)
+        
+        # 残差连接
+        self.shortcut = nn.Sequential()
+        if stride != 1 or in_channels != out_channels:
+            self.shortcut = nn.Sequential(
+                nn.Conv2d(in_channels, out_channels, 1, stride=stride, bias=False),
+                nn.BatchNorm2d(out_channels)
+            )
+    
+    def forward(self, x):
+        residual = self.shortcut(x)
+        
+        out = self.relu(self.bn1(self.conv1(x)))
+        out = self.bn2(self.conv2(out))
+        
+        out += residual
+        out = self.relu(out)
+        
+        return out
 
 class AdvancedDNMTrainer:
     """高级DNM训练器"""
@@ -104,14 +154,14 @@ class AdvancedDNMTrainer:
         self.train_loader = train_loader
         self.test_loader = test_loader
         
-        # 初始化增强的DNM框架
+        # 🚀 增强的DNM框架配置 - 冲刺95%准确率
         self.dnm_config = {
-            'trigger_interval': 5,  # 每5个epoch检查一次
-            'complexity_threshold': 0.6,
+            'trigger_interval': 8,  # 每8个epoch检查一次，更稳定
+            'complexity_threshold': 0.5,  # 降低阈值，更容易触发
             'enable_serial_division': True,
             'enable_parallel_division': True,
             'enable_hybrid_division': True,
-            'max_parameter_growth_ratio': 2.0  # 最大参数增长200%
+            'max_parameter_growth_ratio': 3.0  # 允许更多参数增长
         }
         
         self.dnm_framework = EnhancedDNMFramework(self.dnm_config)
@@ -214,14 +264,27 @@ class AdvancedDNMTrainer:
         
         return test_loss, accuracy
     
-    def train_with_morphogenesis(self, epochs=50):
-        """带形态发生的训练"""
-        print("🧬 开始高级DNM训练...")
+    def train_with_morphogenesis(self, epochs=80):  # 🚀 增加到80个epoch
+        """带形态发生的训练 - 冲刺95%准确率"""
+        print("🧬 开始高级DNM训练 - 冲刺95%准确率...")
         print("=" * 60)
         
-        # 初始化优化器
-        optimizer = optim.AdamW(self.model.parameters(), lr=0.001, weight_decay=1e-4)
-        scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=epochs)
+        # 🚀 增强的优化器配置
+        # 使用SGD + Momentum，对CIFAR-10更有效
+        optimizer = optim.SGD(
+            self.model.parameters(), 
+            lr=0.1,              # 较高的初始学习率
+            momentum=0.9,        # 强动量
+            weight_decay=5e-4,   # 适中的权重衰减
+            nesterov=True        # Nesterov动量
+        )
+        
+        # 🚀 多阶段学习率调度
+        scheduler = optim.lr_scheduler.MultiStepLR(
+            optimizer, 
+            milestones=[30, 60, 75],  # 在30, 60, 75 epoch降低学习率
+            gamma=0.1                 # 每次降低10倍
+        )
         
         # 记录初始参数数量
         initial_params = sum(p.numel() for p in self.model.parameters())
@@ -230,6 +293,15 @@ class AdvancedDNMTrainer:
         
         best_test_acc = 0.0
         patience_counter = 0
+        
+        # 🚀 添加学习率预热
+        warmup_epochs = 5
+        warmup_scheduler = optim.lr_scheduler.LinearLR(
+            optimizer, 
+            start_factor=0.1, 
+            end_factor=1.0, 
+            total_iters=warmup_epochs
+        )
         
         for epoch in range(epochs):
             print(f"\n🧬 Epoch {epoch+1}/{epochs}")
@@ -248,8 +320,18 @@ class AdvancedDNMTrainer:
             print(f"  📊 Train: {train_acc:.2f}% (Loss: {train_loss:.4f}) | "
                   f"Test: {test_acc:.2f}% (Loss: {test_loss:.4f})")
             
+            # 🚀 智能学习率调度
+            if epoch < warmup_epochs:
+                warmup_scheduler.step()
+                current_lr = optimizer.param_groups[0]['lr']
+                print(f"  🔥 预热阶段: LR={current_lr:.6f}")
+            else:
+                scheduler.step()
+                current_lr = optimizer.param_groups[0]['lr']
+                print(f"  📈 当前学习率: {current_lr:.6f}")
+            
             # 检查是否需要形态发生
-            if epoch >= 5:  # 前几个epoch让网络稳定
+            if epoch >= 10:  # 让网络稳定训练更长时间
                 activations, gradients = self.capture_network_state()
                 
                 context = {
@@ -268,12 +350,27 @@ class AdvancedDNMTrainer:
                     print(f"    新增参数: {results['parameters_added']:,}")
                     print(f"    置信度: {results.get('decision_confidence', 0):.3f}")
                     
-                    # 更新模型和优化器
+                    # 更新模型
                     self.model = results['new_model']
                     
-                    # 重新创建优化器以包含新参数
-                    optimizer = optim.AdamW(self.model.parameters(), lr=0.001, weight_decay=1e-4)
-                    scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=epochs-epoch)
+                    # 🚀 重新创建优化器以包含新参数，保持当前学习率
+                    current_lr = optimizer.param_groups[0]['lr']
+                    optimizer = optim.SGD(
+                        self.model.parameters(), 
+                        lr=current_lr,
+                        momentum=0.9,
+                        weight_decay=5e-4,
+                        nesterov=True
+                    )
+                    
+                    # 重新创建调度器
+                    remaining_epochs = epochs - epoch
+                    if remaining_epochs > 0:
+                        milestones = [m - epoch for m in [30, 60, 75] if m > epoch]
+                        if milestones:
+                            scheduler = optim.lr_scheduler.MultiStepLR(
+                                optimizer, milestones=milestones, gamma=0.1
+                            )
                     
                     # 记录形态发生事件
                     current_params = sum(p.numel() for p in self.model.parameters())
@@ -298,19 +395,31 @@ class AdvancedDNMTrainer:
                 current_params = sum(p.numel() for p in self.model.parameters())
                 self.parameter_history.append(current_params)
             
-            # 更新学习率
-            scheduler.step()
-            
-            # 早停检查
+            # 🚀 性能监控和早停检查
             if test_acc > best_test_acc:
                 best_test_acc = test_acc
                 patience_counter = 0
+                print(f"  🎯 新的最佳准确率: {best_test_acc:.2f}%!")
+                
+                # 🏆 里程碑提示
+                if best_test_acc >= 95.0:
+                    print("  🏆 恭喜！达到95%+准确率目标!")
+                elif best_test_acc >= 90.0:
+                    print("  🌟 很好！达到90%+准确率!")
+                elif best_test_acc >= 85.0:
+                    print("  ✨ 不错！达到85%+准确率!")
             else:
                 patience_counter += 1
                 
-            if patience_counter >= 10:
+            # 增加耐心值，给更多时间训练
+            if patience_counter >= 15:
                 print(f"  🛑 Early stopping triggered at epoch {epoch+1}")
                 break
+                
+            # 🚀 进度提示
+            progress = (epoch + 1) / epochs * 100
+            if progress % 25 == 0:
+                print(f"  📊 训练进度: {progress:.0f}% 完成")
         
         print(f"\n✅ 训练完成!")
         print(f"📊 最佳测试准确率: {best_test_acc:.2f}%")
@@ -357,6 +466,13 @@ class AdvancedDNMTrainer:
         train_accs = [acc for _, acc in self.train_history]
         test_accs = [acc for _, acc in self.test_history]
         
+        # 确保参数历史长度与epoch匹配
+        param_history_aligned = self.parameter_history[:len(self.train_history)]
+        if len(param_history_aligned) < len(self.train_history):
+            # 如果参数历史不够长，用最后一个值填充
+            last_param = param_history_aligned[-1] if param_history_aligned else 0
+            param_history_aligned.extend([last_param] * (len(self.train_history) - len(param_history_aligned)))
+        
         plt.figure(figsize=(15, 5))
         
         # 准确率曲线
@@ -366,9 +482,10 @@ class AdvancedDNMTrainer:
         
         # 标记形态发生事件
         for event in self.morphogenesis_history:
-            plt.axvline(x=event['epoch'], color='green', linestyle='--', alpha=0.7)
-            plt.text(event['epoch'], max(test_accs) * 0.9, 
-                    event['type'].split('_')[0], rotation=90, fontsize=8)
+            if event['epoch'] <= len(self.train_history):
+                plt.axvline(x=event['epoch'], color='green', linestyle='--', alpha=0.7)
+                plt.text(event['epoch'], max(test_accs) * 0.9, 
+                        event['type'].split('_')[0], rotation=90, fontsize=8)
         
         plt.xlabel('Epoch')
         plt.ylabel('Accuracy (%)')
@@ -378,8 +495,8 @@ class AdvancedDNMTrainer:
         
         # 参数增长曲线
         plt.subplot(1, 3, 2)
-        param_growth = [(p - self.parameter_history[0]) / self.parameter_history[0] * 100 
-                       for p in self.parameter_history]
+        param_growth = [(p - param_history_aligned[0]) / param_history_aligned[0] * 100 
+                       for p in param_history_aligned]
         plt.plot(epochs, param_growth, color='purple', linewidth=2)
         plt.xlabel('Epoch')
         plt.ylabel('Parameter Growth (%)')
@@ -404,14 +521,21 @@ class AdvancedDNMTrainer:
         plt.show()
 
 def prepare_data():
-    """准备CIFAR-10数据"""
+    """准备CIFAR-10数据 - 增强版数据增强策略"""
+    # 🚀 强化数据增强策略 - 冲刺95%准确率
     transform_train = transforms.Compose([
         transforms.RandomCrop(32, padding=4),
-        transforms.RandomHorizontalFlip(),
+        transforms.RandomHorizontalFlip(p=0.5),
+        transforms.RandomRotation(degrees=15),  # 随机旋转
+        transforms.RandomAffine(degrees=0, translate=(0.1, 0.1)),  # 随机平移
+        transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.1),  # 颜色抖动
+        transforms.RandomApply([transforms.GaussianBlur(kernel_size=3)], p=0.1),  # 随机高斯模糊
         transforms.ToTensor(),
-        transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))
+        transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
+        transforms.RandomErasing(p=0.1, scale=(0.02, 0.33), ratio=(0.3, 3.3))  # 随机擦除
     ])
     
+    # 测试时使用标准预处理
     transform_test = transforms.Compose([
         transforms.ToTensor(),
         transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))
@@ -425,8 +549,9 @@ def prepare_data():
         root='./data', train=False, download=True, transform=transform_test
     )
     
-    train_loader = DataLoader(train_dataset, batch_size=128, shuffle=True, num_workers=2)
-    test_loader = DataLoader(test_dataset, batch_size=100, shuffle=False, num_workers=2)
+    # 增加批次大小以提升训练效率
+    train_loader = DataLoader(train_dataset, batch_size=256, shuffle=True, num_workers=4, pin_memory=True)
+    test_loader = DataLoader(test_dataset, batch_size=200, shuffle=False, num_workers=4, pin_memory=True)
     
     return train_loader, test_loader
 
@@ -557,8 +682,8 @@ def main():
         model = AdaptiveResNet()
         trainer = AdvancedDNMTrainer(model, device, train_loader, test_loader)
         
-        # 训练
-        best_acc = trainer.train_with_morphogenesis(epochs=25)
+        # 🚀 冲刺95%准确率 - 增加训练轮数
+        best_acc = trainer.train_with_morphogenesis(epochs=80)
         
         # 分析结果
         summary = trainer.analyze_morphogenesis_effects()
@@ -575,8 +700,12 @@ def main():
         print(f"  新增参数: {summary['total_parameters_added']:,}")
         print(f"  支持的形态发生类型: {len([r for r in morphogenesis_results.values() if r['success']])}/3")
         
-        if best_acc > 85.0:
-            print("  🌟 成功达到高性能目标!")
+        if best_acc >= 95.0:
+            print("  🏆 恭喜！成功达到95%+准确率目标!")
+        elif best_acc >= 90.0:
+            print("  🌟 很好！达到90%+准确率，接近目标!")
+        elif best_acc >= 85.0:
+            print("  ✨ 不错！达到85%+准确率，继续优化中...")
         elif summary['total_events'] > 0:
             print("  🔧 形态发生功能正常，需要更多训练时间")
         else:
