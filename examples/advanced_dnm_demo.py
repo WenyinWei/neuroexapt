@@ -174,44 +174,85 @@ class AdvancedDNMTrainer:
         
     def capture_network_state(self):
         """捕获网络状态（激活值和梯度）"""
+        print("      🔍 开始详细的网络状态捕获...")
         activations = {}
         gradients = {}
         
         # 注册钩子函数
         def forward_hook(name):
             def hook(module, input, output):
-                if isinstance(output, torch.Tensor):
-                    activations[name] = output.detach().cpu()
+                try:
+                    if isinstance(output, torch.Tensor):
+                        activations[name] = output.detach().cpu()
+                        print(f"        📈 前向钩子捕获: {name} - 形状 {output.shape}")
+                except Exception as e:
+                    print(f"        ❌ 前向钩子错误 {name}: {e}")
             return hook
         
         def backward_hook(name):
             def hook(module, grad_input, grad_output):
-                if grad_output[0] is not None:
-                    gradients[name] = grad_output[0].detach().cpu()
+                try:
+                    if grad_output[0] is not None:
+                        gradients[name] = grad_output[0].detach().cpu()
+                        print(f"        📉 反向钩子捕获: {name} - 形状 {grad_output[0].shape}")
+                except Exception as e:
+                    print(f"        ❌ 反向钩子错误 {name}: {e}")
             return hook
         
         # 注册钩子
+        print("      📎 注册网络钩子...")
         hooks = []
+        hook_count = 0
+        
         for name, module in self.model.named_modules():
             if isinstance(module, (nn.Linear, nn.Conv2d)):
-                hooks.append(module.register_forward_hook(forward_hook(name)))
-                hooks.append(module.register_backward_hook(backward_hook(name)))
+                try:
+                    hooks.append(module.register_forward_hook(forward_hook(name)))
+                    hooks.append(module.register_backward_hook(backward_hook(name)))
+                    hook_count += 2
+                    print(f"        ✅ 钩子注册成功: {name} ({type(module).__name__})")
+                except Exception as e:
+                    print(f"        ❌ 钩子注册失败: {name} - {e}")
+        
+        print(f"      📊 总共注册了 {hook_count} 个钩子")
         
         # 执行一次前向和反向传播
-        self.model.train()
-        data, target = next(iter(self.train_loader))
-        data, target = data.to(self.device), target.to(self.device)
-        
-        output = self.model(data)
-        loss = F.cross_entropy(output, target)
-        
-        # 清空之前的梯度
-        self.model.zero_grad()
-        loss.backward()
+        print("      🚀 执行前向和反向传播...")
+        try:
+            self.model.train()
+            data, target = next(iter(self.train_loader))
+            data, target = data.to(self.device), target.to(self.device)
+            print(f"        📊 输入数据形状: {data.shape}")
+            
+            output = self.model(data)
+            print(f"        📊 输出形状: {output.shape}")
+            
+            loss = F.cross_entropy(output, target)
+            print(f"        📊 损失值: {loss.item():.6f}")
+            
+            # 清空之前的梯度
+            self.model.zero_grad()
+            loss.backward()
+            print("        ✅ 反向传播完成")
+            
+        except Exception as e:
+            print(f"        ❌ 前向/反向传播失败: {e}")
+            import traceback
+            traceback.print_exc()
         
         # 移除钩子
+        print("      🧹 清理钩子...")
+        removed_count = 0
         for hook in hooks:
-            hook.remove()
+            try:
+                hook.remove()
+                removed_count += 1
+            except Exception as e:
+                print(f"        ❌ 钩子移除失败: {e}")
+        
+        print(f"      ✅ 移除了 {removed_count} 个钩子")
+        print(f"      📊 捕获的激活: {len(activations)} 个")
+        print(f"      📊 捕获的梯度: {len(gradients)} 个")
         
         return activations, gradients
     
@@ -332,17 +373,42 @@ class AdvancedDNMTrainer:
             
             # 检查是否需要形态发生
             if epoch >= 10:  # 让网络稳定训练更长时间
-                activations, gradients = self.capture_network_state()
+                print(f"  🔬 形态发生检查 - Epoch {epoch}")
+                print(f"    📊 当前模型参数量: {sum(p.numel() for p in self.model.parameters()):,}")
+                print(f"    📋 模型结构层数: {len(list(self.model.modules()))}")
                 
+                print("  📈 开始捕获网络状态...")
+                try:
+                    activations, gradients = self.capture_network_state()
+                    print(f"    ✅ 激活统计完成: {len(activations)} 个模块")
+                    print(f"    ✅ 梯度统计完成: {len(gradients)} 个模块")
+                except Exception as e:
+                    print(f"    ❌ 网络状态捕获失败: {e}")
+                    activations, gradients = {}, {}
+                
+                print("  🧠 构建分析上下文...")
                 context = {
                     'epoch': epoch,
                     'activations': activations,
                     'gradients': gradients,
                     'performance_history': self.dnm_framework.performance_history
                 }
+                print(f"    ✅ 性能历史长度: {len(self.dnm_framework.performance_history)}")
+                print(f"    ✅ 上下文构建完成")
                 
-                # 执行形态发生
-                results = self.dnm_framework.execute_morphogenesis(self.model, context)
+                print("  🚀 开始执行形态发生分析...")
+                try:
+                    # 执行形态发生
+                    results = self.dnm_framework.execute_morphogenesis(self.model, context)
+                    print(f"    ✅ 形态发生分析完成")
+                    print(f"    📋 返回结果键: {list(results.keys())}")
+                    print(f"    🔧 模型是否修改: {results.get('model_modified', False)}")
+                except Exception as e:
+                    print(f"    ❌ 形态发生执行失败: {e}")
+                    import traceback
+                    print("    📋 详细错误信息:")
+                    traceback.print_exc()
+                    results = {'model_modified': False}
                 
                 if results['model_modified']:
                     print(f"  🎉 形态发生成功!")
@@ -350,42 +416,89 @@ class AdvancedDNMTrainer:
                     print(f"    新增参数: {results['parameters_added']:,}")
                     print(f"    置信度: {results.get('decision_confidence', 0):.3f}")
                     
+                    print("  🔄 开始更新模型...")
+                    old_param_count = sum(p.numel() for p in self.model.parameters())
+                    print(f"    📊 原始模型参数: {old_param_count:,}")
+                    
                     # 更新模型
-                    self.model = results['new_model']
+                    try:
+                        self.model = results['new_model']
+                        new_param_count = sum(p.numel() for p in self.model.parameters())
+                        print(f"    📊 新模型参数: {new_param_count:,}")
+                        print(f"    📈 参数增长: {new_param_count - old_param_count:,}")
+                        print(f"    ✅ 模型更新成功")
+                    except Exception as e:
+                        print(f"    ❌ 模型更新失败: {e}")
+                        import traceback
+                        traceback.print_exc()
+                        continue
                     
                     # 🚀 重新创建优化器以包含新参数，保持当前学习率
+                    print("  ⚙️ 重建优化器...")
                     current_lr = optimizer.param_groups[0]['lr']
-                    optimizer = optim.SGD(
-                        self.model.parameters(), 
-                        lr=current_lr,
-                        momentum=0.9,
-                        weight_decay=5e-4,
-                        nesterov=True
-                    )
+                    print(f"    📈 保持学习率: {current_lr:.6f}")
+                    
+                    try:
+                        optimizer = optim.SGD(
+                            self.model.parameters(), 
+                            lr=current_lr,
+                            momentum=0.9,
+                            weight_decay=5e-4,
+                            nesterov=True
+                        )
+                        print(f"    ✅ 优化器重建成功")
+                        print(f"    📊 优化器参数组数: {len(optimizer.param_groups)}")
+                    except Exception as e:
+                        print(f"    ❌ 优化器重建失败: {e}")
+                        import traceback
+                        traceback.print_exc()
+                        continue
                     
                     # 重新创建调度器
+                    print("  📅 重建学习率调度器...")
                     remaining_epochs = epochs - epoch
+                    print(f"    📊 剩余训练轮数: {remaining_epochs}")
+                    
                     if remaining_epochs > 0:
                         milestones = [m - epoch for m in [30, 60, 75] if m > epoch]
+                        print(f"    📈 调整后的里程碑: {milestones}")
+                        
                         if milestones:
-                            scheduler = optim.lr_scheduler.MultiStepLR(
-                                optimizer, milestones=milestones, gamma=0.1
-                            )
+                            try:
+                                scheduler = optim.lr_scheduler.MultiStepLR(
+                                    optimizer, milestones=milestones, gamma=0.1
+                                )
+                                print(f"    ✅ 调度器重建成功")
+                            except Exception as e:
+                                print(f"    ❌ 调度器重建失败: {e}")
+                        else:
+                            print(f"    ℹ️ 无需重建调度器(无剩余里程碑)")
+                    else:
+                        print(f"    ℹ️ 无需重建调度器(无剩余轮数)")
                     
                     # 记录形态发生事件
+                    print("  📝 记录形态发生历史...")
                     current_params = sum(p.numel() for p in self.model.parameters())
                     self.parameter_history.append(current_params)
                     
-                    self.morphogenesis_history.append({
+                    morphogenesis_event = {
                         'epoch': epoch,
                         'type': results['morphogenesis_type'],
                         'parameters_added': results['parameters_added'],
                         'test_acc_before': test_acc,
                         'total_params': current_params
-                    })
+                    }
                     
-                    print(f"    总参数: {current_params:,} "
-                          f"(+{((current_params-initial_params)/initial_params*100):.1f}%)")
+                    self.morphogenesis_history.append(morphogenesis_event)
+                    print(f"    ✅ 历史记录完成")
+                    print(f"    📊 总参数: {current_params:,}")
+                    print(f"    📈 参数增长率: {((current_params-initial_params)/initial_params*100):.1f}%")
+                    print(f"    📋 形态发生事件总数: {len(self.morphogenesis_history)}")
+                    
+                    print("  🧹 执行内存清理...")
+                    import gc
+                    gc.collect()
+                    print("    ✅ 内存清理完成")
                 else:
                     # 没有形态发生时也记录参数数量
                     current_params = sum(p.numel() for p in self.model.parameters())
