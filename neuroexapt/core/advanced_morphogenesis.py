@@ -206,30 +206,56 @@ class AdvancedBottleneckAnalyzer:
     
     def _analyze_information_flow(self, activations: Dict[str, torch.Tensor]) -> Dict[str, float]:
         """分析信息流瓶颈 - 需要并行分支的位置"""
+        morpho_debug.enter_section("信息流瓶颈分析")
         flow_scores = {}
         layer_names = list(activations.keys())
         
+        morpho_debug.print_debug(f"分析{len(layer_names)}层的信息流", "INFO")
+        
         for i, layer_name in enumerate(layer_names):
+            morpho_debug.print_debug(f"分析层 {i+1}/{len(layer_names)}: {layer_name}", "DEBUG")
             activation = activations[layer_name]
             
-            # 1. 信息瓶颈分析
-            entropy = self._compute_entropy(activation)
+            # 内存检查
+            if activation.numel() > 10**7:  # 超过1000万元素
+                morpho_debug.print_debug(f"⚠️ 大张量检测: {activation.shape}, 元素数={activation.numel():,}", "WARNING")
             
-            # 2. 特征相关性分析
-            feature_correlation = self._compute_feature_correlation(activation)
-            
-            # 3. 信息冗余分析
-            redundancy = self._compute_information_redundancy(activation)
-            
-            # 4. 计算信息流瓶颈分数
-            flow_score = (
-                0.3 * (1.0 - entropy) +
-                0.4 * feature_correlation +
-                0.3 * redundancy
-            )
-            
-            flow_scores[layer_name] = flow_score
-            
+            try:
+                # 1. 信息瓶颈分析
+                morpho_debug.print_debug(f"计算熵值...", "DEBUG")
+                entropy = self._compute_entropy(activation)
+                
+                # 2. 特征相关性分析
+                morpho_debug.print_debug(f"计算特征相关性...", "DEBUG")
+                feature_correlation = self._compute_feature_correlation(activation)
+                
+                # 3. 信息冗余分析
+                morpho_debug.print_debug(f"计算信息冗余度...", "DEBUG")
+                redundancy = self._compute_information_redundancy(activation)
+                
+                # 4. 计算信息流瓶颈分数
+                flow_score = (
+                    0.3 * (1.0 - entropy) +
+                    0.4 * feature_correlation +
+                    0.3 * redundancy
+                )
+                
+                flow_scores[layer_name] = flow_score
+                morpho_debug.print_debug(f"层{layer_name}: 熵={entropy:.3f}, 相关性={feature_correlation:.3f}, 冗余={redundancy:.3f}, 分数={flow_score:.3f}", "DEBUG")
+                
+            except Exception as e:
+                morpho_debug.print_debug(f"❌ 层{layer_name}分析失败: {e}", "ERROR")
+                flow_scores[layer_name] = 0.0
+                
+            # 强制垃圾回收，释放内存
+            if i % 5 == 0:  # 每5层清理一次
+                import gc
+                gc.collect()
+                if torch.cuda.is_available():
+                    torch.cuda.empty_cache()
+                    
+        morpho_debug.print_debug(f"信息流分析完成，共{len(flow_scores)}层", "SUCCESS")
+        morpho_debug.exit_section("信息流瓶颈分析")
         return flow_scores
     
     def _compute_activation_saturation(self, activation: torch.Tensor) -> float:
@@ -361,7 +387,7 @@ class AdvancedBottleneckAnalyzer:
             return 0.0
     
     def _compute_feature_correlation(self, activation: torch.Tensor) -> float:
-        """计算特征相关性"""
+        """计算特征相关性 - 内存优化版本"""
         if activation.numel() == 0 or len(activation.shape) < 2:
             return 0.0
             
@@ -369,35 +395,80 @@ class AdvancedBottleneckAnalyzer:
             activation_flat = activation.view(activation.shape[0], -1)
             if activation_flat.shape[1] < 2:
                 return 0.0
+            
+            # 内存优化：限制特征数量，使用采样
+            max_features = 512  # 最大特征数限制
+            if activation_flat.shape[1] > max_features:
+                # 随机采样特征
+                indices = torch.randperm(activation_flat.shape[1])[:max_features]
+                activation_flat = activation_flat[:, indices]
+            
+            # 进一步限制：如果还是太大，使用更小的样本
+            if activation_flat.shape[0] > 64:
+                indices = torch.randperm(activation_flat.shape[0])[:64]
+                activation_flat = activation_flat[indices]
                 
-            # 计算特征间的相关系数
-            correlation_matrix = torch.corrcoef(activation_flat.T)
-            
-            # 计算平均绝对相关系数
-            mask = torch.eye(correlation_matrix.shape[0], dtype=torch.bool)
-            off_diagonal = correlation_matrix[~mask]
-            
-            if len(off_diagonal) > 0:
-                avg_correlation = torch.mean(torch.abs(off_diagonal))
-                return avg_correlation.item()
+            # 计算特征间的相关系数 - 仅在可管理的大小时
+            if activation_flat.shape[1] > 1024:
+                # 对于非常大的特征，使用近似方法
+                # 随机选择特征对计算相关性
+                num_pairs = min(100, activation_flat.shape[1] // 2)
+                correlations = []
+                
+                for _ in range(num_pairs):
+                    i = torch.randint(0, activation_flat.shape[1], (1,)).item()
+                    j = torch.randint(0, activation_flat.shape[1], (1,)).item()
+                    if i != j:
+                        corr = torch.corrcoef(torch.stack([activation_flat[:, i], activation_flat[:, j]]))[0, 1]
+                        if not torch.isnan(corr):
+                            correlations.append(torch.abs(corr).item())
+                
+                return np.mean(correlations) if correlations else 0.0
             else:
-                return 0.0
-        except:
+                # 标准相关性计算
+                correlation_matrix = torch.corrcoef(activation_flat.T)
+                
+                # 检查矩阵是否有效
+                if torch.isnan(correlation_matrix).any():
+                    return 0.0
+                
+                # 计算平均绝对相关系数
+                mask = torch.eye(correlation_matrix.shape[0], dtype=torch.bool)
+                off_diagonal = correlation_matrix[~mask]
+                
+                if len(off_diagonal) > 0:
+                    avg_correlation = torch.mean(torch.abs(off_diagonal))
+                    return avg_correlation.item()
+                else:
+                    return 0.0
+        except Exception as e:
+            morpho_debug.print_debug(f"特征相关性计算失败: {e}", "WARNING")
             return 0.0
     
     def _compute_information_redundancy(self, activation: torch.Tensor) -> float:
-        """计算信息冗余度"""
+        """计算信息冗余度 - 内存优化版本"""
         if activation.numel() == 0:
             return 0.0
             
-        # 简化的冗余度计算
-        activation_flat = activation.flatten()
-        
-        # 计算重复值的比例
-        unique_values = torch.unique(activation_flat)
-        redundancy = 1.0 - (len(unique_values) / len(activation_flat))
-        
-        return redundancy
+        try:
+            # 内存优化：对于大张量使用采样
+            activation_flat = activation.flatten()
+            
+            # 限制分析的元素数量
+            max_elements = 100000  # 最大分析10万个元素
+            if len(activation_flat) > max_elements:
+                # 随机采样
+                indices = torch.randperm(len(activation_flat))[:max_elements]
+                activation_flat = activation_flat[indices]
+            
+            # 计算重复值的比例
+            unique_values = torch.unique(activation_flat)
+            redundancy = 1.0 - (len(unique_values) / len(activation_flat))
+            
+            return redundancy
+        except Exception as e:
+            morpho_debug.print_debug(f"信息冗余度计算失败: {e}", "WARNING")
+            return 0.0
     
     def _analyze_gradient_flow(self, gradients: Dict[str, torch.Tensor]) -> Dict[str, float]:
         """分析梯度流瓶颈"""
