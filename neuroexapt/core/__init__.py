@@ -32,6 +32,21 @@ from .dnm_net2net import Net2NetTransformer, DNMArchitectureMutator
 from .enhanced_bottleneck_detector import EnhancedBottleneckDetector
 from .performance_guided_division import PerformanceGuidedDivision, DivisionStrategy
 
+# Advanced Morphogenesis Components - 高级形态发生组件
+from .advanced_morphogenesis import (
+    AdvancedBottleneckAnalyzer,
+    AdvancedMorphogenesisExecutor, 
+    IntelligentMorphogenesisDecisionMaker,
+    MorphogenesisType,
+    MorphogenesisDecision
+)
+
+# Enhanced DNM Framework - 增强的DNM框架
+from .enhanced_dnm_framework import (
+    EnhancedDNMFramework,
+    EnhancedMorphogenesisEvent
+)
+
 __all__ = [
     # Core Components
     'Network', 'OPS', 'PRIMITIVES', 'Genotype',
@@ -48,5 +63,10 @@ __all__ = [
     'LayerPerformanceAnalyzer', 'SmartLayerSelector', 'DNMConnectionGrowth', 
     'Net2NetTransformer', 'DNMArchitectureMutator',
     # Enhanced DNM Components - 增强的DNM组件
-    'EnhancedBottleneckDetector', 'PerformanceGuidedDivision', 'DivisionStrategy'
+    'EnhancedBottleneckDetector', 'PerformanceGuidedDivision', 'DivisionStrategy',
+    # Advanced Morphogenesis Components - 高级形态发生组件
+    'AdvancedBottleneckAnalyzer', 'AdvancedMorphogenesisExecutor', 'IntelligentMorphogenesisDecisionMaker',
+    'MorphogenesisType', 'MorphogenesisDecision',
+    # Enhanced DNM Framework - 增强的DNM框架
+    'EnhancedDNMFramework', 'EnhancedMorphogenesisEvent'
 ]
