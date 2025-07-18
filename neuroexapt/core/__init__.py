@@ -4,13 +4,13 @@ from .operations import OPS
 from .genotypes import Genotype, PRIMITIVES
 from .evolvable_model import EvolvableNetwork, EvolvableCell
 
-# ASO-SE Framework components
-from .aso_se_framework import ASOSEFramework, ASOSEConfig
-from .aso_se_trainer import ASOSETrainer
-from .function_preserving_init import FunctionPreservingInitializer
-from .gumbel_softmax_explorer import GumbelSoftmaxExplorer
-from .architecture_mutator import ArchitectureMutator
-from .stability_monitor import StabilityMonitor
+# ASO-SE Framework components (备份保留)
+# from .aso_se_framework import ASOSEFramework, ASOSEConfig
+# from .aso_se_trainer import ASOSETrainer
+# from .function_preserving_init import FunctionPreservingInitializer
+# from .gumbel_softmax_explorer import GumbelSoftmaxExplorer
+# from .architecture_mutator import ArchitectureMutator
+# from .stability_monitor import StabilityMonitor
 
 # High-Performance Components - NEW!
 from .fast_operations import (

@@ -498,3 +498,4 @@ class AdaptiveNeuronDivision:
             'strategy_usage': dict(strategy_counts),
             'layers_modified': list(self.division_history.keys())
         }
+
