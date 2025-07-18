@@ -1,643 +1,958 @@
 #!/usr/bin/env python3
 """
-Dynamic Neural Morphogenesis (DNM) 框架主控制器
+Dynamic Neural Morphogenesis (DNM) Framework - 重构版本
 
-整合三大创新模块：
-1. 信息熵驱动的神经元分裂 (DNMNeuronDivision)
-2. 梯度引导的连接生长 (DNMConnectionGrowth)  
-3. 多目标进化优化 (DNMMultiObjectiveOptimization)
+🧬 核心理论支撑：
+1. 信息论 (Information Theory) - 信息瓶颈和熵分析
+2. 生物学原理 (Biological Principles) - 神经发育和突触可塑性
+3. 动力学系统 (Dynamical Systems) - 梯度流和收敛性分析  
+4. 认知科学 (Cognitive Science) - 学习曲线和记忆巩固
+5. 网络科学 (Network Science) - 连接模式和拓扑分析
 
-提供统一的训练接口，实现真正的神经网络自适应生长
+🎯 目标：突破传统神经网络的性能瓶颈，实现真正的智能形态发生
 """
 
 import torch
 import torch.nn as nn
-import torch.optim as optim
-from torch.utils.data import DataLoader
+import torch.nn.functional as F
 import numpy as np
-import time
-import copy
-from typing import Dict, List, Tuple, Optional, Any, Callable
-from collections import defaultdict, deque
 import logging
+from typing import Dict, List, Tuple, Optional, Any
+from dataclasses import dataclass
+from abc import ABC, abstractmethod
+import math
+from collections import defaultdict, deque
+import copy
 
-# 导入DNM核心模块
-from .dnm_neuron_division import DNMNeuronDivision
-from .dnm_connection_growth import DNMConnectionGrowth
-from ..math.pareto_optimization import DNMMultiObjectiveOptimization
-
+# 配置日志
 logger = logging.getLogger(__name__)
 
-
-class DNMFramework:
-    """
-    Dynamic Neural Morphogenesis 主框架
+@dataclass
+class MorphogenesisEvent:
+    """形态发生事件记录"""
+    epoch: int
+    event_type: str  # 'neuron_division', 'connection_growth', 'pruning', 'topology_change'
+    location: str    # 层名称或位置
+    trigger_reason: str
+    performance_before: float
+    performance_after: Optional[float] = None
+    parameters_added: int = 0
+    complexity_change: float = 0.0
     
-    集成所有DNM组件，提供完整的自适应神经网络生长功能
-    """
+class MorphogenesisTrigger(ABC):
+    """形态发生触发器抽象基类"""
     
-    def __init__(self, config: Optional[Dict] = None):
-        self.config = config or self._default_config()
-        self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-        
-        # 初始化DNM核心组件
-        self.neuron_division = DNMNeuronDivision(self.config.get('neuron_division'))
-        self.connection_growth = DNMConnectionGrowth(self.config.get('connection_growth'))
-        self.multi_objective = DNMMultiObjectiveOptimization(self.config.get('multi_objective'))
-        
-        # 训练状态
-        self.training_active = False
-        self.current_epoch = 0
-        self.model_population = []
-        
-        # 性能和演化追踪
-        self.performance_history = []
-        self.morphogenesis_events = []
-        self.architecture_snapshots = []
-        
-        # 统计信息
-        self.statistics = {
-            'total_neuron_splits': 0,
-            'total_connections_grown': 0,
-            'total_optimizations': 0,
-            'performance_improvements': 0,
-            'architecture_complexity_growth': 0.0
-        }
-        
-        logger.info(f"🧬 DNM Framework initialized on {self.device}")
-        logger.info(f"   Configuration: {self.config}")
-    
-    def _default_config(self) -> Dict:
-        """默认配置"""
-        return {
-            'neuron_division': {
-                'splitter': {
-                    'entropy_threshold': 0.7,
-                    'overload_threshold': 0.6,
-                    'split_probability': 0.4,
-                    'max_splits_per_layer': 3,
-                    'inheritance_noise': 0.1
-                },
-                'monitoring': {
-                    'target_layers': ['conv', 'linear'],
-                    'analysis_frequency': 5,
-                    'min_epoch_before_split': 10
-                }
-            },
-            'connection_growth': {
-                'analyzer': {
-                    'correlation_threshold': 0.15,
-                    'history_length': 8
-                },
-                'growth': {
-                    'max_new_connections': 3,
-                    'min_correlation_threshold': 0.1,
-                    'growth_frequency': 8,
-                    'connection_types': ['skip_connection', 'attention_connection']
-                },
-                'filtering': {
-                    'min_layer_distance': 2,
-                    'max_layer_distance': 6,
-                    'avoid_redundant_connections': True
-                }
-            },
-            'multi_objective': {
-                'evolution': {
-                    'population_size': 12,
-                    'max_generations': 15,
-                    'mutation_rate': 0.3,
-                    'crossover_rate': 0.7,
-                    'elitism_ratio': 0.15
-                },
-                'optimization': {
-                    'trigger_frequency': 20,
-                    'performance_plateau_threshold': 0.01,
-                    'min_improvement_epochs': 5
-                }
-            },
-            'framework': {
-                'morphogenesis_frequency': 5,  # 每5个epoch检查一次形态发生
-                'performance_tracking_window': 10,  # 性能追踪窗口
-                'early_stopping_patience': 15,
-                'target_accuracy_threshold': 95.0,
-                'enable_architecture_snapshots': True,
-                'adaptive_morphogenesis': True  # 自适应形态发生
-            }
-        }
-    
-    def train_with_morphogenesis(self, 
-                                model: nn.Module,
-                                train_loader: DataLoader,
-                                val_loader: DataLoader,
-                                epochs: int,
-                                optimizer: Optional[torch.optim.Optimizer] = None,
-                                criterion: Optional[nn.Module] = None,
-                                callbacks: Optional[List[Callable]] = None) -> Dict[str, Any]:
-        """
-        使用DNM进行训练
-        
-        Args:
-            model: 初始模型
-            train_loader: 训练数据加载器
-            val_loader: 验证数据加载器
-            epochs: 训练轮数
-            optimizer: 优化器（可选）
-            criterion: 损失函数（可选）
-            callbacks: 回调函数列表（可选）
-            
-        Returns:
-            训练结果字典
-        """
-        logger.info(f"🚀 Starting DNM training for {epochs} epochs")
-        logger.info(f"   Initial model parameters: {sum(p.numel() for p in model.parameters()):,}")
-        
-        # 初始化
-        self.training_active = True
-        self.current_epoch = 0
-        model = model.to(self.device)
-        
-        # 默认优化器和损失函数
-        if optimizer is None:
-            optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.9, weight_decay=1e-4)
-        if criterion is None:
-            criterion = nn.CrossEntropyLoss()
-        
-        # 注册神经元分裂监控
-        self.neuron_division.register_model_hooks(model)
-        
-        # 初始化模型种群（用于多目标优化）
-        self.model_population = [copy.deepcopy(model) for _ in range(3)]
-        
-        # 记录初始架构快照
-        if self.config['framework']['enable_architecture_snapshots']:
-            self._take_architecture_snapshot(model, epoch=0)
-        
-        best_val_acc = 0.0
-        patience_counter = 0
-        
-        try:
-            for epoch in range(epochs):
-                self.current_epoch = epoch
-                epoch_start_time = time.time()
-                
-                logger.info(f"\n🧬 Epoch {epoch+1}/{epochs} - Dynamic Morphogenesis")
-                
-                # 1. 标准训练步骤
-                train_loss, train_acc = self._train_epoch(model, train_loader, optimizer, criterion)
-                val_loss, val_acc = self._validate_epoch(model, val_loader, criterion)
-                
-                # 2. 收集梯度用于连接生长分析
-                self.connection_growth.collect_and_analyze_gradients(model)
-                
-                # 3. 记录性能
-                epoch_record = {
-                    'epoch': epoch,
-                    'train_loss': train_loss,
-                    'train_acc': train_acc,
-                    'val_loss': val_loss,
-                    'val_acc': val_acc,
-                    'model_params': sum(p.numel() for p in model.parameters()),
-                    'epoch_time': time.time() - epoch_start_time
-                }
-                self.performance_history.append(epoch_record)
-                
-                # 4. 形态发生检查和执行
-                morphogenesis_triggered = False
-                
-                if self._should_trigger_morphogenesis(epoch, val_acc):
-                    logger.info("  🔄 Triggering morphogenesis analysis...")
-                    
-                    # 神经元分裂
-                    neuron_result = self.neuron_division.analyze_and_split(model, epoch)
-                    
-                    # 连接生长
-                    connection_result = self.connection_growth.analyze_and_grow_connections(model, epoch)
-                    
-                    # 多目标优化
-                    optimization_result = self.multi_objective.optimize_architecture_population(
-                        self.model_population, train_loader, val_loader, epoch
-                    )
-                    
-                    # 记录形态发生事件
-                    if (neuron_result.get('splits_executed', 0) > 0 or 
-                        connection_result.get('connections_grown', 0) > 0 or
-                        optimization_result.get('optimized', False)):
-                        
-                        morphogenesis_event = {
-                            'epoch': epoch,
-                            'neuron_splits': neuron_result.get('splits_executed', 0),
-                            'connections_grown': connection_result.get('connections_grown', 0),
-                            'optimization_triggered': optimization_result.get('optimized', False),
-                            'performance_before': val_acc,
-                            'details': {
-                                'neuron_division': neuron_result,
-                                'connection_growth': connection_result,
-                                'multi_objective': optimization_result
-                            }
-                        }
-                        self.morphogenesis_events.append(morphogenesis_event)
-                        morphogenesis_triggered = True
-                        
-                        # 更新统计
-                        self.statistics['total_neuron_splits'] += neuron_result.get('splits_executed', 0)
-                        self.statistics['total_connections_grown'] += connection_result.get('connections_grown', 0)
-                        if optimization_result.get('optimized', False):
-                            self.statistics['total_optimizations'] += 1
-                        
-                        # 更新优化器以包含新参数
-                        optimizer = self._update_optimizer(optimizer, model)
-                        
-                        # 更新模型种群
-                        if optimization_result.get('optimized', False) and optimization_result.get('best_models'):
-                            self.model_population = optimization_result['best_models'][:3]
-                            # 选择最好的模型继续训练
-                            new_model = self._select_best_model_for_training(optimization_result['best_models'], 
-                                                                           optimization_result['best_fitness'])
-                            if new_model is not None:
-                                model = new_model
-                                optimizer = self._update_optimizer(optimizer, model)
-                
-                # 5. 输出状态
-                current_params = sum(p.numel() for p in model.parameters())
-                if epoch == 0:
-                    initial_params = current_params
-                else:
-                    param_growth = (current_params - initial_params) / initial_params * 100
-                
-                logger.info(f"  📊 Train: {train_acc:.2f}% | Val: {val_acc:.2f}% | "
-                           f"Params: {current_params:,} | "
-                           f"{'🧬 Morphogenesis' if morphogenesis_triggered else ''}")
-                
-                # 6. 早期停止和性能追踪
-                if val_acc > best_val_acc:
-                    best_val_acc = val_acc
-                    patience_counter = 0
-                    self.statistics['performance_improvements'] += 1
-                else:
-                    patience_counter += 1
-                
-                if val_acc >= self.config['framework']['target_accuracy_threshold']:
-                    logger.info(f"  🎯 Reached target accuracy: {val_acc:.2f}%!")
-                    break
-                
-                if patience_counter >= self.config['framework']['early_stopping_patience']:
-                    logger.info(f"  🛑 Early stopping triggered (patience: {patience_counter})")
-                    break
-                
-                # 7. 执行回调
-                if callbacks:
-                    for callback in callbacks:
-                        callback(self, model, epoch_record)
-                
-                # 8. 架构快照
-                if (self.config['framework']['enable_architecture_snapshots'] and 
-                    epoch % 10 == 0 and morphogenesis_triggered):
-                    self._take_architecture_snapshot(model, epoch)
-        
-        except KeyboardInterrupt:
-            logger.info("  ⏹️ Training interrupted by user")
-        
-        finally:
-            # 清理
-            self.training_active = False
-            self.neuron_division.remove_model_hooks(model)
-        
-        # 生成训练总结
-        training_summary = self._generate_training_summary(model, best_val_acc)
-        
-        logger.info("✅ DNM training completed")
-        logger.info(f"   Final accuracy: {val_acc:.2f}% | Best: {best_val_acc:.2f}%")
-        logger.info(f"   Morphogenesis events: {len(self.morphogenesis_events)}")
-        
-        return {
-            'model': model,
-            'best_val_accuracy': best_val_acc,
-            'final_val_accuracy': val_acc,
-            'performance_history': self.performance_history,
-            'morphogenesis_events': self.morphogenesis_events,
-            'architecture_snapshots': self.architecture_snapshots,
-            'statistics': self.statistics,
-            'training_summary': training_summary
-        }
-    
-    def _should_trigger_morphogenesis(self, epoch: int, current_performance: float) -> bool:
+    @abstractmethod
+    def should_trigger(self, context: Dict[str, Any]) -> Tuple[bool, str]:
         """判断是否应该触发形态发生"""
-        
-        # 基础频率检查
-        if epoch % self.config['framework']['morphogenesis_frequency'] != 0:
-            return False
-        
-        # 最小epoch检查
-        if epoch < 10:
-            return False
-        
-        # 自适应形态发生
-        if self.config['framework']['adaptive_morphogenesis']:
-            # 检查最近的性能平台期
-            recent_history = self.performance_history[-self.config['framework']['performance_tracking_window']:]
-            if len(recent_history) >= 5:
-                recent_accs = [h['val_acc'] for h in recent_history]
-                performance_std = np.std(recent_accs)
-                
-                # 如果性能变化很小，更可能触发形态发生
-                if performance_std < self.config['multi_objective']['optimization']['performance_plateau_threshold']:
-                    return True
-        
-        return True
+        pass
     
-    def _train_epoch(self, model: nn.Module, train_loader: DataLoader, 
-                    optimizer: torch.optim.Optimizer, criterion: nn.Module) -> Tuple[float, float]:
-        """训练一个epoch"""
-        model.train()
-        total_loss = 0.0
-        correct = 0
-        total = 0
-        
-        for batch_idx, (data, target) in enumerate(train_loader):
-            data, target = data.to(self.device), target.to(self.device)
-            
-            optimizer.zero_grad()
-            output = model(data)
-            loss = criterion(output, target)
-            loss.backward()
-            
-            # 梯度裁剪
-            torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
-            
-            optimizer.step()
-            
-            total_loss += loss.item()
-            pred = output.argmax(dim=1, keepdim=True)
-            correct += pred.eq(target.view_as(pred)).sum().item()
-            total += target.size(0)
-        
-        avg_loss = total_loss / len(train_loader)
-        accuracy = 100.0 * correct / total
-        return avg_loss, accuracy
-    
-    def _validate_epoch(self, model: nn.Module, val_loader: DataLoader, 
-                       criterion: nn.Module) -> Tuple[float, float]:
-        """验证一个epoch"""
-        model.eval()
-        total_loss = 0.0
-        correct = 0
-        total = 0
-        
-        with torch.no_grad():
-            for data, target in val_loader:
-                data, target = data.to(self.device), target.to(self.device)
-                output = model(data)
-                loss = criterion(output, target)
-                
-                total_loss += loss.item()
-                pred = output.argmax(dim=1, keepdim=True)
-                correct += pred.eq(target.view_as(pred)).sum().item()
-                total += target.size(0)
-        
-        avg_loss = total_loss / len(val_loader)
-        accuracy = 100.0 * correct / total
-        return avg_loss, accuracy
-    
-    def _update_optimizer(self, optimizer: torch.optim.Optimizer, model: nn.Module) -> torch.optim.Optimizer:
-        """
-        🔧 修复优化器状态管理：在形态发生后创建新的优化器
-        
-        当模型结构发生变化时，需要重新创建优化器以包含新参数。
-        为简化起见，我们创建一个全新的优化器，保持相同的超参数。
-        """
-        try:
-            # 保存当前优化器配置
-            lr = optimizer.param_groups[0]['lr']
-            momentum = optimizer.param_groups[0].get('momentum', 0.9)
-            weight_decay = optimizer.param_groups[0].get('weight_decay', 0)
-            
-            # 根据优化器类型创建新优化器
-            if isinstance(optimizer, torch.optim.SGD):
-                new_optimizer = torch.optim.SGD(
-                    model.parameters(), lr=lr, momentum=momentum, weight_decay=weight_decay
-                )
-            elif isinstance(optimizer, torch.optim.Adam):
-                betas = optimizer.param_groups[0].get('betas', (0.9, 0.999))
-                eps = optimizer.param_groups[0].get('eps', 1e-8)
-                new_optimizer = torch.optim.Adam(
-                    model.parameters(), lr=lr, betas=betas, eps=eps, weight_decay=weight_decay
-                )
-            elif isinstance(optimizer, torch.optim.AdamW):
-                betas = optimizer.param_groups[0].get('betas', (0.9, 0.999))
-                eps = optimizer.param_groups[0].get('eps', 1e-8)
-                new_optimizer = torch.optim.AdamW(
-                    model.parameters(), lr=lr, betas=betas, eps=eps, weight_decay=weight_decay
-                )
-            else:
-                # 通用处理 - 使用反射获取构造参数
-                optimizer_class = type(optimizer)
-                new_optimizer = optimizer_class(model.parameters(), lr=lr)
-            
-            logger.info(f"✅ Optimizer updated after morphogenesis: {type(new_optimizer).__name__} with lr={lr}")
-            return new_optimizer
-            
-        except Exception as e:
-            logger.error(f"Failed to update optimizer: {e}")
-            # 作为最后的备选方案，创建一个简单的SGD优化器
-            fallback_optimizer = torch.optim.SGD(model.parameters(), lr=0.01)
-            logger.warning("Using fallback SGD optimizer with lr=0.01")
-            return fallback_optimizer
+    @abstractmethod
+    def get_priority(self) -> float:
+        """获取触发器优先级"""
+        pass
 
+class InformationTheoryTrigger(MorphogenesisTrigger):
+    """基于信息论的触发器"""
     
-    def _select_best_model_for_training(self, models: List[nn.Module], fitness_list: List) -> nn.Module:
-        """从候选模型中选择最佳的用于继续训练"""
-        if not models or not fitness_list:
-            return models[0] if models else None
+    def __init__(self, entropy_threshold: float = 0.1, mi_threshold: float = 0.05):
+        self.entropy_threshold = entropy_threshold
+        self.mi_threshold = mi_threshold
+        self.history = deque(maxlen=10)
         
-        # 选择准确率最高的模型
-        best_idx = 0
-        best_accuracy = fitness_list[0].accuracy
+    def should_trigger(self, context: Dict[str, Any]) -> Tuple[bool, str]:
+        activations = context.get('activations', {})
+        gradients = context.get('gradients', {})
         
-        for i, fitness in enumerate(fitness_list):
-            if fitness.accuracy > best_accuracy:
-                best_accuracy = fitness.accuracy
-                best_idx = i
+        if not activations or not gradients:
+            return False, "缺少激活值或梯度信息"
+            
+        # 计算信息熵变化
+        entropy_changes = self._compute_entropy_changes(activations)
         
-        logger.info(f"  🎯 Selected model {best_idx} with accuracy {best_accuracy:.2f}% for continued training")
-        return copy.deepcopy(models[best_idx])
+        # 计算互信息
+        mutual_info = self._compute_mutual_information(activations)
+        
+        # 梯度方差分析
+        gradient_variance = self._analyze_gradient_variance(gradients)
+        
+        self.history.append({
+            'entropy_changes': entropy_changes,
+            'mutual_info': mutual_info,
+            'gradient_variance': gradient_variance
+        })
+        
+        # 信息瓶颈检测
+        if self._detect_information_bottleneck():
+            return True, f"信息瓶颈检测：熵变化={entropy_changes:.4f}, 互信息={mutual_info:.4f}"
+            
+        return False, "信息论指标未达到触发条件"
     
-    def _take_architecture_snapshot(self, model: nn.Module, epoch: int) -> None:
-        """拍摄架构快照"""
-        snapshot = {
+    def _compute_entropy_changes(self, activations: Dict[str, torch.Tensor]) -> float:
+        """计算激活值熵的变化"""
+        total_entropy_change = 0.0
+        count = 0
+        
+        for name, activation in activations.items():
+            if len(activation.shape) >= 2:
+                # 计算每个神经元的熵
+                activation_flat = activation.view(activation.size(0), -1)
+                probs = F.softmax(activation_flat, dim=-1) + 1e-8
+                entropy = -torch.sum(probs * torch.log(probs), dim=-1).mean()
+                
+                if len(self.history) > 0:
+                    prev_entropy = self.history[-1].get('entropy_changes', 0)
+                    entropy_change = abs(entropy.item() - prev_entropy)
+                    total_entropy_change += entropy_change
+                    count += 1
+                    
+        return total_entropy_change / max(count, 1)
+    
+    def _compute_mutual_information(self, activations: Dict[str, torch.Tensor]) -> float:
+        """计算层间互信息"""
+        layer_names = list(activations.keys())
+        if len(layer_names) < 2:
+            return 0.0
+            
+        # 简化的互信息估计
+        mi_sum = 0.0
+        pairs = 0
+        
+        for i in range(len(layer_names) - 1):
+            for j in range(i + 1, min(i + 3, len(layer_names))):  # 只考虑相邻层
+                act1 = activations[layer_names[i]].flatten()
+                act2 = activations[layer_names[j]].flatten()
+                
+                # 使用相关系数近似互信息
+                if len(act1) == len(act2):
+                    correlation = torch.corrcoef(torch.stack([act1, act2]))[0, 1]
+                    mi = -0.5 * torch.log(1 - correlation**2 + 1e-8)
+                    mi_sum += mi.item()
+                    pairs += 1
+                    
+        return mi_sum / max(pairs, 1)
+    
+    def _analyze_gradient_variance(self, gradients: Dict[str, torch.Tensor]) -> float:
+        """分析梯度方差"""
+        total_variance = 0.0
+        count = 0
+        
+        for name, grad in gradients.items():
+            if grad is not None:
+                variance = torch.var(grad).item()
+                total_variance += variance
+                count += 1
+                
+        return total_variance / max(count, 1)
+    
+    def _detect_information_bottleneck(self) -> bool:
+        """检测信息瓶颈"""
+        if len(self.history) < 5:
+            return False
+            
+        recent_entropies = [h['entropy_changes'] for h in list(self.history)[-5:]]
+        recent_mis = [h['mutual_info'] for h in list(self.history)[-5:]]
+        
+        # 熵变化趋于稳定且互信息较低
+        entropy_stability = np.std(recent_entropies) < self.entropy_threshold
+        low_mi = np.mean(recent_mis) < self.mi_threshold
+        
+        return entropy_stability and low_mi
+    
+    def get_priority(self) -> float:
+        return 0.8
+
+class BiologicalPrinciplesTrigger(MorphogenesisTrigger):
+    """基于生物学原理的触发器"""
+    
+    def __init__(self, learning_rate_threshold: float = 1e-4, saturation_threshold: float = 0.95):
+        self.learning_rate_threshold = learning_rate_threshold
+        self.saturation_threshold = saturation_threshold
+        self.performance_history = deque(maxlen=20)
+        
+    def should_trigger(self, context: Dict[str, Any]) -> Tuple[bool, str]:
+        current_performance = context.get('current_performance', 0.0)
+        learning_rate = context.get('learning_rate', 1e-3)
+        activations = context.get('activations', {})
+        
+        self.performance_history.append(current_performance)
+        
+        # 模拟神经可塑性 - Hebbian学习原理
+        if self._detect_hebbian_potential(activations):
+            return True, f"Hebbian可塑性检测：性能={current_performance:.4f}"
+            
+        # 模拟突触稳态 - 性能平台期检测
+        if self._detect_homeostatic_imbalance():
+            return True, f"稳态失衡检测：性能停滞，建议结构调整"
+            
+        # 模拟神经发育的关键期
+        if self._detect_critical_period():
+            return True, f"关键发育期检测：适合结构重组"
+            
+        return False, "生物学指标未达到触发条件"
+    
+    def _detect_hebbian_potential(self, activations: Dict[str, torch.Tensor]) -> bool:
+        """检测Hebbian可塑性潜力"""
+        if not activations:
+            return False
+            
+        # 分析激活模式的相关性
+        correlation_strengths = []
+        
+        for name, activation in activations.items():
+            if len(activation.shape) >= 2:
+                # 计算神经元间的相关性
+                act_flat = activation.view(activation.size(0), -1)
+                if act_flat.size(1) > 1:
+                    corr_matrix = torch.corrcoef(act_flat.T)
+                    # 移除对角线元素
+                    mask = ~torch.eye(corr_matrix.size(0), dtype=bool)
+                    corr_values = corr_matrix[mask]
+                    avg_correlation = torch.mean(torch.abs(corr_values)).item()
+                    correlation_strengths.append(avg_correlation)
+        
+        if correlation_strengths:
+            mean_correlation = np.mean(correlation_strengths)
+            return mean_correlation > 0.7  # 高相关性表明可以分裂
+            
+        return False
+    
+    def _detect_homeostatic_imbalance(self) -> bool:
+        """检测稳态失衡"""
+        if len(self.performance_history) < 10:
+            return False
+            
+        recent_performance = list(self.performance_history)[-10:]
+        performance_std = np.std(recent_performance)
+        performance_trend = np.polyfit(range(len(recent_performance)), recent_performance, 1)[0]
+        
+        # 性能停滞且无明显上升趋势
+        return performance_std < 0.01 and abs(performance_trend) < 0.001
+    
+    def _detect_critical_period(self) -> bool:
+        """检测关键发育期"""
+        if len(self.performance_history) < 15:
+            return False
+            
+        # 模拟生物神经网络的关键期
+        recent_performance = list(self.performance_history)[-15:]
+        
+        # 查找性能快速上升后的平台期
+        for i in range(5, len(recent_performance)):
+            early_avg = np.mean(recent_performance[:i-5])
+            recent_avg = np.mean(recent_performance[i-5:i])
+            latest_avg = np.mean(recent_performance[i:])
+            
+            # 快速上升后停滞
+            if (recent_avg - early_avg > 0.05) and (abs(latest_avg - recent_avg) < 0.01):
+                return True
+                
+        return False
+    
+    def get_priority(self) -> float:
+        return 0.9
+
+class DynamicalSystemsTrigger(MorphogenesisTrigger):
+    """基于动力学系统的触发器"""
+    
+    def __init__(self):
+        self.gradient_history = deque(maxlen=15)
+        self.loss_history = deque(maxlen=20)
+        
+    def should_trigger(self, context: Dict[str, Any]) -> Tuple[bool, str]:
+        gradients = context.get('gradients', {})
+        current_loss = context.get('current_loss', float('inf'))
+        
+        self.loss_history.append(current_loss)
+        
+        if gradients:
+            gradient_norm = self._compute_gradient_norm(gradients)
+            self.gradient_history.append(gradient_norm)
+        
+        # 检测梯度消失/爆炸
+        if self._detect_gradient_pathology():
+            return True, "梯度病理检测：需要结构调整改善梯度流"
+            
+        # 检测损失函数的动力学特性
+        if self._detect_loss_dynamics_anomaly():
+            return True, "损失动力学异常：建议增加模型容量"
+            
+        # 检测收敛性问题
+        if self._detect_convergence_issues():
+            return True, "收敛性问题检测：模型可能欠拟合"
+            
+        return False, "动力学系统指标正常"
+    
+    def _compute_gradient_norm(self, gradients: Dict[str, torch.Tensor]) -> float:
+        """计算梯度范数"""
+        total_norm = 0.0
+        for grad in gradients.values():
+            if grad is not None:
+                total_norm += torch.norm(grad).item() ** 2
+        return math.sqrt(total_norm)
+    
+    def _detect_gradient_pathology(self) -> bool:
+        """检测梯度病理"""
+        if len(self.gradient_history) < 10:
+            return False
+            
+        recent_grads = list(self.gradient_history)[-10:]
+        
+        # 梯度消失
+        if np.mean(recent_grads) < 1e-6:
+            return True
+            
+        # 梯度爆炸
+        if np.max(recent_grads) > 100:
+            return True
+            
+        # 梯度振荡
+        grad_diff = np.diff(recent_grads)
+        if len(grad_diff) > 5:
+            oscillation = np.sum(np.diff(np.sign(grad_diff)) != 0) / len(grad_diff)
+            if oscillation > 0.7:
+                return True
+                
+        return False
+    
+    def _detect_loss_dynamics_anomaly(self) -> bool:
+        """检测损失动力学异常"""
+        if len(self.loss_history) < 15:
+            return False
+            
+        recent_losses = list(self.loss_history)[-15:]
+        
+        # 损失停滞
+        loss_std = np.std(recent_losses)
+        if loss_std < 0.001:
+            return True
+            
+        # 损失振荡而不收敛
+        loss_trend = np.polyfit(range(len(recent_losses)), recent_losses, 1)[0]
+        if abs(loss_trend) < 0.001 and loss_std > 0.01:
+            return True
+            
+        return False
+    
+    def _detect_convergence_issues(self) -> bool:
+        """检测收敛性问题"""
+        if len(self.loss_history) < 15 or len(self.gradient_history) < 10:
+            return False
+            
+        # 损失下降缓慢且梯度很小
+        recent_losses = list(self.loss_history)[-10:]
+        recent_grads = list(self.gradient_history)[-5:]
+        
+        loss_improvement = recent_losses[0] - recent_losses[-1]
+        avg_grad = np.mean(recent_grads)
+        
+        # 损失改善很小且梯度很小，但不是过拟合
+        if loss_improvement < 0.01 and avg_grad < 0.01 and recent_losses[-1] > 0.5:
+            return True
+            
+        return False
+    
+    def get_priority(self) -> float:
+        return 0.85
+
+class CognitiveScienceTrigger(MorphogenesisTrigger):
+    """基于认知科学的触发器"""
+    
+    def __init__(self):
+        self.learning_curve = deque(maxlen=50)
+        self.forgetting_events = []
+        
+    def should_trigger(self, context: Dict[str, Any]) -> Tuple[bool, str]:
+        train_acc = context.get('train_accuracy', 0.0)
+        val_acc = context.get('val_accuracy', 0.0)
+        epoch = context.get('epoch', 0)
+        
+        self.learning_curve.append({
             'epoch': epoch,
-            'model_structure': str(model),
-            'parameter_count': sum(p.numel() for p in model.parameters()),
-            'layer_info': []
-        }
+            'train_acc': train_acc,
+            'val_acc': val_acc,
+            'generalization_gap': train_acc - val_acc
+        })
+        
+        # 检测学习高原期
+        if self._detect_learning_plateau():
+            return True, "学习高原期检测：需要增加认知复杂性"
+            
+        # 检测遗忘现象
+        if self._detect_catastrophic_forgetting():
+            return True, "灾难性遗忘检测：需要分化专门化神经元"
+            
+        # 检测认知负荷过载
+        if self._detect_cognitive_overload():
+            return True, "认知负荷过载：建议分解任务复杂性"
+            
+        return False, "认知科学指标正常"
+    
+    def _detect_learning_plateau(self) -> bool:
+        """检测学习高原期"""
+        if len(self.learning_curve) < 20:
+            return False
+            
+        recent_curves = list(self.learning_curve)[-20:]
+        train_accs = [c['train_acc'] for c in recent_curves]
+        val_accs = [c['val_acc'] for c in recent_curves]
+        
+        # 训练和验证准确率都停滞
+        train_improvement = max(train_accs) - min(train_accs)
+        val_improvement = max(val_accs) - min(val_accs)
+        
+        return train_improvement < 0.02 and val_improvement < 0.02
+    
+    def _detect_catastrophic_forgetting(self) -> bool:
+        """检测灾难性遗忘"""
+        if len(self.learning_curve) < 10:
+            return False
+            
+        recent_curves = list(self.learning_curve)[-10:]
+        
+        # 检测验证准确率大幅下降
+        for i in range(1, len(recent_curves)):
+            val_drop = recent_curves[i-1]['val_acc'] - recent_curves[i]['val_acc']
+            if val_drop > 0.05:  # 准确率下降超过5%
+                self.forgetting_events.append(recent_curves[i]['epoch'])
+                return True
+                
+        return False
+    
+    def _detect_cognitive_overload(self) -> bool:
+        """检测认知负荷过载"""
+        if len(self.learning_curve) < 15:
+            return False
+            
+        recent_curves = list(self.learning_curve)[-15:]
+        gaps = [c['generalization_gap'] for c in recent_curves]
+        
+        # 泛化差距持续增大
+        gap_trend = np.polyfit(range(len(gaps)), gaps, 1)[0]
+        avg_gap = np.mean(gaps)
+        
+        return gap_trend > 0.002 and avg_gap > 0.15
+    
+    def get_priority(self) -> float:
+        return 0.75
+
+class NetworkScienceTrigger(MorphogenesisTrigger):
+    """基于网络科学的触发器"""
+    
+    def __init__(self):
+        self.connectivity_history = deque(maxlen=10)
+        
+    def should_trigger(self, context: Dict[str, Any]) -> Tuple[bool, str]:
+        model = context.get('model')
+        activations = context.get('activations', {})
+        
+        if model is None:
+            return False, "缺少模型信息"
+            
+        # 分析网络拓扑特性
+        connectivity_metrics = self._analyze_network_topology(model, activations)
+        self.connectivity_history.append(connectivity_metrics)
+        
+        # 检测网络瓶颈
+        if self._detect_network_bottleneck(connectivity_metrics):
+            return True, f"网络瓶颈检测：中心性过高={connectivity_metrics.get('centrality', 0):.3f}"
+            
+        # 检测连接不平衡
+        if self._detect_connectivity_imbalance(connectivity_metrics):
+            return True, "连接不平衡检测：需要重新分布网络连接"
+            
+        return False, "网络科学指标正常"
+    
+    def _analyze_network_topology(self, model: nn.Module, activations: Dict[str, torch.Tensor]) -> Dict[str, float]:
+        """分析网络拓扑特性"""
+        metrics = {}
+        
+        # 计算层间连接强度
+        layer_connections = self._compute_layer_connections(model)
+        metrics['avg_connection_strength'] = np.mean(list(layer_connections.values()))
+        
+        # 计算网络中心性
+        centrality = self._compute_network_centrality(activations)
+        metrics['centrality'] = centrality
+        
+        # 计算聚类系数
+        clustering = self._compute_clustering_coefficient(activations)
+        metrics['clustering'] = clustering
+        
+        return metrics
+    
+    def _compute_layer_connections(self, model: nn.Module) -> Dict[str, float]:
+        """计算层间连接强度"""
+        connections = {}
         
         for name, module in model.named_modules():
-            if isinstance(module, (nn.Conv2d, nn.Linear)):
-                layer_info = {
-                    'name': name,
-                    'type': type(module).__name__,
-                    'parameters': sum(p.numel() for p in module.parameters())
-                }
+            if isinstance(module, (nn.Linear, nn.Conv2d)):
+                if hasattr(module, 'weight') and module.weight is not None:
+                    weight_norm = torch.norm(module.weight).item()
+                    connections[name] = weight_norm
+                    
+        return connections
+    
+    def _compute_network_centrality(self, activations: Dict[str, torch.Tensor]) -> float:
+        """计算网络中心性"""
+        if len(activations) < 2:
+            return 0.0
+            
+        # 简化的中心性计算
+        activation_norms = {}
+        for name, activation in activations.items():
+            activation_norms[name] = torch.norm(activation).item()
+            
+        norm_values = list(activation_norms.values())
+        if not norm_values:
+            return 0.0
+            
+        # 计算标准化的中心性
+        max_norm = max(norm_values)
+        avg_norm = np.mean(norm_values)
+        
+        return max_norm / (avg_norm + 1e-8)
+    
+    def _compute_clustering_coefficient(self, activations: Dict[str, torch.Tensor]) -> float:
+        """计算聚类系数"""
+        if len(activations) < 3:
+            return 0.0
+            
+        # 简化的聚类系数计算
+        layer_names = list(activations.keys())
+        correlations = []
+        
+        for i in range(len(layer_names)):
+            for j in range(i+1, len(layer_names)):
+                act1 = activations[layer_names[i]].flatten()
+                act2 = activations[layer_names[j]].flatten()
                 
-                if isinstance(module, nn.Conv2d):
-                    layer_info.update({
-                        'in_channels': module.in_channels,
-                        'out_channels': module.out_channels,
-                        'kernel_size': module.kernel_size
-                    })
-                elif isinstance(module, nn.Linear):
-                    layer_info.update({
-                        'in_features': module.in_features,
-                        'out_features': module.out_features
-                    })
+                if len(act1) == len(act2) and len(act1) > 1:
+                    corr = torch.corrcoef(torch.stack([act1, act2]))[0, 1]
+                    correlations.append(abs(corr.item()))
+                    
+        return np.mean(correlations) if correlations else 0.0
+    
+    def _detect_network_bottleneck(self, metrics: Dict[str, float]) -> bool:
+        """检测网络瓶颈"""
+        centrality = metrics.get('centrality', 0)
+        return centrality > 3.0  # 中心性过高表明存在瓶颈
+    
+    def _detect_connectivity_imbalance(self, metrics: Dict[str, float]) -> bool:
+        """检测连接不平衡"""
+        if len(self.connectivity_history) < 5:
+            return False
+            
+        recent_metrics = list(self.connectivity_history)[-5:]
+        connection_strengths = [m.get('avg_connection_strength', 0) for m in recent_metrics]
+        
+        # 连接强度方差过大
+        strength_std = np.std(connection_strengths)
+        return strength_std > 0.5
+    
+    def get_priority(self) -> float:
+        return 0.7
+
+class NeuronDivisionExecutor:
+    """神经元分裂执行器"""
+    
+    def __init__(self):
+        self.division_history = []
+        
+    def execute_division(self, model: nn.Module, layer_name: str, division_type: str = 'width_expansion') -> Tuple[nn.Module, int]:
+        """执行神经元分裂"""
+        try:
+            if division_type == 'width_expansion':
+                return self._expand_layer_width(model, layer_name)
+            elif division_type == 'depth_expansion':
+                return self._expand_network_depth(model, layer_name)
+            elif division_type == 'branch_creation':
+                return self._create_branch(model, layer_name)
+            else:
+                logger.warning(f"未知的分裂类型: {division_type}")
+                return model, 0
                 
-                snapshot['layer_info'].append(layer_info)
-        
-        self.architecture_snapshots.append(snapshot)
-        logger.debug(f"Architecture snapshot taken at epoch {epoch}")
+        except Exception as e:
+            logger.error(f"神经元分裂执行失败: {e}")
+            return model, 0
     
-    def _generate_training_summary(self, model: nn.Module, best_val_acc: float) -> Dict[str, Any]:
-        """生成训练总结"""
-        if not self.performance_history:
-            return {}
+    def _expand_layer_width(self, model: nn.Module, layer_name: str) -> Tuple[nn.Module, int]:
+        """扩展层宽度（增加神经元数量）"""
+        new_model = copy.deepcopy(model)
+        parameters_added = 0
         
-        initial_params = self.performance_history[0]['model_params']
-        final_params = self.performance_history[-1]['model_params']
-        param_growth = (final_params - initial_params) / initial_params * 100
-        
-        summary = {
-            'training_epochs': len(self.performance_history),
-            'best_validation_accuracy': best_val_acc,
-            'final_validation_accuracy': self.performance_history[-1]['val_acc'],
-            'accuracy_improvement': self.performance_history[-1]['val_acc'] - self.performance_history[0]['val_acc'],
-            'parameter_growth': param_growth,
-            'initial_parameters': initial_params,
-            'final_parameters': final_params,
-            'morphogenesis_events': len(self.morphogenesis_events),
-            'total_neuron_splits': self.statistics['total_neuron_splits'],
-            'total_connections_grown': self.statistics['total_connections_grown'],
-            'total_optimizations': self.statistics['total_optimizations'],
-            'avg_epoch_time': np.mean([h['epoch_time'] for h in self.performance_history]),
-            'total_training_time': sum(h['epoch_time'] for h in self.performance_history)
-        }
-        
-        return summary
-    
-    def get_morphogenesis_summary(self) -> Dict[str, Any]:
-        """获取形态发生总结"""
-        return {
-            'framework_statistics': self.statistics,
-            'neuron_division_summary': self.neuron_division.get_split_summary(),
-            'connection_growth_summary': self.connection_growth.get_growth_summary(),
-            'multi_objective_summary': self.multi_objective.get_optimization_summary(),
-            'morphogenesis_events': self.morphogenesis_events,
-            'architecture_snapshots': self.architecture_snapshots[-5:] if self.architecture_snapshots else []
-        }
-    
-    def export_evolved_model(self, filepath: str, model: nn.Module) -> None:
-        """导出演化后的模型"""
-        save_dict = {
-            'model_state_dict': model.state_dict(),
-            'model_structure': str(model),
-            'morphogenesis_summary': self.get_morphogenesis_summary(),
-            'performance_history': self.performance_history,
-            'config': self.config
-        }
-        
-        torch.save(save_dict, filepath)
-        logger.info(f"Evolved model exported to {filepath}")
-
-
-# 便捷函数
-def train_with_dnm(model: nn.Module,
-                   train_loader: DataLoader,
-                   val_loader: DataLoader,
-                   epochs: int = 100,
-                   config: Optional[Dict] = None,
-                   **kwargs) -> Dict[str, Any]:
-    """
-    便捷的DNM训练函数
-    
-    Args:
-        model: 模型
-        train_loader: 训练数据
-        val_loader: 验证数据
-        epochs: 训练轮数
-        config: DNM配置
-        **kwargs: 其他参数
-        
-    Returns:
-        训练结果
-    """
-    dnm = DNMFramework(config)
-    return dnm.train_with_morphogenesis(model, train_loader, val_loader, epochs, **kwargs)
-
-
-# 测试函数
-def test_dnm_framework():
-    """测试DNM框架"""
-    print("🧬 Testing Complete DNM Framework")
-    
-    # 创建测试模型
-    class TestEvolvableCNN(nn.Module):
-        def __init__(self, num_classes=10):
-            super().__init__()
-            self.features = nn.Sequential(
-                nn.Conv2d(3, 32, 3, padding=1),
-                nn.ReLU(inplace=True),
-                nn.MaxPool2d(2),
-                nn.Conv2d(32, 64, 3, padding=1),
-                nn.ReLU(inplace=True),
-                nn.MaxPool2d(2),
-                nn.Conv2d(64, 128, 3, padding=1),
-                nn.ReLU(inplace=True),
-                nn.AdaptiveAvgPool2d((4, 4))
+        # 找到目标层
+        target_module = None
+        for name, module in new_model.named_modules():
+            if name == layer_name:
+                target_module = module
+                break
+                
+        if target_module is None:
+            logger.warning(f"未找到目标层: {layer_name}")
+            return model, 0
+            
+        if isinstance(target_module, nn.Linear):
+            # 扩展全连接层
+            old_out_features = target_module.out_features
+            new_out_features = int(old_out_features * 1.2)  # 增加20%
+            expansion_size = new_out_features - old_out_features
+            
+            # 创建新的权重和偏置
+            new_weight = torch.zeros(new_out_features, target_module.in_features)
+            new_bias = torch.zeros(new_out_features) if target_module.bias is not None else None
+            
+            # 复制原有权重
+            new_weight[:old_out_features] = target_module.weight.data
+            if new_bias is not None:
+                new_bias[:old_out_features] = target_module.bias.data
+                
+            # 初始化新增的神经元
+            with torch.no_grad():
+                # 使用小的随机值初始化新神经元
+                nn.init.normal_(new_weight[old_out_features:], mean=0, std=0.01)
+                if new_bias is not None:
+                    nn.init.zeros_(new_bias[old_out_features:])
+                    
+            # 更新模块
+            target_module.out_features = new_out_features
+            target_module.weight = nn.Parameter(new_weight)
+            if target_module.bias is not None:
+                target_module.bias = nn.Parameter(new_bias)
+                
+            parameters_added = expansion_size * (target_module.in_features + 1)
+            
+        elif isinstance(target_module, nn.Conv2d):
+            # 扩展卷积层
+            old_out_channels = target_module.out_channels
+            new_out_channels = int(old_out_channels * 1.15)  # 增加15%
+            expansion_size = new_out_channels - old_out_channels
+            
+            # 创建新的卷积层
+            new_conv = nn.Conv2d(
+                target_module.in_channels,
+                new_out_channels,
+                target_module.kernel_size,
+                target_module.stride,
+                target_module.padding,
+                target_module.dilation,
+                target_module.groups,
+                target_module.bias is not None
             )
             
-            self.classifier = nn.Sequential(
-                nn.Flatten(),
-                nn.Linear(128 * 16, 256),
-                nn.ReLU(inplace=True),
-                nn.Dropout(0.5),
-                nn.Linear(256, 128),
-                nn.ReLU(inplace=True),
-                nn.Linear(128, num_classes)
-            )
+            # 复制原有权重
+            with torch.no_grad():
+                new_conv.weight.data[:old_out_channels] = target_module.weight.data
+                if target_module.bias is not None:
+                    new_conv.bias.data[:old_out_channels] = target_module.bias.data
+                    
+                # 初始化新增的通道
+                nn.init.kaiming_normal_(new_conv.weight.data[old_out_channels:])
+                if new_conv.bias is not None:
+                    nn.init.zeros_(new_conv.bias.data[old_out_channels:])
+                    
+            # 替换模块
+            parent_name = '.'.join(layer_name.split('.')[:-1])
+            child_name = layer_name.split('.')[-1]
+            
+            if parent_name:
+                parent_module = new_model
+                for part in parent_name.split('.'):
+                    parent_module = getattr(parent_module, part)
+                setattr(parent_module, child_name, new_conv)
+            else:
+                setattr(new_model, child_name, new_conv)
+                
+            parameters_added = expansion_size * target_module.in_channels * \
+                             target_module.kernel_size[0] * target_module.kernel_size[1]
+            
+        self.division_history.append({
+            'layer': layer_name,
+            'type': 'width_expansion',
+            'parameters_added': parameters_added
+        })
         
-        def forward(self, x):
-            x = self.features(x)
-            x = self.classifier(x)
-            return x
+        logger.info(f"执行宽度扩展: {layer_name}, 新增参数: {parameters_added}")
+        return new_model, parameters_added
     
-    # 创建虚拟数据集
-    from torch.utils.data import TensorDataset
+    def _expand_network_depth(self, model: nn.Module, layer_name: str) -> Tuple[nn.Module, int]:
+        """扩展网络深度（添加新层）"""
+        # 深度扩展的实现较为复杂，这里提供基础框架
+        logger.info(f"深度扩展功能待实现: {layer_name}")
+        return model, 0
     
-    train_data = torch.randn(500, 3, 32, 32)
-    train_labels = torch.randint(0, 10, (500,))
-    val_data = torch.randn(100, 3, 32, 32)
-    val_labels = torch.randint(0, 10, (100,))
-    
-    train_dataset = TensorDataset(train_data, train_labels)
-    val_dataset = TensorDataset(val_data, val_labels)
-    
-    train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
-    val_loader = DataLoader(val_dataset, batch_size=32, shuffle=False)
-    
-    # 创建模型
-    model = TestEvolvableCNN()
-    
-    # 使用DNM训练
-    result = train_with_dnm(
-        model=model,
-        train_loader=train_loader,
-        val_loader=val_loader,
-        epochs=30
-    )
-    
-    print(f"Training completed: {result['training_summary']}")
-    print(f"Morphogenesis events: {len(result['morphogenesis_events'])}")
-    
-    return result
+    def _create_branch(self, model: nn.Module, layer_name: str) -> Tuple[nn.Module, int]:
+        """创建分支结构"""
+        # 分支创建的实现较为复杂，这里提供基础框架
+        logger.info(f"分支创建功能待实现: {layer_name}")
+        return model, 0
 
-
-if __name__ == "__main__":
-    test_dnm_framework()
+class DNMFramework:
+    """Dynamic Neural Morphogenesis Framework - 主框架"""
+    
+    def __init__(self, model: nn.Module, config: Optional[Dict[str, Any]] = None):
+        self.model = model
+        self.config = config or {}
+        
+        # 初始化触发器
+        self.triggers = [
+            InformationTheoryTrigger(),
+            BiologicalPrinciplesTrigger(), 
+            DynamicalSystemsTrigger(),
+            CognitiveScienceTrigger(),
+            NetworkScienceTrigger()
+        ]
+        
+        # 执行器
+        self.executor = NeuronDivisionExecutor()
+        
+        # 层级分析器（新增）
+        try:
+            from .dnm_layer_analyzer import LayerPerformanceAnalyzer, SmartLayerSelector
+            self.layer_analyzer = LayerPerformanceAnalyzer(model)
+            self.layer_selector = SmartLayerSelector(self.layer_analyzer)
+            self.smart_analysis_enabled = True
+        except ImportError:
+            self.smart_analysis_enabled = False
+            logger.warning("层级分析器不可用，将使用简单的分裂策略")
+        
+        # 状态追踪
+        self.morphogenesis_events = []
+        self.performance_history = deque(maxlen=100)
+        self.activation_cache = {}
+        self.gradient_cache = {}
+        self.target_cache = None
+        
+        # 配置参数
+        self.morphogenesis_interval = self.config.get('morphogenesis_interval', 4)
+        self.max_morphogenesis_per_epoch = self.config.get('max_morphogenesis_per_epoch', 2)
+        self.performance_improvement_threshold = self.config.get('performance_improvement_threshold', 0.02)
+        
+    def should_trigger_morphogenesis(self, epoch: int, train_metrics: Dict[str, float], 
+                                   val_metrics: Dict[str, float]) -> Tuple[bool, List[str]]:
+        """判断是否应该触发形态发生"""
+        
+        # 检查触发间隔
+        if epoch % self.morphogenesis_interval != 0:
+            return False, []
+            
+        # 准备上下文信息
+        context = {
+            'epoch': epoch,
+            'train_accuracy': train_metrics.get('accuracy', 0.0),
+            'val_accuracy': val_metrics.get('accuracy', 0.0),
+            'current_loss': train_metrics.get('loss', float('inf')),
+            'current_performance': val_metrics.get('accuracy', 0.0),
+            'learning_rate': train_metrics.get('learning_rate', 1e-3),
+            'model': self.model,
+            'activations': self.activation_cache,
+            'gradients': self.gradient_cache
+        }
+        
+        # 检查所有触发器
+        trigger_results = []
+        triggered_reasons = []
+        
+        for trigger in self.triggers:
+            should_trigger, reason = trigger.should_trigger(context)
+            if should_trigger:
+                trigger_results.append((trigger, reason))
+                triggered_reasons.append(f"{trigger.__class__.__name__}: {reason}")
+                
+        # 根据优先级排序
+        trigger_results.sort(key=lambda x: x[0].get_priority(), reverse=True)
+        
+        # 至少有一个高优先级触发器激活
+        if trigger_results and trigger_results[0][0].get_priority() >= 0.8:
+            return True, triggered_reasons
+            
+        # 或者有多个中等优先级触发器激活
+        if len(trigger_results) >= 2 and all(t[0].get_priority() >= 0.7 for t in trigger_results[:2]):
+            return True, triggered_reasons
+            
+        return False, []
+    
+    def execute_morphogenesis(self, epoch: int) -> Dict[str, Any]:
+        """执行形态发生"""
+        logger.info(f"🔄 Triggering morphogenesis analysis...")
+        
+        results = {
+            'neuron_divisions': 0,
+            'connection_growths': 0,
+            'optimizations': 0,
+            'parameters_added': 0,
+            'events': []
+        }
+        
+        # 分析最佳分裂位置
+        best_layers = self._identify_optimal_division_layers()
+        
+        divisions_executed = 0
+        for layer_name, score in best_layers[:self.max_morphogenesis_per_epoch]:
+            # 执行神经元分裂
+            new_model, params_added = self.executor.execute_division(
+                self.model, layer_name, 'width_expansion'
+            )
+            
+            if params_added > 0:
+                # 确保新模型在正确的设备上
+                device = next(self.model.parameters()).device
+                self.model = new_model.to(device)
+                
+                # 验证所有参数都在正确的设备上
+                for name, param in self.model.named_parameters():
+                    if param.device != device:
+                        logger.warning(f"参数 {name} 在设备 {param.device}，期望在 {device}")
+                        param.data = param.data.to(device)
+                
+                divisions_executed += 1
+                results['parameters_added'] += params_added
+                
+                # 记录事件
+                event = MorphogenesisEvent(
+                    epoch=epoch,
+                    event_type='neuron_division',
+                    location=layer_name,
+                    trigger_reason=f"优化分数: {score:.4f}",
+                    performance_before=self.performance_history[-1] if self.performance_history else 0.0,
+                    parameters_added=params_added
+                )
+                
+                self.morphogenesis_events.append(event)
+                results['events'].append(event)
+                
+        results['neuron_divisions'] = divisions_executed
+        
+        logger.info(f"DNM Neuron Division completed: {divisions_executed} splits executed")
+        
+        return results
+    
+    def _identify_optimal_division_layers(self) -> List[Tuple[str, float]]:
+        """识别最佳分裂层"""
+        
+        # 如果启用了智能分析，使用层级分析器
+        if self.smart_analysis_enabled and self.target_cache is not None:
+            try:
+                current_accuracy = self.performance_history[-1] if self.performance_history else 0.0
+                
+                # 执行全层分析
+                layer_analysis = self.layer_analyzer.analyze_all_layers(
+                    self.activation_cache,
+                    self.gradient_cache, 
+                    self.target_cache,
+                    current_accuracy
+                )
+                
+                # 智能选择最优层
+                optimal_selections = self.layer_selector.select_optimal_division_layers(
+                    layer_analysis, 
+                    max_selections=self.max_morphogenesis_per_epoch
+                )
+                
+                # 转换为原有格式并添加详细信息
+                result = []
+                for layer_name, score, issue in optimal_selections:
+                    logger.info(f"🎯 推荐分裂层: {layer_name} (分数: {score:.3f}, 问题: {issue})")
+                    result.append((layer_name, score))
+                
+                if result:
+                    return result
+                    
+            except Exception as e:
+                logger.warning(f"智能层分析失败，使用简单策略: {e}")
+        
+        # 备用：简单的分数计算
+        layer_scores = []
+        for name, module in self.model.named_modules():
+            if isinstance(module, (nn.Linear, nn.Conv2d)):
+                score = self._compute_division_score(name, module)
+                layer_scores.append((name, score))
+                
+        # 按分数排序
+        layer_scores.sort(key=lambda x: x[1], reverse=True)
+        return layer_scores
+    
+    def _compute_division_score(self, layer_name: str, module: nn.Module) -> float:
+        """计算层的分裂分数"""
+        score = 0.0
+        
+        # 基于权重分析
+        if hasattr(module, 'weight') and module.weight is not None:
+            weight = module.weight.data
+            
+            # 权重方差（高方差表明神经元分化程度高）
+            weight_var = torch.var(weight).item()
+            score += weight_var * 0.3
+            
+            # 权重范数（适中的范数最佳）
+            weight_norm = torch.norm(weight).item()
+            normalized_norm = weight_norm / weight.numel()
+            score += (1.0 - abs(normalized_norm - 0.1)) * 0.2
+            
+        # 基于激活值分析
+        if layer_name in self.activation_cache:
+            activation = self.activation_cache[layer_name]
+            
+            # 激活值多样性
+            act_std = torch.std(activation).item()
+            score += act_std * 0.3
+            
+            # 激活值饱和度
+            saturation = torch.mean((activation > 0.9).float()).item()
+            score += (1.0 - saturation) * 0.2
+            
+        return score
+    
+    def update_caches(self, activations: Dict[str, torch.Tensor], 
+                      gradients: Dict[str, torch.Tensor],
+                      targets: Optional[torch.Tensor] = None):
+        """更新激活值和梯度缓存"""
+        self.activation_cache = {k: v.detach().clone() for k, v in activations.items()}
+        self.gradient_cache = {k: v.detach().clone() if v is not None else None 
+                              for k, v in gradients.items()}
+        if targets is not None:
+            self.target_cache = targets.detach().clone()
+    
+    def record_performance(self, performance: float):
+        """记录性能"""
+        self.performance_history.append(performance)
+    
+    def get_morphogenesis_summary(self) -> Dict[str, Any]:
+        """获取形态发生摘要"""
+        if not self.morphogenesis_events:
+            return {
+                'total_events': 0,
+                'total_neuron_divisions': 0,
+                'total_parameters_added': 0,
+                'performance_improvement': 0.0
+            }
+            
+        total_events = len(self.morphogenesis_events)
+        neuron_divisions = sum(1 for e in self.morphogenesis_events 
+                              if e.event_type == 'neuron_division')
+        total_params = sum(e.parameters_added for e in self.morphogenesis_events)
+        
+        # 计算性能改善
+        if len(self.performance_history) >= 2:
+            initial_perf = self.performance_history[0]
+            final_perf = self.performance_history[-1]
+            performance_improvement = final_perf - initial_perf
+        else:
+            performance_improvement = 0.0
+            
+        return {
+            'total_events': total_events,
+            'total_neuron_divisions': neuron_divisions,
+            'total_parameters_added': total_params,
+            'performance_improvement': performance_improvement,
+            'events_detail': [
+                {
+                    'epoch': e.epoch,
+                    'type': e.event_type,
+                    'location': e.location,
+                    'params_added': e.parameters_added,
+                    'reason': e.trigger_reason
+                }
+                for e in self.morphogenesis_events
+            ]
+        }
