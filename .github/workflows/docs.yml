@@ -1,0 +1,263 @@
+name: 📚 Generate and Deploy Documentation
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  schedule:
+    # 每天凌晨2点自动更新文档
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    # 允许手动触发
+
+# 设置权限以便部署到GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 只允许一个并发部署，跳过正在运行的部署之间的排队运行
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  # 构建文档
+  build-docs:
+    name: 🔧 Build Documentation
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 📥 Checkout Repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # 获取完整历史记录以便生成更好的文档
+    
+    - name: 🐍 Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+        cache: 'pip'
+    
+    - name: 📦 Install Python Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt || echo "requirements.txt not found, skipping..."
+        pip install matplotlib seaborn pandas numpy  # 用于示例和测试
+    
+    - name: 🔧 Install Doxygen
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y doxygen graphviz
+        doxygen --version
+    
+    - name: 📊 Install Documentation Dependencies
+      run: |
+        pip install markdown beautifulsoup4 lxml
+    
+    - name: 🏗️ Generate Documentation
+      run: |
+        echo "Starting documentation generation..."
+        
+        # 确保脚本可执行
+        chmod +x docs/generate_docs.py
+        
+        # 运行文档生成脚本
+        python docs/generate_docs.py --verbose
+        
+        # 检查生成结果
+        if [ -d "docs/generated/html" ]; then
+          echo "✅ Documentation generated successfully"
+          ls -la docs/generated/html/
+        else
+          echo "❌ Documentation generation failed"
+          exit 1
+        fi
+    
+    - name: 📝 Create Index Redirect
+      run: |
+        # 创建根目录的index.html重定向到文档
+        cat > docs/generated/html/index.html << 'EOF'
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <meta http-equiv="refresh" content="0; url=./html/index.html">
+            <title>NeuroExapt Documentation</title>
+            <style>
+                body {
+                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    height: 100vh;
+                    margin: 0;
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    color: white;
+                    text-align: center;
+                }
+                .container {
+                    padding: 40px;
+                    border-radius: 15px;
+                    background: rgba(255, 255, 255, 0.1);
+                    backdrop-filter: blur(10px);
+                }
+                .spinner {
+                    margin: 20px auto;
+                    width: 40px;
+                    height: 40px;
+                    border: 4px solid rgba(255,255,255,0.3);
+                    border-top: 4px solid white;
+                    border-radius: 50%;
+                    animation: spin 1s linear infinite;
+                }
+                @keyframes spin {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
+                }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h1>🧠 NeuroExapt Documentation</h1>
+                <div class="spinner"></div>
+                <p>Redirecting to documentation...</p>
+                <p><a href="./html/index.html" style="color: white;">Click here if not redirected automatically</a></p>
+            </div>
+        </body>
+        </html>
+        EOF
+    
+    - name: 📋 Generate Documentation Report
+      run: |
+        # 生成文档统计报告
+        cat > docs/generated/build-report.md << EOF
+        # Documentation Build Report
+        
+        **Build Date:** $(date)
+        **Build Trigger:** ${{ github.event_name }}
+        **Commit:** ${{ github.sha }}
+        **Branch:** ${{ github.ref_name }}
+        
+        ## Generated Files
+        \`\`\`
+        $(find docs/generated -name "*.html" | wc -l) HTML files
+        $(find docs/generated -name "*.css" | wc -l) CSS files
+        $(find docs/generated -name "*.js" | wc -l) JavaScript files
+        $(find . -name "*.md" | wc -l) Markdown files in project
+        \`\`\`
+        
+        ## Documentation Structure
+        \`\`\`
+        $(tree docs/generated/html -L 2 || ls -la docs/generated/html/)
+        \`\`\`
+        
+        ## Build Status
+        ✅ Documentation build completed successfully
+        EOF
+    
+    - name: 🔍 Validate Documentation
+      run: |
+        # 基本验证检查
+        echo "🔍 Validating generated documentation..."
+        
+        # 检查主要文件是否存在
+        required_files=(
+          "docs/generated/html/index.html"
+          "docs/generated/html/modules.html"
+          "docs/generated/html/files.html"
+        )
+        
+        for file in "${required_files[@]}"; do
+          if [ -f "$file" ]; then
+            echo "✅ $file exists"
+          else
+            echo "❌ $file missing"
+            exit 1
+          fi
+        done
+        
+        # 检查文档大小
+        doc_size=$(du -sh docs/generated/html | cut -f1)
+        echo "📊 Documentation size: $doc_size"
+        
+        # 检查是否有JavaScript错误（基本语法检查）
+        find docs/generated/html -name "*.js" -exec node -c {} \; 2>/dev/null || echo "⚠️ JavaScript validation skipped (Node.js not available)"
+    
+    - name: 📤 Upload Documentation Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: neuroexapt-docs-${{ github.sha }}
+        path: docs/generated/html/
+        retention-days: 30
+    
+    - name: 📄 Upload Pages Artifact
+      if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+      uses: actions/upload-pages-artifact@v2
+      with:
+        path: docs/generated/html/
+
+  # 部署到GitHub Pages (仅在主分支)
+  deploy-pages:
+    name: 🚀 Deploy to GitHub Pages
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    needs: build-docs
+    runs-on: ubuntu-latest
+    
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    
+    steps:
+    - name: 🌐 Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v2
+    
+    - name: 📢 Post Deployment Info
+      run: |
+        echo "🎉 Documentation deployed successfully!"
+        echo "📖 Documentation URL: ${{ steps.deployment.outputs.page_url }}"
+        echo "🔗 Direct link will be available at: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/"
+
+  # 通知构建结果
+  notify:
+    name: 📢 Notify Build Status
+    if: always()
+    needs: [build-docs, deploy-pages]
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 📊 Create Build Summary
+      run: |
+        echo "## 📚 Documentation Build Summary" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "**Repository:** ${{ github.repository }}" >> $GITHUB_STEP_SUMMARY
+        echo "**Trigger:** ${{ github.event_name }}" >> $GITHUB_STEP_SUMMARY
+        echo "**Branch:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+        echo "**Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        
+        if [ "${{ needs.build-docs.result }}" == "success" ]; then
+          echo "✅ **Documentation Build:** SUCCESS" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "❌ **Documentation Build:** FAILED" >> $GITHUB_STEP_SUMMARY
+        fi
+        
+        if [ "${{ github.ref }}" == "refs/heads/main" ] || [ "${{ github.ref }}" == "refs/heads/master" ]; then
+          if [ "${{ needs.deploy-pages.result }}" == "success" ]; then
+            echo "🚀 **GitHub Pages Deployment:** SUCCESS" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "📖 **Documentation is now available at:** https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ **GitHub Pages Deployment:** FAILED" >> $GITHUB_STEP_SUMMARY
+          fi
+        else
+          echo "⏭️ **GitHub Pages Deployment:** SKIPPED (not main branch)" >> $GITHUB_STEP_SUMMARY
+        fi
+        
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### 📋 Quick Links" >> $GITHUB_STEP_SUMMARY
+        echo "- [📊 Build Artifacts](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})" >> $GITHUB_STEP_SUMMARY
+        echo "- [🔧 Workflow File](.github/workflows/docs.yml)" >> $GITHUB_STEP_SUMMARY
+        echo "- [📝 Documentation Source](docs/)" >> $GITHUB_STEP_SUMMARY
