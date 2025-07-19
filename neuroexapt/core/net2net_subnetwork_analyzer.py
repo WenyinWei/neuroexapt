@@ -809,18 +809,26 @@ class Net2NetSubnetworkAnalyzer:
                 layer_analyses, current_accuracy, model
             )
             
-            # 5. 生成全局变异策略（结合贝叶斯预测）
-            logger.info("🎯 生成全局变异策略...")
-            global_strategy = self._generate_global_mutation_strategy(
-                layer_analyses, leak_points, flow_analysis, current_accuracy, bayesian_predictions
+            # 5. 综合变异策略预测（Serial/Parallel + 层类型组合）
+            logger.info("🎭 预测综合变异策略...")
+            comprehensive_strategies = self.predict_comprehensive_strategies_for_top_candidates(
+                layer_analyses, current_accuracy, model, top_n=3
             )
             
-            # 6. 组装完整分析结果
+            # 6. 生成全局变异策略（结合贝叶斯预测和综合策略）
+            logger.info("🎯 生成全局变异策略...")
+            global_strategy = self._generate_global_mutation_strategy(
+                layer_analyses, leak_points, flow_analysis, current_accuracy, 
+                bayesian_predictions, comprehensive_strategies
+            )
+            
+            # 7. 组装完整分析结果
             complete_analysis = {
                 'global_flow_analysis': flow_analysis,
                 'detected_leak_points': leak_points,
                 'layer_analyses': layer_analyses,
                 'bayesian_benefit_predictions': bayesian_predictions,
+                'comprehensive_mutation_strategies': comprehensive_strategies,
                 'global_mutation_strategy': global_strategy,
                 'analysis_metadata': {
                     'total_layers_analyzed': len(layer_analyses),
@@ -831,6 +839,7 @@ class Net2NetSubnetworkAnalyzer:
                                                        if bp.get('bayesian_prediction', {}).get('uncertainty_metrics', {}).get('prediction_confidence', 0) > 0.7]),
                     'strong_recommendations': len([bp for bp in bayesian_predictions.values() 
                                                   if bp.get('bayesian_prediction', {}).get('recommendation_strength', '') == 'strong_recommend']),
+                    'comprehensive_strategies_count': len(comprehensive_strategies),
                     'analysis_timestamp': time.time()
                 }
             }
@@ -1009,7 +1018,8 @@ class Net2NetSubnetworkAnalyzer:
                                          leak_points: List[Dict[str, Any]],
                                          flow_analysis: Dict[str, Any],
                                          current_accuracy: float,
-                                         bayesian_predictions: Dict[str, Dict[str, Any]] = None) -> Dict[str, Any]:
+                                         bayesian_predictions: Dict[str, Dict[str, Any]] = None,
+                                         comprehensive_strategies: Dict[str, Dict[str, Any]] = None) -> Dict[str, Any]:
         """生成全局变异策略"""
         
         # 1. 优先处理严重漏点
@@ -1068,12 +1078,32 @@ class Net2NetSubnetworkAnalyzer:
             priority_targets, current_accuracy, flow_analysis
         )
         
+        # 集成综合策略信息
+        enhanced_targets = []
+        for target in priority_targets:
+            layer_name = target['layer_name']
+            enhanced_target = target.copy()
+            
+            # 添加综合策略信息
+            if comprehensive_strategies and layer_name in comprehensive_strategies:
+                comp_strategy = comprehensive_strategies[layer_name]['comprehensive_strategy']
+                enhanced_target.update({
+                    'detailed_mutation_mode': comp_strategy.get('mutation_mode', 'unknown'),
+                    'layer_combination_strategy': comp_strategy.get('layer_combination', {}),
+                    'implementation_timeline': comp_strategy.get('implementation_details', {}).get('expected_timeline', 'unknown'),
+                    'comprehensive_confidence': comp_strategy.get('confidence', 0.5),
+                    'total_expected_gain': comp_strategy.get('expected_total_gain', 0.0)
+                })
+            
+            enhanced_targets.append(enhanced_target)
+        
         return {
-            'priority_targets': priority_targets,
+            'priority_targets': enhanced_targets,
             'execution_plan': execution_plan,
-            'global_improvement_estimate': sum(t['expected_improvement'] for t in priority_targets),
+            'comprehensive_strategies_summary': self._summarize_comprehensive_strategies(comprehensive_strategies),
+            'global_improvement_estimate': sum(t.get('total_expected_gain', t.get('expected_improvement', 0)) for t in enhanced_targets),
             'recommended_sequence': [t['layer_name'] for t in 
-                                   sorted(priority_targets, key=lambda x: x['expected_improvement'], reverse=True)]
+                                   sorted(enhanced_targets, key=lambda x: x.get('total_expected_gain', x.get('expected_improvement', 0)), reverse=True)]
         }
     
     def _calculate_information_density(self, activation: torch.Tensor, gradient: torch.Tensor) -> float:
@@ -1307,6 +1337,91 @@ class Net2NetSubnetworkAnalyzer:
         
         return bayesian_predictions
     
+    def predict_comprehensive_strategies_for_top_candidates(self,
+                                                          layer_analyses: Dict[str, Any],
+                                                          current_accuracy: float,
+                                                          model: nn.Module,
+                                                          top_n: int = 3) -> Dict[str, Dict[str, Any]]:
+        """
+        为前N个候选层预测综合变异策略
+        包括变异模式选择和层类型组合预测
+        """
+        logger.enter_section("综合策略预测")
+        
+        try:
+            comprehensive_strategies = {}
+            
+            # 选择top N候选层
+            candidates = []
+            for layer_name, analysis in layer_analyses.items():
+                improvement_potential = analysis.get('mutation_prediction', {}).get('improvement_potential', 0)
+                leak_severity = analysis.get('leak_assessment', {}).get('leak_severity', 0)
+                combined_score = improvement_potential + leak_severity * 0.5
+                candidates.append((layer_name, combined_score, analysis))
+            
+            # 按评分排序并选择前N个
+            candidates.sort(key=lambda x: x[1], reverse=True)
+            top_candidates = candidates[:top_n]
+            
+            for layer_name, score, layer_analysis in top_candidates:
+                logger.info(f"🎯 预测 {layer_name} 的综合变异策略...")
+                
+                # 预测综合策略
+                comprehensive_strategy = self.bayesian_predictor.predict_comprehensive_mutation_strategy(
+                    layer_analysis=layer_analysis,
+                    current_accuracy=current_accuracy,
+                    model=model,
+                    target_layer_name=layer_name
+                )
+                
+                comprehensive_strategies[layer_name] = {
+                    'layer_score': score,
+                    'comprehensive_strategy': comprehensive_strategy,
+                    'detailed_breakdown': {
+                        'mode_analysis': self._extract_mode_analysis(comprehensive_strategy),
+                        'combination_analysis': self._extract_combination_analysis(comprehensive_strategy),
+                        'implementation_plan': comprehensive_strategy.get('implementation_details', {})
+                    }
+                }
+                
+                # 详细日志输出
+                mode = comprehensive_strategy['mutation_mode']
+                combo = comprehensive_strategy['layer_combination']['combination']
+                total_gain = comprehensive_strategy['expected_total_gain']
+                confidence = comprehensive_strategy['confidence']
+                
+                logger.info(f"  📋 {layer_name}: {mode} + {combo}")
+                logger.info(f"    💡 总期望收益: {total_gain:.4f}")
+                logger.info(f"    🎯 置信度: {confidence:.3f}")
+            
+            logger.success(f"完成{len(comprehensive_strategies)}个层的综合策略预测")
+            logger.exit_section("综合策略预测")
+            
+            return comprehensive_strategies
+            
+        except Exception as e:
+            logger.error(f"综合策略预测失败: {e}")
+            logger.exit_section("综合策略预测")
+            return {}
+
+    def _extract_mode_analysis(self, comprehensive_strategy: Dict[str, Any]) -> Dict[str, Any]:
+        """提取变异模式分析"""
+        return {
+            'recommended_mode': comprehensive_strategy.get('mutation_mode', 'unknown'),
+            'mode_reasoning': "基于瓶颈类型和准确率阶段的最优选择",
+            'alternatives': ['serial_division', 'parallel_division', 'hybrid_division']
+        }
+
+    def _extract_combination_analysis(self, comprehensive_strategy: Dict[str, Any]) -> Dict[str, Any]:
+        """提取层组合分析"""
+        layer_combo = comprehensive_strategy.get('layer_combination', {})
+        return {
+            'recommended_combination': layer_combo.get('combination', 'unknown'),
+            'combination_type': layer_combo.get('type', 'unknown'),
+            'synergy_score': layer_combo.get('synergy', 0.5),
+            'implementation_cost': layer_combo.get('implementation_cost', 1.0)
+        }
+    
     def _calculate_model_complexity(self, model: nn.Module) -> Dict[str, float]:
         """计算模型复杂度指标"""
         
@@ -1412,6 +1527,55 @@ class Net2NetSubnetworkAnalyzer:
             phases.append([t['layer_name'] for t in high[:max_concurrent]])
         
         return phases
+    
+    def _summarize_comprehensive_strategies(self, comprehensive_strategies: Dict[str, Dict[str, Any]]) -> Dict[str, Any]:
+        """总结综合策略"""
+        if not comprehensive_strategies:
+            return {}
+        
+        # 统计变异模式偏好
+        mode_counts = {}
+        combination_types = {}
+        total_expected_gain = 0.0
+        avg_confidence = 0.0
+        
+        for layer_name, strategy_data in comprehensive_strategies.items():
+            comp_strategy = strategy_data['comprehensive_strategy']
+            
+            # 统计变异模式
+            mode = comp_strategy.get('mutation_mode', 'unknown')
+            mode_counts[mode] = mode_counts.get(mode, 0) + 1
+            
+            # 统计层组合类型
+            combo_type = comp_strategy.get('layer_combination', {}).get('type', 'unknown')
+            combination_types[combo_type] = combination_types.get(combo_type, 0) + 1
+            
+            # 累加指标
+            total_expected_gain += comp_strategy.get('expected_total_gain', 0.0)
+            avg_confidence += comp_strategy.get('confidence', 0.0)
+        
+        n_strategies = len(comprehensive_strategies)
+        avg_confidence /= max(n_strategies, 1)
+        
+        # 找出最受推荐的模式和组合
+        preferred_mode = max(mode_counts.items(), key=lambda x: x[1])[0] if mode_counts else 'serial_division'
+        preferred_combination = max(combination_types.items(), key=lambda x: x[1])[0] if combination_types else 'heterogeneous'
+        
+        return {
+            'total_strategies_analyzed': n_strategies,
+            'preferred_mutation_mode': preferred_mode,
+            'preferred_combination_type': preferred_combination,
+            'mode_distribution': mode_counts,
+            'combination_distribution': combination_types,
+            'total_expected_improvement': total_expected_gain,
+            'average_confidence': avg_confidence,
+            'strategy_recommendations': [
+                f"主要推荐: {preferred_mode} 变异模式",
+                f"首选组合: {preferred_combination} 层组合",
+                f"总期望收益: {total_expected_gain:.4f}",
+                f"平均置信度: {avg_confidence:.3f}"
+            ]
+        }
     
     def _is_analyzable_layer(self, model: nn.Module, layer_name: str) -> bool:
         """判断层是否可分析"""
@@ -1598,22 +1762,114 @@ class BayesianMutationBenefitPredictor:
                 'aggressive_widening': {'alpha': 2, 'beta': 1}  # 高风险高收益
             },
             
+            # Serial vs Parallel mutation 先验知识
+            'mutation_mode_priors': {
+                'serial_division': {
+                    'success_rate': {'alpha': 5, 'beta': 3},  # 相对稳定
+                    'best_for': ['gradient_learning_bottleneck', 'representational_bottleneck'],
+                    'accuracy_preference': {'low': 0.7, 'medium': 0.8, 'high': 0.6}
+                },
+                'parallel_division': {
+                    'success_rate': {'alpha': 4, 'beta': 4},  # 中等风险
+                    'best_for': ['information_compression_bottleneck'],
+                    'accuracy_preference': {'low': 0.6, 'medium': 0.7, 'high': 0.8}
+                },
+                'hybrid_division': {
+                    'success_rate': {'alpha': 6, 'beta': 2},  # 激进但高收益
+                    'best_for': ['general_bottleneck'],
+                    'accuracy_preference': {'low': 0.8, 'medium': 0.9, 'high': 0.7}
+                }
+            },
+            
+            # 层类型组合策略先验 (同种 vs 异种)
+            'layer_combination_priors': {
+                'homogeneous': {  # 同种层
+                    'conv2d_conv2d': {'effectiveness': 0.7, 'stability': 0.9},
+                    'linear_linear': {'effectiveness': 0.6, 'stability': 0.8},
+                    'batch_norm_batch_norm': {'effectiveness': 0.5, 'stability': 0.9}
+                },
+                'heterogeneous': {  # 异种层组合
+                    'conv2d_depthwise_conv': {'effectiveness': 0.8, 'stability': 0.7},
+                    'conv2d_batch_norm': {'effectiveness': 0.9, 'stability': 0.8},
+                    'conv2d_dropout': {'effectiveness': 0.6, 'stability': 0.7},
+                    'conv2d_attention': {'effectiveness': 0.85, 'stability': 0.6},
+                    'linear_dropout': {'effectiveness': 0.7, 'stability': 0.8},
+                    'linear_batch_norm': {'effectiveness': 0.8, 'stability': 0.9},
+                    'conv2d_pool': {'effectiveness': 0.5, 'stability': 0.9},
+                    'conv2d_residual_block': {'effectiveness': 0.9, 'stability': 0.8}
+                }
+            },
+            
+            # 不同网络层操作的适用性先验
+            'layer_operation_priors': {
+                'conv2d': {
+                    'feature_extraction_boost': 0.9,
+                    'spatial_processing': 0.95,
+                    'parameter_efficiency': 0.7,
+                    'computation_cost': 0.6
+                },
+                'depthwise_conv': {
+                    'feature_extraction_boost': 0.7,
+                    'spatial_processing': 0.8,
+                    'parameter_efficiency': 0.9,
+                    'computation_cost': 0.8
+                },
+                'batch_norm': {
+                    'feature_extraction_boost': 0.4,
+                    'spatial_processing': 0.3,
+                    'parameter_efficiency': 0.9,
+                    'computation_cost': 0.9,
+                    'stability_boost': 0.9
+                },
+                'dropout': {
+                    'feature_extraction_boost': 0.2,
+                    'spatial_processing': 0.1,
+                    'parameter_efficiency': 1.0,
+                    'computation_cost': 0.95,
+                    'overfitting_prevention': 0.8
+                },
+                'attention': {
+                    'feature_extraction_boost': 0.85,
+                    'spatial_processing': 0.7,
+                    'parameter_efficiency': 0.5,
+                    'computation_cost': 0.3,
+                    'long_range_dependency': 0.95
+                },
+                'pool': {
+                    'feature_extraction_boost': 0.3,
+                    'spatial_processing': 0.6,
+                    'parameter_efficiency': 1.0,
+                    'computation_cost': 0.9,
+                    'dimensionality_reduction': 0.9
+                },
+                'residual_connection': {
+                    'feature_extraction_boost': 0.6,
+                    'spatial_processing': 0.5,
+                    'parameter_efficiency': 0.8,
+                    'computation_cost': 0.7,
+                    'gradient_flow': 0.95
+                }
+            },
+            
             # 不同瓶颈类型对变异的响应性先验
             'bottleneck_response_priors': {
                 'information_compression_bottleneck': {
                     'widening_response': 0.8,
                     'deepening_response': 0.3,
-                    'hybrid_response': 0.6
+                    'hybrid_response': 0.6,
+                    'preferred_operations': ['conv2d', 'attention', 'residual_connection']
                 },
                 'gradient_learning_bottleneck': {
                     'widening_response': 0.4,
                     'deepening_response': 0.7,
-                    'hybrid_response': 0.5
+                    'hybrid_response': 0.5,
+                    'preferred_operations': ['batch_norm', 'residual_connection', 'dropout']
                 },
                 'representational_bottleneck': {
                     'widening_response': 0.6,
                     'deepening_response': 0.5,
-                    'hybrid_response': 0.9
+                    'hybrid_response': 0.9,
+                    'preferred_operations': ['attention', 'conv2d', 'depthwise_conv']
                 }
             },
             
@@ -2104,3 +2360,618 @@ class BayesianMutationBenefitPredictor:
             self.mutation_history = self.mutation_history[-100:]
         
         logger.info(f"更新贝叶斯模型: {mutation_strategy}, 实际收益={actual_gain:.4f}")
+
+    def predict_optimal_mutation_mode(self, 
+                                    layer_analysis: Dict[str, Any],
+                                    current_accuracy: float,
+                                    model_complexity: Dict[str, float]) -> Dict[str, Any]:
+        """
+        预测最优变异模式 (Serial vs Parallel vs Hybrid Division)
+        
+        Args:
+            layer_analysis: 层分析结果
+            current_accuracy: 当前准确率
+            model_complexity: 模型复杂度
+            
+        Returns:
+            各种变异模式的收益预测和推荐
+        """
+        logger.enter_section("变异模式预测分析")
+        
+        try:
+            leak_assessment = layer_analysis.get('leak_assessment', {})
+            leak_type = leak_assessment.get('leak_type', 'general_bottleneck')
+            leak_severity = leak_assessment.get('leak_severity', 0.0)
+            
+            # 确定准确率阶段
+            accuracy_stage = self._get_accuracy_stage(current_accuracy)
+            
+            mode_predictions = {}
+            
+            # 预测每种变异模式的收益
+            for mode_name, mode_config in self.prior_knowledge['mutation_mode_priors'].items():
+                # 计算该模式对当前瓶颈类型的适配度
+                bottleneck_fit = 1.0 if leak_type in mode_config['best_for'] else 0.6
+                
+                # 计算该模式对当前准确率阶段的适配度
+                accuracy_fit = mode_config['accuracy_preference'][accuracy_stage]
+                
+                # 计算复杂度适配度
+                complexity_fit = self._calculate_complexity_fit(mode_name, model_complexity)
+                
+                # 贝叶斯后验概率
+                alpha = mode_config['success_rate']['alpha']
+                beta = mode_config['success_rate']['beta']
+                
+                # 观测证据调整
+                evidence_adjustment = leak_severity * bottleneck_fit * accuracy_fit
+                alpha_posterior = alpha + evidence_adjustment
+                beta_posterior = beta + (1.0 - evidence_adjustment)
+                
+                success_probability = alpha_posterior / (alpha_posterior + beta_posterior)
+                
+                # 期望收益计算
+                base_gain = self._calculate_base_mutation_gain(current_accuracy, leak_severity)
+                mode_multiplier = self._get_mode_multiplier(mode_name, leak_type, accuracy_stage)
+                expected_gain = base_gain * mode_multiplier * success_probability
+                
+                # 风险评估
+                risk_score = self._calculate_mode_risk(mode_name, model_complexity, current_accuracy)
+                
+                mode_predictions[mode_name] = {
+                    'expected_accuracy_gain': float(expected_gain),
+                    'success_probability': float(success_probability),
+                    'bottleneck_fit': float(bottleneck_fit),
+                    'accuracy_stage_fit': float(accuracy_fit),
+                    'complexity_fit': float(complexity_fit),
+                    'risk_score': float(risk_score),
+                    'recommendation_score': float(expected_gain * success_probability / (risk_score + 0.1)),
+                    'optimal_for': mode_config['best_for']
+                }
+            
+            # 选择最优模式
+            best_mode = max(mode_predictions.items(), 
+                          key=lambda x: x[1]['recommendation_score'])
+            
+            prediction_result = {
+                'recommended_mode': best_mode[0],
+                'mode_predictions': mode_predictions,
+                'confidence': best_mode[1]['success_probability'],
+                'expected_improvement': best_mode[1]['expected_accuracy_gain'],
+                'reasoning': self._generate_mode_reasoning(best_mode, leak_type, accuracy_stage)
+            }
+            
+            logger.success(f"最优变异模式: {best_mode[0]} (收益={best_mode[1]['expected_accuracy_gain']:.4f})")
+            logger.exit_section("变异模式预测分析")
+            
+            return prediction_result
+            
+        except Exception as e:
+            logger.error(f"变异模式预测失败: {e}")
+            logger.exit_section("变异模式预测分析")
+            return self._fallback_mode_prediction(current_accuracy)
+
+    def predict_optimal_layer_combinations(self, 
+                                         layer_analysis: Dict[str, Any],
+                                         target_layer_type: str,
+                                         mutation_mode: str,
+                                         current_accuracy: float) -> Dict[str, Any]:
+        """
+        预测最优层类型组合 (同种 vs 异种层)
+        
+        Args:
+            layer_analysis: 层分析结果
+            target_layer_type: 目标层类型 (conv2d, linear等)
+            mutation_mode: 变异模式 (serial_division, parallel_division等)
+            current_accuracy: 当前准确率
+            
+        Returns:
+            层类型组合的收益预测和推荐
+        """
+        logger.enter_section(f"层组合预测: {target_layer_type}")
+        
+        try:
+            leak_assessment = layer_analysis.get('leak_assessment', {})
+            leak_type = leak_assessment.get('leak_type', 'general_bottleneck')
+            
+            # 获取瓶颈类型的首选操作
+            preferred_ops = self.prior_knowledge['bottleneck_response_priors'].get(
+                leak_type, {}
+            ).get('preferred_operations', ['conv2d', 'batch_norm'])
+            
+            combination_predictions = {}
+            
+            # 1. 同种层组合预测
+            homo_key = f"{target_layer_type}_{target_layer_type}"
+            if homo_key in self.prior_knowledge['layer_combination_priors']['homogeneous']:
+                homo_config = self.prior_knowledge['layer_combination_priors']['homogeneous'][homo_key]
+                homo_prediction = self._predict_combination_benefit(
+                    homo_config, target_layer_type, target_layer_type, 
+                    leak_type, mutation_mode, current_accuracy, 'homogeneous'
+                )
+                combination_predictions['homogeneous'] = homo_prediction
+            
+            # 2. 异种层组合预测
+            hetero_predictions = {}
+            for operation in preferred_ops:
+                if operation != target_layer_type:  # 避免重复
+                    hetero_key = f"{target_layer_type}_{operation}"
+                    reverse_key = f"{operation}_{target_layer_type}"
+                    
+                    # 查找配置
+                    hetero_config = None
+                    final_key = None
+                    if hetero_key in self.prior_knowledge['layer_combination_priors']['heterogeneous']:
+                        hetero_config = self.prior_knowledge['layer_combination_priors']['heterogeneous'][hetero_key]
+                        final_key = hetero_key
+                    elif reverse_key in self.prior_knowledge['layer_combination_priors']['heterogeneous']:
+                        hetero_config = self.prior_knowledge['layer_combination_priors']['heterogeneous'][reverse_key]
+                        final_key = reverse_key
+                    
+                    if hetero_config:
+                        hetero_prediction = self._predict_combination_benefit(
+                            hetero_config, target_layer_type, operation,
+                            leak_type, mutation_mode, current_accuracy, 'heterogeneous'
+                        )
+                        hetero_predictions[final_key] = hetero_prediction
+            
+            combination_predictions['heterogeneous'] = hetero_predictions
+            
+            # 选择最优组合
+            best_combination = self._select_best_combination(combination_predictions)
+            
+            prediction_result = {
+                'recommended_combination': best_combination,
+                'combination_predictions': combination_predictions,
+                'target_layer_type': target_layer_type,
+                'mutation_mode': mutation_mode,
+                'detailed_analysis': self._generate_combination_analysis(
+                    best_combination, combination_predictions, leak_type
+                )
+            }
+            
+            logger.success(f"最优层组合: {best_combination['type']} - {best_combination['combination']}")
+            logger.exit_section(f"层组合预测: {target_layer_type}")
+            
+            return prediction_result
+            
+        except Exception as e:
+            logger.error(f"层组合预测失败: {e}")
+            logger.exit_section(f"层组合预测: {target_layer_type}")
+            return self._fallback_combination_prediction(target_layer_type)
+
+    def predict_comprehensive_mutation_strategy(self,
+                                               layer_analysis: Dict[str, Any],
+                                               current_accuracy: float,
+                                               model: nn.Module,
+                                               target_layer_name: str) -> Dict[str, Any]:
+        """
+        综合预测完整的变异策略
+        包括: 变异模式 + 层类型组合 + 具体参数
+        """
+        logger.enter_section(f"综合变异策略预测: {target_layer_name}")
+        
+        try:
+            model_complexity = self._calculate_model_complexity(model)
+            target_layer_type = self._get_layer_type(model, target_layer_name)
+            
+            # 1. 预测最优变异模式
+            mode_prediction = self.predict_optimal_mutation_mode(
+                layer_analysis, current_accuracy, model_complexity
+            )
+            
+            # 2. 预测最优层组合
+            combination_prediction = self.predict_optimal_layer_combinations(
+                layer_analysis, target_layer_type, 
+                mode_prediction['recommended_mode'], current_accuracy
+            )
+            
+            # 3. 预测具体参数配置
+            parameter_prediction = self._predict_optimal_parameters(
+                layer_analysis, mode_prediction['recommended_mode'],
+                combination_prediction['recommended_combination'], 
+                current_accuracy, model_complexity
+            )
+            
+            # 4. 综合评分和最终推荐
+            comprehensive_score = self._calculate_comprehensive_score(
+                mode_prediction, combination_prediction, parameter_prediction
+            )
+            
+            final_strategy = {
+                'mutation_mode': mode_prediction['recommended_mode'],
+                'layer_combination': combination_prediction['recommended_combination'],
+                'parameters': parameter_prediction,
+                'comprehensive_score': comprehensive_score,
+                'expected_total_gain': (
+                    mode_prediction['expected_improvement'] *
+                    combination_prediction['recommended_combination']['expected_gain']
+                ),
+                'confidence': min(
+                    mode_prediction['confidence'],
+                    combination_prediction['recommended_combination']['confidence']
+                ),
+                'implementation_details': self._generate_implementation_details(
+                    mode_prediction, combination_prediction, parameter_prediction
+                )
+            }
+            
+            logger.success(f"综合策略: {final_strategy['mutation_mode']} + "
+                         f"{final_strategy['layer_combination']['combination']} "
+                         f"(总收益={final_strategy['expected_total_gain']:.4f})")
+            logger.exit_section(f"综合变异策略预测: {target_layer_name}")
+            
+            return final_strategy
+            
+        except Exception as e:
+            logger.error(f"综合预测失败: {e}")
+            logger.exit_section(f"综合变异策略预测: {target_layer_name}")
+            return self._fallback_comprehensive_prediction(target_layer_name)
+
+    def _get_accuracy_stage(self, accuracy: float) -> str:
+        """确定准确率阶段"""
+        for stage, (low, high) in self.prior_knowledge['accuracy_stage_priors'].items():
+            if low <= accuracy < high:
+                return stage
+        return 'high'
+
+    def _calculate_complexity_fit(self, mode_name: str, model_complexity: Dict[str, float]) -> float:
+        """计算复杂度适配度"""
+        total_params = model_complexity.get('total_parameters', 0)
+        layer_depth = model_complexity.get('layer_depth', 0)
+        
+        # 不同模式对复杂度的适配性
+        if mode_name == 'serial_division':
+            # Serial适合深度增加
+            return min(1.0, (50 - layer_depth) / 50.0)  # 层数越少越适合
+        elif mode_name == 'parallel_division':
+            # Parallel适合宽度增加，但需要足够的参数预算
+            return min(1.0, total_params / 1e6)  # 参数越多越适合
+        else:  # hybrid_division
+            # Hybrid适合中等复杂度
+            param_fit = 1.0 - abs(total_params / 1e6 - 0.5) * 2  # 0.5M参数最适合
+            depth_fit = 1.0 - abs(layer_depth - 25) / 25.0  # 25层最适合
+            return (param_fit + depth_fit) / 2.0
+
+    def _calculate_base_mutation_gain(self, current_accuracy: float, leak_severity: float) -> float:
+        """计算基础变异收益"""
+        # 基础收益与准确率距离上限和漏点严重程度成正比
+        headroom = (0.95 - current_accuracy) / 0.95
+        base_gain = headroom * 0.1 * (1 + leak_severity)
+        return max(0.005, base_gain)  # 最小收益保障
+
+    def _get_mode_multiplier(self, mode_name: str, leak_type: str, accuracy_stage: str) -> float:
+        """获取模式收益倍数"""
+        mode_config = self.prior_knowledge['mutation_mode_priors'].get(mode_name, {})
+        
+        # 基础倍数
+        base_multiplier = 1.0
+        
+        # 瓶颈类型适配加成
+        if leak_type in mode_config.get('best_for', []):
+            base_multiplier *= 1.3
+        
+        # 准确率阶段适配加成
+        stage_fit = mode_config.get('accuracy_preference', {}).get(accuracy_stage, 0.5)
+        base_multiplier *= stage_fit
+        
+        return base_multiplier
+
+    def _calculate_mode_risk(self, mode_name: str, model_complexity: Dict[str, float], 
+                           current_accuracy: float) -> float:
+        """计算模式风险"""
+        base_risk = {
+            'serial_division': 0.3,    # 相对稳定
+            'parallel_division': 0.5,  # 中等风险
+            'hybrid_division': 0.7     # 高风险高收益
+        }.get(mode_name, 0.5)
+        
+        # 高准确率时风险增加
+        if current_accuracy > 0.9:
+            base_risk *= 1.5
+        
+        # 高复杂度时风险增加
+        if model_complexity.get('total_parameters', 0) > 5e6:
+            base_risk *= 1.2
+        
+        return base_risk
+
+    def _predict_combination_benefit(self, config: Dict[str, float], 
+                                   layer1_type: str, layer2_type: str,
+                                   leak_type: str, mutation_mode: str,
+                                   current_accuracy: float, combo_type: str) -> Dict[str, Any]:
+        """预测特定层组合的收益"""
+        
+        # 基础效果和稳定性
+        effectiveness = config.get('effectiveness', 0.5)
+        stability = config.get('stability', 0.5)
+        
+        # 获取层操作特性
+        layer1_props = self.prior_knowledge['layer_operation_priors'].get(layer1_type, {})
+        layer2_props = self.prior_knowledge['layer_operation_priors'].get(layer2_type, {})
+        
+        # 计算协同效应
+        synergy = self._calculate_layer_synergy(layer1_props, layer2_props, leak_type)
+        
+        # 计算期望收益
+        base_gain = self._calculate_base_mutation_gain(current_accuracy, 0.5)
+        expected_gain = base_gain * effectiveness * synergy
+        
+        # 计算置信度
+        confidence = stability * synergy
+        
+        # 计算实施成本
+        implementation_cost = self._calculate_implementation_cost(
+            layer1_type, layer2_type, mutation_mode
+        )
+        
+        return {
+            'expected_gain': float(expected_gain),
+            'confidence': float(confidence),
+            'effectiveness': float(effectiveness),
+            'stability': float(stability),
+            'synergy': float(synergy),
+            'implementation_cost': float(implementation_cost),
+            'combination': f"{layer1_type}+{layer2_type}",
+            'type': combo_type
+        }
+
+    def _calculate_layer_synergy(self, layer1_props: Dict[str, float], 
+                               layer2_props: Dict[str, float], leak_type: str) -> float:
+        """计算层间协同效应"""
+        
+        # 基础协同分数
+        synergy_factors = []
+        
+        # 特征提取能力协同
+        feat_synergy = (layer1_props.get('feature_extraction_boost', 0.5) + 
+                       layer2_props.get('feature_extraction_boost', 0.5)) / 2
+        synergy_factors.append(feat_synergy)
+        
+        # 参数效率协同
+        param_synergy = (layer1_props.get('parameter_efficiency', 0.5) + 
+                        layer2_props.get('parameter_efficiency', 0.5)) / 2
+        synergy_factors.append(param_synergy)
+        
+        # 计算成本协同
+        cost_synergy = 1.0 - abs(layer1_props.get('computation_cost', 0.5) - 
+                                layer2_props.get('computation_cost', 0.5))
+        synergy_factors.append(cost_synergy)
+        
+        # 特殊能力互补
+        special_abilities = ['stability_boost', 'overfitting_prevention', 
+                           'long_range_dependency', 'gradient_flow']
+        complementary_bonus = 0.0
+        
+        for ability in special_abilities:
+            if (ability in layer1_props and ability not in layer2_props) or \
+               (ability not in layer1_props and ability in layer2_props):
+                complementary_bonus += 0.1
+        
+        base_synergy = np.mean(synergy_factors)
+        final_synergy = min(1.0, base_synergy + complementary_bonus)
+        
+        return final_synergy
+
+    def _calculate_implementation_cost(self, layer1_type: str, layer2_type: str, 
+                                     mutation_mode: str) -> float:
+        """计算实施成本"""
+        
+        # 基础成本
+        layer_costs = {
+            'conv2d': 0.6, 'linear': 0.4, 'batch_norm': 0.2,
+            'dropout': 0.1, 'attention': 0.8, 'pool': 0.2,
+            'depthwise_conv': 0.5, 'residual_connection': 0.7
+        }
+        
+        cost1 = layer_costs.get(layer1_type, 0.5)
+        cost2 = layer_costs.get(layer2_type, 0.5)
+        
+        # 组合成本
+        if layer1_type == layer2_type:
+            combo_cost = cost1 * 1.5  # 同种层复制成本较低
+        else:
+            combo_cost = cost1 + cost2  # 异种层需要更多适配
+        
+        # 模式成本
+        mode_cost_multiplier = {
+            'serial_division': 1.0,
+            'parallel_division': 1.3,
+            'hybrid_division': 1.5
+        }.get(mutation_mode, 1.0)
+        
+        return combo_cost * mode_cost_multiplier
+
+    def _select_best_combination(self, combination_predictions: Dict[str, Any]) -> Dict[str, Any]:
+        """选择最佳层组合"""
+        
+        best_combo = None
+        best_score = -1.0
+        
+        # 评估同种层组合
+        if 'homogeneous' in combination_predictions:
+            homo = combination_predictions['homogeneous']
+            score = (homo['expected_gain'] * homo['confidence']) / (homo['implementation_cost'] + 0.1)
+            if score > best_score:
+                best_score = score
+                best_combo = homo
+        
+        # 评估异种层组合
+        if 'heterogeneous' in combination_predictions:
+            for combo_name, hetero in combination_predictions['heterogeneous'].items():
+                score = (hetero['expected_gain'] * hetero['confidence']) / (hetero['implementation_cost'] + 0.1)
+                if score > best_score:
+                    best_score = score
+                    best_combo = hetero
+        
+        return best_combo if best_combo else {'type': 'fallback', 'expected_gain': 0.01}
+
+    def _get_layer_type(self, model: nn.Module, layer_name: str) -> str:
+        """获取层类型"""
+        try:
+            module = dict(model.named_modules())[layer_name]
+            if isinstance(module, nn.Conv2d):
+                return 'conv2d'
+            elif isinstance(module, nn.Linear):
+                return 'linear'
+            elif isinstance(module, nn.BatchNorm2d):
+                return 'batch_norm'
+            elif isinstance(module, nn.Dropout):
+                return 'dropout'
+            else:
+                return 'unknown'
+        except:
+            return 'unknown'
+
+    def _predict_optimal_parameters(self, layer_analysis: Dict[str, Any], 
+                                  mutation_mode: str, best_combination: Dict[str, Any],
+                                  current_accuracy: float, model_complexity: Dict[str, float]) -> Dict[str, Any]:
+        """预测最优参数配置"""
+        
+        # 基于变异模式和层组合预测参数
+        params = {
+            'parameter_scaling_factor': 1.5,  # 默认参数扩展因子
+            'depth_increase': 1,              # 深度增加
+            'width_multiplier': 1.0,          # 宽度倍数
+            'learning_rate_adjustment': 1.0    # 学习率调整
+        }
+        
+        # 根据变异模式调整
+        if mutation_mode == 'serial_division':
+            params['depth_increase'] = 2
+            params['parameter_scaling_factor'] = 1.3
+        elif mutation_mode == 'parallel_division':
+            params['width_multiplier'] = 2.0
+            params['parameter_scaling_factor'] = 1.8
+        else:  # hybrid_division
+            params['depth_increase'] = 1
+            params['width_multiplier'] = 1.5
+            params['parameter_scaling_factor'] = 2.0
+        
+        # 根据当前准确率调整
+        if current_accuracy > 0.9:
+            # 高准确率时更保守
+            params['parameter_scaling_factor'] *= 0.8
+            params['learning_rate_adjustment'] = 0.5
+        
+        return params
+
+    def _calculate_comprehensive_score(self, mode_pred: Dict[str, Any], 
+                                     combo_pred: Dict[str, Any], 
+                                     param_pred: Dict[str, Any]) -> float:
+        """计算综合评分"""
+        
+        mode_score = mode_pred['expected_improvement'] * mode_pred['confidence']
+        combo_score = combo_pred['recommended_combination']['expected_gain'] * \
+                     combo_pred['recommended_combination']['confidence']
+        
+        # 参数复杂度惩罚
+        param_penalty = param_pred['parameter_scaling_factor'] * 0.1
+        
+        comprehensive_score = (mode_score + combo_score) / 2.0 - param_penalty
+        
+        return max(0.0, comprehensive_score)
+
+    def _generate_implementation_details(self, mode_pred: Dict[str, Any], 
+                                       combo_pred: Dict[str, Any], 
+                                       param_pred: Dict[str, Any]) -> Dict[str, Any]:
+        """生成实施细节"""
+        
+        return {
+            'mutation_sequence': self._plan_mutation_sequence(mode_pred, combo_pred),
+            'parameter_adjustments': param_pred,
+            'expected_timeline': self._estimate_implementation_time(mode_pred, combo_pred),
+            'resource_requirements': self._estimate_resource_needs(param_pred),
+            'rollback_strategy': self._plan_rollback_strategy(mode_pred, combo_pred)
+        }
+
+    def _plan_mutation_sequence(self, mode_pred: Dict[str, Any], combo_pred: Dict[str, Any]) -> List[str]:
+        """规划变异序列"""
+        return [
+            f"1. 准备{mode_pred['recommended_mode']}变异",
+            f"2. 实施{combo_pred['recommended_combination']['combination']}层组合",
+            "3. 参数初始化和微调",
+            "4. 渐进式训练验证"
+        ]
+
+    def _estimate_implementation_time(self, mode_pred: Dict[str, Any], combo_pred: Dict[str, Any]) -> str:
+        """估算实施时间"""
+        base_time = 10  # 基础10个epoch
+        
+        if mode_pred['recommended_mode'] == 'hybrid_division':
+            base_time *= 1.5
+        
+        if combo_pred['recommended_combination']['type'] == 'heterogeneous':
+            base_time *= 1.2
+        
+        return f"{int(base_time)} epochs"
+
+    def _estimate_resource_needs(self, param_pred: Dict[str, Any]) -> Dict[str, float]:
+        """估算资源需求"""
+        scaling = param_pred['parameter_scaling_factor']
+        
+        return {
+            'memory_increase': scaling * 1.2,
+            'computation_increase': scaling * 1.5,
+            'storage_increase': scaling * 1.1
+        }
+
+    def _plan_rollback_strategy(self, mode_pred: Dict[str, Any], combo_pred: Dict[str, Any]) -> List[str]:
+        """规划回滚策略"""
+        return [
+            "1. 保存变异前模型检查点",
+            "2. 监控关键性能指标",
+            "3. 设置性能下降阈值 (2%)",
+            "4. 自动回滚机制"
+        ]
+
+    def _fallback_mode_prediction(self, current_accuracy: float) -> Dict[str, Any]:
+        """模式预测fallback"""
+        return {
+            'recommended_mode': 'serial_division',
+            'confidence': 0.5,
+            'expected_improvement': 0.01,
+            'reasoning': 'Fallback to conservative serial division'
+        }
+
+    def _fallback_combination_prediction(self, target_layer_type: str) -> Dict[str, Any]:
+        """层组合预测fallback"""
+        return {
+            'recommended_combination': {
+                'combination': f"{target_layer_type}+batch_norm",
+                'type': 'heterogeneous',
+                'expected_gain': 0.005,
+                'confidence': 0.4
+            }
+        }
+
+    def _fallback_comprehensive_prediction(self, target_layer_name: str) -> Dict[str, Any]:
+        """综合预测fallback"""
+        return {
+            'mutation_mode': 'serial_division',
+            'layer_combination': {
+                'combination': 'conv2d+batch_norm',
+                'type': 'heterogeneous'
+            },
+            'expected_total_gain': 0.005,
+            'confidence': 0.3
+        }
+
+    def _generate_mode_reasoning(self, best_mode: tuple, leak_type: str, accuracy_stage: str) -> str:
+        """生成模式选择推理"""
+        mode_name, mode_data = best_mode
+        
+        return (f"{mode_name}最适合当前情况: "
+               f"瓶颈类型={leak_type}, 准确率阶段={accuracy_stage}, "
+               f"期望收益={mode_data['expected_accuracy_gain']:.4f}")
+
+    def _generate_combination_analysis(self, best_combo: Dict[str, Any], 
+                                     all_predictions: Dict[str, Any], 
+                                     leak_type: str) -> Dict[str, Any]:
+        """生成组合分析"""
+        return {
+            'selected_combination': best_combo['combination'],
+            'selection_reason': f"最高综合评分，适合{leak_type}瓶颈",
+            'alternative_options': list(all_predictions.get('heterogeneous', {}).keys())[:3],
+            'synergy_analysis': f"协同效应评分: {best_combo.get('synergy', 0.5):.3f}"
+        }

@@ -680,12 +680,20 @@ class EnhancedDNMFramework:
             
             # 显示贝叶斯预测结果
             bayesian_predictions = net2net_results.get('bayesian_benefit_predictions', {})
+            comprehensive_strategies = net2net_results.get('comprehensive_mutation_strategies', {})
             metadata = net2net_results.get('analysis_metadata', {})
+            strategy_summary = net2net_results.get('global_mutation_strategy', {}).get('comprehensive_strategies_summary', {})
             
             logger.info(f"🚀 Net2Net发现{len(improvement_candidates)}个改进候选:")
             logger.info(f"🕳️ 检测到{len(leak_points)}个信息漏点")
             logger.info(f"🧠 贝叶斯预测: {metadata.get('high_confidence_predictions', 0)}个高置信度预测")
             logger.info(f"⭐ 强烈推荐: {metadata.get('strong_recommendations', 0)}个层")
+            logger.info(f"🎭 综合策略: {metadata.get('comprehensive_strategies_count', 0)}个详细变异策略")
+            
+            # 显示综合策略偏好总结
+            if strategy_summary:
+                logger.info(f"📊 策略偏好: {strategy_summary.get('preferred_mutation_mode', 'unknown')} + {strategy_summary.get('preferred_combination_type', 'unknown')}")
+                logger.info(f"🎯 综合收益预期: {strategy_summary.get('total_expected_improvement', 0.0):.4f}")
             
             for layer_name, potential, details in improvement_candidates[:3]:
                 recommendation = details.get('recommendation', {})
@@ -698,12 +706,25 @@ class EnhancedDNMFramework:
                 confidence = bayesian_pred.get('uncertainty_metrics', {}).get('prediction_confidence', 0)
                 rec_strength = bayesian_pred.get('recommendation_strength', 'neutral')
                 
+                # 获取综合策略信息
+                comp_strategy_info = comprehensive_strategies.get(layer_name, {})
+                comp_strategy = comp_strategy_info.get('comprehensive_strategy', {})
+                mutation_mode = comp_strategy.get('mutation_mode', 'unknown')
+                layer_combination = comp_strategy.get('layer_combination', {}).get('combination', 'unknown')
+                total_gain = comp_strategy.get('expected_total_gain', 0)
+                comp_confidence = comp_strategy.get('confidence', 0)
+                
                 if leak_info:
                     logger.info(f"  {layer_name}: 漏点严重度={potential:.3f}, 类型={leak_info.get('leak_type', 'unknown')}")
                     logger.info(f"    🧠 贝叶斯预测: 期望收益={expected_gain:.4f}, 置信度={confidence:.3f}, 推荐={rec_strength}")
                 else:
                     logger.info(f"  {layer_name}: 潜力={potential:.3f}, 建议={recommendation.get('action', 'unknown')}")
                     logger.info(f"    🧠 贝叶斯预测: 期望收益={expected_gain:.4f}, 置信度={confidence:.3f}, 推荐={rec_strength}")
+                
+                # 显示综合策略信息
+                if comp_strategy_info:
+                    logger.info(f"    🎭 综合策略: {mutation_mode} + {layer_combination}")
+                    logger.info(f"    📈 总期望收益: {total_gain:.4f}, 综合置信度: {comp_confidence:.3f}")
             
         except Exception as e:
             logger.error(f"❌ Net2Net分析失败: {e}")
