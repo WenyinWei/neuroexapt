@@ -161,15 +161,22 @@ class AdvancedDNMTrainer:
         self.train_loader = train_loader
         self.test_loader = test_loader
         
-        # 🚀 增强的DNM框架配置 - 激进模式冲刺95%准确率
+        # 🧠 智能DNM框架配置 - 智能瓶颈检测冲刺95%准确率
         self.dnm_config = {
-            'trigger_interval': 8,  # 每8个epoch检查一次，更稳定
-            'complexity_threshold': 0.5,  # 降低阈值，更容易触发
+            'trigger_interval': 1,  # 每轮都检查，由智能算法决定触发
+            'complexity_threshold': 0.3,  # 降低阈值，更敏感检测
             'enable_serial_division': True,
             'enable_parallel_division': True,
             'enable_hybrid_division': True,
             'max_parameter_growth_ratio': 3.0,  # 允许更多参数增长
-            # 🚨 激进模式配置
+            
+            # 🧠 智能瓶颈检测配置
+            'enable_intelligent_bottleneck_detection': True,
+            'bottleneck_severity_threshold': 0.5,  # 瓶颈严重程度阈值
+            'stagnation_threshold': 0.005,  # 0.5% 停滞阈值
+            'net2net_improvement_threshold': 0.3,  # Net2Net改进潜力阈值
+            
+            # 激进模式配置 (作为备用)
             'enable_aggressive_mode': True,  # 启用激进形态发生
             'accuracy_plateau_threshold': 0.001,  # 0.1%改进阈值
             'plateau_detection_window': 5,  # 5个epoch停滞检测窗口
