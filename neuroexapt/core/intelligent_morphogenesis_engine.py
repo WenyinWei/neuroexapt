@@ -35,10 +35,10 @@ class IntelligentMorphogenesisEngine:
         
         # 动态阈值管理
         self.adaptive_thresholds = {
-            'bottleneck_severity': 0.3,        # 动态调整
-            'improvement_potential': 0.1,      # 基于历史调整
-            'mutation_confidence': 0.6,        # 自适应
-            'performance_plateau_ratio': 0.05  # 相对停滞比例
+            'bottleneck_severity': 0.1,        # 降低到0.1 - 更容易检测瓶颈
+            'improvement_potential': 0.05,     # 降低到0.05 - 更容易发现改进机会
+            'mutation_confidence': 0.1,        # 降低到0.1 - 更容易通过变异决策
+            'performance_plateau_ratio': 0.02  # 降低到0.02 - 更敏感的停滞检测
         }
         
         # 分析历史记录
@@ -267,6 +267,11 @@ class IntelligentMorphogenesisEngine:
             scores = bottleneck_info['bottleneck_scores']
             avg_score = np.mean(list(scores.values()))
             
+            # 调试输出
+            logger.info(f"🔍 分析层 {name}: 平均分数={avg_score:.3f}, 阈值={self.adaptive_thresholds['bottleneck_severity']:.3f}")
+            for score_type, score_value in scores.items():
+                logger.info(f"    {score_type}: {score_value:.3f}")
+            
             # 动态阈值判断
             threshold = self.adaptive_thresholds['bottleneck_severity']
             if avg_score > threshold:
@@ -294,21 +299,21 @@ class IntelligentMorphogenesisEngine:
         """分析参数容量约束"""
         
         if isinstance(module, nn.Conv2d):
-            # 对于卷积层，分析通道数相对于特征复杂度的充分性
-            channel_ratio = module.out_channels / max(64, module.in_channels)  # 基准比例
+            # 对于卷积层，分析通道数相对于特征复杂度的充分性 - 降低基准值
+            channel_ratio = module.out_channels / max(32, module.in_channels)  # 降低基准从64到32
             kernel_efficiency = (module.kernel_size[0] * module.kernel_size[1]) / 9  # 3x3为基准
             
             # 通道数不足或核太小都可能造成容量约束
             capacity_constraint = max(0, 1 - channel_ratio) + max(0, 1 - kernel_efficiency)
-            return min(1.0, capacity_constraint / 2)
+            return min(1.0, capacity_constraint / 1.5)  # 降低除数从2到1.5，提高分数
             
         elif isinstance(module, nn.Linear):
-            # 对于线性层，分析特征数相对于输入复杂度的充分性
-            feature_ratio = module.out_features / max(128, module.in_features)
+            # 对于线性层，分析特征数相对于输入复杂度的充分性 - 降低基准值
+            feature_ratio = module.out_features / max(64, module.in_features)  # 降低基准从128到64
             capacity_constraint = max(0, 1 - feature_ratio)
-            return min(1.0, capacity_constraint)
+            return min(1.0, capacity_constraint * 1.5)  # 提高分数倍数
         
-        return 0.0
+        return 0.3  # 默认给一个中等分数，而不是0
     
     def _analyze_layer_information_flow(self, activation: torch.Tensor) -> float:
         """分析层级信息流效率"""
@@ -329,10 +334,10 @@ class IntelligentMorphogenesisEngine:
             
             # 信息流效率 = 1 - 有效性和均匀性的综合
             efficiency_loss = (1 - non_zero_ratio) * 0.6 + (1 - entropy_ratio) * 0.4
-            return float(efficiency_loss)
+            return float(min(1.0, efficiency_loss * 1.5))  # 提高分数倍数
             
         except Exception:
-            return 0.5
+            return 0.4  # 提高默认分数
     
     def _analyze_layer_gradient_quality(self, gradient: torch.Tensor) -> float:
         """分析层级梯度质量"""
@@ -355,10 +360,10 @@ class IntelligentMorphogenesisEngine:
             signal_noise_ratio = grad_mean / (grad_std + 1e-10)
             quality_score = 1.0 / (1.0 + signal_noise_ratio)
             
-            return float(quality_score)
+            return float(min(1.0, quality_score * 1.5))  # 提高分数倍数
             
         except Exception:
-            return 0.5
+            return 0.4  # 提高默认分数
     
     def _analyze_architectural_efficiency(self, module: nn.Module, context: Dict[str, Any]) -> float:
         """分析架构效率"""
@@ -376,8 +381,9 @@ class IntelligentMorphogenesisEngine:
         else:
             efficiency_score = 0.5
         
-        # 返回效率不足程度
-        return 1.0 - efficiency_score
+        # 返回效率不足程度 - 给个基础分数
+        inefficiency = 1.0 - efficiency_score
+        return max(0.2, inefficiency)  # 确保至少有0.2的基础分数
     
     def _analyze_information_efficiency(self, model: nn.Module, context: Dict[str, Any]) -> Dict[str, Any]:
         """分析全局信息效率"""
@@ -478,6 +484,7 @@ class IntelligentMorphogenesisEngine:
         candidates = []
         
         # 从结构瓶颈中选择候选
+        logger.info(f"🔍 处理{len(structural_bottlenecks)}个结构瓶颈")
         for bottleneck in structural_bottlenecks:
             candidate = {
                 'layer_name': bottleneck['layer_name'],
@@ -491,13 +498,18 @@ class IntelligentMorphogenesisEngine:
             
             # 根据瓶颈类型推荐变异策略
             if 'parameter_constraint' in bottleneck['bottleneck_types']:
-                candidate['recommended_mutations'].append('width_expansion')
+                candidate['recommended_mutations'].extend(['width_expansion', 'serial_division'])
             if 'information_bottleneck' in bottleneck['bottleneck_types']:
-                candidate['recommended_mutations'].extend(['depth_expansion', 'attention_enhancement'])
+                candidate['recommended_mutations'].extend(['depth_expansion', 'attention_enhancement', 'parallel_division'])
             if 'gradient_bottleneck' in bottleneck['bottleneck_types']:
                 candidate['recommended_mutations'].extend(['residual_connection', 'batch_norm_insertion'])
             
+            # 根据层类型添加特定推荐
+            if bottleneck['layer_type'] in ['conv', 'linear']:
+                candidate['recommended_mutations'].extend(['serial_division', 'parallel_division'])
+            
             candidates.append(candidate)
+            logger.info(f"✅ 添加候选点: {candidate['layer_name']}, 推荐变异: {candidate['recommended_mutations']}")
         
         # 从信息效率分析中补充候选
         for layer_name in information_efficiency.get('bottleneck_layers', []):
@@ -510,7 +522,7 @@ class IntelligentMorphogenesisEngine:
                     'bottleneck_types': ['information_flow'],
                     'improvement_potential': 0.7,
                     'priority_score': 0.7,
-                    'recommended_mutations': ['information_enhancement', 'channel_attention']
+                    'recommended_mutations': ['information_enhancement', 'channel_attention', 'parallel_division']
                 }
                 candidates.append(candidate)
         
@@ -582,7 +594,9 @@ class IntelligentMorphogenesisEngine:
             'batch_norm_insertion': 0.7,
             'information_enhancement': 1.1,
             'channel_attention': 1.0,
-            'layer_norm': 0.6
+            'layer_norm': 0.6,
+            'serial_division': 1.5,      # 串行分裂 - 高改进潜力
+            'parallel_division': 1.3     # 并行分裂 - 良好改进潜力
         }
         
         adjusted_improvement = base_improvement * type_multipliers.get(mutation_type, 1.0)
@@ -614,7 +628,9 @@ class IntelligentMorphogenesisEngine:
             'batch_norm_insertion': 0.1,
             'information_enhancement': 0.3,
             'channel_attention': 0.2,
-            'layer_norm': 0.1
+            'layer_norm': 0.1,
+            'serial_division': 0.3,     # 串行分裂 - 中等风险
+            'parallel_division': 0.4    # 并行分裂 - 稍高风险
         }
         
         base_risk = base_risks.get(mutation_type, 0.5)
@@ -651,27 +667,36 @@ class IntelligentMorphogenesisEngine:
         final_decisions = []
         
         for strategy in mutation_strategies:
-            # 综合评分
+            # 综合评分 - 修复计算逻辑
             decision_score = 0.0
             
-            # 性能分析权重
-            perf_score = strategy['expected_outcome']['expected_accuracy_improvement'] * 10
+            # 性能分析权重 - 使用更合理的放大倍数
+            perf_score = strategy['expected_outcome']['expected_accuracy_improvement'] * 100  # 放大100倍使其更有意义
             decision_score += perf_score * self.decision_weights['performance_analysis']
             
-            # 结构分析权重
+            # 结构分析权重 - 直接使用改进潜力
             struct_score = strategy['rationale']['improvement_potential']
             decision_score += struct_score * self.decision_weights['structural_analysis']
             
-            # 风险调整
+            # 置信度加权
+            confidence_boost = strategy['expected_outcome']['confidence_level'] * 0.2
+            decision_score += confidence_boost
+            
+            # 风险调整 - 减少惩罚强度
             risk_penalty = strategy['risk_assessment']['overall_risk']
-            decision_score *= (1 - risk_penalty * 0.5)
+            decision_score *= (1 - risk_penalty * 0.3)  # 减少惩罚
             
             # 历史成功率权重
             historical_success = self.mutation_success_rate.get(strategy['mutation_type'], 0.5)
             decision_score += historical_success * self.decision_weights['historical_success']
             
-            # 只保留高分策略
+            # 确保分数为正
+            decision_score = max(0.1, decision_score)
+            
+            # 检查阈值
             confidence_threshold = self.adaptive_thresholds['mutation_confidence']
+            logger.debug(f"🔍 策略评分: {strategy['mutation_type']} = {decision_score:.3f} (阈值: {confidence_threshold:.3f})")
+            
             if decision_score > confidence_threshold:
                 decision = strategy.copy()
                 decision['final_score'] = decision_score
@@ -747,7 +772,9 @@ class IntelligentMorphogenesisEngine:
             'batch_norm_insertion': 100,
             'information_enhancement': 20000,
             'channel_attention': 5000,
-            'layer_norm': 200
+            'layer_norm': 200,
+            'serial_division': 75000,     # 串行分裂参数增加
+            'parallel_division': 120000   # 并行分裂参数增加更多
         }
         return estimates.get(mutation_type, 10000)
     
@@ -761,7 +788,9 @@ class IntelligentMorphogenesisEngine:
             'batch_norm_insertion': 0.02,
             'information_enhancement': 0.15,
             'channel_attention': 0.1,
-            'layer_norm': 0.02
+            'layer_norm': 0.02,
+            'serial_division': 0.25,      # 串行分裂计算开销
+            'parallel_division': 0.35     # 并行分裂计算开销较高
         }
         return overheads.get(mutation_type, 0.1)
     

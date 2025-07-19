@@ -7,7 +7,11 @@ Quick test for intelligent trigger mechanism
 import torch
 import torch.nn as nn
 import numpy as np
-from neuroexapt.core import EnhancedDNMFramework
+import logging
+from neuroexapt.core.intelligent_dnm_integration import IntelligentDNMCore
+
+# 设置日志级别
+logging.basicConfig(level=logging.INFO, format='%(levelname)s:%(name)s:%(message)s')
 
 def create_test_model():
     """创建一个简单的测试模型"""
@@ -39,22 +43,15 @@ def test_intelligent_trigger():
     """测试智能触发机制"""
     print("🧠 测试智能触发机制...")
     
-    # 创建DNM框架
+    # 配置DNM框架
     config = {
-        'trigger_interval': 1,
-        'complexity_threshold': 0.3,
-        'enable_serial_division': True,
-        'enable_parallel_division': True, 
-        'enable_hybrid_division': True,
-        'max_parameter_growth_ratio': 2.0,
-        'enable_intelligent_bottleneck_detection': True,
-        'bottleneck_severity_threshold': 0.4,  # 降低阈值便于测试
-        'stagnation_threshold': 0.01,
-        'net2net_improvement_threshold': 0.2,
+        'trigger_threshold': 0.05,  # 降低阈值增加触发敏感度
+        'division_strategies': ['parallel', 'serial'],
+        'enable_gradient_tracking': True,
         'enable_aggressive_mode': False  # 关闭激进模式专注测试基础功能
     }
     
-    dnm_framework = EnhancedDNMFramework(config)
+    dnm_framework = IntelligentDNMCore()
     
     # 创建测试数据
     model = create_test_model()
@@ -68,15 +65,36 @@ def test_intelligent_trigger():
     print(f"性能历史: {performance_history_stagnant}")
     
     try:
-        should_trigger, reasons = dnm_framework.check_morphogenesis_trigger(
-            model, activations, gradients, performance_history_stagnant, epoch=5
-        )
+        # 构建上下文
+        context = {
+            'activations': activations,
+            'gradients': gradients,
+            'performance_history': performance_history_stagnant,
+            'current_epoch': 5,
+            'stagnation_detected': True
+        }
         
-        print(f"触发结果: {'✅ 触发' if should_trigger else '❌ 未触发'}")
-        if reasons:
-            print("触发原因:")
-            for reason in reasons:
-                print(f"  • {reason}")
+        print(f"📋 上下文信息:")
+        print(f"  激活数量: {len(activations)}")
+        print(f"  梯度数量: {len(gradients)}")
+        print(f"  模型层数: {len(list(model.named_modules()))}")
+        for name in list(model.named_modules())[:3]:  # 显示前3层
+            print(f"    {name}")
+        
+        result = dnm_framework.enhanced_morphogenesis_execution(model, context)
+        
+        print(f"✅ 智能分析完成")
+        print(f"模型是否修改: {result.get('model_modified', False)}")
+        print(f"变异事件: {len(result.get('morphogenesis_events', []))}")
+        
+        if 'intelligent_analysis' in result:
+            analysis = result['intelligent_analysis']
+            print(f"候选点发现: {analysis.get('candidates_found', 0)}个")
+            print(f"策略评估: {analysis.get('strategies_evaluated', 0)}个")
+            print(f"最终决策: {analysis.get('final_decisions', 0)}个")
+            print(f"执行置信度: {analysis.get('execution_confidence', 0):.3f}")
+            performance_sit = analysis.get('performance_situation', {})
+            print(f"性能态势: {performance_sit.get('status', 'unknown')}")
         
     except Exception as e:
         print(f"❌ 测试失败: {e}")
@@ -87,18 +105,30 @@ def test_intelligent_trigger():
     print(f"性能历史: {performance_history_improving}")
     
     try:
-        should_trigger, reasons = dnm_framework.check_morphogenesis_trigger(
-            model, activations, gradients, performance_history_improving, epoch=5
-        )
+        # 构建改进情况的上下文
+        context = {
+            'activations': activations,
+            'gradients': gradients,
+            'performance_history': performance_history_improving,
+            'current_epoch': 5,
+            'stagnation_detected': False
+        }
         
-        print(f"触发结果: {'✅ 触发' if should_trigger else '❌ 未触发'}")
-        if reasons:
-            print("触发原因:")
-            for reason in reasons:
-                print(f"  • {reason}")
-        else:
-            print("未触发原因: 性能持续改进中")
-            
+        result = dnm_framework.enhanced_morphogenesis_execution(model, context)
+        
+        print(f"✅ 智能分析完成")
+        print(f"模型是否修改: {result.get('model_modified', False)}")
+        print(f"变异事件: {len(result.get('morphogenesis_events', []))}")
+        
+        if 'intelligent_analysis' in result:
+            analysis = result['intelligent_analysis']
+            print(f"候选点发现: {analysis.get('candidates_found', 0)}个")
+            print(f"策略评估: {analysis.get('strategies_evaluated', 0)}个")
+            print(f"最终决策: {analysis.get('final_decisions', 0)}个")
+            print(f"执行置信度: {analysis.get('execution_confidence', 0):.3f}")
+            performance_sit = analysis.get('performance_situation', {})
+            print(f"性能态势: {performance_sit.get('status', 'unknown')}")
+        
     except Exception as e:
         print(f"❌ 测试失败: {e}")
         import traceback
