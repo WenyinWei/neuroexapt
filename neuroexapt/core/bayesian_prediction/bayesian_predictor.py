@@ -11,7 +11,6 @@ import torch.nn as nn
 import time
 import logging
 from .prior_knowledge import PriorKnowledgeBase
-from ..mutation_strategies.comprehensive_strategy import ComprehensiveStrategyGenerator
 
 logger = logging.getLogger(__name__)
 
@@ -25,7 +24,7 @@ class BayesianMutationBenefitPredictor:
     
     def __init__(self):
         self.prior_knowledge = PriorKnowledgeBase()
-        self.comprehensive_generator = ComprehensiveStrategyGenerator(self.prior_knowledge)
+        self._comprehensive_generator = None
         
         self.gp_hyperparams = {
             'length_scale': 1.0,
@@ -36,6 +35,31 @@ class BayesianMutationBenefitPredictor:
         
         # 历史变异数据（用于更新先验）
         self.mutation_history = []
+    
+    @property
+    def comprehensive_generator(self):
+        """延迟加载综合策略生成器"""
+        if self._comprehensive_generator is None:
+            try:
+                from ..mutation_strategies.comprehensive_strategy import ComprehensiveStrategyGenerator
+                self._comprehensive_generator = ComprehensiveStrategyGenerator(self.prior_knowledge)
+            except ImportError as e:
+                logger.warning(f"Could not import ComprehensiveStrategyGenerator: {e}")
+                # 创建简化版本作为回退
+                self._comprehensive_generator = self._create_simple_strategy_generator()
+        return self._comprehensive_generator
+    
+    def _create_simple_strategy_generator(self):
+        """创建简化的策略生成器作为回退"""
+        class SimpleStrategyGenerator:
+            def generate_comprehensive_strategy(self, *args, **kwargs):
+                return {
+                    'mutation_mode': 'serial_division',
+                    'layer_combination_strategy': 'single_layer',
+                    'confidence': 0.5,
+                    'expected_benefit': 0.01
+                }
+        return SimpleStrategyGenerator()
         
     def predict_mutation_benefit(self, 
                                layer_analysis: Dict[str, Any],
