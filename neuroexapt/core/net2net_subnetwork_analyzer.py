@@ -21,6 +21,7 @@ from typing import Dict, List, Tuple, Optional, Any, Set
 from collections import OrderedDict, defaultdict
 import copy
 import logging
+import time
 
 from .logging_utils import logger
 
@@ -739,7 +740,509 @@ class Net2NetSubnetworkAnalyzer:
         self.extractor = SubnetworkExtractor()
         self.param_analyzer = ParameterSpaceAnalyzer()
         self.predictor = MutationPotentialPredictor()
+        
+        # 新增：信息流分析器
+        self.info_flow_analyzer = InformationFlowAnalyzer()
+        self.leak_detector = InformationLeakDetector()
     
+    def analyze_all_layers(self, model: nn.Module, context: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        分析所有层的变异潜力和信息流瓶颈
+        
+        这是实现神经网络最优变异理论的核心方法：
+        1. 检测信息流漏点 - 某层成为信息提取瓶颈，导致后续层无法提升准确率
+        2. 分析参数空间密度 - 漏点层的参数空间中高准确率区域占比较小
+        3. 预测变异收益 - 变异后参数空间中高准确率区域占比提升
+        4. 指导架构变异 - 让漏点层变得更复杂，提取更多信息
+        
+        Args:
+            model: 神经网络模型
+            context: 分析上下文，包含激活值、梯度、目标等
+            
+        Returns:
+            包含所有层分析结果和变异建议的字典
+        """
+        logger.enter_section("Net2Net全层分析")
+        
+        try:
+            activations = context.get('activations', {})
+            gradients = context.get('gradients', {})
+            targets = context.get('targets')
+            current_accuracy = context.get('current_accuracy', 0.0)
+            
+            # 1. 信息流全局分析
+            logger.info("🔍 执行信息流全局分析...")
+            flow_analysis = self._analyze_global_information_flow(
+                model, activations, gradients, targets
+            )
+            
+            # 2. 检测信息泄露漏点
+            logger.info("🕳️ 检测信息泄露漏点...")
+            leak_points = self._detect_information_leak_points(
+                model, activations, gradients, targets, current_accuracy
+            )
+            
+            # 3. 分析每层的变异潜力
+            logger.info("📊 分析各层变异潜力...")
+            layer_analyses = {}
+            
+            for layer_name in activations.keys():
+                if self._is_analyzable_layer(model, layer_name):
+                    layer_analysis = self.analyze_layer_mutation_potential(
+                        model, layer_name, activations, gradients, 
+                        targets, current_accuracy
+                    )
+                    
+                    # 增强分析：添加信息流漏点评估
+                    layer_analysis['leak_assessment'] = self._assess_layer_leak_potential(
+                        layer_name, activations, gradients, leak_points
+                    )
+                    
+                    layer_analyses[layer_name] = layer_analysis
+            
+            # 4. 生成全局变异策略
+            logger.info("🎯 生成全局变异策略...")
+            global_strategy = self._generate_global_mutation_strategy(
+                layer_analyses, leak_points, flow_analysis, current_accuracy
+            )
+            
+            # 5. 组装完整分析结果
+            complete_analysis = {
+                'global_flow_analysis': flow_analysis,
+                'detected_leak_points': leak_points,
+                'layer_analyses': layer_analyses,
+                'global_mutation_strategy': global_strategy,
+                'analysis_metadata': {
+                    'total_layers_analyzed': len(layer_analyses),
+                    'critical_leak_points': len([lp for lp in leak_points if lp['severity'] > 0.7]),
+                    'high_potential_layers': len([la for la in layer_analyses.values() 
+                                                 if la.get('mutation_prediction', {}).get('improvement_potential', 0) > 0.5]),
+                    'analysis_timestamp': time.time()
+                }
+            }
+            
+            logger.success(f"Net2Net全层分析完成，发现{len(leak_points)}个潜在漏点")
+            logger.exit_section("Net2Net全层分析")
+            
+            return complete_analysis
+            
+        except Exception as e:
+            logger.error(f"Net2Net全层分析失败: {e}")
+            logger.exit_section("Net2Net全层分析")
+            return {
+                'error': str(e),
+                'global_mutation_strategy': {'action': 'skip', 'reason': f'分析失败: {e}'}
+            }
+    
+    def _analyze_global_information_flow(self, model: nn.Module, 
+                                       activations: Dict[str, torch.Tensor],
+                                       gradients: Dict[str, torch.Tensor],
+                                       targets: torch.Tensor) -> Dict[str, Any]:
+        """分析全局信息流模式"""
+        
+        flow_metrics = {}
+        layer_names = list(activations.keys())
+        
+        for i, layer_name in enumerate(layer_names):
+            if layer_name not in gradients:
+                continue
+                
+            activation = activations[layer_name]
+            gradient = gradients[layer_name]
+            
+            # 计算信息密度指标
+            info_density = self._calculate_information_density(activation, gradient)
+            
+            # 计算信息传递效率（与下一层的相关性）
+            transfer_efficiency = 0.0
+            if i < len(layer_names) - 1:
+                next_layer = layer_names[i + 1]
+                if next_layer in activations:
+                    transfer_efficiency = self._calculate_transfer_efficiency(
+                        activation, activations[next_layer]
+                    )
+            
+            # 计算信息保留率（与目标的相关性）
+            target_correlation = self._calculate_target_correlation(activation, targets)
+            
+            flow_metrics[layer_name] = {
+                'information_density': info_density,
+                'transfer_efficiency': transfer_efficiency,
+                'target_correlation': target_correlation,
+                'flow_bottleneck_score': self._calculate_bottleneck_score(
+                    info_density, transfer_efficiency, target_correlation
+                )
+            }
+        
+        return {
+            'layer_flow_metrics': flow_metrics,
+            'global_bottleneck_score': np.mean([m['flow_bottleneck_score'] 
+                                              for m in flow_metrics.values()]),
+            'critical_bottlenecks': [name for name, metrics in flow_metrics.items() 
+                                   if metrics['flow_bottleneck_score'] > 0.7]
+        }
+    
+    def _detect_information_leak_points(self, model: nn.Module,
+                                      activations: Dict[str, torch.Tensor],
+                                      gradients: Dict[str, torch.Tensor],
+                                      targets: torch.Tensor,
+                                      current_accuracy: float) -> List[Dict[str, Any]]:
+        """
+        检测信息泄露漏点
+        
+        漏点的特征：
+        1. 该层的信息密度显著低于前层
+        2. 该层的梯度方差很小（学习困难）
+        3. 后续子网络的参数空间中高准确率区域占比小
+        4. 变异该层后，后续子网络性能提升明显
+        """
+        
+        leak_points = []
+        layer_names = list(activations.keys())
+        
+        for i, layer_name in enumerate(layer_names[1:], 1):  # 跳过第一层
+            if layer_name not in gradients:
+                continue
+                
+            # 获取当前层和前一层的数据
+            current_activation = activations[layer_name]
+            current_gradient = gradients[layer_name]
+            prev_layer = layer_names[i-1]
+            
+            if prev_layer not in activations:
+                continue
+                
+            prev_activation = activations[prev_layer]
+            
+            # 1. 信息密度下降检测
+            current_info_density = self._calculate_information_density(
+                current_activation, current_gradient
+            )
+            prev_info_density = self._calculate_information_density(
+                prev_activation, gradients.get(prev_layer, torch.zeros_like(prev_activation))
+            )
+            
+            info_drop = prev_info_density - current_info_density
+            
+            # 2. 梯度学习困难检测
+            gradient_variance = torch.var(current_gradient).item()
+            learning_difficulty = 1.0 / (1.0 + gradient_variance)  # 方差越小，学习越困难
+            
+            # 3. 后续子网络效率评估
+            posterior_efficiency = self._evaluate_posterior_subnetwork_efficiency(
+                model, layer_name, activations, targets
+            )
+            
+            # 4. 变异潜力评估
+            mutation_potential = self._estimate_mutation_improvement_potential(
+                current_activation, current_gradient, targets, current_accuracy
+            )
+            
+            # 综合评估漏点严重程度
+            leak_severity = (
+                info_drop * 0.3 +
+                learning_difficulty * 0.2 +
+                (1.0 - posterior_efficiency) * 0.3 +
+                mutation_potential * 0.2
+            )
+            
+            if leak_severity > 0.5:  # 阈值可调
+                leak_points.append({
+                    'layer_name': layer_name,
+                    'severity': leak_severity,
+                    'info_density_drop': info_drop,
+                    'learning_difficulty': learning_difficulty,
+                    'posterior_efficiency': posterior_efficiency,
+                    'mutation_potential': mutation_potential,
+                    'leak_type': self._classify_leak_type(
+                        info_drop, learning_difficulty, posterior_efficiency
+                    )
+                })
+        
+        # 按严重程度排序
+        leak_points.sort(key=lambda x: x['severity'], reverse=True)
+        
+        return leak_points
+    
+    def _assess_layer_leak_potential(self, layer_name: str,
+                                   activations: Dict[str, torch.Tensor],
+                                   gradients: Dict[str, torch.Tensor],
+                                   leak_points: List[Dict[str, Any]]) -> Dict[str, Any]:
+        """评估特定层的漏点潜力"""
+        
+        # 检查该层是否被识别为漏点
+        is_leak_point = any(lp['layer_name'] == layer_name for lp in leak_points)
+        
+        if is_leak_point:
+            leak_info = next(lp for lp in leak_points if lp['layer_name'] == layer_name)
+            
+            return {
+                'is_leak_point': True,
+                'leak_severity': leak_info['severity'],
+                'leak_type': leak_info['leak_type'],
+                'recommended_mutation_priority': 'high' if leak_info['severity'] > 0.7 else 'medium',
+                'expected_improvement': leak_info['mutation_potential']
+            }
+        else:
+            return {
+                'is_leak_point': False,
+                'leak_severity': 0.0,
+                'recommended_mutation_priority': 'low',
+                'expected_improvement': 0.0
+            }
+    
+    def _generate_global_mutation_strategy(self, layer_analyses: Dict[str, Any],
+                                         leak_points: List[Dict[str, Any]],
+                                         flow_analysis: Dict[str, Any],
+                                         current_accuracy: float) -> Dict[str, Any]:
+        """生成全局变异策略"""
+        
+        # 1. 优先处理严重漏点
+        priority_targets = []
+        for leak_point in leak_points:
+            if leak_point['severity'] > 0.7:
+                priority_targets.append({
+                    'layer_name': leak_point['layer_name'],
+                    'priority': 'critical',
+                    'expected_improvement': leak_point['mutation_potential'],
+                    'strategy': self._select_optimal_mutation_strategy(leak_point)
+                })
+        
+        # 2. 考虑高潜力非漏点层
+        for layer_name, analysis in layer_analyses.items():
+            mutation_potential = analysis.get('mutation_prediction', {}).get('improvement_potential', 0)
+            if mutation_potential > 0.6 and not any(t['layer_name'] == layer_name for t in priority_targets):
+                priority_targets.append({
+                    'layer_name': layer_name,
+                    'priority': 'high',
+                    'expected_improvement': mutation_potential,
+                    'strategy': analysis.get('recommendation', {}).get('strategy', 'widening')
+                })
+        
+        # 3. 生成执行计划
+        execution_plan = self._create_mutation_execution_plan(
+            priority_targets, current_accuracy, flow_analysis
+        )
+        
+        return {
+            'priority_targets': priority_targets,
+            'execution_plan': execution_plan,
+            'global_improvement_estimate': sum(t['expected_improvement'] for t in priority_targets),
+            'recommended_sequence': [t['layer_name'] for t in 
+                                   sorted(priority_targets, key=lambda x: x['expected_improvement'], reverse=True)]
+        }
+    
+    def _calculate_information_density(self, activation: torch.Tensor, gradient: torch.Tensor) -> float:
+        """计算信息密度"""
+        # 使用激活值的熵和梯度的方差作为信息密度指标
+        activation_entropy = self._calculate_entropy(activation)
+        gradient_variance = torch.var(gradient).item()
+        
+        # 归一化并组合
+        info_density = (activation_entropy + np.log(1 + gradient_variance)) / 2
+        return float(info_density)
+    
+    def _calculate_entropy(self, tensor: torch.Tensor) -> float:
+        """计算张量的近似熵"""
+        # 将张量展平并计算直方图
+        flat_tensor = tensor.flatten()
+        hist, _ = np.histogram(flat_tensor.cpu().numpy(), bins=50, density=True)
+        
+        # 避免log(0)
+        hist = hist + 1e-10
+        entropy = -np.sum(hist * np.log(hist))
+        
+        return float(entropy)
+    
+    def _calculate_transfer_efficiency(self, current_activation: torch.Tensor, 
+                                     next_activation: torch.Tensor) -> float:
+        """计算信息传递效率"""
+        # 计算激活值之间的相关性
+        curr_flat = current_activation.flatten()
+        next_flat = next_activation.flatten()
+        
+        # 调整尺寸以匹配
+        min_size = min(len(curr_flat), len(next_flat))
+        curr_flat = curr_flat[:min_size]
+        next_flat = next_flat[:min_size]
+        
+        correlation = torch.corrcoef(torch.stack([curr_flat, next_flat]))[0, 1]
+        
+        # 处理NaN情况
+        if torch.isnan(correlation):
+            return 0.0
+            
+        return float(torch.abs(correlation))
+    
+    def _calculate_target_correlation(self, activation: torch.Tensor, targets: torch.Tensor) -> float:
+        """计算与目标的相关性"""
+        # 简化的相关性计算
+        activation_mean = torch.mean(activation, dim=tuple(range(1, activation.dim())))
+        
+        if len(activation_mean) != len(targets):
+            return 0.0
+            
+        # 计算与目标的相关性
+        try:
+            correlation = torch.corrcoef(torch.stack([
+                activation_mean.float(),
+                targets.float()
+            ]))[0, 1]
+            
+            if torch.isnan(correlation):
+                return 0.0
+                
+            return float(torch.abs(correlation))
+        except:
+            return 0.0
+    
+    def _calculate_bottleneck_score(self, info_density: float, transfer_efficiency: float, 
+                                  target_correlation: float) -> float:
+        """计算瓶颈分数"""
+        # 瓶颈分数 = 信息密度低 + 传递效率低 + 目标相关性低
+        bottleneck_score = (
+            (1.0 - min(info_density / 10.0, 1.0)) * 0.4 +
+            (1.0 - transfer_efficiency) * 0.3 +
+            (1.0 - target_correlation) * 0.3
+        )
+        
+        return float(bottleneck_score)
+    
+    def _evaluate_posterior_subnetwork_efficiency(self, model: nn.Module, layer_name: str,
+                                                activations: Dict[str, torch.Tensor],
+                                                targets: torch.Tensor) -> float:
+        """评估后续子网络效率"""
+        # 获取该层之后的所有层
+        layer_names = list(activations.keys())
+        try:
+            layer_idx = layer_names.index(layer_name)
+            posterior_layers = layer_names[layer_idx + 1:]
+        except ValueError:
+            return 0.5  # 默认中等效率
+        
+        if not posterior_layers:
+            return 1.0  # 最后一层，效率为1
+        
+        # 计算后续层的平均信息处理效率
+        efficiency_scores = []
+        
+        for post_layer in posterior_layers:
+            if post_layer in activations:
+                post_activation = activations[post_layer]
+                target_corr = self._calculate_target_correlation(post_activation, targets)
+                efficiency_scores.append(target_corr)
+        
+        if not efficiency_scores:
+            return 0.5
+            
+        return float(np.mean(efficiency_scores))
+    
+    def _estimate_mutation_improvement_potential(self, activation: torch.Tensor,
+                                               gradient: torch.Tensor,
+                                               targets: torch.Tensor,
+                                               current_accuracy: float) -> float:
+        """估算变异改进潜力"""
+        # 基于梯度和激活模式估算变异后的改进潜力
+        
+        # 1. 梯度多样性（高多样性 = 高改进潜力）
+        gradient_diversity = torch.std(gradient).item()
+        
+        # 2. 激活饱和度（低饱和度 = 高改进潜力）
+        activation_saturation = torch.mean(torch.sigmoid(activation)).item()
+        saturation_score = 1.0 - abs(activation_saturation - 0.5) * 2  # 0.5为最佳
+        
+        # 3. 当前准确率距离上限的空间
+        accuracy_headroom = (0.95 - current_accuracy) / 0.95
+        
+        # 综合评估
+        improvement_potential = (
+            gradient_diversity * 0.3 +
+            saturation_score * 0.3 +
+            accuracy_headroom * 0.4
+        )
+        
+        return float(np.clip(improvement_potential, 0.0, 1.0))
+    
+    def _classify_leak_type(self, info_drop: float, learning_difficulty: float, 
+                          posterior_efficiency: float) -> str:
+        """分类漏点类型"""
+        if info_drop > 0.5:
+            return "information_compression_bottleneck"
+        elif learning_difficulty > 0.7:
+            return "gradient_learning_bottleneck"
+        elif posterior_efficiency < 0.3:
+            return "representational_bottleneck"
+        else:
+            return "general_bottleneck"
+    
+    def _select_optimal_mutation_strategy(self, leak_point: Dict[str, Any]) -> str:
+        """为漏点选择最优变异策略"""
+        leak_type = leak_point['leak_type']
+        severity = leak_point['severity']
+        
+        if leak_type == "information_compression_bottleneck":
+            return "widening"  # 增加通道数
+        elif leak_type == "gradient_learning_bottleneck":
+            return "deepening"  # 增加层数
+        elif leak_type == "representational_bottleneck":
+            return "hybrid_expansion"  # 混合扩展
+        else:
+            # 根据严重程度选择
+            if severity > 0.8:
+                return "aggressive_widening"
+            else:
+                return "conservative_widening"
+    
+    def _create_mutation_execution_plan(self, priority_targets: List[Dict[str, Any]],
+                                      current_accuracy: float,
+                                      flow_analysis: Dict[str, Any]) -> Dict[str, Any]:
+        """创建变异执行计划"""
+        
+        # 根据当前准确率和全局流分析确定执行策略
+        if current_accuracy < 0.85:
+            execution_mode = "conservative"
+            max_concurrent = 1
+        elif current_accuracy < 0.92:
+            execution_mode = "moderate"
+            max_concurrent = 2
+        else:
+            execution_mode = "aggressive"
+            max_concurrent = 3
+        
+        return {
+            'execution_mode': execution_mode,
+            'max_concurrent_mutations': max_concurrent,
+            'total_expected_improvement': sum(t['expected_improvement'] for t in priority_targets),
+            'estimated_parameter_cost': len(priority_targets) * 5000,  # 估算
+            'execution_phases': self._plan_execution_phases(priority_targets, max_concurrent)
+        }
+    
+    def _plan_execution_phases(self, targets: List[Dict[str, Any]], max_concurrent: int) -> List[List[str]]:
+        """规划执行阶段"""
+        phases = []
+        
+        # 按优先级分组
+        critical = [t for t in targets if t['priority'] == 'critical']
+        high = [t for t in targets if t['priority'] == 'high']
+        
+        # 第一阶段：关键漏点
+        if critical:
+            phases.append([t['layer_name'] for t in critical[:max_concurrent]])
+        
+        # 第二阶段：高潜力层
+        if high:
+            phases.append([t['layer_name'] for t in high[:max_concurrent]])
+        
+        return phases
+    
+    def _is_analyzable_layer(self, model: nn.Module, layer_name: str) -> bool:
+        """判断层是否可分析"""
+        try:
+            module = dict(model.named_modules())[layer_name]
+            return isinstance(module, (nn.Linear, nn.Conv2d, nn.Conv1d))
+        except:
+            return False
+
     def analyze_layer_mutation_potential(self, 
                                        model: nn.Module,
                                        layer_name: str,
@@ -812,7 +1315,7 @@ class Net2NetSubnetworkAnalyzer:
                 'error': str(e),
                 'recommendation': {'action': 'skip', 'reason': f'分析失败: {e}'}
             }
-    
+
     def _generate_recommendation(self, 
                                layer_name: str,
                                param_space_analysis: Dict[str, float],
@@ -858,3 +1361,30 @@ class Net2NetSubnetworkAnalyzer:
             'risk_level': risk_assessment['overall_risk'],
             'reason': f"改进潜力={improvement_potential:.3f}, 风险={risk_assessment['overall_risk']:.3f}"
         }
+
+# 新增：信息流分析器类
+class InformationFlowAnalyzer:
+    """信息流分析器"""
+    
+    def __init__(self):
+        self.flow_patterns = {}
+        
+    def analyze_flow_patterns(self, activations: Dict[str, torch.Tensor]) -> Dict[str, Any]:
+        """分析信息流模式"""
+        # 实现信息流分析逻辑
+        return {}
+
+class InformationLeakDetector:
+    """信息泄露检测器"""
+    
+    def __init__(self):
+        self.leak_thresholds = {
+            'entropy_drop': 0.5,
+            'gradient_variance': 0.1,
+            'correlation_loss': 0.3
+        }
+    
+    def detect_leaks(self, layer_data: Dict[str, torch.Tensor]) -> List[Dict[str, Any]]:
+        """检测信息泄露点"""
+        # 实现泄露检测逻辑
+        return []
