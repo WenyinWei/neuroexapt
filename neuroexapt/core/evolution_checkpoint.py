@@ -1,4 +1,11 @@
 """
+"""
+\defgroup group_evolution_checkpoint Evolution Checkpoint
+\ingroup core
+Evolution Checkpoint module for NeuroExapt framework.
+"""
+
+
 架构进化检查点管理器
 
 负责管理神经网络架构进化过程中的checkpoints：

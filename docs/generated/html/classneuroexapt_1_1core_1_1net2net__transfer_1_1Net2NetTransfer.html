@@ -1,0 +1,910 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="description" content="NeuroExapt - Advanced Neural Architecture Search and Dynamic Morphogenesis Framework">
+    <meta name="keywords" content="neural architecture search, dynamic morphogenesis, deep learning, AI, PyTorch">
+    <meta name="author" content="NeuroExapt Team">
+    <meta property="og:title" content="NeuroExapt Documentation">
+    <meta property="og:description" content="Advanced Neural Architecture Search Framework">
+    <meta property="og:type" content="website">
+
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>NeuroExapt: neuroexapt.core.net2net_transfer.Net2NetTransfer Class Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="custom.css" rel="stylesheet" type="text/css"/>
+<!-- NeuroExapt Custom Styles -->
+<style>
+/* Enhanced header styling */
+.header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+.header h1 {
+    margin: 0;
+    font-size: 2.5em;
+    font-weight: 300;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+.header .subtitle {
+    font-size: 1.2em;
+    opacity: 0.9;
+    margin-top: 10px;
+}
+/* Enhanced navigation */
+.tablist {
+    background: #f8f9fa;
+    border-bottom: 2px solid #e9ecef;
+}
+.tablist li.current a {
+    background: #667eea;
+    color: white;
+}
+/* Improved content layout */
+.contents {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+/* Code highlighting */
+.fragment {
+    background: #f8f9fa;
+    border-left: 4px solid #667eea;
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 0 8px 8px 0;
+}
+/* Enhanced tables */
+table.memberdecls {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 20px 0;
+}
+table.memberdecls td {
+    border: 1px solid #e9ecef;
+    padding: 12px;
+}
+/* Better typography */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #343a40;
+}
+h1, h2, h3, h4, h5, h6 {
+    color: #495057;
+    font-weight: 500;
+}
+/* Responsive design */
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 2em;
+    }
+    .contents {
+        padding: 15px;
+    }
+}
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #1a1a1a;
+        color: #e9ecef;
+    }
+    .header {
+        background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+    }
+    .fragment {
+        background: #2d3748;
+        color: #e9ecef;
+    }
+}
+</style>
+<!-- Analytics (if needed) -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<!--
+<script async src="https://www.googletagmanager.com/gtag/js?id=GA_TRACKING_ID"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'GA_TRACKING_ID');
+</script>
+-->
+</head>
+<body>
+<!-- Custom Header -->
+<div class="header">
+    <h1>🧠 NeuroExapt</h1>
+    <div class="subtitle">Advanced Neural Architecture Search and Dynamic Morphogenesis Framework</div>
+    <div style="margin-top: 15px; font-size: 0.9em;">
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🚀 Dynamic Neural Morphogenesis
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🔬 Advanced Architecture Search
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            ⚡ High-Performance Computing
+        </span>
+    </div>
+</div>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! --><!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('classneuroexapt_1_1core_1_1net2net__transfer_1_1Net2NetTransfer.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#pro-methods">Protected Member Functions</a> &#124;
+<a href="classneuroexapt_1_1core_1_1net2net__transfer_1_1Net2NetTransfer-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">neuroexapt.core.net2net_transfer.Net2NetTransfer Class Reference</div></div>
+</div><!--header-->
+<div class="contents">
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:aad6292ec3968d775d11f47ec2c65a79e" id="r_aad6292ec3968d775d11f47ec2c65a79e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1net2net__transfer_1_1Net2NetTransfer.html#aad6292ec3968d775d11f47ec2c65a79e">__init__</a> (self)</td></tr>
+<tr class="separator:aad6292ec3968d775d11f47ec2c65a79e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a764bcdfd5e38ceb5be875c861ad9799f" id="r_a764bcdfd5e38ceb5be875c861ad9799f"><td class="memItemLeft" align="right" valign="top">Tuple[nn.Conv2d, Optional[nn.Module]]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1net2net__transfer_1_1Net2NetTransfer.html#a764bcdfd5e38ceb5be875c861ad9799f">net2wider_conv</a> (self, nn.Conv2d conv_layer, Optional[nn.Module] next_layer, int new_width, float noise_std=1e-7)</td></tr>
+<tr class="separator:a764bcdfd5e38ceb5be875c861ad9799f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a41a87155424decfb50a3139e6a4ffb99" id="r_a41a87155424decfb50a3139e6a4ffb99"><td class="memItemLeft" align="right" valign="top">nn.Conv2d&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1net2net__transfer_1_1Net2NetTransfer.html#a41a87155424decfb50a3139e6a4ffb99">net2deeper_conv</a> (self, nn.Conv2d reference_layer, str activation='relu')</td></tr>
+<tr class="separator:a41a87155424decfb50a3139e6a4ffb99"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ade051916ccf8cb1dc417beaa63f255e0" id="r_ade051916ccf8cb1dc417beaa63f255e0"><td class="memItemLeft" align="right" valign="top">nn.Linear&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1net2net__transfer_1_1Net2NetTransfer.html#ade051916ccf8cb1dc417beaa63f255e0">net2deeper_linear</a> (self, nn.Linear reference_layer)</td></tr>
+<tr class="separator:ade051916ccf8cb1dc417beaa63f255e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a90173f04950670f59d3354e5cd3f0f89" id="r_a90173f04950670f59d3354e5cd3f0f89"><td class="memItemLeft" align="right" valign="top">List[nn.Module]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1net2net__transfer_1_1Net2NetTransfer.html#a90173f04950670f59d3354e5cd3f0f89">net2branch</a> (self, nn.Module base_layer, int num_branches=2)</td></tr>
+<tr class="separator:a90173f04950670f59d3354e5cd3f0f89"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac1eb6a472d8729d5c3db0ebc49757ec4" id="r_ac1eb6a472d8729d5c3db0ebc49757ec4"><td class="memItemLeft" align="right" valign="top">torch.Tensor&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1net2net__transfer_1_1Net2NetTransfer.html#ac1eb6a472d8729d5c3db0ebc49757ec4">smooth_transition_loss</a> (self, torch.Tensor student_output, torch.Tensor teacher_output, float alpha=0.1)</td></tr>
+<tr class="separator:ac1eb6a472d8729d5c3db0ebc49757ec4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a56cf39ce54d580ca4f071e4177ca53ef" id="r_a56cf39ce54d580ca4f071e4177ca53ef"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1net2net__transfer_1_1Net2NetTransfer.html#a56cf39ce54d580ca4f071e4177ca53ef">verify_function_preserving</a> (self, nn.Module teacher_model, nn.Module student_model, torch.Tensor test_input, float tolerance=1e-5)</td></tr>
+<tr class="separator:a56cf39ce54d580ca4f071e4177ca53ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a365ca26285a20a6530fdb7b433b2d11d" id="r_a365ca26285a20a6530fdb7b433b2d11d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1net2net__transfer_1_1Net2NetTransfer.html#a365ca26285a20a6530fdb7b433b2d11d">record_transfer</a> (self, str transfer_type, Dict details)</td></tr>
+<tr class="separator:a365ca26285a20a6530fdb7b433b2d11d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab52d62bcde3d9a46c25e9642899aeaa6" id="r_ab52d62bcde3d9a46c25e9642899aeaa6"><td class="memItemLeft" align="right" valign="top">List[Dict]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1net2net__transfer_1_1Net2NetTransfer.html#ab52d62bcde3d9a46c25e9642899aeaa6">get_transfer_history</a> (self)</td></tr>
+<tr class="separator:ab52d62bcde3d9a46c25e9642899aeaa6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a68c3c9dea2f29e58cc058396b83f7c83" id="r_a68c3c9dea2f29e58cc058396b83f7c83"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1net2net__transfer_1_1Net2NetTransfer.html#a68c3c9dea2f29e58cc058396b83f7c83">transfer_records</a></td></tr>
+<tr class="separator:a68c3c9dea2f29e58cc058396b83f7c83"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr class="memitem:a6a5bc957aac17f7fe8548f7155e951d7" id="r_a6a5bc957aac17f7fe8548f7155e951d7"><td class="memItemLeft" align="right" valign="top">nn.Conv2d&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1net2net__transfer_1_1Net2NetTransfer.html#a6a5bc957aac17f7fe8548f7155e951d7">_wider_next_conv</a> (self, nn.Conv2d conv_layer, List[int] mapping, Dict[int, int] replication_count)</td></tr>
+<tr class="separator:a6a5bc957aac17f7fe8548f7155e951d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb215ddc648436b7cfc943dc79008f12" id="r_adb215ddc648436b7cfc943dc79008f12"><td class="memItemLeft" align="right" valign="top">nn.Linear&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1net2net__transfer_1_1Net2NetTransfer.html#adb215ddc648436b7cfc943dc79008f12">_wider_next_linear</a> (self, nn.Linear linear_layer, List[int] mapping, Dict[int, int] replication_count)</td></tr>
+<tr class="separator:adb215ddc648436b7cfc943dc79008f12"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae34bfc2d6a5dc926a62972c43f1a7aa6" id="r_ae34bfc2d6a5dc926a62972c43f1a7aa6"><td class="memItemLeft" align="right" valign="top">nn.BatchNorm2d&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1net2net__transfer_1_1Net2NetTransfer.html#ae34bfc2d6a5dc926a62972c43f1a7aa6">_wider_next_batchnorm2d</a> (self, nn.BatchNorm2d bn_layer, List[int] mapping, Dict[int, int] replication_count)</td></tr>
+<tr class="separator:ae34bfc2d6a5dc926a62972c43f1a7aa6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><pre class="fragment">Net2Net风格的平滑参数迁移工具</pre> 
+<p class="definition">Definition at line <a class="el" href="net2net__transfer_8py_source.html#l00029">29</a> of file <a class="el" href="net2net__transfer_8py_source.html">net2net_transfer.py</a>.</p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="aad6292ec3968d775d11f47ec2c65a79e" name="aad6292ec3968d775d11f47ec2c65a79e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aad6292ec3968d775d11f47ec2c65a79e">&#9670;&#160;</a></span>__init__()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.net2net_transfer.Net2NetTransfer.__init__ </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="net2net__transfer_8py_source.html#l00032">32</a> of file <a class="el" href="net2net__transfer_8py_source.html">net2net_transfer.py</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="ae34bfc2d6a5dc926a62972c43f1a7aa6" name="ae34bfc2d6a5dc926a62972c43f1a7aa6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae34bfc2d6a5dc926a62972c43f1a7aa6">&#9670;&#160;</a></span>_wider_next_batchnorm2d()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> nn.BatchNorm2d neuroexapt.core.net2net_transfer.Net2NetTransfer._wider_next_batchnorm2d </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">nn.BatchNorm2d&#160;</td>
+          <td class="paramname"><em>bn_layer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">List[int]&#160;</td>
+          <td class="paramname"><em>mapping</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Dict[int, int]&#160;</td>
+          <td class="paramname"><em>replication_count</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">扩展后续BatchNorm层</pre> 
+<p class="definition">Definition at line <a class="el" href="net2net__transfer_8py_source.html#l00154">154</a> of file <a class="el" href="net2net__transfer_8py_source.html">net2net_transfer.py</a>.</p>
+
+</div>
+</div>
+<a id="a6a5bc957aac17f7fe8548f7155e951d7" name="a6a5bc957aac17f7fe8548f7155e951d7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6a5bc957aac17f7fe8548f7155e951d7">&#9670;&#160;</a></span>_wider_next_conv()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> nn.Conv2d neuroexapt.core.net2net_transfer.Net2NetTransfer._wider_next_conv </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">nn.Conv2d&#160;</td>
+          <td class="paramname"><em>conv_layer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">List[int]&#160;</td>
+          <td class="paramname"><em>mapping</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Dict[int, int]&#160;</td>
+          <td class="paramname"><em>replication_count</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">扩展后续卷积层的输入通道</pre> 
+<p class="definition">Definition at line <a class="el" href="net2net__transfer_8py_source.html#l00106">106</a> of file <a class="el" href="net2net__transfer_8py_source.html">net2net_transfer.py</a>.</p>
+
+</div>
+</div>
+<a id="adb215ddc648436b7cfc943dc79008f12" name="adb215ddc648436b7cfc943dc79008f12"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adb215ddc648436b7cfc943dc79008f12">&#9670;&#160;</a></span>_wider_next_linear()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> nn.Linear neuroexapt.core.net2net_transfer.Net2NetTransfer._wider_next_linear </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">nn.Linear&#160;</td>
+          <td class="paramname"><em>linear_layer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">List[int]&#160;</td>
+          <td class="paramname"><em>mapping</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Dict[int, int]&#160;</td>
+          <td class="paramname"><em>replication_count</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">扩展后续线性层的输入特征</pre> 
+<p class="definition">Definition at line <a class="el" href="net2net__transfer_8py_source.html#l00135">135</a> of file <a class="el" href="net2net__transfer_8py_source.html">net2net_transfer.py</a>.</p>
+
+</div>
+</div>
+<a id="ab52d62bcde3d9a46c25e9642899aeaa6" name="ab52d62bcde3d9a46c25e9642899aeaa6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab52d62bcde3d9a46c25e9642899aeaa6">&#9670;&#160;</a></span>get_transfer_history()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> List[Dict] neuroexapt.core.net2net_transfer.Net2NetTransfer.get_transfer_history </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">获取迁移历史</pre> 
+<p class="definition">Definition at line <a class="el" href="net2net__transfer_8py_source.html#l00335">335</a> of file <a class="el" href="net2net__transfer_8py_source.html">net2net_transfer.py</a>.</p>
+
+</div>
+</div>
+<a id="a90173f04950670f59d3354e5cd3f0f89" name="a90173f04950670f59d3354e5cd3f0f89"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a90173f04950670f59d3354e5cd3f0f89">&#9670;&#160;</a></span>net2branch()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> List[nn.Module] neuroexapt.core.net2net_transfer.Net2NetTransfer.net2branch </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">nn.Module&#160;</td>
+          <td class="paramname"><em>base_layer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int &#160;</td>
+          <td class="paramname"><em>num_branches</em> = <code>2</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">创建分支结构，每个分支初始化为与基础层相同
+
+Args:
+    base_layer: 基础层
+    num_branches: 分支数量
+
+Returns:
+    分支层列表
+</pre> 
+<p class="definition">Definition at line <a class="el" href="net2net__transfer_8py_source.html#l00230">230</a> of file <a class="el" href="net2net__transfer_8py_source.html">net2net_transfer.py</a>.</p>
+
+</div>
+</div>
+<a id="a41a87155424decfb50a3139e6a4ffb99" name="a41a87155424decfb50a3139e6a4ffb99"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a41a87155424decfb50a3139e6a4ffb99">&#9670;&#160;</a></span>net2deeper_conv()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> nn.Conv2d neuroexapt.core.net2net_transfer.Net2NetTransfer.net2deeper_conv </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">nn.Conv2d&#160;</td>
+          <td class="paramname"><em>reference_layer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str &#160;</td>
+          <td class="paramname"><em>activation</em> = <code>'relu'</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">在卷积层后插入恒等映射层
+
+Args:
+    reference_layer: 参考层(用于确定新层的通道数)
+    activation: 激活函数类型
+
+Returns:
+    恒等映射的新卷积层
+</pre> 
+<p class="definition">Definition at line <a class="el" href="net2net__transfer_8py_source.html#l00177">177</a> of file <a class="el" href="net2net__transfer_8py_source.html">net2net_transfer.py</a>.</p>
+
+</div>
+</div>
+<a id="ade051916ccf8cb1dc417beaa63f255e0" name="ade051916ccf8cb1dc417beaa63f255e0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ade051916ccf8cb1dc417beaa63f255e0">&#9670;&#160;</a></span>net2deeper_linear()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> nn.Linear neuroexapt.core.net2net_transfer.Net2NetTransfer.net2deeper_linear </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">nn.Linear&#160;</td>
+          <td class="paramname"><em>reference_layer</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">在线性层后插入恒等映射层
+</pre> 
+<p class="definition">Definition at line <a class="el" href="net2net__transfer_8py_source.html#l00212">212</a> of file <a class="el" href="net2net__transfer_8py_source.html">net2net_transfer.py</a>.</p>
+
+</div>
+</div>
+<a id="a764bcdfd5e38ceb5be875c861ad9799f" name="a764bcdfd5e38ceb5be875c861ad9799f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a764bcdfd5e38ceb5be875c861ad9799f">&#9670;&#160;</a></span>net2wider_conv()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Tuple[nn.Conv2d, Optional[nn.Module]] neuroexapt.core.net2net_transfer.Net2NetTransfer.net2wider_conv </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">nn.Conv2d&#160;</td>
+          <td class="paramname"><em>conv_layer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Optional[nn.Module]&#160;</td>
+          <td class="paramname"><em>next_layer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>new_width</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float &#160;</td>
+          <td class="paramname"><em>noise_std</em> = <code>1e-7</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">卷积层宽度扩展 (增加输出通道数)
+
+Args:
+    conv_layer: 要扩展的卷积层
+    next_layer: 后续层(需要相应调整输入通道)
+    new_width: 新的输出通道数
+    noise_std: 添加的噪声标准差(用于打破对称性)
+
+Returns:
+    (新的卷积层, 新的后续层)
+</pre> 
+<p class="definition">Definition at line <a class="el" href="net2net__transfer_8py_source.html#l00035">35</a> of file <a class="el" href="net2net__transfer_8py_source.html">net2net_transfer.py</a>.</p>
+
+</div>
+</div>
+<a id="a365ca26285a20a6530fdb7b433b2d11d" name="a365ca26285a20a6530fdb7b433b2d11d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a365ca26285a20a6530fdb7b433b2d11d">&#9670;&#160;</a></span>record_transfer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.net2net_transfer.Net2NetTransfer.record_transfer </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str&#160;</td>
+          <td class="paramname"><em>transfer_type</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Dict&#160;</td>
+          <td class="paramname"><em>details</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">记录迁移操作</pre> 
+<p class="definition">Definition at line <a class="el" href="net2net__transfer_8py_source.html#l00326">326</a> of file <a class="el" href="net2net__transfer_8py_source.html">net2net_transfer.py</a>.</p>
+
+</div>
+</div>
+<a id="ac1eb6a472d8729d5c3db0ebc49757ec4" name="ac1eb6a472d8729d5c3db0ebc49757ec4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac1eb6a472d8729d5c3db0ebc49757ec4">&#9670;&#160;</a></span>smooth_transition_loss()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> torch.Tensor neuroexapt.core.net2net_transfer.Net2NetTransfer.smooth_transition_loss </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">torch.Tensor&#160;</td>
+          <td class="paramname"><em>student_output</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">torch.Tensor&#160;</td>
+          <td class="paramname"><em>teacher_output</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float &#160;</td>
+          <td class="paramname"><em>alpha</em> = <code>0.1</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">平滑过渡损失函数
+
+Args:
+    student_output: 学生网络输出
+    teacher_output: 教师网络输出
+    alpha: 过渡损失权重
+
+Returns:
+    平滑过渡损失
+</pre> 
+<p class="definition">Definition at line <a class="el" href="net2net__transfer_8py_source.html#l00283">283</a> of file <a class="el" href="net2net__transfer_8py_source.html">net2net_transfer.py</a>.</p>
+
+</div>
+</div>
+<a id="a56cf39ce54d580ca4f071e4177ca53ef" name="a56cf39ce54d580ca4f071e4177ca53ef"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a56cf39ce54d580ca4f071e4177ca53ef">&#9670;&#160;</a></span>verify_function_preserving()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> bool neuroexapt.core.net2net_transfer.Net2NetTransfer.verify_function_preserving </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">nn.Module&#160;</td>
+          <td class="paramname"><em>teacher_model</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">nn.Module&#160;</td>
+          <td class="paramname"><em>student_model</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">torch.Tensor&#160;</td>
+          <td class="paramname"><em>test_input</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float &#160;</td>
+          <td class="paramname"><em>tolerance</em> = <code>1e-5</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">验证函数保持性质
+
+Args:
+    teacher_model: 教师模型
+    student_model: 学生模型  
+    test_input: 测试输入
+    tolerance: 容差
+
+Returns:
+    是否保持函数相等
+</pre> 
+<p class="definition">Definition at line <a class="el" href="net2net__transfer_8py_source.html#l00300">300</a> of file <a class="el" href="net2net__transfer_8py_source.html">net2net_transfer.py</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a68c3c9dea2f29e58cc058396b83f7c83" name="a68c3c9dea2f29e58cc058396b83f7c83"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a68c3c9dea2f29e58cc058396b83f7c83">&#9670;&#160;</a></span>transfer_records</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.net2net_transfer.Net2NetTransfer.transfer_records</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="net2net__transfer_8py_source.html#l00033">33</a> of file <a class="el" href="net2net__transfer_8py_source.html">net2net_transfer.py</a>.</p>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following file:<ul>
+<li>neuroexapt/core/<a class="el" href="net2net__transfer_8py_source.html">net2net_transfer.py</a></li>
+</ul>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<!-- do not remove this div, it is closed by doxygen! -->
+</div>
+<!-- Custom Footer -->
+<div style="background: #f8f9fa; border-top: 1px solid #e9ecef; margin-top: 50px; padding: 30px 0; text-align: center;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-bottom: 20px;">
+            <!-- Project Info -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🧠 NeuroExapt</h4>
+                <p style="color: #6c757d; margin: 0; font-size: 0.9em;">
+                    Advanced Neural Architecture Search and Dynamic Morphogenesis Framework for next-generation AI research.
+                </p>
+            </div>
+            <!-- Quick Links -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">📚 Quick Links</h4>
+                <div style="text-align: left;">
+                    <a href="index.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🏠 Home</a>
+                    <a href="modules.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📦 Modules</a>
+                    <a href="examples.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💡 Examples</a>
+                    <a href="files.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📁 Files</a>
+                </div>
+            </div>
+            <!-- Resources -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🔗 Resources</h4>
+                <div style="text-align: left;">
+                    <a href="https://github.com/your-username/neuroexapt" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💻 GitHub Repository</a>
+                    <a href="https://github.com/your-username/neuroexapt/issues" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🐛 Issue Tracker</a>
+                    <a href="https://github.com/your-username/neuroexapt/wiki" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📖 Wiki</a>
+                    <a href="https://github.com/your-username/neuroexapt/releases" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🚀 Releases</a>
+                </div>
+            </div>
+        </div>
+        <hr style="border: 0; height: 1px; background: #e9ecef; margin: 20px 0;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+            <div style="color: #6c757d; font-size: 0.9em;">
+                © 2024 NeuroExapt Project. Generated with 
+                <a href="https://www.doxygen.nl/index.html" style="color: #667eea; text-decoration: none;">Doxygen 1.9.8</a>
+            </div>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <span style="font-size: 0.9em; color: #6c757d;">Built with ❤️ for AI Research</span>
+                <div style="display: flex; gap: 10px;">
+                    <span style="background: #28a745; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">🟢 Active</span>
+                    <span style="background: #17a2b8; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">v3.0</span>
+                </div>
+            </div>
+        </div>
+        <!-- Technology Stack -->
+        <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #e9ecef;">
+            <div style="font-size: 0.8em; color: #868e96; text-align: center;">
+                <strong>Built with:</strong>
+                <span style="margin: 0 5px;">🐍 Python</span>
+                <span style="margin: 0 5px;">🔥 PyTorch</span>
+                <span style="margin: 0 5px;">⚡ CUDA</span>
+                <span style="margin: 0 5px;">🧮 NumPy</span>
+                <span style="margin: 0 5px;">📊 Matplotlib</span>
+                <span style="margin: 0 5px;">🚀 Triton</span>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Back to top button -->
+<div id="back-to-top" style="position: fixed; bottom: 20px; right: 20px; display: none; z-index: 1000;">
+    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" 
+            style="background: #667eea; color: white; border: none; padding: 10px 15px; border-radius: 50%; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,0.2); font-size: 16px;">
+        ⬆️
+    </button>
+</div>
+<script>
+// Back to top button functionality
+window.addEventListener('scroll', function() {
+    const backToTop = document.getElementById('back-to-top');
+    if (window.pageYOffset > 300) {
+        backToTop.style.display = 'block';
+    } else {
+        backToTop.style.display = 'none';
+    }
+});
+// Enhanced search functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Add search enhancement if search box exists
+    const searchBox = document.getElementById('MSearchField');
+    if (searchBox) {
+        searchBox.placeholder = 'Search documentation... 🔍';
+        searchBox.style.borderRadius = '20px';
+        searchBox.style.padding = '8px 15px';
+    }
+    // Add copy code button to code blocks
+    const codeBlocks = document.querySelectorAll('.fragment');
+    codeBlocks.forEach(function(block) {
+        const copyBtn = document.createElement('button');
+        copyBtn.innerHTML = '📋';
+        copyBtn.title = 'Copy code';
+        copyBtn.style.cssText = 'position: absolute; top: 10px; right: 10px; background: #667eea; color: white; border: none; padding: 5px; border-radius: 3px; cursor: pointer; font-size: 12px;';
+        block.style.position = 'relative';
+        block.appendChild(copyBtn);
+        copyBtn.addEventListener('click', function() {
+            const text = block.textContent;
+            navigator.clipboard.writeText(text).then(function() {
+                copyBtn.innerHTML = '✅';
+                setTimeout(function() {
+                    copyBtn.innerHTML = '📋';
+                }, 2000);
+            });
+        });
+    });
+});
+// Dark mode toggle (optional)
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+}
+// Load saved dark mode preference
+if (localStorage.getItem('darkMode') === 'true') {
+    document.body.classList.add('dark-mode');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,520 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="description" content="NeuroExapt - Advanced Neural Architecture Search and Dynamic Morphogenesis Framework">
+    <meta name="keywords" content="neural architecture search, dynamic morphogenesis, deep learning, AI, PyTorch">
+    <meta name="author" content="NeuroExapt Team">
+    <meta property="og:title" content="NeuroExapt Documentation">
+    <meta property="og:description" content="Advanced Neural Architecture Search Framework">
+    <meta property="og:type" content="website">
+
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>NeuroExapt: examples/simple_batchnorm_debug.py Source File</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="custom.css" rel="stylesheet" type="text/css"/>
+<!-- NeuroExapt Custom Styles -->
+<style>
+/* Enhanced header styling */
+.header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+.header h1 {
+    margin: 0;
+    font-size: 2.5em;
+    font-weight: 300;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+.header .subtitle {
+    font-size: 1.2em;
+    opacity: 0.9;
+    margin-top: 10px;
+}
+/* Enhanced navigation */
+.tablist {
+    background: #f8f9fa;
+    border-bottom: 2px solid #e9ecef;
+}
+.tablist li.current a {
+    background: #667eea;
+    color: white;
+}
+/* Improved content layout */
+.contents {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+/* Code highlighting */
+.fragment {
+    background: #f8f9fa;
+    border-left: 4px solid #667eea;
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 0 8px 8px 0;
+}
+/* Enhanced tables */
+table.memberdecls {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 20px 0;
+}
+table.memberdecls td {
+    border: 1px solid #e9ecef;
+    padding: 12px;
+}
+/* Better typography */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #343a40;
+}
+h1, h2, h3, h4, h5, h6 {
+    color: #495057;
+    font-weight: 500;
+}
+/* Responsive design */
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 2em;
+    }
+    .contents {
+        padding: 15px;
+    }
+}
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #1a1a1a;
+        color: #e9ecef;
+    }
+    .header {
+        background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+    }
+    .fragment {
+        background: #2d3748;
+        color: #e9ecef;
+    }
+}
+</style>
+<!-- Analytics (if needed) -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<!--
+<script async src="https://www.googletagmanager.com/gtag/js?id=GA_TRACKING_ID"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'GA_TRACKING_ID');
+</script>
+-->
+</head>
+<body>
+<!-- Custom Header -->
+<div class="header">
+    <h1>🧠 NeuroExapt</h1>
+    <div class="subtitle">Advanced Neural Architecture Search and Dynamic Morphogenesis Framework</div>
+    <div style="margin-top: 15px; font-size: 0.9em;">
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🚀 Dynamic Neural Morphogenesis
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🔬 Advanced Architecture Search
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            ⚡ High-Performance Computing
+        </span>
+    </div>
+</div>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! --><!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function() { init_codefold(0); });
+/* @license-end */
+</script>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('simple__batchnorm__debug_8py_source.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">simple_batchnorm_debug.py</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="simple__batchnorm__debug_8py.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno"><a class="line" href="namespaceexamples_1_1simple__batchnorm__debug.html">    1</a></span><span class="comment">#!/usr/bin/env python3</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="stringliteral">&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="stringliteral">🔧 简化的BatchNorm同步调试脚本</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="stringliteral">直接测试DNM框架中的BatchNorm同步问题</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="stringliteral">&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="keyword">import</span> torch</div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="keyword">import</span> logging</div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="keyword">import</span> sys</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="keyword">import</span> os</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="comment"># 添加项目路径</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="comment"># 配置详细日志</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>logging.basicConfig(</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno"><a class="line" href="namespaceexamples_1_1simple__batchnorm__debug.html#af31ccf6fdf5b30dd24cb281ebe364bd7">   18</a></span>    level=logging.DEBUG,</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno"><a class="line" href="namespaceexamples_1_1simple__batchnorm__debug.html#a211267f9147853caf532206b102e9b0c">   19</a></span>    format=<span class="stringliteral">&#39;%(asctime)s - %(name)s - %(levelname)s - %(message)s&#39;</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>)</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno"><a class="line" href="namespaceexamples_1_1simple__batchnorm__debug.html#abe9581069cfa1d8beb70e9d4bda5ecac">   22</a></span>logger = logging.getLogger(__name__)</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="comment"># 直接导入DNM模块，避免整个neuroexapt包的依赖问题</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="keywordflow">try</span>:</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    <span class="comment"># 直接从文件导入，绕过__init__.py</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    <span class="keyword">import</span> importlib.util</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno"><a class="line" href="namespaceexamples_1_1simple__batchnorm__debug.html#ae373403bf22d7ee143ee1649b0dd4d51">   28</a></span>    spec = importlib.util.spec_from_file_location(</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>        <span class="stringliteral">&quot;dnm_neuron_division&quot;</span>, </div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>        <span class="stringliteral">&quot;/workspace/neuroexapt/core/dnm_neuron_division.py&quot;</span></div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    )</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno"><a class="line" href="namespaceexamples_1_1simple__batchnorm__debug.html#abb98aacf0585e4dd9577b9099dfe48a9">   32</a></span>    dnm_module = importlib.util.module_from_spec(spec)</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    spec.loader.exec_module(dnm_module)</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno"><a class="line" href="namespaceexamples_1_1simple__batchnorm__debug.html#ae8620e30d660b9ef093be5de92848798">   34</a></span>    DNMNeuronDivision = dnm_module.DNMNeuronDivision</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    logger.info(<span class="stringliteral">&quot;✅ 成功导入DNM模块&quot;</span>)</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="keywordflow">except</span> Exception <span class="keyword">as</span> e:</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    logger.error(f<span class="stringliteral">&quot;❌ 无法导入DNM模块: {e}&quot;</span>)</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    sys.exit(1)</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
+<div class="foldopen" id="foldopen00040" data-start="" data-end="">
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno"><a class="line" href="classexamples_1_1simple__batchnorm__debug_1_1SimpleTestNet.html">   40</a></span><span class="keyword">class </span><a class="code hl_class" href="classexamples_1_1simple__batchnorm__debug_1_1SimpleTestNet.html">SimpleTestNet</a>(nn.Module):</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="stringliteral">&quot;&quot;&quot;简单的测试网络，模拟ResNet结构&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    </div>
+<div class="foldopen" id="foldopen00043" data-start="" data-end="">
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno"><a class="line" href="classexamples_1_1simple__batchnorm__debug_1_1SimpleTestNet.html#a65ce671dd3d92607a3fb0c7d70a26cd6">   43</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classexamples_1_1simple__batchnorm__debug_1_1SimpleTestNet.html#a65ce671dd3d92607a3fb0c7d70a26cd6">__init__</a>(self):</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>        super().<a class="code hl_function" href="classexamples_1_1simple__batchnorm__debug_1_1SimpleTestNet.html#a65ce671dd3d92607a3fb0c7d70a26cd6">__init__</a>()</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        </div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>        <span class="comment"># 简单的stem结构 (类似ResNet)</span></div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno"><a class="line" href="classexamples_1_1simple__batchnorm__debug_1_1SimpleTestNet.html#a3f2bbcceec8b9535f49f71d9b9b59f59">   47</a></span>        self.<a class="code hl_variable" href="classexamples_1_1simple__batchnorm__debug_1_1SimpleTestNet.html#a3f2bbcceec8b9535f49f71d9b9b59f59">stem</a> = nn.Sequential(</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>            nn.Conv2d(3, 64, kernel_size=3, padding=1, bias=<span class="keyword">False</span>),  <span class="comment"># stem.0</span></div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>            nn.BatchNorm2d(64),  <span class="comment"># stem.1</span></div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>            nn.ReLU(inplace=<span class="keyword">True</span>),  <span class="comment"># stem.2</span></div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>        )</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>        </div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        <span class="comment"># 简单的layer1结构</span></div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno"><a class="line" href="classexamples_1_1simple__batchnorm__debug_1_1SimpleTestNet.html#a4232cdf842c81ee0c81de69a4a82bc4e">   54</a></span>        self.<a class="code hl_variable" href="classexamples_1_1simple__batchnorm__debug_1_1SimpleTestNet.html#a4232cdf842c81ee0c81de69a4a82bc4e">layer1</a> = nn.Sequential(</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>            nn.Conv2d(64, 64, kernel_size=3, padding=1, bias=<span class="keyword">False</span>),  <span class="comment"># layer1.0</span></div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>            nn.BatchNorm2d(64),  <span class="comment"># layer1.1</span></div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>            nn.ReLU(inplace=<span class="keyword">True</span>),  <span class="comment"># layer1.2</span></div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        )</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        </div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>        <span class="comment"># 分类头</span></div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno"><a class="line" href="classexamples_1_1simple__batchnorm__debug_1_1SimpleTestNet.html#ac7b10878a3bd0209502477d11ad25fa1">   61</a></span>        self.<a class="code hl_variable" href="classexamples_1_1simple__batchnorm__debug_1_1SimpleTestNet.html#ac7b10878a3bd0209502477d11ad25fa1">classifier</a> = nn.Linear(64, 10)</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    </div>
+</div>
+<div class="foldopen" id="foldopen00063" data-start="" data-end="">
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno"><a class="line" href="classexamples_1_1simple__batchnorm__debug_1_1SimpleTestNet.html#a8b2a7c0fd943b67f8c4aa14d0ef1b3b8">   63</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classexamples_1_1simple__batchnorm__debug_1_1SimpleTestNet.html#a8b2a7c0fd943b67f8c4aa14d0ef1b3b8">forward</a>(self, x):</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>        x = self.<a class="code hl_variable" href="classexamples_1_1simple__batchnorm__debug_1_1SimpleTestNet.html#a3f2bbcceec8b9535f49f71d9b9b59f59">stem</a>(x)</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>        x = self.<a class="code hl_variable" href="classexamples_1_1simple__batchnorm__debug_1_1SimpleTestNet.html#a4232cdf842c81ee0c81de69a4a82bc4e">layer1</a>(x)</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>        x = nn.functional.adaptive_avg_pool2d(x, (1, 1))</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>        x = x.view(x.size(0), -1)</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>        x = self.<a class="code hl_variable" href="classexamples_1_1simple__batchnorm__debug_1_1SimpleTestNet.html#ac7b10878a3bd0209502477d11ad25fa1">classifier</a>(x)</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>        <span class="keywordflow">return</span> x</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span> </div>
+</div>
+</div>
+<div class="foldopen" id="foldopen00071" data-start="" data-end="">
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno"><a class="line" href="namespaceexamples_1_1simple__batchnorm__debug.html#a5c08250a0368e1da223efb0cf6ba46b5">   71</a></span><span class="keyword">def </span><a class="code hl_function" href="namespaceexamples_1_1simple__batchnorm__debug.html#a5c08250a0368e1da223efb0cf6ba46b5">test_batchnorm_sync</a>():</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    <span class="stringliteral">&quot;&quot;&quot;测试BatchNorm同步功能&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    </div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    logger.info(<span class="stringliteral">&quot;🧪 开始BatchNorm同步测试&quot;</span>)</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    </div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    <span class="comment"># 创建测试网络</span></div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    model = <a class="code hl_class" href="classexamples_1_1simple__batchnorm__debug_1_1SimpleTestNet.html">SimpleTestNet</a>()</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    logger.info(f<span class="stringliteral">&quot;原始模型参数: {sum(p.numel() for p in model.parameters())}&quot;</span>)</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    </div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    <span class="comment"># 打印模型结构</span></div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    logger.info(<span class="stringliteral">&quot;📋 模型结构:&quot;</span>)</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    <span class="keywordflow">for</span> name, module <span class="keywordflow">in</span> model.named_modules():</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>        <span class="keywordflow">if</span> isinstance(module, (nn.Conv2d, nn.BatchNorm2d)):</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>            <span class="keywordflow">if</span> isinstance(module, nn.Conv2d):</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>                logger.info(f<span class="stringliteral">&quot;  {name}: Conv2d(in={module.in_channels}, out={module.out_channels})&quot;</span>)</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>            <span class="keywordflow">else</span>:</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>                logger.info(f<span class="stringliteral">&quot;  {name}: BatchNorm2d(features={module.num_features})&quot;</span>)</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    </div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    <span class="comment"># 创建DNM管理器配置</span></div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    config = {</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>        <span class="stringliteral">&#39;splitter&#39;</span>: {</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>            <span class="stringliteral">&#39;entropy_threshold&#39;</span>: 0.3,  <span class="comment"># 降低阈值，确保会触发分裂</span></div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>            <span class="stringliteral">&#39;overload_threshold&#39;</span>: 0.3,</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>            <span class="stringliteral">&#39;split_probability&#39;</span>: 0.8,  <span class="comment"># 提高分裂概率</span></div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>            <span class="stringliteral">&#39;max_splits_per_layer&#39;</span>: 5,</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>            <span class="stringliteral">&#39;inheritance_noise&#39;</span>: 0.1</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>        },</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>        <span class="stringliteral">&#39;monitoring&#39;</span>: {</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>            <span class="stringliteral">&#39;target_layers&#39;</span>: [<span class="stringliteral">&#39;conv&#39;</span>, <span class="stringliteral">&#39;linear&#39;</span>],</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>            <span class="stringliteral">&#39;analysis_frequency&#39;</span>: 1,  <span class="comment"># 每次都分析</span></div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>            <span class="stringliteral">&#39;min_epoch_before_split&#39;</span>: 0  <span class="comment"># 立即开始分裂</span></div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>        }</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    }</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    </div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    dnm_manager = <a class="code hl_variable" href="namespaceexamples_1_1simple__batchnorm__debug.html#ae8620e30d660b9ef093be5de92848798">DNMNeuronDivision</a>(config)</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>    </div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    <span class="comment"># 注册hooks</span></div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>    dnm_manager.register_model_hooks(model)</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    </div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    <span class="comment"># 创建测试数据</span></div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>    batch_size = 4</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>    x = torch.randn(batch_size, 3, 32, 32)</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    </div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>    logger.info(<span class="stringliteral">&quot;🔍 执行前向传播以收集统计信息&quot;</span>)</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    <span class="keyword">with</span> torch.no_grad():</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>        y = model(x)</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>        logger.info(f<span class="stringliteral">&quot;输出形状: {y.shape}&quot;</span>)</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>    </div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>    <span class="comment"># 执行神经元分裂</span></div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>    logger.info(<span class="stringliteral">&quot;⚡ 执行DNM神经元分裂&quot;</span>)</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    <span class="keywordflow">try</span>:</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>        result = dnm_manager.analyze_and_split(model, epoch=0)</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>        splits_made = result.get(<span class="stringliteral">&#39;splits_executed&#39;</span>, 0)</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>        logger.info(f<span class="stringliteral">&quot;✅ 分裂完成，执行了 {splits_made} 次分裂&quot;</span>)</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>    <span class="keywordflow">except</span> Exception <span class="keyword">as</span> e:</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>        logger.error(f<span class="stringliteral">&quot;❌ 分裂过程中发生错误: {e}&quot;</span>)</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>        logger.error(f<span class="stringliteral">&quot;错误类型: {type(e).__name__}&quot;</span>)</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>        <span class="keyword">import</span> traceback</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>        traceback.print_exc()</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>        <span class="keywordflow">return</span> <span class="keyword">False</span></div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>    </div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>    <span class="comment"># 检查模型参数变化</span></div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>    new_param_count = sum(p.numel() <span class="keywordflow">for</span> p <span class="keywordflow">in</span> model.parameters())</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>    logger.info(f<span class="stringliteral">&quot;分裂后模型参数: {new_param_count}&quot;</span>)</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>    </div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>    <span class="comment"># 打印分裂后的模型结构</span></div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>    logger.info(<span class="stringliteral">&quot;📋 分裂后模型结构:&quot;</span>)</div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>    <span class="keywordflow">for</span> name, module <span class="keywordflow">in</span> model.named_modules():</div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>        <span class="keywordflow">if</span> isinstance(module, (nn.Conv2d, nn.BatchNorm2d)):</div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>            <span class="keywordflow">if</span> isinstance(module, nn.Conv2d):</div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>                logger.info(f<span class="stringliteral">&quot;  {name}: Conv2d(in={module.in_channels}, out={module.out_channels})&quot;</span>)</div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>            <span class="keywordflow">else</span>:</div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>                logger.info(f<span class="stringliteral">&quot;  {name}: BatchNorm2d(features={module.num_features})&quot;</span>)</div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>    </div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>    <span class="comment"># 测试前向传播是否正常</span></div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>    logger.info(<span class="stringliteral">&quot;🔍 测试分裂后的前向传播&quot;</span>)</div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>    <span class="keywordflow">try</span>:</div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>        <span class="keyword">with</span> torch.no_grad():</div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>            y_new = model(x)</div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>            logger.info(f<span class="stringliteral">&quot;✅ 前向传播成功，输出形状: {y_new.shape}&quot;</span>)</div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>            <span class="keywordflow">return</span> <span class="keyword">True</span></div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>    <span class="keywordflow">except</span> Exception <span class="keyword">as</span> e:</div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>        logger.error(f<span class="stringliteral">&quot;❌ 前向传播失败: {e}&quot;</span>)</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>        logger.error(f<span class="stringliteral">&quot;错误类型: {type(e).__name__}&quot;</span>)</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>        <span class="keyword">import</span> traceback</div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>        traceback.print_exc()</div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>        <span class="keywordflow">return</span> <span class="keyword">False</span></div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span> </div>
+</div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span><span class="keywordflow">if</span> __name__ == <span class="stringliteral">&quot;__main__&quot;</span>:</div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>    logger.info(<span class="stringliteral">&quot;🚀 启动BatchNorm同步调试&quot;</span>)</div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>    </div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno"><a class="line" href="namespaceexamples_1_1simple__batchnorm__debug.html#accf5836bf5617f1b543152368d89f490">  162</a></span>    success = <a class="code hl_function" href="namespaceexamples_1_1simple__batchnorm__debug.html#a5c08250a0368e1da223efb0cf6ba46b5">test_batchnorm_sync</a>()</div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>    </div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>    <span class="keywordflow">if</span> success:</div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>        logger.info(<span class="stringliteral">&quot;🎉 BatchNorm同步测试成功！&quot;</span>)</div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>    <span class="keywordflow">else</span>:</div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>        logger.error(<span class="stringliteral">&quot;💥 BatchNorm同步测试失败！&quot;</span>)</div>
+<div class="ttc" id="aclassexamples_1_1simple__batchnorm__debug_1_1SimpleTestNet_html"><div class="ttname"><a href="classexamples_1_1simple__batchnorm__debug_1_1SimpleTestNet.html">examples.simple_batchnorm_debug.SimpleTestNet</a></div><div class="ttdef"><b>Definition</b> <a href="simple__batchnorm__debug_8py_source.html#l00040">simple_batchnorm_debug.py:40</a></div></div>
+<div class="ttc" id="aclassexamples_1_1simple__batchnorm__debug_1_1SimpleTestNet_html_a3f2bbcceec8b9535f49f71d9b9b59f59"><div class="ttname"><a href="classexamples_1_1simple__batchnorm__debug_1_1SimpleTestNet.html#a3f2bbcceec8b9535f49f71d9b9b59f59">examples.simple_batchnorm_debug.SimpleTestNet.stem</a></div><div class="ttdeci">stem</div><div class="ttdef"><b>Definition</b> <a href="simple__batchnorm__debug_8py_source.html#l00047">simple_batchnorm_debug.py:47</a></div></div>
+<div class="ttc" id="aclassexamples_1_1simple__batchnorm__debug_1_1SimpleTestNet_html_a4232cdf842c81ee0c81de69a4a82bc4e"><div class="ttname"><a href="classexamples_1_1simple__batchnorm__debug_1_1SimpleTestNet.html#a4232cdf842c81ee0c81de69a4a82bc4e">examples.simple_batchnorm_debug.SimpleTestNet.layer1</a></div><div class="ttdeci">layer1</div><div class="ttdef"><b>Definition</b> <a href="simple__batchnorm__debug_8py_source.html#l00054">simple_batchnorm_debug.py:54</a></div></div>
+<div class="ttc" id="aclassexamples_1_1simple__batchnorm__debug_1_1SimpleTestNet_html_a65ce671dd3d92607a3fb0c7d70a26cd6"><div class="ttname"><a href="classexamples_1_1simple__batchnorm__debug_1_1SimpleTestNet.html#a65ce671dd3d92607a3fb0c7d70a26cd6">examples.simple_batchnorm_debug.SimpleTestNet.__init__</a></div><div class="ttdeci">__init__(self)</div><div class="ttdef"><b>Definition</b> <a href="simple__batchnorm__debug_8py_source.html#l00043">simple_batchnorm_debug.py:43</a></div></div>
+<div class="ttc" id="aclassexamples_1_1simple__batchnorm__debug_1_1SimpleTestNet_html_a8b2a7c0fd943b67f8c4aa14d0ef1b3b8"><div class="ttname"><a href="classexamples_1_1simple__batchnorm__debug_1_1SimpleTestNet.html#a8b2a7c0fd943b67f8c4aa14d0ef1b3b8">examples.simple_batchnorm_debug.SimpleTestNet.forward</a></div><div class="ttdeci">forward(self, x)</div><div class="ttdef"><b>Definition</b> <a href="simple__batchnorm__debug_8py_source.html#l00063">simple_batchnorm_debug.py:63</a></div></div>
+<div class="ttc" id="aclassexamples_1_1simple__batchnorm__debug_1_1SimpleTestNet_html_ac7b10878a3bd0209502477d11ad25fa1"><div class="ttname"><a href="classexamples_1_1simple__batchnorm__debug_1_1SimpleTestNet.html#ac7b10878a3bd0209502477d11ad25fa1">examples.simple_batchnorm_debug.SimpleTestNet.classifier</a></div><div class="ttdeci">classifier</div><div class="ttdef"><b>Definition</b> <a href="simple__batchnorm__debug_8py_source.html#l00061">simple_batchnorm_debug.py:61</a></div></div>
+<div class="ttc" id="anamespaceexamples_1_1simple__batchnorm__debug_html_a5c08250a0368e1da223efb0cf6ba46b5"><div class="ttname"><a href="namespaceexamples_1_1simple__batchnorm__debug.html#a5c08250a0368e1da223efb0cf6ba46b5">examples.simple_batchnorm_debug.test_batchnorm_sync</a></div><div class="ttdeci">test_batchnorm_sync()</div><div class="ttdef"><b>Definition</b> <a href="simple__batchnorm__debug_8py_source.html#l00071">simple_batchnorm_debug.py:71</a></div></div>
+<div class="ttc" id="anamespaceexamples_1_1simple__batchnorm__debug_html_ae8620e30d660b9ef093be5de92848798"><div class="ttname"><a href="namespaceexamples_1_1simple__batchnorm__debug.html#ae8620e30d660b9ef093be5de92848798">examples.simple_batchnorm_debug.DNMNeuronDivision</a></div><div class="ttdeci">DNMNeuronDivision</div><div class="ttdef"><b>Definition</b> <a href="simple__batchnorm__debug_8py_source.html#l00034">simple_batchnorm_debug.py:34</a></div></div>
+</div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
+<!-- do not remove this div, it is closed by doxygen! -->
+</div>
+<!-- Custom Footer -->
+<div style="background: #f8f9fa; border-top: 1px solid #e9ecef; margin-top: 50px; padding: 30px 0; text-align: center;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-bottom: 20px;">
+            <!-- Project Info -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🧠 NeuroExapt</h4>
+                <p style="color: #6c757d; margin: 0; font-size: 0.9em;">
+                    Advanced Neural Architecture Search and Dynamic Morphogenesis Framework for next-generation AI research.
+                </p>
+            </div>
+            <!-- Quick Links -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">📚 Quick Links</h4>
+                <div style="text-align: left;">
+                    <a href="index.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🏠 Home</a>
+                    <a href="modules.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📦 Modules</a>
+                    <a href="examples.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💡 Examples</a>
+                    <a href="files.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📁 Files</a>
+                </div>
+            </div>
+            <!-- Resources -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🔗 Resources</h4>
+                <div style="text-align: left;">
+                    <a href="https://github.com/your-username/neuroexapt" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💻 GitHub Repository</a>
+                    <a href="https://github.com/your-username/neuroexapt/issues" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🐛 Issue Tracker</a>
+                    <a href="https://github.com/your-username/neuroexapt/wiki" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📖 Wiki</a>
+                    <a href="https://github.com/your-username/neuroexapt/releases" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🚀 Releases</a>
+                </div>
+            </div>
+        </div>
+        <hr style="border: 0; height: 1px; background: #e9ecef; margin: 20px 0;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+            <div style="color: #6c757d; font-size: 0.9em;">
+                © 2024 NeuroExapt Project. Generated with 
+                <a href="https://www.doxygen.nl/index.html" style="color: #667eea; text-decoration: none;">Doxygen 1.9.8</a>
+            </div>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <span style="font-size: 0.9em; color: #6c757d;">Built with ❤️ for AI Research</span>
+                <div style="display: flex; gap: 10px;">
+                    <span style="background: #28a745; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">🟢 Active</span>
+                    <span style="background: #17a2b8; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">v3.0</span>
+                </div>
+            </div>
+        </div>
+        <!-- Technology Stack -->
+        <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #e9ecef;">
+            <div style="font-size: 0.8em; color: #868e96; text-align: center;">
+                <strong>Built with:</strong>
+                <span style="margin: 0 5px;">🐍 Python</span>
+                <span style="margin: 0 5px;">🔥 PyTorch</span>
+                <span style="margin: 0 5px;">⚡ CUDA</span>
+                <span style="margin: 0 5px;">🧮 NumPy</span>
+                <span style="margin: 0 5px;">📊 Matplotlib</span>
+                <span style="margin: 0 5px;">🚀 Triton</span>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Back to top button -->
+<div id="back-to-top" style="position: fixed; bottom: 20px; right: 20px; display: none; z-index: 1000;">
+    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" 
+            style="background: #667eea; color: white; border: none; padding: 10px 15px; border-radius: 50%; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,0.2); font-size: 16px;">
+        ⬆️
+    </button>
+</div>
+<script>
+// Back to top button functionality
+window.addEventListener('scroll', function() {
+    const backToTop = document.getElementById('back-to-top');
+    if (window.pageYOffset > 300) {
+        backToTop.style.display = 'block';
+    } else {
+        backToTop.style.display = 'none';
+    }
+});
+// Enhanced search functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Add search enhancement if search box exists
+    const searchBox = document.getElementById('MSearchField');
+    if (searchBox) {
+        searchBox.placeholder = 'Search documentation... 🔍';
+        searchBox.style.borderRadius = '20px';
+        searchBox.style.padding = '8px 15px';
+    }
+    // Add copy code button to code blocks
+    const codeBlocks = document.querySelectorAll('.fragment');
+    codeBlocks.forEach(function(block) {
+        const copyBtn = document.createElement('button');
+        copyBtn.innerHTML = '📋';
+        copyBtn.title = 'Copy code';
+        copyBtn.style.cssText = 'position: absolute; top: 10px; right: 10px; background: #667eea; color: white; border: none; padding: 5px; border-radius: 3px; cursor: pointer; font-size: 12px;';
+        block.style.position = 'relative';
+        block.appendChild(copyBtn);
+        copyBtn.addEventListener('click', function() {
+            const text = block.textContent;
+            navigator.clipboard.writeText(text).then(function() {
+                copyBtn.innerHTML = '✅';
+                setTimeout(function() {
+                    copyBtn.innerHTML = '📋';
+                }, 2000);
+            });
+        });
+    });
+});
+// Dark mode toggle (optional)
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+}
+// Load saved dark mode preference
+if (localStorage.getItem('darkMode') === 'true') {
+    document.body.classList.add('dark-mode');
+}
+</script>
+</body>
+</html>

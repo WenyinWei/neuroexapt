@@ -1,0 +1,968 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="description" content="NeuroExapt - Advanced Neural Architecture Search and Dynamic Morphogenesis Framework">
+    <meta name="keywords" content="neural architecture search, dynamic morphogenesis, deep learning, AI, PyTorch">
+    <meta name="author" content="NeuroExapt Team">
+    <meta property="og:title" content="NeuroExapt Documentation">
+    <meta property="og:description" content="Advanced Neural Architecture Search Framework">
+    <meta property="og:type" content="website">
+
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>NeuroExapt: neuroexapt.utils.gpu_manager.GPUManager Class Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="custom.css" rel="stylesheet" type="text/css"/>
+<!-- NeuroExapt Custom Styles -->
+<style>
+/* Enhanced header styling */
+.header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+.header h1 {
+    margin: 0;
+    font-size: 2.5em;
+    font-weight: 300;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+.header .subtitle {
+    font-size: 1.2em;
+    opacity: 0.9;
+    margin-top: 10px;
+}
+/* Enhanced navigation */
+.tablist {
+    background: #f8f9fa;
+    border-bottom: 2px solid #e9ecef;
+}
+.tablist li.current a {
+    background: #667eea;
+    color: white;
+}
+/* Improved content layout */
+.contents {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+/* Code highlighting */
+.fragment {
+    background: #f8f9fa;
+    border-left: 4px solid #667eea;
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 0 8px 8px 0;
+}
+/* Enhanced tables */
+table.memberdecls {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 20px 0;
+}
+table.memberdecls td {
+    border: 1px solid #e9ecef;
+    padding: 12px;
+}
+/* Better typography */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #343a40;
+}
+h1, h2, h3, h4, h5, h6 {
+    color: #495057;
+    font-weight: 500;
+}
+/* Responsive design */
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 2em;
+    }
+    .contents {
+        padding: 15px;
+    }
+}
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #1a1a1a;
+        color: #e9ecef;
+    }
+    .header {
+        background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+    }
+    .fragment {
+        background: #2d3748;
+        color: #e9ecef;
+    }
+}
+</style>
+<!-- Analytics (if needed) -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<!--
+<script async src="https://www.googletagmanager.com/gtag/js?id=GA_TRACKING_ID"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'GA_TRACKING_ID');
+</script>
+-->
+</head>
+<body>
+<!-- Custom Header -->
+<div class="header">
+    <h1>🧠 NeuroExapt</h1>
+    <div class="subtitle">Advanced Neural Architecture Search and Dynamic Morphogenesis Framework</div>
+    <div style="margin-top: 15px; font-size: 0.9em;">
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🚀 Dynamic Neural Morphogenesis
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🔬 Advanced Architecture Search
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            ⚡ High-Performance Computing
+        </span>
+    </div>
+</div>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! --><!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('classneuroexapt_1_1utils_1_1gpu__manager_1_1GPUManager.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#pro-methods">Protected Member Functions</a> &#124;
+<a href="classneuroexapt_1_1utils_1_1gpu__manager_1_1GPUManager-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">neuroexapt.utils.gpu_manager.GPUManager Class Reference</div></div>
+</div><!--header-->
+<div class="contents">
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a53be2b36028c00d159397872bcd57f58" id="r_a53be2b36028c00d159397872bcd57f58"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1utils_1_1gpu__manager_1_1GPUManager.html#a53be2b36028c00d159397872bcd57f58">__init__</a> (self)</td></tr>
+<tr class="separator:a53be2b36028c00d159397872bcd57f58"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a113541d939f301f475993c0428bfbd2a" id="r_a113541d939f301f475993c0428bfbd2a"><td class="memItemLeft" align="right" valign="top">torch.device&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1utils_1_1gpu__manager_1_1GPUManager.html#a113541d939f301f475993c0428bfbd2a">initialize</a> (self, Optional[int] force_gpu_id=None)</td></tr>
+<tr class="separator:a113541d939f301f475993c0428bfbd2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a27b834c88daec70b39cf9ad751f3f7ec" id="r_a27b834c88daec70b39cf9ad751f3f7ec"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1utils_1_1gpu__manager_1_1GPUManager.html#a27b834c88daec70b39cf9ad751f3f7ec">get_optimal_batch_size</a> (self, torch.nn.Module model, Tuple[int,...] input_shape, int starting_batch_size=32, float safety_factor=0.9, int max_search_multiplier=8, bool use_cache=True)</td></tr>
+<tr class="separator:a27b834c88daec70b39cf9ad751f3f7ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5a825ca849f7f25a3eb152b0cdacbf7f" id="r_a5a825ca849f7f25a3eb152b0cdacbf7f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1utils_1_1gpu__manager_1_1GPUManager.html#a5a825ca849f7f25a3eb152b0cdacbf7f">clear_batch_size_cache</a> (self)</td></tr>
+<tr class="separator:a5a825ca849f7f25a3eb152b0cdacbf7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae68dd177429b72bde0e727bb202062c9" id="r_ae68dd177429b72bde0e727bb202062c9"><td class="memItemLeft" align="right" valign="top">torch.optim.Optimizer&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1utils_1_1gpu__manager_1_1GPUManager.html#ae68dd177429b72bde0e727bb202062c9">create_optimizer_with_gpu_optimization</a> (self, parameters, float lr=0.001, str optimizer_type='adamw')</td></tr>
+<tr class="separator:ae68dd177429b72bde0e727bb202062c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6fef54de2a122a50db8213563236f115" id="r_a6fef54de2a122a50db8213563236f115"><td class="memItemLeft" align="right" valign="top">torch.nn.Module&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1utils_1_1gpu__manager_1_1GPUManager.html#a6fef54de2a122a50db8213563236f115">wrap_model_for_gpu</a> (self, torch.nn.Module model, bool use_compile=True)</td></tr>
+<tr class="separator:a6fef54de2a122a50db8213563236f115"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6727419730eee412ef871ffab1899e0e" id="r_a6727419730eee412ef871ffab1899e0e"><td class="memItemLeft" align="right" valign="top">Dict[str, float]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1utils_1_1gpu__manager_1_1GPUManager.html#a6727419730eee412ef871ffab1899e0e">get_memory_stats</a> (self)</td></tr>
+<tr class="separator:a6727419730eee412ef871ffab1899e0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a59efed185375fa044108bb1dd210a387" id="r_a59efed185375fa044108bb1dd210a387"><td class="memItemLeft" align="right" valign="top">Dict[str, Any]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1utils_1_1gpu__manager_1_1GPUManager.html#a59efed185375fa044108bb1dd210a387">monitor_gpu_utilization</a> (self)</td></tr>
+<tr class="separator:a59efed185375fa044108bb1dd210a387"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3582419bccfa742c8484856135ba56b8" id="r_a3582419bccfa742c8484856135ba56b8"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1utils_1_1gpu__manager_1_1GPUManager.html#a3582419bccfa742c8484856135ba56b8">clear_cache</a> (self)</td></tr>
+<tr class="separator:a3582419bccfa742c8484856135ba56b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a998da699f9085d1b4e451c2b2dca3159" id="r_a998da699f9085d1b4e451c2b2dca3159"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1utils_1_1gpu__manager_1_1GPUManager.html#a998da699f9085d1b4e451c2b2dca3159">is_initialized</a></td></tr>
+<tr class="separator:a998da699f9085d1b4e451c2b2dca3159"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae56f1db27e3758b78d8bd172a29726d5" id="r_ae56f1db27e3758b78d8bd172a29726d5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1utils_1_1gpu__manager_1_1GPUManager.html#ae56f1db27e3758b78d8bd172a29726d5">cache_dir</a></td></tr>
+<tr class="separator:ae56f1db27e3758b78d8bd172a29726d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a48da9b6b06b1aee614f767c4f72c9f65" id="r_a48da9b6b06b1aee614f767c4f72c9f65"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1utils_1_1gpu__manager_1_1GPUManager.html#a48da9b6b06b1aee614f767c4f72c9f65">device</a></td></tr>
+<tr class="separator:a48da9b6b06b1aee614f767c4f72c9f65"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aee9ebc7187cad8348ab1520460bca320" id="r_aee9ebc7187cad8348ab1520460bca320"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1utils_1_1gpu__manager_1_1GPUManager.html#aee9ebc7187cad8348ab1520460bca320">device_properties</a></td></tr>
+<tr class="separator:aee9ebc7187cad8348ab1520460bca320"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr class="memitem:aa396835b7c5183f7a5c36bc4e9eb399c" id="r_aa396835b7c5183f7a5c36bc4e9eb399c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1utils_1_1gpu__manager_1_1GPUManager.html#aa396835b7c5183f7a5c36bc4e9eb399c">_configure_cuda_settings</a> (self)</td></tr>
+<tr class="separator:aa396835b7c5183f7a5c36bc4e9eb399c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab45b57005f6716ec67b303f93c496c64" id="r_ab45b57005f6716ec67b303f93c496c64"><td class="memItemLeft" align="right" valign="top">str&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1utils_1_1gpu__manager_1_1GPUManager.html#ab45b57005f6716ec67b303f93c496c64">_get_model_hash</a> (self, torch.nn.Module model, Tuple[int,...] input_shape)</td></tr>
+<tr class="separator:ab45b57005f6716ec67b303f93c496c64"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a78cb419dbac5e1dd809f639f629135b0" id="r_a78cb419dbac5e1dd809f639f629135b0"><td class="memItemLeft" align="right" valign="top">Optional[str]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1utils_1_1gpu__manager_1_1GPUManager.html#a78cb419dbac5e1dd809f639f629135b0">_get_gpu_hash</a> (self)</td></tr>
+<tr class="separator:a78cb419dbac5e1dd809f639f629135b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac046552c4f2eb1d63755b6022f899e35" id="r_ac046552c4f2eb1d63755b6022f899e35"><td class="memItemLeft" align="right" valign="top">Optional[int]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1utils_1_1gpu__manager_1_1GPUManager.html#ac046552c4f2eb1d63755b6022f899e35">_check_batch_size_cache</a> (self, torch.nn.Module model, Tuple[int,...] input_shape, float safety_factor)</td></tr>
+<tr class="separator:ac046552c4f2eb1d63755b6022f899e35"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab7ae65d16e08adab6f7464558567e225" id="r_ab7ae65d16e08adab6f7464558567e225"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1utils_1_1gpu__manager_1_1GPUManager.html#ab7ae65d16e08adab6f7464558567e225">_cache_batch_size</a> (self, torch.nn.Module model, Tuple[int,...] input_shape, float safety_factor, int batch_size)</td></tr>
+<tr class="separator:ab7ae65d16e08adab6f7464558567e225"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><pre class="fragment">Centralized GPU management for NeuroExapt.
+Ensures NVIDIA GPU is used and provides optimal settings.
+</pre> 
+<p class="definition">Definition at line <a class="el" href="gpu__manager_8py_source.html#l00035">35</a> of file <a class="el" href="gpu__manager_8py_source.html">gpu_manager.py</a>.</p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a53be2b36028c00d159397872bcd57f58" name="a53be2b36028c00d159397872bcd57f58"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a53be2b36028c00d159397872bcd57f58">&#9670;&#160;</a></span>__init__()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.utils.gpu_manager.GPUManager.__init__ </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="gpu__manager_8py_source.html#l00041">41</a> of file <a class="el" href="gpu__manager_8py_source.html">gpu_manager.py</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="ab7ae65d16e08adab6f7464558567e225" name="ab7ae65d16e08adab6f7464558567e225"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab7ae65d16e08adab6f7464558567e225">&#9670;&#160;</a></span>_cache_batch_size()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.utils.gpu_manager.GPUManager._cache_batch_size </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">torch.nn.Module&#160;</td>
+          <td class="paramname"><em>model</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Tuple[int, ...]&#160;</td>
+          <td class="paramname"><em>input_shape</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>safety_factor</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>batch_size</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">Cache the optimal batch size for this configuration.</pre> 
+<p class="definition">Definition at line <a class="el" href="gpu__manager_8py_source.html#l00362">362</a> of file <a class="el" href="gpu__manager_8py_source.html">gpu_manager.py</a>.</p>
+
+</div>
+</div>
+<a id="ac046552c4f2eb1d63755b6022f899e35" name="ac046552c4f2eb1d63755b6022f899e35"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac046552c4f2eb1d63755b6022f899e35">&#9670;&#160;</a></span>_check_batch_size_cache()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Optional[int] neuroexapt.utils.gpu_manager.GPUManager._check_batch_size_cache </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">torch.nn.Module&#160;</td>
+          <td class="paramname"><em>model</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Tuple[int, ...]&#160;</td>
+          <td class="paramname"><em>input_shape</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>safety_factor</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">Check if we have a cached batch size for this configuration.</pre> 
+<p class="definition">Definition at line <a class="el" href="gpu__manager_8py_source.html#l00326">326</a> of file <a class="el" href="gpu__manager_8py_source.html">gpu_manager.py</a>.</p>
+
+</div>
+</div>
+<a id="aa396835b7c5183f7a5c36bc4e9eb399c" name="aa396835b7c5183f7a5c36bc4e9eb399c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa396835b7c5183f7a5c36bc4e9eb399c">&#9670;&#160;</a></span>_configure_cuda_settings()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.utils.gpu_manager.GPUManager._configure_cuda_settings </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">Configure CUDA for optimal performance.</pre> 
+<p class="definition">Definition at line <a class="el" href="gpu__manager_8py_source.html#l00097">97</a> of file <a class="el" href="gpu__manager_8py_source.html">gpu_manager.py</a>.</p>
+
+</div>
+</div>
+<a id="a78cb419dbac5e1dd809f639f629135b0" name="a78cb419dbac5e1dd809f639f629135b0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a78cb419dbac5e1dd809f639f629135b0">&#9670;&#160;</a></span>_get_gpu_hash()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Optional[str] neuroexapt.utils.gpu_manager.GPUManager._get_gpu_hash </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">Generate a hash for current GPU configuration.</pre> 
+<p class="definition">Definition at line <a class="el" href="gpu__manager_8py_source.html#l00315">315</a> of file <a class="el" href="gpu__manager_8py_source.html">gpu_manager.py</a>.</p>
+
+</div>
+</div>
+<a id="ab45b57005f6716ec67b303f93c496c64" name="ab45b57005f6716ec67b303f93c496c64"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab45b57005f6716ec67b303f93c496c64">&#9670;&#160;</a></span>_get_model_hash()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> str neuroexapt.utils.gpu_manager.GPUManager._get_model_hash </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">torch.nn.Module&#160;</td>
+          <td class="paramname"><em>model</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Tuple[int, ...]&#160;</td>
+          <td class="paramname"><em>input_shape</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">Generate a hash for model architecture and input shape.</pre> 
+<p class="definition">Definition at line <a class="el" href="gpu__manager_8py_source.html#l00303">303</a> of file <a class="el" href="gpu__manager_8py_source.html">gpu_manager.py</a>.</p>
+
+</div>
+</div>
+<a id="a5a825ca849f7f25a3eb152b0cdacbf7f" name="a5a825ca849f7f25a3eb152b0cdacbf7f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5a825ca849f7f25a3eb152b0cdacbf7f">&#9670;&#160;</a></span>clear_batch_size_cache()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.utils.gpu_manager.GPUManager.clear_batch_size_cache </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">Clear all cached batch sizes.</pre> 
+<p class="definition">Definition at line <a class="el" href="gpu__manager_8py_source.html#l00393">393</a> of file <a class="el" href="gpu__manager_8py_source.html">gpu_manager.py</a>.</p>
+
+</div>
+</div>
+<a id="a3582419bccfa742c8484856135ba56b8" name="a3582419bccfa742c8484856135ba56b8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3582419bccfa742c8484856135ba56b8">&#9670;&#160;</a></span>clear_cache()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.utils.gpu_manager.GPUManager.clear_cache </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">Clear GPU cache.</pre> 
+<p class="definition">Definition at line <a class="el" href="gpu__manager_8py_source.html#l00528">528</a> of file <a class="el" href="gpu__manager_8py_source.html">gpu_manager.py</a>.</p>
+
+</div>
+</div>
+<a id="ae68dd177429b72bde0e727bb202062c9" name="ae68dd177429b72bde0e727bb202062c9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae68dd177429b72bde0e727bb202062c9">&#9670;&#160;</a></span>create_optimizer_with_gpu_optimization()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> torch.optim.Optimizer neuroexapt.utils.gpu_manager.GPUManager.create_optimizer_with_gpu_optimization </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>parameters</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float &#160;</td>
+          <td class="paramname"><em>lr</em> = <code>0.001</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str &#160;</td>
+          <td class="paramname"><em>optimizer_type</em> = <code>'adamw'</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">Create optimizer with GPU-optimized settings.
+
+Args:
+    parameters: Model parameters
+    lr: Learning rate
+    optimizer_type: Type of optimizer
+    
+Returns:
+    Configured optimizer
+</pre> 
+<p class="definition">Definition at line <a class="el" href="gpu__manager_8py_source.html#l00405">405</a> of file <a class="el" href="gpu__manager_8py_source.html">gpu_manager.py</a>.</p>
+
+</div>
+</div>
+<a id="a6727419730eee412ef871ffab1899e0e" name="a6727419730eee412ef871ffab1899e0e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6727419730eee412ef871ffab1899e0e">&#9670;&#160;</a></span>get_memory_stats()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Dict[str, float] neuroexapt.utils.gpu_manager.GPUManager.get_memory_stats </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">Get current GPU memory statistics.</pre> 
+<p class="definition">Definition at line <a class="el" href="gpu__manager_8py_source.html#l00478">478</a> of file <a class="el" href="gpu__manager_8py_source.html">gpu_manager.py</a>.</p>
+
+</div>
+</div>
+<a id="a27b834c88daec70b39cf9ad751f3f7ec" name="a27b834c88daec70b39cf9ad751f3f7ec"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a27b834c88daec70b39cf9ad751f3f7ec">&#9670;&#160;</a></span>get_optimal_batch_size()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> int neuroexapt.utils.gpu_manager.GPUManager.get_optimal_batch_size </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">torch.nn.Module&#160;</td>
+          <td class="paramname"><em>model</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Tuple[int, ...]&#160;</td>
+          <td class="paramname"><em>input_shape</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int &#160;</td>
+          <td class="paramname"><em>starting_batch_size</em> = <code>32</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float &#160;</td>
+          <td class="paramname"><em>safety_factor</em> = <code>0.9</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int &#160;</td>
+          <td class="paramname"><em>max_search_multiplier</em> = <code>8</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool &#160;</td>
+          <td class="paramname"><em>use_cache</em> = <code>True</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">Find optimal batch size for given model and input shape.
+
+Args:
+    model: PyTorch model
+    input_shape: Shape of single input (without batch dimension)
+    starting_batch_size: Initial batch size to try
+    safety_factor: Memory safety factor (0-1)
+    max_search_multiplier: Maximum multiplier for search range (default 8x starting size)
+    use_cache: Whether to use cached results
+    
+Returns:
+    Optimal batch size
+</pre> 
+<p class="definition">Definition at line <a class="el" href="gpu__manager_8py_source.html#l00117">117</a> of file <a class="el" href="gpu__manager_8py_source.html">gpu_manager.py</a>.</p>
+
+</div>
+</div>
+<a id="a113541d939f301f475993c0428bfbd2a" name="a113541d939f301f475993c0428bfbd2a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a113541d939f301f475993c0428bfbd2a">&#9670;&#160;</a></span>initialize()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> torch.device neuroexapt.utils.gpu_manager.GPUManager.initialize </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Optional[int] &#160;</td>
+          <td class="paramname"><em>force_gpu_id</em> = <code>None</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">Initialize GPU with proper configuration.
+
+Args:
+    force_gpu_id: Force specific GPU ID (None for auto-select)
+    
+Returns:
+    Configured torch device
+</pre> 
+<p class="definition">Definition at line <a class="el" href="gpu__manager_8py_source.html#l00048">48</a> of file <a class="el" href="gpu__manager_8py_source.html">gpu_manager.py</a>.</p>
+
+</div>
+</div>
+<a id="a59efed185375fa044108bb1dd210a387" name="a59efed185375fa044108bb1dd210a387"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a59efed185375fa044108bb1dd210a387">&#9670;&#160;</a></span>monitor_gpu_utilization()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Dict[str, Any] neuroexapt.utils.gpu_manager.GPUManager.monitor_gpu_utilization </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">Monitor GPU utilization using nvidia-ml-py.</pre> 
+<p class="definition">Definition at line <a class="el" href="gpu__manager_8py_source.html#l00494">494</a> of file <a class="el" href="gpu__manager_8py_source.html">gpu_manager.py</a>.</p>
+
+</div>
+</div>
+<a id="a6fef54de2a122a50db8213563236f115" name="a6fef54de2a122a50db8213563236f115"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6fef54de2a122a50db8213563236f115">&#9670;&#160;</a></span>wrap_model_for_gpu()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> torch.nn.Module neuroexapt.utils.gpu_manager.GPUManager.wrap_model_for_gpu </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">torch.nn.Module&#160;</td>
+          <td class="paramname"><em>model</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool &#160;</td>
+          <td class="paramname"><em>use_compile</em> = <code>True</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">Wrap model with GPU optimizations.
+
+Args:
+    model: PyTorch model
+    use_compile: Whether to use torch.compile (PyTorch 2.0+)
+    
+Returns:
+    Optimized model
+</pre> 
+<p class="definition">Definition at line <a class="el" href="gpu__manager_8py_source.html#l00443">443</a> of file <a class="el" href="gpu__manager_8py_source.html">gpu_manager.py</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="ae56f1db27e3758b78d8bd172a29726d5" name="ae56f1db27e3758b78d8bd172a29726d5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae56f1db27e3758b78d8bd172a29726d5">&#9670;&#160;</a></span>cache_dir</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.utils.gpu_manager.GPUManager.cache_dir</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="gpu__manager_8py_source.html#l00045">45</a> of file <a class="el" href="gpu__manager_8py_source.html">gpu_manager.py</a>.</p>
+
+</div>
+</div>
+<a id="a48da9b6b06b1aee614f767c4f72c9f65" name="a48da9b6b06b1aee614f767c4f72c9f65"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a48da9b6b06b1aee614f767c4f72c9f65">&#9670;&#160;</a></span>device</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.utils.gpu_manager.GPUManager.device</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="gpu__manager_8py_source.html#l00067">67</a> of file <a class="el" href="gpu__manager_8py_source.html">gpu_manager.py</a>.</p>
+
+</div>
+</div>
+<a id="aee9ebc7187cad8348ab1520460bca320" name="aee9ebc7187cad8348ab1520460bca320"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aee9ebc7187cad8348ab1520460bca320">&#9670;&#160;</a></span>device_properties</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.utils.gpu_manager.GPUManager.device_properties</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="gpu__manager_8py_source.html#l00089">89</a> of file <a class="el" href="gpu__manager_8py_source.html">gpu_manager.py</a>.</p>
+
+</div>
+</div>
+<a id="a998da699f9085d1b4e451c2b2dca3159" name="a998da699f9085d1b4e451c2b2dca3159"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a998da699f9085d1b4e451c2b2dca3159">&#9670;&#160;</a></span>is_initialized</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.utils.gpu_manager.GPUManager.is_initialized</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="gpu__manager_8py_source.html#l00044">44</a> of file <a class="el" href="gpu__manager_8py_source.html">gpu_manager.py</a>.</p>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following file:<ul>
+<li>neuroexapt/utils/<a class="el" href="gpu__manager_8py_source.html">gpu_manager.py</a></li>
+</ul>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<!-- do not remove this div, it is closed by doxygen! -->
+</div>
+<!-- Custom Footer -->
+<div style="background: #f8f9fa; border-top: 1px solid #e9ecef; margin-top: 50px; padding: 30px 0; text-align: center;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-bottom: 20px;">
+            <!-- Project Info -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🧠 NeuroExapt</h4>
+                <p style="color: #6c757d; margin: 0; font-size: 0.9em;">
+                    Advanced Neural Architecture Search and Dynamic Morphogenesis Framework for next-generation AI research.
+                </p>
+            </div>
+            <!-- Quick Links -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">📚 Quick Links</h4>
+                <div style="text-align: left;">
+                    <a href="index.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🏠 Home</a>
+                    <a href="modules.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📦 Modules</a>
+                    <a href="examples.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💡 Examples</a>
+                    <a href="files.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📁 Files</a>
+                </div>
+            </div>
+            <!-- Resources -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🔗 Resources</h4>
+                <div style="text-align: left;">
+                    <a href="https://github.com/your-username/neuroexapt" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💻 GitHub Repository</a>
+                    <a href="https://github.com/your-username/neuroexapt/issues" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🐛 Issue Tracker</a>
+                    <a href="https://github.com/your-username/neuroexapt/wiki" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📖 Wiki</a>
+                    <a href="https://github.com/your-username/neuroexapt/releases" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🚀 Releases</a>
+                </div>
+            </div>
+        </div>
+        <hr style="border: 0; height: 1px; background: #e9ecef; margin: 20px 0;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+            <div style="color: #6c757d; font-size: 0.9em;">
+                © 2024 NeuroExapt Project. Generated with 
+                <a href="https://www.doxygen.nl/index.html" style="color: #667eea; text-decoration: none;">Doxygen 1.9.8</a>
+            </div>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <span style="font-size: 0.9em; color: #6c757d;">Built with ❤️ for AI Research</span>
+                <div style="display: flex; gap: 10px;">
+                    <span style="background: #28a745; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">🟢 Active</span>
+                    <span style="background: #17a2b8; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">v3.0</span>
+                </div>
+            </div>
+        </div>
+        <!-- Technology Stack -->
+        <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #e9ecef;">
+            <div style="font-size: 0.8em; color: #868e96; text-align: center;">
+                <strong>Built with:</strong>
+                <span style="margin: 0 5px;">🐍 Python</span>
+                <span style="margin: 0 5px;">🔥 PyTorch</span>
+                <span style="margin: 0 5px;">⚡ CUDA</span>
+                <span style="margin: 0 5px;">🧮 NumPy</span>
+                <span style="margin: 0 5px;">📊 Matplotlib</span>
+                <span style="margin: 0 5px;">🚀 Triton</span>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Back to top button -->
+<div id="back-to-top" style="position: fixed; bottom: 20px; right: 20px; display: none; z-index: 1000;">
+    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" 
+            style="background: #667eea; color: white; border: none; padding: 10px 15px; border-radius: 50%; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,0.2); font-size: 16px;">
+        ⬆️
+    </button>
+</div>
+<script>
+// Back to top button functionality
+window.addEventListener('scroll', function() {
+    const backToTop = document.getElementById('back-to-top');
+    if (window.pageYOffset > 300) {
+        backToTop.style.display = 'block';
+    } else {
+        backToTop.style.display = 'none';
+    }
+});
+// Enhanced search functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Add search enhancement if search box exists
+    const searchBox = document.getElementById('MSearchField');
+    if (searchBox) {
+        searchBox.placeholder = 'Search documentation... 🔍';
+        searchBox.style.borderRadius = '20px';
+        searchBox.style.padding = '8px 15px';
+    }
+    // Add copy code button to code blocks
+    const codeBlocks = document.querySelectorAll('.fragment');
+    codeBlocks.forEach(function(block) {
+        const copyBtn = document.createElement('button');
+        copyBtn.innerHTML = '📋';
+        copyBtn.title = 'Copy code';
+        copyBtn.style.cssText = 'position: absolute; top: 10px; right: 10px; background: #667eea; color: white; border: none; padding: 5px; border-radius: 3px; cursor: pointer; font-size: 12px;';
+        block.style.position = 'relative';
+        block.appendChild(copyBtn);
+        copyBtn.addEventListener('click', function() {
+            const text = block.textContent;
+            navigator.clipboard.writeText(text).then(function() {
+                copyBtn.innerHTML = '✅';
+                setTimeout(function() {
+                    copyBtn.innerHTML = '📋';
+                }, 2000);
+            });
+        });
+    });
+});
+// Dark mode toggle (optional)
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+}
+// Load saved dark mode preference
+if (localStorage.getItem('darkMode') === 'true') {
+    document.body.classList.add('dark-mode');
+}
+</script>
+</body>
+</html>

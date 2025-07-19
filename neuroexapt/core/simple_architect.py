@@ -1,3 +1,10 @@
+"""
+\defgroup group_simple_architect Simple Architect
+\ingroup core
+Simple Architect module for NeuroExapt framework.
+"""
+
+
 import torch
 import torch.nn as nn
 from torch.autograd import Variable

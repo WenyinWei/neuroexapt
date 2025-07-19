@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+"""
+\defgroup group_logging_utils Logging Utils
+\ingroup core
+Logging Utils module for NeuroExapt framework.
+"""
+
+
 Logging Utilities for NeuroExapt - 统一日志系统
 
 🔧 提供统一的日志接口，避免循环导入问题

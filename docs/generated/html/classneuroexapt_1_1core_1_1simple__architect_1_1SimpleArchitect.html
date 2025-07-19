@@ -1,0 +1,895 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="description" content="NeuroExapt - Advanced Neural Architecture Search and Dynamic Morphogenesis Framework">
+    <meta name="keywords" content="neural architecture search, dynamic morphogenesis, deep learning, AI, PyTorch">
+    <meta name="author" content="NeuroExapt Team">
+    <meta property="og:title" content="NeuroExapt Documentation">
+    <meta property="og:description" content="Advanced Neural Architecture Search Framework">
+    <meta property="og:type" content="website">
+
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>NeuroExapt: neuroexapt.core.simple_architect.SimpleArchitect Class Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="custom.css" rel="stylesheet" type="text/css"/>
+<!-- NeuroExapt Custom Styles -->
+<style>
+/* Enhanced header styling */
+.header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+.header h1 {
+    margin: 0;
+    font-size: 2.5em;
+    font-weight: 300;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+.header .subtitle {
+    font-size: 1.2em;
+    opacity: 0.9;
+    margin-top: 10px;
+}
+/* Enhanced navigation */
+.tablist {
+    background: #f8f9fa;
+    border-bottom: 2px solid #e9ecef;
+}
+.tablist li.current a {
+    background: #667eea;
+    color: white;
+}
+/* Improved content layout */
+.contents {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+/* Code highlighting */
+.fragment {
+    background: #f8f9fa;
+    border-left: 4px solid #667eea;
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 0 8px 8px 0;
+}
+/* Enhanced tables */
+table.memberdecls {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 20px 0;
+}
+table.memberdecls td {
+    border: 1px solid #e9ecef;
+    padding: 12px;
+}
+/* Better typography */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #343a40;
+}
+h1, h2, h3, h4, h5, h6 {
+    color: #495057;
+    font-weight: 500;
+}
+/* Responsive design */
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 2em;
+    }
+    .contents {
+        padding: 15px;
+    }
+}
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #1a1a1a;
+        color: #e9ecef;
+    }
+    .header {
+        background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+    }
+    .fragment {
+        background: #2d3748;
+        color: #e9ecef;
+    }
+}
+</style>
+<!-- Analytics (if needed) -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<!--
+<script async src="https://www.googletagmanager.com/gtag/js?id=GA_TRACKING_ID"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'GA_TRACKING_ID');
+</script>
+-->
+</head>
+<body>
+<!-- Custom Header -->
+<div class="header">
+    <h1>🧠 NeuroExapt</h1>
+    <div class="subtitle">Advanced Neural Architecture Search and Dynamic Morphogenesis Framework</div>
+    <div style="margin-top: 15px; font-size: 0.9em;">
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🚀 Dynamic Neural Morphogenesis
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🔬 Advanced Architecture Search
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            ⚡ High-Performance Computing
+        </span>
+    </div>
+</div>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! --><!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('classneuroexapt_1_1core_1_1simple__architect_1_1SimpleArchitect.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#pro-methods">Protected Member Functions</a> &#124;
+<a href="classneuroexapt_1_1core_1_1simple__architect_1_1SimpleArchitect-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">neuroexapt.core.simple_architect.SimpleArchitect Class Reference</div></div>
+</div><!--header-->
+<div class="contents">
+<div class="dynheader">
+Inheritance diagram for neuroexapt.core.simple_architect.SimpleArchitect:</div>
+<div class="dyncontent">
+ <div class="center">
+  <img src="classneuroexapt_1_1core_1_1simple__architect_1_1SimpleArchitect.png" usemap="#neuroexapt.core.simple_5Farchitect.SimpleArchitect_map" alt=""/>
+  <map id="neuroexapt.core.simple_5Farchitect.SimpleArchitect_map" name="neuroexapt.core.simple_5Farchitect.SimpleArchitect_map">
+<area href="classneuroexapt_1_1core_1_1architect_1_1Architect.html" alt="neuroexapt.core.architect.Architect" shape="rect" coords="0,56,292,80"/>
+  </map>
+</div></div>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a591cbf0e83263ac9556cadf18de8f783" id="r_a591cbf0e83263ac9556cadf18de8f783"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1simple__architect_1_1SimpleArchitect.html#a591cbf0e83263ac9556cadf18de8f783">__init__</a> (self, <a class="el" href="classneuroexapt_1_1core_1_1simple__architect_1_1SimpleArchitect.html#a893bfcebc642c20d22c27fbd74196ad9">model</a>, args, Optional[<a class="el" href="classneuroexapt_1_1utils_1_1minimal__monitor_1_1MinimalMonitor.html">MinimalMonitor</a>] <a class="el" href="classneuroexapt_1_1core_1_1simple__architect_1_1SimpleArchitect.html#a9bf045c29015e29bf79f8e043c412260">monitor</a>=None)</td></tr>
+<tr class="separator:a591cbf0e83263ac9556cadf18de8f783"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3b367a1c8401b64d6e68a6b7a3fbe96a" id="r_a3b367a1c8401b64d6e68a6b7a3fbe96a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1simple__architect_1_1SimpleArchitect.html#a3b367a1c8401b64d6e68a6b7a3fbe96a">set_epoch</a> (self, int epoch)</td></tr>
+<tr class="separator:a3b367a1c8401b64d6e68a6b7a3fbe96a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaa65055cfee0b1db2a18dcde53dffde3" id="r_aaa65055cfee0b1db2a18dcde53dffde3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1simple__architect_1_1SimpleArchitect.html#aaa65055cfee0b1db2a18dcde53dffde3">should_update_arch</a> (self)</td></tr>
+<tr class="separator:aaa65055cfee0b1db2a18dcde53dffde3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1e59534d930c3d7707cbf98d384933dc" id="r_a1e59534d930c3d7707cbf98d384933dc"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1simple__architect_1_1SimpleArchitect.html#a1e59534d930c3d7707cbf98d384933dc">step</a> (self, input_train, target_train, input_valid, target_valid, eta, network_optimizer, unrolled)</td></tr>
+<tr class="separator:a1e59534d930c3d7707cbf98d384933dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af83ca0a1708e822e207f728e63c286fa" id="r_af83ca0a1708e822e207f728e63c286fa"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1simple__architect_1_1SimpleArchitect.html#af83ca0a1708e822e207f728e63c286fa">cleanup_gradients</a> (self)</td></tr>
+<tr class="separator:af83ca0a1708e822e207f728e63c286fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e01d04533a7378230d41f5a7593306c" id="r_a2e01d04533a7378230d41f5a7593306c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1simple__architect_1_1SimpleArchitect.html#a2e01d04533a7378230d41f5a7593306c">get_stats</a> (self)</td></tr>
+<tr class="separator:a2e01d04533a7378230d41f5a7593306c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a9bf045c29015e29bf79f8e043c412260" id="r_a9bf045c29015e29bf79f8e043c412260"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1simple__architect_1_1SimpleArchitect.html#a9bf045c29015e29bf79f8e043c412260">monitor</a></td></tr>
+<tr class="separator:a9bf045c29015e29bf79f8e043c412260"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aedd3793df3ed883381496e01638d23a5" id="r_aedd3793df3ed883381496e01638d23a5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1simple__architect_1_1SimpleArchitect.html#aedd3793df3ed883381496e01638d23a5">arch_update_freq</a></td></tr>
+<tr class="separator:aedd3793df3ed883381496e01638d23a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aca0d74b3f4971eb4908c78bb0958fad2" id="r_aca0d74b3f4971eb4908c78bb0958fad2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1simple__architect_1_1SimpleArchitect.html#aca0d74b3f4971eb4908c78bb0958fad2">warmup_epochs</a></td></tr>
+<tr class="separator:aca0d74b3f4971eb4908c78bb0958fad2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af8ec80164fea9e474667d82096b38432" id="r_af8ec80164fea9e474667d82096b38432"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1simple__architect_1_1SimpleArchitect.html#af8ec80164fea9e474667d82096b38432">use_first_order</a></td></tr>
+<tr class="separator:af8ec80164fea9e474667d82096b38432"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a20b5d2ecc988d6c9c78250595aeb4727" id="r_a20b5d2ecc988d6c9c78250595aeb4727"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1simple__architect_1_1SimpleArchitect.html#a20b5d2ecc988d6c9c78250595aeb4727">current_epoch</a></td></tr>
+<tr class="separator:a20b5d2ecc988d6c9c78250595aeb4727"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac0361fa0fc66b40bfd379843e6b54c32" id="r_ac0361fa0fc66b40bfd379843e6b54c32"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1simple__architect_1_1SimpleArchitect.html#ac0361fa0fc66b40bfd379843e6b54c32">step_count</a></td></tr>
+<tr class="separator:ac0361fa0fc66b40bfd379843e6b54c32"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a64735bab95b8031c3265340222457d18" id="r_a64735bab95b8031c3265340222457d18"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1simple__architect_1_1SimpleArchitect.html#a64735bab95b8031c3265340222457d18">optimizer</a></td></tr>
+<tr class="separator:a64735bab95b8031c3265340222457d18"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a893bfcebc642c20d22c27fbd74196ad9" id="r_a893bfcebc642c20d22c27fbd74196ad9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1simple__architect_1_1SimpleArchitect.html#a893bfcebc642c20d22c27fbd74196ad9">model</a></td></tr>
+<tr class="separator:a893bfcebc642c20d22c27fbd74196ad9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_attribs_classneuroexapt_1_1core_1_1architect_1_1Architect"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_classneuroexapt_1_1core_1_1architect_1_1Architect')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html">neuroexapt.core.architect.Architect</a></td></tr>
+<tr class="memitem:a773af551097b8939d6ae4055a0ab546c inherit pub_attribs_classneuroexapt_1_1core_1_1architect_1_1Architect" id="r_a773af551097b8939d6ae4055a0ab546c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a773af551097b8939d6ae4055a0ab546c">network_momentum</a></td></tr>
+<tr class="separator:a773af551097b8939d6ae4055a0ab546c inherit pub_attribs_classneuroexapt_1_1core_1_1architect_1_1Architect"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1d1c351bb8771ce89c03dc8c3605253b inherit pub_attribs_classneuroexapt_1_1core_1_1architect_1_1Architect" id="r_a1d1c351bb8771ce89c03dc8c3605253b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a1d1c351bb8771ce89c03dc8c3605253b">network_weight_decay</a></td></tr>
+<tr class="separator:a1d1c351bb8771ce89c03dc8c3605253b inherit pub_attribs_classneuroexapt_1_1core_1_1architect_1_1Architect"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8493e20b4b3db61e80298ed278b26452 inherit pub_attribs_classneuroexapt_1_1core_1_1architect_1_1Architect" id="r_a8493e20b4b3db61e80298ed278b26452"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a8493e20b4b3db61e80298ed278b26452">model</a></td></tr>
+<tr class="separator:a8493e20b4b3db61e80298ed278b26452 inherit pub_attribs_classneuroexapt_1_1core_1_1architect_1_1Architect"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8d908ad32c2131370fd65ff59a52ae00 inherit pub_attribs_classneuroexapt_1_1core_1_1architect_1_1Architect" id="r_a8d908ad32c2131370fd65ff59a52ae00"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a8d908ad32c2131370fd65ff59a52ae00">optimizer</a></td></tr>
+<tr class="separator:a8d908ad32c2131370fd65ff59a52ae00 inherit pub_attribs_classneuroexapt_1_1core_1_1architect_1_1Architect"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a308cee7ca26b699d4b4decd39df5db0f inherit pub_attribs_classneuroexapt_1_1core_1_1architect_1_1Architect" id="r_a308cee7ca26b699d4b4decd39df5db0f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a308cee7ca26b699d4b4decd39df5db0f">arch_update_freq</a></td></tr>
+<tr class="separator:a308cee7ca26b699d4b4decd39df5db0f inherit pub_attribs_classneuroexapt_1_1core_1_1architect_1_1Architect"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1a6f0b22b70e0a9a5507e03c409e3dc0 inherit pub_attribs_classneuroexapt_1_1core_1_1architect_1_1Architect" id="r_a1a6f0b22b70e0a9a5507e03c409e3dc0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a1a6f0b22b70e0a9a5507e03c409e3dc0">warmup_epochs</a></td></tr>
+<tr class="separator:a1a6f0b22b70e0a9a5507e03c409e3dc0 inherit pub_attribs_classneuroexapt_1_1core_1_1architect_1_1Architect"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a29f176d7054f258c9125b02a72faa42f inherit pub_attribs_classneuroexapt_1_1core_1_1architect_1_1Architect" id="r_a29f176d7054f258c9125b02a72faa42f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a29f176d7054f258c9125b02a72faa42f">current_epoch</a></td></tr>
+<tr class="separator:a29f176d7054f258c9125b02a72faa42f inherit pub_attribs_classneuroexapt_1_1core_1_1architect_1_1Architect"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af9590985a1d80f49b541c39be5f75baa inherit pub_attribs_classneuroexapt_1_1core_1_1architect_1_1Architect" id="r_af9590985a1d80f49b541c39be5f75baa"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#af9590985a1d80f49b541c39be5f75baa">step_count</a></td></tr>
+<tr class="separator:af9590985a1d80f49b541c39be5f75baa inherit pub_attribs_classneuroexapt_1_1core_1_1architect_1_1Architect"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr class="memitem:aabc4502eb1c7cf42ac0000e1e2bad2de" id="r_aabc4502eb1c7cf42ac0000e1e2bad2de"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1simple__architect_1_1SimpleArchitect.html#aabc4502eb1c7cf42ac0000e1e2bad2de">_pre_arch_update_cleanup</a> (self)</td></tr>
+<tr class="separator:aabc4502eb1c7cf42ac0000e1e2bad2de"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a272ea77ed2a62e5d2b29bc4222f0230f" id="r_a272ea77ed2a62e5d2b29bc4222f0230f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1simple__architect_1_1SimpleArchitect.html#a272ea77ed2a62e5d2b29bc4222f0230f">_post_arch_update_cleanup</a> (self)</td></tr>
+<tr class="separator:a272ea77ed2a62e5d2b29bc4222f0230f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a845f6fd74141944fae780580e0327bee" id="r_a845f6fd74141944fae780580e0327bee"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1simple__architect_1_1SimpleArchitect.html#a845f6fd74141944fae780580e0327bee">_gradient_optimized_loss</a> (self, input_valid, target_valid)</td></tr>
+<tr class="separator:a845f6fd74141944fae780580e0327bee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6462c5593a9fcdb0dcc71b529a9b498a" id="r_a6462c5593a9fcdb0dcc71b529a9b498a"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1simple__architect_1_1SimpleArchitect.html#a6462c5593a9fcdb0dcc71b529a9b498a">_adaptive_gradient_clip</a> (self)</td></tr>
+<tr class="separator:a6462c5593a9fcdb0dcc71b529a9b498a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_methods_classneuroexapt_1_1core_1_1architect_1_1Architect"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classneuroexapt_1_1core_1_1architect_1_1Architect')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html">neuroexapt.core.architect.Architect</a></td></tr>
+<tr class="memitem:a02e5a1b50866feced4f6608e166735b1 inherit pro_methods_classneuroexapt_1_1core_1_1architect_1_1Architect" id="r_a02e5a1b50866feced4f6608e166735b1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a02e5a1b50866feced4f6608e166735b1">_compute_unrolled_model</a> (self, input, target, eta, network_optimizer)</td></tr>
+<tr class="separator:a02e5a1b50866feced4f6608e166735b1 inherit pro_methods_classneuroexapt_1_1core_1_1architect_1_1Architect"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a74269c0b528d0d72d57e8a4a58cdfe86 inherit pro_methods_classneuroexapt_1_1core_1_1architect_1_1Architect" id="r_a74269c0b528d0d72d57e8a4a58cdfe86"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a74269c0b528d0d72d57e8a4a58cdfe86">_backward_step</a> (self, input_valid, target_valid)</td></tr>
+<tr class="separator:a74269c0b528d0d72d57e8a4a58cdfe86 inherit pro_methods_classneuroexapt_1_1core_1_1architect_1_1Architect"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a619780fc4f05a64d90332c051bfcff7f inherit pro_methods_classneuroexapt_1_1core_1_1architect_1_1Architect" id="r_a619780fc4f05a64d90332c051bfcff7f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a619780fc4f05a64d90332c051bfcff7f">_backward_step_unrolled</a> (self, input_train, target_train, input_valid, target_valid, eta, network_optimizer)</td></tr>
+<tr class="separator:a619780fc4f05a64d90332c051bfcff7f inherit pro_methods_classneuroexapt_1_1core_1_1architect_1_1Architect"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6736be01cf3b48dbd9367c6a43343e97 inherit pro_methods_classneuroexapt_1_1core_1_1architect_1_1Architect" id="r_a6736be01cf3b48dbd9367c6a43343e97"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a6736be01cf3b48dbd9367c6a43343e97">_construct_model_from_theta</a> (self, theta)</td></tr>
+<tr class="separator:a6736be01cf3b48dbd9367c6a43343e97 inherit pro_methods_classneuroexapt_1_1core_1_1architect_1_1Architect"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a616723dea22d40a8fa29cab5a0d36a49 inherit pro_methods_classneuroexapt_1_1core_1_1architect_1_1Architect" id="r_a616723dea22d40a8fa29cab5a0d36a49"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a616723dea22d40a8fa29cab5a0d36a49">_hessian_vector_product</a> (self, vector, input, target)</td></tr>
+<tr class="separator:a616723dea22d40a8fa29cab5a0d36a49 inherit pro_methods_classneuroexapt_1_1core_1_1architect_1_1Architect"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><pre class="fragment">极简架构搜索器
+去除所有复杂的动态调整逻辑，专注于核心功能
+</pre> 
+<p class="definition">Definition at line <a class="el" href="simple__architect_8py_source.html#l00018">18</a> of file <a class="el" href="simple__architect_8py_source.html">simple_architect.py</a>.</p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a591cbf0e83263ac9556cadf18de8f783" name="a591cbf0e83263ac9556cadf18de8f783"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a591cbf0e83263ac9556cadf18de8f783">&#9670;&#160;</a></span>__init__()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.simple_architect.SimpleArchitect.__init__ </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>model</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>args</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Optional[<a class="el" href="classneuroexapt_1_1utils_1_1minimal__monitor_1_1MinimalMonitor.html">MinimalMonitor</a>] &#160;</td>
+          <td class="paramname"><em>monitor</em> = <code>None</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Reimplemented from <a class="el" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#abfa4d865048325fefec530e51262201c">neuroexapt.core.architect.Architect</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="simple__architect_8py_source.html#l00024">24</a> of file <a class="el" href="simple__architect_8py_source.html">simple_architect.py</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a6462c5593a9fcdb0dcc71b529a9b498a" name="a6462c5593a9fcdb0dcc71b529a9b498a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6462c5593a9fcdb0dcc71b529a9b498a">&#9670;&#160;</a></span>_adaptive_gradient_clip()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> float neuroexapt.core.simple_architect.SimpleArchitect._adaptive_gradient_clip </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">自适应梯度裁剪</pre> 
+<p class="definition">Definition at line <a class="el" href="simple__architect_8py_source.html#l00184">184</a> of file <a class="el" href="simple__architect_8py_source.html">simple_architect.py</a>.</p>
+
+</div>
+</div>
+<a id="a845f6fd74141944fae780580e0327bee" name="a845f6fd74141944fae780580e0327bee"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a845f6fd74141944fae780580e0327bee">&#9670;&#160;</a></span>_gradient_optimized_loss()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.simple_architect.SimpleArchitect._gradient_optimized_loss </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>input_valid</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>target_valid</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">使用梯度优化的损失计算</pre> 
+<p class="definition">Definition at line <a class="el" href="simple__architect_8py_source.html#l00153">153</a> of file <a class="el" href="simple__architect_8py_source.html">simple_architect.py</a>.</p>
+
+</div>
+</div>
+<a id="a272ea77ed2a62e5d2b29bc4222f0230f" name="a272ea77ed2a62e5d2b29bc4222f0230f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a272ea77ed2a62e5d2b29bc4222f0230f">&#9670;&#160;</a></span>_post_arch_update_cleanup()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.simple_architect.SimpleArchitect._post_arch_update_cleanup </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">架构更新后的清理工作</pre> 
+<p class="definition">Definition at line <a class="el" href="simple__architect_8py_source.html#l00144">144</a> of file <a class="el" href="simple__architect_8py_source.html">simple_architect.py</a>.</p>
+
+</div>
+</div>
+<a id="aabc4502eb1c7cf42ac0000e1e2bad2de" name="aabc4502eb1c7cf42ac0000e1e2bad2de"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aabc4502eb1c7cf42ac0000e1e2bad2de">&#9670;&#160;</a></span>_pre_arch_update_cleanup()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.simple_architect.SimpleArchitect._pre_arch_update_cleanup </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">架构更新前的内存清理</pre> 
+<p class="definition">Definition at line <a class="el" href="simple__architect_8py_source.html#l00133">133</a> of file <a class="el" href="simple__architect_8py_source.html">simple_architect.py</a>.</p>
+
+</div>
+</div>
+<a id="af83ca0a1708e822e207f728e63c286fa" name="af83ca0a1708e822e207f728e63c286fa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af83ca0a1708e822e207f728e63c286fa">&#9670;&#160;</a></span>cleanup_gradients()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.simple_architect.SimpleArchitect.cleanup_gradients </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">清理梯度（简化版本）</pre> 
+<p>Reimplemented from <a class="el" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#af10076793231fb0b5b05a9c77065ddad">neuroexapt.core.architect.Architect</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="simple__architect_8py_source.html#l00208">208</a> of file <a class="el" href="simple__architect_8py_source.html">simple_architect.py</a>.</p>
+
+</div>
+</div>
+<a id="a2e01d04533a7378230d41f5a7593306c" name="a2e01d04533a7378230d41f5a7593306c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2e01d04533a7378230d41f5a7593306c">&#9670;&#160;</a></span>get_stats()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.simple_architect.SimpleArchitect.get_stats </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">获取简单的统计信息</pre> 
+<p class="definition">Definition at line <a class="el" href="simple__architect_8py_source.html#l00224">224</a> of file <a class="el" href="simple__architect_8py_source.html">simple_architect.py</a>.</p>
+
+</div>
+</div>
+<a id="a3b367a1c8401b64d6e68a6b7a3fbe96a" name="a3b367a1c8401b64d6e68a6b7a3fbe96a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3b367a1c8401b64d6e68a6b7a3fbe96a">&#9670;&#160;</a></span>set_epoch()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.simple_architect.SimpleArchitect.set_epoch </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>epoch</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">设置当前epoch</pre> 
+<p>Reimplemented from <a class="el" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a27644c9b34f05187c00ab160ebd36817">neuroexapt.core.architect.Architect</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="simple__architect_8py_source.html#l00050">50</a> of file <a class="el" href="simple__architect_8py_source.html">simple_architect.py</a>.</p>
+
+</div>
+</div>
+<a id="aaa65055cfee0b1db2a18dcde53dffde3" name="aaa65055cfee0b1db2a18dcde53dffde3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaa65055cfee0b1db2a18dcde53dffde3">&#9670;&#160;</a></span>should_update_arch()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> bool neuroexapt.core.simple_architect.SimpleArchitect.should_update_arch </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">判断是否应该更新架构</pre> 
+<p>Reimplemented from <a class="el" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#aabd1a78e03b1f10fd5374682d640499d">neuroexapt.core.architect.Architect</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="simple__architect_8py_source.html#l00054">54</a> of file <a class="el" href="simple__architect_8py_source.html">simple_architect.py</a>.</p>
+
+</div>
+</div>
+<a id="a1e59534d930c3d7707cbf98d384933dc" name="a1e59534d930c3d7707cbf98d384933dc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1e59534d930c3d7707cbf98d384933dc">&#9670;&#160;</a></span>step()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.simple_architect.SimpleArchitect.step </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>input_train</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>target_train</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>input_valid</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>target_valid</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>eta</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>network_optimizer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>unrolled</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">执行架构更新步骤</pre> 
+<p>Reimplemented from <a class="el" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a344bd58c2e216a76ceb34566df2339f5">neuroexapt.core.architect.Architect</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="simple__architect_8py_source.html#l00070">70</a> of file <a class="el" href="simple__architect_8py_source.html">simple_architect.py</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="aedd3793df3ed883381496e01638d23a5" name="aedd3793df3ed883381496e01638d23a5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aedd3793df3ed883381496e01638d23a5">&#9670;&#160;</a></span>arch_update_freq</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.simple_architect.SimpleArchitect.arch_update_freq</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="simple__architect_8py_source.html#l00031">31</a> of file <a class="el" href="simple__architect_8py_source.html">simple_architect.py</a>.</p>
+
+</div>
+</div>
+<a id="a20b5d2ecc988d6c9c78250595aeb4727" name="a20b5d2ecc988d6c9c78250595aeb4727"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a20b5d2ecc988d6c9c78250595aeb4727">&#9670;&#160;</a></span>current_epoch</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.simple_architect.SimpleArchitect.current_epoch</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="simple__architect_8py_source.html#l00036">36</a> of file <a class="el" href="simple__architect_8py_source.html">simple_architect.py</a>.</p>
+
+</div>
+</div>
+<a id="a893bfcebc642c20d22c27fbd74196ad9" name="a893bfcebc642c20d22c27fbd74196ad9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a893bfcebc642c20d22c27fbd74196ad9">&#9670;&#160;</a></span>model</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.simple_architect.SimpleArchitect.model</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="simple__architect_8py_source.html#l00081">81</a> of file <a class="el" href="simple__architect_8py_source.html">simple_architect.py</a>.</p>
+
+</div>
+</div>
+<a id="a9bf045c29015e29bf79f8e043c412260" name="a9bf045c29015e29bf79f8e043c412260"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9bf045c29015e29bf79f8e043c412260">&#9670;&#160;</a></span>monitor</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.simple_architect.SimpleArchitect.monitor</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="simple__architect_8py_source.html#l00028">28</a> of file <a class="el" href="simple__architect_8py_source.html">simple_architect.py</a>.</p>
+
+</div>
+</div>
+<a id="a64735bab95b8031c3265340222457d18" name="a64735bab95b8031c3265340222457d18"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a64735bab95b8031c3265340222457d18">&#9670;&#160;</a></span>optimizer</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.simple_architect.SimpleArchitect.optimizer</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="simple__architect_8py_source.html#l00040">40</a> of file <a class="el" href="simple__architect_8py_source.html">simple_architect.py</a>.</p>
+
+</div>
+</div>
+<a id="ac0361fa0fc66b40bfd379843e6b54c32" name="ac0361fa0fc66b40bfd379843e6b54c32"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac0361fa0fc66b40bfd379843e6b54c32">&#9670;&#160;</a></span>step_count</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.simple_architect.SimpleArchitect.step_count</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="simple__architect_8py_source.html#l00037">37</a> of file <a class="el" href="simple__architect_8py_source.html">simple_architect.py</a>.</p>
+
+</div>
+</div>
+<a id="af8ec80164fea9e474667d82096b38432" name="af8ec80164fea9e474667d82096b38432"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af8ec80164fea9e474667d82096b38432">&#9670;&#160;</a></span>use_first_order</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.simple_architect.SimpleArchitect.use_first_order</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="simple__architect_8py_source.html#l00033">33</a> of file <a class="el" href="simple__architect_8py_source.html">simple_architect.py</a>.</p>
+
+</div>
+</div>
+<a id="aca0d74b3f4971eb4908c78bb0958fad2" name="aca0d74b3f4971eb4908c78bb0958fad2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aca0d74b3f4971eb4908c78bb0958fad2">&#9670;&#160;</a></span>warmup_epochs</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.simple_architect.SimpleArchitect.warmup_epochs</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="simple__architect_8py_source.html#l00032">32</a> of file <a class="el" href="simple__architect_8py_source.html">simple_architect.py</a>.</p>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following file:<ul>
+<li>neuroexapt/core/<a class="el" href="simple__architect_8py_source.html">simple_architect.py</a></li>
+</ul>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<!-- do not remove this div, it is closed by doxygen! -->
+</div>
+<!-- Custom Footer -->
+<div style="background: #f8f9fa; border-top: 1px solid #e9ecef; margin-top: 50px; padding: 30px 0; text-align: center;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-bottom: 20px;">
+            <!-- Project Info -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🧠 NeuroExapt</h4>
+                <p style="color: #6c757d; margin: 0; font-size: 0.9em;">
+                    Advanced Neural Architecture Search and Dynamic Morphogenesis Framework for next-generation AI research.
+                </p>
+            </div>
+            <!-- Quick Links -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">📚 Quick Links</h4>
+                <div style="text-align: left;">
+                    <a href="index.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🏠 Home</a>
+                    <a href="modules.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📦 Modules</a>
+                    <a href="examples.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💡 Examples</a>
+                    <a href="files.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📁 Files</a>
+                </div>
+            </div>
+            <!-- Resources -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🔗 Resources</h4>
+                <div style="text-align: left;">
+                    <a href="https://github.com/your-username/neuroexapt" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💻 GitHub Repository</a>
+                    <a href="https://github.com/your-username/neuroexapt/issues" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🐛 Issue Tracker</a>
+                    <a href="https://github.com/your-username/neuroexapt/wiki" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📖 Wiki</a>
+                    <a href="https://github.com/your-username/neuroexapt/releases" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🚀 Releases</a>
+                </div>
+            </div>
+        </div>
+        <hr style="border: 0; height: 1px; background: #e9ecef; margin: 20px 0;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+            <div style="color: #6c757d; font-size: 0.9em;">
+                © 2024 NeuroExapt Project. Generated with 
+                <a href="https://www.doxygen.nl/index.html" style="color: #667eea; text-decoration: none;">Doxygen 1.9.8</a>
+            </div>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <span style="font-size: 0.9em; color: #6c757d;">Built with ❤️ for AI Research</span>
+                <div style="display: flex; gap: 10px;">
+                    <span style="background: #28a745; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">🟢 Active</span>
+                    <span style="background: #17a2b8; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">v3.0</span>
+                </div>
+            </div>
+        </div>
+        <!-- Technology Stack -->
+        <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #e9ecef;">
+            <div style="font-size: 0.8em; color: #868e96; text-align: center;">
+                <strong>Built with:</strong>
+                <span style="margin: 0 5px;">🐍 Python</span>
+                <span style="margin: 0 5px;">🔥 PyTorch</span>
+                <span style="margin: 0 5px;">⚡ CUDA</span>
+                <span style="margin: 0 5px;">🧮 NumPy</span>
+                <span style="margin: 0 5px;">📊 Matplotlib</span>
+                <span style="margin: 0 5px;">🚀 Triton</span>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Back to top button -->
+<div id="back-to-top" style="position: fixed; bottom: 20px; right: 20px; display: none; z-index: 1000;">
+    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" 
+            style="background: #667eea; color: white; border: none; padding: 10px 15px; border-radius: 50%; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,0.2); font-size: 16px;">
+        ⬆️
+    </button>
+</div>
+<script>
+// Back to top button functionality
+window.addEventListener('scroll', function() {
+    const backToTop = document.getElementById('back-to-top');
+    if (window.pageYOffset > 300) {
+        backToTop.style.display = 'block';
+    } else {
+        backToTop.style.display = 'none';
+    }
+});
+// Enhanced search functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Add search enhancement if search box exists
+    const searchBox = document.getElementById('MSearchField');
+    if (searchBox) {
+        searchBox.placeholder = 'Search documentation... 🔍';
+        searchBox.style.borderRadius = '20px';
+        searchBox.style.padding = '8px 15px';
+    }
+    // Add copy code button to code blocks
+    const codeBlocks = document.querySelectorAll('.fragment');
+    codeBlocks.forEach(function(block) {
+        const copyBtn = document.createElement('button');
+        copyBtn.innerHTML = '📋';
+        copyBtn.title = 'Copy code';
+        copyBtn.style.cssText = 'position: absolute; top: 10px; right: 10px; background: #667eea; color: white; border: none; padding: 5px; border-radius: 3px; cursor: pointer; font-size: 12px;';
+        block.style.position = 'relative';
+        block.appendChild(copyBtn);
+        copyBtn.addEventListener('click', function() {
+            const text = block.textContent;
+            navigator.clipboard.writeText(text).then(function() {
+                copyBtn.innerHTML = '✅';
+                setTimeout(function() {
+                    copyBtn.innerHTML = '📋';
+                }, 2000);
+            });
+        });
+    });
+});
+// Dark mode toggle (optional)
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+}
+// Load saved dark mode preference
+if (localStorage.getItem('darkMode') === 'true') {
+    document.body.classList.add('dark-mode');
+}
+</script>
+</body>
+</html>

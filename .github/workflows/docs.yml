@@ -165,8 +165,14 @@ jobs:
         # 检查主要文件是否存在
         required_files=(
           "docs/generated/html/index.html"
-          "docs/generated/html/modules.html"
           "docs/generated/html/files.html"
+        )
+        
+        # 可选文件（根据内容可能生成或不生成）
+        optional_files=(
+          "docs/generated/html/modules.html"
+          "docs/generated/html/classes.html"
+          "docs/generated/html/namespaces.html"
         )
         
         for file in "${required_files[@]}"; do
@@ -175,6 +181,14 @@ jobs:
           else
             echo "❌ $file missing"
             exit 1
+          fi
+        done
+        
+        for file in "${optional_files[@]}"; do
+          if [ -f "$file" ]; then
+            echo "✅ $file exists (optional)"
+          else
+            echo "ℹ️ $file not generated (optional)"
           fi
         done
         

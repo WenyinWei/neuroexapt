@@ -1,0 +1,27 @@
+var classneuroexapt_1_1utils_1_1performance__monitor_1_1PerformanceMonitor =
+[
+    [ "__init__", "classneuroexapt_1_1utils_1_1performance__monitor_1_1PerformanceMonitor.html#ad3cda8d15482ee76501f96cb47367c80", null ],
+    [ "_setup_logger", "classneuroexapt_1_1utils_1_1performance__monitor_1_1PerformanceMonitor.html#a427a0609003ff60a36ca89ce8fcb027c", null ],
+    [ "cleanup", "classneuroexapt_1_1utils_1_1performance__monitor_1_1PerformanceMonitor.html#a14cb28bd288c99e890cdd7383f4e9776", null ],
+    [ "end_timer", "classneuroexapt_1_1utils_1_1performance__monitor_1_1PerformanceMonitor.html#a4a39683b530f4ec798bb926e02175e8e", null ],
+    [ "get_performance_report", "classneuroexapt_1_1utils_1_1performance__monitor_1_1PerformanceMonitor.html#a0f8ba97b80c8b27389c0342ea85b99cf", null ],
+    [ "log_architecture_step", "classneuroexapt_1_1utils_1_1performance__monitor_1_1PerformanceMonitor.html#a35a5692c4716ba430b37f4b87a2bf216", null ],
+    [ "log_bottleneck_analysis", "classneuroexapt_1_1utils_1_1performance__monitor_1_1PerformanceMonitor.html#afaca276e1f58cfb2603d35565fd7cb00", null ],
+    [ "log_epoch_summary", "classneuroexapt_1_1utils_1_1performance__monitor_1_1PerformanceMonitor.html#a5f8b7b7152c36d63868f3c73dde11732", null ],
+    [ "log_gpu_memory", "classneuroexapt_1_1utils_1_1performance__monitor_1_1PerformanceMonitor.html#a6820ad06defa26d908dcbbe84575307b", null ],
+    [ "log_model_stats", "classneuroexapt_1_1utils_1_1performance__monitor_1_1PerformanceMonitor.html#af6489c093fabdd869b146cf7ad868c12", null ],
+    [ "record_time", "classneuroexapt_1_1utils_1_1performance__monitor_1_1PerformanceMonitor.html#aa882b052264779a47cc275bcd0c78e87", null ],
+    [ "save_performance_report", "classneuroexapt_1_1utils_1_1performance__monitor_1_1PerformanceMonitor.html#a75a99b387fa79932fd4704787d5dbb06", null ],
+    [ "start_timer", "classneuroexapt_1_1utils_1_1performance__monitor_1_1PerformanceMonitor.html#a123bc784be0c01aa6933f16291e8253b", null ],
+    [ "suggest_optimizations", "classneuroexapt_1_1utils_1_1performance__monitor_1_1PerformanceMonitor.html#a479e571fce0df1b75d472a735c84342b", null ],
+    [ "timer", "classneuroexapt_1_1utils_1_1performance__monitor_1_1PerformanceMonitor.html#a33ba51b15ae612983c786a2cfc3ba8c7", null ],
+    [ "current_timers", "classneuroexapt_1_1utils_1_1performance__monitor_1_1PerformanceMonitor.html#a324d12c66d76dfe029f6a1b67386bc37", null ],
+    [ "history", "classneuroexapt_1_1utils_1_1performance__monitor_1_1PerformanceMonitor.html#a53d57bb6d72f0149db558b8d00764111", null ],
+    [ "log_dir", "classneuroexapt_1_1utils_1_1performance__monitor_1_1PerformanceMonitor.html#a0c4e22af539a8dbe51f7d9e1f814f8a6", null ],
+    [ "logger", "classneuroexapt_1_1utils_1_1performance__monitor_1_1PerformanceMonitor.html#a9d52f589fc79ef47f4dbbc7b00cf87de", null ],
+    [ "real_time_stats", "classneuroexapt_1_1utils_1_1performance__monitor_1_1PerformanceMonitor.html#a05c0fdaabb1221c2e8ecb1fa987d94d6", null ],
+    [ "start_time", "classneuroexapt_1_1utils_1_1performance__monitor_1_1PerformanceMonitor.html#aed31918c9b2f5cf3edcd0422dd54e5e0", null ],
+    [ "stats", "classneuroexapt_1_1utils_1_1performance__monitor_1_1PerformanceMonitor.html#a1e1d724cfb4e99c35d20a3304a915b1e", null ],
+    [ "thread_local", "classneuroexapt_1_1utils_1_1performance__monitor_1_1PerformanceMonitor.html#ac0fa9bdae02aa6054148712d4613d812", null ],
+    [ "timers", "classneuroexapt_1_1utils_1_1performance__monitor_1_1PerformanceMonitor.html#a51b261210fe2c096ebd6bbb72d1b4249", null ]
+];

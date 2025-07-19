@@ -1,0 +1,1185 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="description" content="NeuroExapt - Advanced Neural Architecture Search and Dynamic Morphogenesis Framework">
+    <meta name="keywords" content="neural architecture search, dynamic morphogenesis, deep learning, AI, PyTorch">
+    <meta name="author" content="NeuroExapt Team">
+    <meta property="og:title" content="NeuroExapt Documentation">
+    <meta property="og:description" content="Advanced Neural Architecture Search Framework">
+    <meta property="og:type" content="website">
+
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>NeuroExapt: neuroexapt.neuroexapt_v3.NeuroExaptV3 Class Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="custom.css" rel="stylesheet" type="text/css"/>
+<!-- NeuroExapt Custom Styles -->
+<style>
+/* Enhanced header styling */
+.header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+.header h1 {
+    margin: 0;
+    font-size: 2.5em;
+    font-weight: 300;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+.header .subtitle {
+    font-size: 1.2em;
+    opacity: 0.9;
+    margin-top: 10px;
+}
+/* Enhanced navigation */
+.tablist {
+    background: #f8f9fa;
+    border-bottom: 2px solid #e9ecef;
+}
+.tablist li.current a {
+    background: #667eea;
+    color: white;
+}
+/* Improved content layout */
+.contents {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+/* Code highlighting */
+.fragment {
+    background: #f8f9fa;
+    border-left: 4px solid #667eea;
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 0 8px 8px 0;
+}
+/* Enhanced tables */
+table.memberdecls {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 20px 0;
+}
+table.memberdecls td {
+    border: 1px solid #e9ecef;
+    padding: 12px;
+}
+/* Better typography */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #343a40;
+}
+h1, h2, h3, h4, h5, h6 {
+    color: #495057;
+    font-weight: 500;
+}
+/* Responsive design */
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 2em;
+    }
+    .contents {
+        padding: 15px;
+    }
+}
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #1a1a1a;
+        color: #e9ecef;
+    }
+    .header {
+        background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+    }
+    .fragment {
+        background: #2d3748;
+        color: #e9ecef;
+    }
+}
+</style>
+<!-- Analytics (if needed) -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<!--
+<script async src="https://www.googletagmanager.com/gtag/js?id=GA_TRACKING_ID"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'GA_TRACKING_ID');
+</script>
+-->
+</head>
+<body>
+<!-- Custom Header -->
+<div class="header">
+    <h1>🧠 NeuroExapt</h1>
+    <div class="subtitle">Advanced Neural Architecture Search and Dynamic Morphogenesis Framework</div>
+    <div style="margin-top: 15px; font-size: 0.9em;">
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🚀 Dynamic Neural Morphogenesis
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🔬 Advanced Architecture Search
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            ⚡ High-Performance Computing
+        </span>
+    </div>
+</div>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! --><!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('classneuroexapt_1_1neuroexapt__v3_1_1NeuroExaptV3.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#pro-methods">Protected Member Functions</a> &#124;
+<a href="classneuroexapt_1_1neuroexapt__v3_1_1NeuroExaptV3-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">neuroexapt.neuroexapt_v3.NeuroExaptV3 Class Reference</div></div>
+</div><!--header-->
+<div class="contents">
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a879a93fd02d1d221998fc6055747a7fe" id="r_a879a93fd02d1d221998fc6055747a7fe"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1neuroexapt__v3_1_1NeuroExaptV3.html#a879a93fd02d1d221998fc6055747a7fe">__init__</a> (self, nn.Module <a class="el" href="classneuroexapt_1_1neuroexapt__v3_1_1NeuroExaptV3.html#ac572f1eb9483df1f7f827975de48a902">model</a>, Optional[torch.device] <a class="el" href="classneuroexapt_1_1neuroexapt__v3_1_1NeuroExaptV3.html#a4284b075f916bd4312e7c509ac6e8f6e">device</a>=None, float <a class="el" href="classneuroexapt_1_1neuroexapt__v3_1_1NeuroExaptV3.html#aabd23fcc15a91053c1aaa14f6f5fb54f">efficiency_threshold</a>=0.1, float <a class="el" href="classneuroexapt_1_1neuroexapt__v3_1_1NeuroExaptV3.html#a5fdcd72e1f491436482738ac4bfbd5c5">rollback_threshold</a>=0.05, bool <a class="el" href="classneuroexapt_1_1neuroexapt__v3_1_1NeuroExaptV3.html#a565ea9b087591f084f2bc9b83abca93e">enable_visualization</a>=True, str <a class="el" href="classneuroexapt_1_1neuroexapt__v3_1_1NeuroExaptV3.html#affcf92862d053ca68b462a108dd643b8">log_directory</a>=&quot;./neuroexapt_logs&quot;)</td></tr>
+<tr class="separator:a879a93fd02d1d221998fc6055747a7fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a69eb737eda71118c5f44d83760a2a119" id="r_a69eb737eda71118c5f44d83760a2a119"><td class="memItemLeft" align="right" valign="top">nn.Module&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1neuroexapt__v3_1_1NeuroExaptV3.html#a69eb737eda71118c5f44d83760a2a119">wrap_model</a> (self, nn.Module <a class="el" href="classneuroexapt_1_1neuroexapt__v3_1_1NeuroExaptV3.html#ac572f1eb9483df1f7f827975de48a902">model</a>)</td></tr>
+<tr class="separator:a69eb737eda71118c5f44d83760a2a119"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a39cbf177505e7336f33cd62371fcfe33" id="r_a39cbf177505e7336f33cd62371fcfe33"><td class="memItemLeft" align="right" valign="top">Dict[str, Any]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1neuroexapt__v3_1_1NeuroExaptV3.html#a39cbf177505e7336f33cd62371fcfe33">analyze_architecture</a> (self, DataLoader dataloader)</td></tr>
+<tr class="separator:a39cbf177505e7336f33cd62371fcfe33"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a35a2e88424071e96d0eec0107e889bf8" id="r_a35a2e88424071e96d0eec0107e889bf8"><td class="memItemLeft" align="right" valign="top">Optional[Dict[str, Any]]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1neuroexapt__v3_1_1NeuroExaptV3.html#a35a2e88424071e96d0eec0107e889bf8">check_evolution_need</a> (self, DataLoader dataloader, Dict[str, float] performance_metrics, int epoch)</td></tr>
+<tr class="separator:a35a2e88424071e96d0eec0107e889bf8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7b91ea0c9ee917d838450c1fc3b2fd12" id="r_a7b91ea0c9ee917d838450c1fc3b2fd12"><td class="memItemLeft" align="right" valign="top">Dict[str, Any]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1neuroexapt__v3_1_1NeuroExaptV3.html#a7b91ea0c9ee917d838450c1fc3b2fd12">apply_evolution</a> (self, Dict[str, Any] decision, DataLoader dataloader)</td></tr>
+<tr class="separator:a7b91ea0c9ee917d838450c1fc3b2fd12"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a10d2ab9d1b3966adc887e4cf2500254f" id="r_a10d2ab9d1b3966adc887e4cf2500254f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1neuroexapt__v3_1_1NeuroExaptV3.html#a10d2ab9d1b3966adc887e4cf2500254f">should_rollback</a> (self, Dict[str, float] current_performance)</td></tr>
+<tr class="separator:a10d2ab9d1b3966adc887e4cf2500254f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab481070e9fad8f24ae8117e209cb546c" id="r_ab481070e9fad8f24ae8117e209cb546c"><td class="memItemLeft" align="right" valign="top">nn.Module&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1neuroexapt__v3_1_1NeuroExaptV3.html#ab481070e9fad8f24ae8117e209cb546c">rollback</a> (self)</td></tr>
+<tr class="separator:ab481070e9fad8f24ae8117e209cb546c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac5712102040ba9f96a38fd89878d9be9" id="r_ac5712102040ba9f96a38fd89878d9be9"><td class="memItemLeft" align="right" valign="top">Dict[str, List[float]]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1neuroexapt__v3_1_1NeuroExaptV3.html#ac5712102040ba9f96a38fd89878d9be9">fit</a> (self, DataLoader train_loader, DataLoader val_loader, int epochs, optim.Optimizer optimizer, nn.Module criterion, Optional[torch.Tensor] sample_input=None, **kwargs)</td></tr>
+<tr class="separator:ac5712102040ba9f96a38fd89878d9be9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aed9094e21f9611a753de3e3d2d98a207" id="r_aed9094e21f9611a753de3e3d2d98a207"><td class="memItemLeft" align="right" valign="top">nn.Module&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1neuroexapt__v3_1_1NeuroExaptV3.html#aed9094e21f9611a753de3e3d2d98a207">get_model</a> (self)</td></tr>
+<tr class="separator:aed9094e21f9611a753de3e3d2d98a207"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1e7c9d976af50586fa7aab1f59603a94" id="r_a1e7c9d976af50586fa7aab1f59603a94"><td class="memItemLeft" align="right" valign="top">Dict[str, Any]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1neuroexapt__v3_1_1NeuroExaptV3.html#a1e7c9d976af50586fa7aab1f59603a94">get_evolution_summary</a> (self)</td></tr>
+<tr class="separator:a1e7c9d976af50586fa7aab1f59603a94"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4359de6555805eb5111185cb2c7dc124" id="r_a4359de6555805eb5111185cb2c7dc124"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1neuroexapt__v3_1_1NeuroExaptV3.html#a4359de6555805eb5111185cb2c7dc124">save_model</a> (self, str filepath)</td></tr>
+<tr class="separator:a4359de6555805eb5111185cb2c7dc124"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afb1e4aac5d888352d50b36b9d91745e5" id="r_afb1e4aac5d888352d50b36b9d91745e5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1neuroexapt__v3_1_1NeuroExaptV3.html#afb1e4aac5d888352d50b36b9d91745e5">load_model</a> (self, str filepath)</td></tr>
+<tr class="separator:afb1e4aac5d888352d50b36b9d91745e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a84f05da6d889fb6f8a8acf518a6545a6" id="r_a84f05da6d889fb6f8a8acf518a6545a6"><td class="memItemLeft" align="right" valign="top">str&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1neuroexapt__v3_1_1NeuroExaptV3.html#a84f05da6d889fb6f8a8acf518a6545a6">__repr__</a> (self)</td></tr>
+<tr class="separator:a84f05da6d889fb6f8a8acf518a6545a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a4284b075f916bd4312e7c509ac6e8f6e" id="r_a4284b075f916bd4312e7c509ac6e8f6e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1neuroexapt__v3_1_1NeuroExaptV3.html#a4284b075f916bd4312e7c509ac6e8f6e">device</a></td></tr>
+<tr class="separator:a4284b075f916bd4312e7c509ac6e8f6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac572f1eb9483df1f7f827975de48a902" id="r_ac572f1eb9483df1f7f827975de48a902"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1neuroexapt__v3_1_1NeuroExaptV3.html#ac572f1eb9483df1f7f827975de48a902">model</a></td></tr>
+<tr class="separator:ac572f1eb9483df1f7f827975de48a902"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a705be85abdc32b5be75c16e7ff528950" id="r_a705be85abdc32b5be75c16e7ff528950"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1neuroexapt__v3_1_1NeuroExaptV3.html#a705be85abdc32b5be75c16e7ff528950">original_model</a></td></tr>
+<tr class="separator:a705be85abdc32b5be75c16e7ff528950"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aabd23fcc15a91053c1aaa14f6f5fb54f" id="r_aabd23fcc15a91053c1aaa14f6f5fb54f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1neuroexapt__v3_1_1NeuroExaptV3.html#aabd23fcc15a91053c1aaa14f6f5fb54f">efficiency_threshold</a></td></tr>
+<tr class="separator:aabd23fcc15a91053c1aaa14f6f5fb54f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5fdcd72e1f491436482738ac4bfbd5c5" id="r_a5fdcd72e1f491436482738ac4bfbd5c5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1neuroexapt__v3_1_1NeuroExaptV3.html#a5fdcd72e1f491436482738ac4bfbd5c5">rollback_threshold</a></td></tr>
+<tr class="separator:a5fdcd72e1f491436482738ac4bfbd5c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a565ea9b087591f084f2bc9b83abca93e" id="r_a565ea9b087591f084f2bc9b83abca93e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1neuroexapt__v3_1_1NeuroExaptV3.html#a565ea9b087591f084f2bc9b83abca93e">enable_visualization</a></td></tr>
+<tr class="separator:a565ea9b087591f084f2bc9b83abca93e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:affcf92862d053ca68b462a108dd643b8" id="r_affcf92862d053ca68b462a108dd643b8"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1neuroexapt__v3_1_1NeuroExaptV3.html#affcf92862d053ca68b462a108dd643b8">log_directory</a></td></tr>
+<tr class="separator:affcf92862d053ca68b462a108dd643b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad2e5d50c9b2b90a97b0b7683f340ce38" id="r_ad2e5d50c9b2b90a97b0b7683f340ce38"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1neuroexapt__v3_1_1NeuroExaptV3.html#ad2e5d50c9b2b90a97b0b7683f340ce38">training_active</a></td></tr>
+<tr class="separator:ad2e5d50c9b2b90a97b0b7683f340ce38"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae54b8182b083f7e93b61366fc6b0807b" id="r_ae54b8182b083f7e93b61366fc6b0807b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1neuroexapt__v3_1_1NeuroExaptV3.html#ae54b8182b083f7e93b61366fc6b0807b">current_epoch</a></td></tr>
+<tr class="separator:ae54b8182b083f7e93b61366fc6b0807b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0ae263e015fc31366f2dac5838b81271" id="r_a0ae263e015fc31366f2dac5838b81271"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1neuroexapt__v3_1_1NeuroExaptV3.html#a0ae263e015fc31366f2dac5838b81271">performance_history</a></td></tr>
+<tr class="separator:a0ae263e015fc31366f2dac5838b81271"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8bd7066b7959f711057ee804669a03e3" id="r_a8bd7066b7959f711057ee804669a03e3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1neuroexapt__v3_1_1NeuroExaptV3.html#a8bd7066b7959f711057ee804669a03e3">evolution_history</a></td></tr>
+<tr class="separator:a8bd7066b7959f711057ee804669a03e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adf1424ad51f75465d8aaef5e66180c35" id="r_adf1424ad51f75465d8aaef5e66180c35"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1neuroexapt__v3_1_1NeuroExaptV3.html#adf1424ad51f75465d8aaef5e66180c35">metrics_history</a></td></tr>
+<tr class="separator:adf1424ad51f75465d8aaef5e66180c35"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad70a1580b90af24eb65ae3385cfe9d7f" id="r_ad70a1580b90af24eb65ae3385cfe9d7f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1neuroexapt__v3_1_1NeuroExaptV3.html#ad70a1580b90af24eb65ae3385cfe9d7f">stats</a></td></tr>
+<tr class="separator:ad70a1580b90af24eb65ae3385cfe9d7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5229ccec0b8758ea8a9994bc9eed04e7" id="r_a5229ccec0b8758ea8a9994bc9eed04e7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1neuroexapt__v3_1_1NeuroExaptV3.html#a5229ccec0b8758ea8a9994bc9eed04e7">thresholds</a></td></tr>
+<tr class="separator:a5229ccec0b8758ea8a9994bc9eed04e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr class="memitem:acfe05bf6139478c0729d72a1b565741b" id="r_acfe05bf6139478c0729d72a1b565741b"><td class="memItemLeft" align="right" valign="top">Dict[str, float]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1neuroexapt__v3_1_1NeuroExaptV3.html#acfe05bf6139478c0729d72a1b565741b">_train_epoch</a> (self, DataLoader dataloader, optim.Optimizer optimizer, nn.Module criterion)</td></tr>
+<tr class="separator:acfe05bf6139478c0729d72a1b565741b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abad4ca05de8827716818db425c266fca" id="r_abad4ca05de8827716818db425c266fca"><td class="memItemLeft" align="right" valign="top">Dict[str, float]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1neuroexapt__v3_1_1NeuroExaptV3.html#abad4ca05de8827716818db425c266fca">_validate_epoch</a> (self, DataLoader dataloader, nn.Module criterion)</td></tr>
+<tr class="separator:abad4ca05de8827716818db425c266fca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><pre class="fragment">NeuroExapt V3: Advanced adaptive neural network optimization.
+
+Features:
+- Every-epoch architecture analysis
+- Information-theoretic evolution decisions
+- Intelligent threshold learning
+- Smart visualization (only on changes)
+- Automatic rollback on performance degradation
+</pre> 
+<p class="definition">Definition at line <a class="el" href="neuroexapt__v3_8py_source.html#l00026">26</a> of file <a class="el" href="neuroexapt__v3_8py_source.html">neuroexapt_v3.py</a>.</p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a879a93fd02d1d221998fc6055747a7fe" name="a879a93fd02d1d221998fc6055747a7fe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a879a93fd02d1d221998fc6055747a7fe">&#9670;&#160;</a></span>__init__()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.neuroexapt_v3.NeuroExaptV3.__init__ </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">nn.Module&#160;</td>
+          <td class="paramname"><em>model</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Optional[torch.device] &#160;</td>
+          <td class="paramname"><em>device</em> = <code>None</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float &#160;</td>
+          <td class="paramname"><em>efficiency_threshold</em> = <code>0.1</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float &#160;</td>
+          <td class="paramname"><em>rollback_threshold</em> = <code>0.05</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool &#160;</td>
+          <td class="paramname"><em>enable_visualization</em> = <code>True</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str &#160;</td>
+          <td class="paramname"><em>log_directory</em> = <code>&quot;./neuroexapt_logs&quot;</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">Initialize NeuroExapt V3 system.
+
+Args:
+    model: Neural network model to optimize
+    device: Device for computation
+    efficiency_threshold: Minimum efficiency gain for evolution
+    rollback_threshold: Performance drop threshold for rollback
+    enable_visualization: Whether to enable smart visualization
+    log_directory: Directory for logs and visualizations
+</pre> 
+<p class="definition">Definition at line <a class="el" href="neuroexapt__v3_8py_source.html#l00038">38</a> of file <a class="el" href="neuroexapt__v3_8py_source.html">neuroexapt_v3.py</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a84f05da6d889fb6f8a8acf518a6545a6" name="a84f05da6d889fb6f8a8acf518a6545a6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a84f05da6d889fb6f8a8acf518a6545a6">&#9670;&#160;</a></span>__repr__()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> str neuroexapt.neuroexapt_v3.NeuroExaptV3.__repr__ </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="neuroexapt__v3_8py_source.html#l00376">376</a> of file <a class="el" href="neuroexapt__v3_8py_source.html">neuroexapt_v3.py</a>.</p>
+
+</div>
+</div>
+<a id="acfe05bf6139478c0729d72a1b565741b" name="acfe05bf6139478c0729d72a1b565741b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acfe05bf6139478c0729d72a1b565741b">&#9670;&#160;</a></span>_train_epoch()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Dict[str, float] neuroexapt.neuroexapt_v3.NeuroExaptV3._train_epoch </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">DataLoader&#160;</td>
+          <td class="paramname"><em>dataloader</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">optim.Optimizer&#160;</td>
+          <td class="paramname"><em>optimizer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">nn.Module&#160;</td>
+          <td class="paramname"><em>criterion</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">Train for one epoch.</pre> 
+<p class="definition">Definition at line <a class="el" href="neuroexapt__v3_8py_source.html#l00280">280</a> of file <a class="el" href="neuroexapt__v3_8py_source.html">neuroexapt_v3.py</a>.</p>
+
+</div>
+</div>
+<a id="abad4ca05de8827716818db425c266fca" name="abad4ca05de8827716818db425c266fca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abad4ca05de8827716818db425c266fca">&#9670;&#160;</a></span>_validate_epoch()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Dict[str, float] neuroexapt.neuroexapt_v3.NeuroExaptV3._validate_epoch </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">DataLoader&#160;</td>
+          <td class="paramname"><em>dataloader</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">nn.Module&#160;</td>
+          <td class="paramname"><em>criterion</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">Validate for one epoch.</pre> 
+<p class="definition">Definition at line <a class="el" href="neuroexapt__v3_8py_source.html#l00306">306</a> of file <a class="el" href="neuroexapt__v3_8py_source.html">neuroexapt_v3.py</a>.</p>
+
+</div>
+</div>
+<a id="a39cbf177505e7336f33cd62371fcfe33" name="a39cbf177505e7336f33cd62371fcfe33"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a39cbf177505e7336f33cd62371fcfe33">&#9670;&#160;</a></span>analyze_architecture()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Dict[str, Any] neuroexapt.neuroexapt_v3.NeuroExaptV3.analyze_architecture </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">DataLoader&#160;</td>
+          <td class="paramname"><em>dataloader</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">Perform basic architecture analysis.</pre> 
+<p class="definition">Definition at line <a class="el" href="neuroexapt__v3_8py_source.html#l00101">101</a> of file <a class="el" href="neuroexapt__v3_8py_source.html">neuroexapt_v3.py</a>.</p>
+
+</div>
+</div>
+<a id="a7b91ea0c9ee917d838450c1fc3b2fd12" name="a7b91ea0c9ee917d838450c1fc3b2fd12"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7b91ea0c9ee917d838450c1fc3b2fd12">&#9670;&#160;</a></span>apply_evolution()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Dict[str, Any] neuroexapt.neuroexapt_v3.NeuroExaptV3.apply_evolution </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Dict[str, Any]&#160;</td>
+          <td class="paramname"><em>decision</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">DataLoader
+    &#160;</td>
+          <td class="paramname"><em>dataloader</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">Apply evolution decision to model.</pre> 
+<p class="definition">Definition at line <a class="el" href="neuroexapt__v3_8py_source.html#l00167">167</a> of file <a class="el" href="neuroexapt__v3_8py_source.html">neuroexapt_v3.py</a>.</p>
+
+</div>
+</div>
+<a id="a35a2e88424071e96d0eec0107e889bf8" name="a35a2e88424071e96d0eec0107e889bf8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a35a2e88424071e96d0eec0107e889bf8">&#9670;&#160;</a></span>check_evolution_need()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Optional[Dict[str, Any]] neuroexapt.neuroexapt_v3.NeuroExaptV3.check_evolution_need </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">DataLoader&#160;</td>
+          <td class="paramname"><em>dataloader</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Dict[str, float]&#160;</td>
+          <td class="paramname"><em>performance_metrics</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int
+    &#160;</td>
+          <td class="paramname"><em>epoch</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">Check if evolution is needed for current epoch.</pre> 
+<p class="definition">Definition at line <a class="el" href="neuroexapt__v3_8py_source.html#l00132">132</a> of file <a class="el" href="neuroexapt__v3_8py_source.html">neuroexapt_v3.py</a>.</p>
+
+</div>
+</div>
+<a id="ac5712102040ba9f96a38fd89878d9be9" name="ac5712102040ba9f96a38fd89878d9be9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac5712102040ba9f96a38fd89878d9be9">&#9670;&#160;</a></span>fit()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Dict[str, List[float]] neuroexapt.neuroexapt_v3.NeuroExaptV3.fit </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">DataLoader&#160;</td>
+          <td class="paramname"><em>train_loader</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">DataLoader&#160;</td>
+          <td class="paramname"><em>val_loader</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>epochs</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">optim.Optimizer&#160;</td>
+          <td class="paramname"><em>optimizer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">nn.Module&#160;</td>
+          <td class="paramname"><em>criterion</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Optional[torch.Tensor] &#160;</td>
+          <td class="paramname"><em>sample_input</em> = <code>None</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">**&#160;</td>
+          <td class="paramname"><em>kwargs</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">Complete training with adaptive evolution.</pre> 
+<p class="definition">Definition at line <a class="el" href="neuroexapt__v3_8py_source.html#l00221">221</a> of file <a class="el" href="neuroexapt__v3_8py_source.html">neuroexapt_v3.py</a>.</p>
+
+</div>
+</div>
+<a id="a1e7c9d976af50586fa7aab1f59603a94" name="a1e7c9d976af50586fa7aab1f59603a94"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1e7c9d976af50586fa7aab1f59603a94">&#9670;&#160;</a></span>get_evolution_summary()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Dict[str, Any] neuroexapt.neuroexapt_v3.NeuroExaptV3.get_evolution_summary </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">Get comprehensive evolution summary.</pre> 
+<p class="definition">Definition at line <a class="el" href="neuroexapt__v3_8py_source.html#l00333">333</a> of file <a class="el" href="neuroexapt__v3_8py_source.html">neuroexapt_v3.py</a>.</p>
+
+</div>
+</div>
+<a id="aed9094e21f9611a753de3e3d2d98a207" name="aed9094e21f9611a753de3e3d2d98a207"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aed9094e21f9611a753de3e3d2d98a207">&#9670;&#160;</a></span>get_model()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> nn.Module neuroexapt.neuroexapt_v3.NeuroExaptV3.get_model </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">Get the current optimized model.</pre> 
+<p class="definition">Definition at line <a class="el" href="neuroexapt__v3_8py_source.html#l00329">329</a> of file <a class="el" href="neuroexapt__v3_8py_source.html">neuroexapt_v3.py</a>.</p>
+
+</div>
+</div>
+<a id="afb1e4aac5d888352d50b36b9d91745e5" name="afb1e4aac5d888352d50b36b9d91745e5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afb1e4aac5d888352d50b36b9d91745e5">&#9670;&#160;</a></span>load_model()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.neuroexapt_v3.NeuroExaptV3.load_model </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str&#160;</td>
+          <td class="paramname"><em>filepath</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">Load a previously optimized model.</pre> 
+<p class="definition">Definition at line <a class="el" href="neuroexapt__v3_8py_source.html#l00366">366</a> of file <a class="el" href="neuroexapt__v3_8py_source.html">neuroexapt_v3.py</a>.</p>
+
+</div>
+</div>
+<a id="ab481070e9fad8f24ae8117e209cb546c" name="ab481070e9fad8f24ae8117e209cb546c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab481070e9fad8f24ae8117e209cb546c">&#9670;&#160;</a></span>rollback()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> nn.Module neuroexapt.neuroexapt_v3.NeuroExaptV3.rollback </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">Rollback to previous model state.</pre> 
+<p class="definition">Definition at line <a class="el" href="neuroexapt__v3_8py_source.html#l00215">215</a> of file <a class="el" href="neuroexapt__v3_8py_source.html">neuroexapt_v3.py</a>.</p>
+
+</div>
+</div>
+<a id="a4359de6555805eb5111185cb2c7dc124" name="a4359de6555805eb5111185cb2c7dc124"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4359de6555805eb5111185cb2c7dc124">&#9670;&#160;</a></span>save_model()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.neuroexapt_v3.NeuroExaptV3.save_model </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str&#160;</td>
+          <td class="paramname"><em>filepath</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">Save the optimized model.</pre> 
+<p class="definition">Definition at line <a class="el" href="neuroexapt__v3_8py_source.html#l00356">356</a> of file <a class="el" href="neuroexapt__v3_8py_source.html">neuroexapt_v3.py</a>.</p>
+
+</div>
+</div>
+<a id="a10d2ab9d1b3966adc887e4cf2500254f" name="a10d2ab9d1b3966adc887e4cf2500254f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a10d2ab9d1b3966adc887e4cf2500254f">&#9670;&#160;</a></span>should_rollback()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> bool neuroexapt.neuroexapt_v3.NeuroExaptV3.should_rollback </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Dict[str, float]&#160;</td>
+          <td class="paramname"><em>current_performance</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">Check if rollback is needed based on performance.</pre> 
+<p class="definition">Definition at line <a class="el" href="neuroexapt__v3_8py_source.html#l00202">202</a> of file <a class="el" href="neuroexapt__v3_8py_source.html">neuroexapt_v3.py</a>.</p>
+
+</div>
+</div>
+<a id="a69eb737eda71118c5f44d83760a2a119" name="a69eb737eda71118c5f44d83760a2a119"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a69eb737eda71118c5f44d83760a2a119">&#9670;&#160;</a></span>wrap_model()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> nn.Module neuroexapt.neuroexapt_v3.NeuroExaptV3.wrap_model </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">nn.Module&#160;</td>
+          <td class="paramname"><em>model</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">Wrap a PyTorch model for adaptive optimization.</pre> 
+<p class="definition">Definition at line <a class="el" href="neuroexapt__v3_8py_source.html#l00095">95</a> of file <a class="el" href="neuroexapt__v3_8py_source.html">neuroexapt_v3.py</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="ae54b8182b083f7e93b61366fc6b0807b" name="ae54b8182b083f7e93b61366fc6b0807b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae54b8182b083f7e93b61366fc6b0807b">&#9670;&#160;</a></span>current_epoch</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.neuroexapt_v3.NeuroExaptV3.current_epoch</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="neuroexapt__v3_8py_source.html#l00070">70</a> of file <a class="el" href="neuroexapt__v3_8py_source.html">neuroexapt_v3.py</a>.</p>
+
+</div>
+</div>
+<a id="a4284b075f916bd4312e7c509ac6e8f6e" name="a4284b075f916bd4312e7c509ac6e8f6e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4284b075f916bd4312e7c509ac6e8f6e">&#9670;&#160;</a></span>device</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.neuroexapt_v3.NeuroExaptV3.device</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="neuroexapt__v3_8py_source.html#l00058">58</a> of file <a class="el" href="neuroexapt__v3_8py_source.html">neuroexapt_v3.py</a>.</p>
+
+</div>
+</div>
+<a id="aabd23fcc15a91053c1aaa14f6f5fb54f" name="aabd23fcc15a91053c1aaa14f6f5fb54f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aabd23fcc15a91053c1aaa14f6f5fb54f">&#9670;&#160;</a></span>efficiency_threshold</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.neuroexapt_v3.NeuroExaptV3.efficiency_threshold</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="neuroexapt__v3_8py_source.html#l00063">63</a> of file <a class="el" href="neuroexapt__v3_8py_source.html">neuroexapt_v3.py</a>.</p>
+
+</div>
+</div>
+<a id="a565ea9b087591f084f2bc9b83abca93e" name="a565ea9b087591f084f2bc9b83abca93e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a565ea9b087591f084f2bc9b83abca93e">&#9670;&#160;</a></span>enable_visualization</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.neuroexapt_v3.NeuroExaptV3.enable_visualization</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="neuroexapt__v3_8py_source.html#l00065">65</a> of file <a class="el" href="neuroexapt__v3_8py_source.html">neuroexapt_v3.py</a>.</p>
+
+</div>
+</div>
+<a id="a8bd7066b7959f711057ee804669a03e3" name="a8bd7066b7959f711057ee804669a03e3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8bd7066b7959f711057ee804669a03e3">&#9670;&#160;</a></span>evolution_history</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.neuroexapt_v3.NeuroExaptV3.evolution_history</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="neuroexapt__v3_8py_source.html#l00072">72</a> of file <a class="el" href="neuroexapt__v3_8py_source.html">neuroexapt_v3.py</a>.</p>
+
+</div>
+</div>
+<a id="affcf92862d053ca68b462a108dd643b8" name="affcf92862d053ca68b462a108dd643b8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#affcf92862d053ca68b462a108dd643b8">&#9670;&#160;</a></span>log_directory</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.neuroexapt_v3.NeuroExaptV3.log_directory</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="neuroexapt__v3_8py_source.html#l00066">66</a> of file <a class="el" href="neuroexapt__v3_8py_source.html">neuroexapt_v3.py</a>.</p>
+
+</div>
+</div>
+<a id="adf1424ad51f75465d8aaef5e66180c35" name="adf1424ad51f75465d8aaef5e66180c35"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adf1424ad51f75465d8aaef5e66180c35">&#9670;&#160;</a></span>metrics_history</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.neuroexapt_v3.NeuroExaptV3.metrics_history</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="neuroexapt__v3_8py_source.html#l00075">75</a> of file <a class="el" href="neuroexapt__v3_8py_source.html">neuroexapt_v3.py</a>.</p>
+
+</div>
+</div>
+<a id="ac572f1eb9483df1f7f827975de48a902" name="ac572f1eb9483df1f7f827975de48a902"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac572f1eb9483df1f7f827975de48a902">&#9670;&#160;</a></span>model</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.neuroexapt_v3.NeuroExaptV3.model</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="neuroexapt__v3_8py_source.html#l00059">59</a> of file <a class="el" href="neuroexapt__v3_8py_source.html">neuroexapt_v3.py</a>.</p>
+
+</div>
+</div>
+<a id="a705be85abdc32b5be75c16e7ff528950" name="a705be85abdc32b5be75c16e7ff528950"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a705be85abdc32b5be75c16e7ff528950">&#9670;&#160;</a></span>original_model</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.neuroexapt_v3.NeuroExaptV3.original_model</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="neuroexapt__v3_8py_source.html#l00060">60</a> of file <a class="el" href="neuroexapt__v3_8py_source.html">neuroexapt_v3.py</a>.</p>
+
+</div>
+</div>
+<a id="a0ae263e015fc31366f2dac5838b81271" name="a0ae263e015fc31366f2dac5838b81271"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0ae263e015fc31366f2dac5838b81271">&#9670;&#160;</a></span>performance_history</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.neuroexapt_v3.NeuroExaptV3.performance_history</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="neuroexapt__v3_8py_source.html#l00071">71</a> of file <a class="el" href="neuroexapt__v3_8py_source.html">neuroexapt_v3.py</a>.</p>
+
+</div>
+</div>
+<a id="a5fdcd72e1f491436482738ac4bfbd5c5" name="a5fdcd72e1f491436482738ac4bfbd5c5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5fdcd72e1f491436482738ac4bfbd5c5">&#9670;&#160;</a></span>rollback_threshold</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.neuroexapt_v3.NeuroExaptV3.rollback_threshold</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="neuroexapt__v3_8py_source.html#l00064">64</a> of file <a class="el" href="neuroexapt__v3_8py_source.html">neuroexapt_v3.py</a>.</p>
+
+</div>
+</div>
+<a id="ad70a1580b90af24eb65ae3385cfe9d7f" name="ad70a1580b90af24eb65ae3385cfe9d7f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad70a1580b90af24eb65ae3385cfe9d7f">&#9670;&#160;</a></span>stats</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.neuroexapt_v3.NeuroExaptV3.stats</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="neuroexapt__v3_8py_source.html#l00078">78</a> of file <a class="el" href="neuroexapt__v3_8py_source.html">neuroexapt_v3.py</a>.</p>
+
+</div>
+</div>
+<a id="a5229ccec0b8758ea8a9994bc9eed04e7" name="a5229ccec0b8758ea8a9994bc9eed04e7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5229ccec0b8758ea8a9994bc9eed04e7">&#9670;&#160;</a></span>thresholds</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.neuroexapt_v3.NeuroExaptV3.thresholds</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="neuroexapt__v3_8py_source.html#l00087">87</a> of file <a class="el" href="neuroexapt__v3_8py_source.html">neuroexapt_v3.py</a>.</p>
+
+</div>
+</div>
+<a id="ad2e5d50c9b2b90a97b0b7683f340ce38" name="ad2e5d50c9b2b90a97b0b7683f340ce38"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad2e5d50c9b2b90a97b0b7683f340ce38">&#9670;&#160;</a></span>training_active</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.neuroexapt_v3.NeuroExaptV3.training_active</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="neuroexapt__v3_8py_source.html#l00069">69</a> of file <a class="el" href="neuroexapt__v3_8py_source.html">neuroexapt_v3.py</a>.</p>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following file:<ul>
+<li>neuroexapt/<a class="el" href="neuroexapt__v3_8py_source.html">neuroexapt_v3.py</a></li>
+</ul>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<!-- do not remove this div, it is closed by doxygen! -->
+</div>
+<!-- Custom Footer -->
+<div style="background: #f8f9fa; border-top: 1px solid #e9ecef; margin-top: 50px; padding: 30px 0; text-align: center;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-bottom: 20px;">
+            <!-- Project Info -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🧠 NeuroExapt</h4>
+                <p style="color: #6c757d; margin: 0; font-size: 0.9em;">
+                    Advanced Neural Architecture Search and Dynamic Morphogenesis Framework for next-generation AI research.
+                </p>
+            </div>
+            <!-- Quick Links -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">📚 Quick Links</h4>
+                <div style="text-align: left;">
+                    <a href="index.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🏠 Home</a>
+                    <a href="modules.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📦 Modules</a>
+                    <a href="examples.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💡 Examples</a>
+                    <a href="files.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📁 Files</a>
+                </div>
+            </div>
+            <!-- Resources -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🔗 Resources</h4>
+                <div style="text-align: left;">
+                    <a href="https://github.com/your-username/neuroexapt" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💻 GitHub Repository</a>
+                    <a href="https://github.com/your-username/neuroexapt/issues" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🐛 Issue Tracker</a>
+                    <a href="https://github.com/your-username/neuroexapt/wiki" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📖 Wiki</a>
+                    <a href="https://github.com/your-username/neuroexapt/releases" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🚀 Releases</a>
+                </div>
+            </div>
+        </div>
+        <hr style="border: 0; height: 1px; background: #e9ecef; margin: 20px 0;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+            <div style="color: #6c757d; font-size: 0.9em;">
+                © 2024 NeuroExapt Project. Generated with 
+                <a href="https://www.doxygen.nl/index.html" style="color: #667eea; text-decoration: none;">Doxygen 1.9.8</a>
+            </div>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <span style="font-size: 0.9em; color: #6c757d;">Built with ❤️ for AI Research</span>
+                <div style="display: flex; gap: 10px;">
+                    <span style="background: #28a745; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">🟢 Active</span>
+                    <span style="background: #17a2b8; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">v3.0</span>
+                </div>
+            </div>
+        </div>
+        <!-- Technology Stack -->
+        <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #e9ecef;">
+            <div style="font-size: 0.8em; color: #868e96; text-align: center;">
+                <strong>Built with:</strong>
+                <span style="margin: 0 5px;">🐍 Python</span>
+                <span style="margin: 0 5px;">🔥 PyTorch</span>
+                <span style="margin: 0 5px;">⚡ CUDA</span>
+                <span style="margin: 0 5px;">🧮 NumPy</span>
+                <span style="margin: 0 5px;">📊 Matplotlib</span>
+                <span style="margin: 0 5px;">🚀 Triton</span>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Back to top button -->
+<div id="back-to-top" style="position: fixed; bottom: 20px; right: 20px; display: none; z-index: 1000;">
+    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" 
+            style="background: #667eea; color: white; border: none; padding: 10px 15px; border-radius: 50%; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,0.2); font-size: 16px;">
+        ⬆️
+    </button>
+</div>
+<script>
+// Back to top button functionality
+window.addEventListener('scroll', function() {
+    const backToTop = document.getElementById('back-to-top');
+    if (window.pageYOffset > 300) {
+        backToTop.style.display = 'block';
+    } else {
+        backToTop.style.display = 'none';
+    }
+});
+// Enhanced search functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Add search enhancement if search box exists
+    const searchBox = document.getElementById('MSearchField');
+    if (searchBox) {
+        searchBox.placeholder = 'Search documentation... 🔍';
+        searchBox.style.borderRadius = '20px';
+        searchBox.style.padding = '8px 15px';
+    }
+    // Add copy code button to code blocks
+    const codeBlocks = document.querySelectorAll('.fragment');
+    codeBlocks.forEach(function(block) {
+        const copyBtn = document.createElement('button');
+        copyBtn.innerHTML = '📋';
+        copyBtn.title = 'Copy code';
+        copyBtn.style.cssText = 'position: absolute; top: 10px; right: 10px; background: #667eea; color: white; border: none; padding: 5px; border-radius: 3px; cursor: pointer; font-size: 12px;';
+        block.style.position = 'relative';
+        block.appendChild(copyBtn);
+        copyBtn.addEventListener('click', function() {
+            const text = block.textContent;
+            navigator.clipboard.writeText(text).then(function() {
+                copyBtn.innerHTML = '✅';
+                setTimeout(function() {
+                    copyBtn.innerHTML = '📋';
+                }, 2000);
+            });
+        });
+    });
+});
+// Dark mode toggle (optional)
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+}
+// Load saved dark mode preference
+if (localStorage.getItem('darkMode') === 'true') {
+    document.body.classList.add('dark-mode');
+}
+</script>
+</body>
+</html>

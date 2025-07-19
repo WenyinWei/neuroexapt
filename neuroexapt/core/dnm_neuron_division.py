@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+"""
+\defgroup group_dnm_neuron_division Dnm Neuron Division
+\ingroup core
+Dnm Neuron Division module for NeuroExapt framework.
+"""
+
+
 DNM Neuron Division Module - 神经元分裂专用模块
 
 🧬 核心功能：

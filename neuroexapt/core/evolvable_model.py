@@ -1,4 +1,11 @@
 
+"""
+\defgroup group_evolvable_model Evolvable Model
+\ingroup core
+Evolvable Model module for NeuroExapt framework.
+"""
+
+
 import torch
 import torch.nn as nn
 from .operations import OPS, FactorizedReduce, ReLUConvBN

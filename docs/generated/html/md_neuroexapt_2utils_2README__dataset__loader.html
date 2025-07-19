@@ -1,0 +1,614 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="description" content="NeuroExapt - Advanced Neural Architecture Search and Dynamic Morphogenesis Framework">
+    <meta name="keywords" content="neural architecture search, dynamic morphogenesis, deep learning, AI, PyTorch">
+    <meta name="author" content="NeuroExapt Team">
+    <meta property="og:title" content="NeuroExapt Documentation">
+    <meta property="og:description" content="Advanced Neural Architecture Search Framework">
+    <meta property="og:type" content="website">
+
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>NeuroExapt: Advanced Dataset Loader</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="custom.css" rel="stylesheet" type="text/css"/>
+<!-- NeuroExapt Custom Styles -->
+<style>
+/* Enhanced header styling */
+.header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+.header h1 {
+    margin: 0;
+    font-size: 2.5em;
+    font-weight: 300;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+.header .subtitle {
+    font-size: 1.2em;
+    opacity: 0.9;
+    margin-top: 10px;
+}
+/* Enhanced navigation */
+.tablist {
+    background: #f8f9fa;
+    border-bottom: 2px solid #e9ecef;
+}
+.tablist li.current a {
+    background: #667eea;
+    color: white;
+}
+/* Improved content layout */
+.contents {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+/* Code highlighting */
+.fragment {
+    background: #f8f9fa;
+    border-left: 4px solid #667eea;
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 0 8px 8px 0;
+}
+/* Enhanced tables */
+table.memberdecls {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 20px 0;
+}
+table.memberdecls td {
+    border: 1px solid #e9ecef;
+    padding: 12px;
+}
+/* Better typography */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #343a40;
+}
+h1, h2, h3, h4, h5, h6 {
+    color: #495057;
+    font-weight: 500;
+}
+/* Responsive design */
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 2em;
+    }
+    .contents {
+        padding: 15px;
+    }
+}
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #1a1a1a;
+        color: #e9ecef;
+    }
+    .header {
+        background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+    }
+    .fragment {
+        background: #2d3748;
+        color: #e9ecef;
+    }
+}
+</style>
+<!-- Analytics (if needed) -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<!--
+<script async src="https://www.googletagmanager.com/gtag/js?id=GA_TRACKING_ID"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'GA_TRACKING_ID');
+</script>
+-->
+</head>
+<body>
+<!-- Custom Header -->
+<div class="header">
+    <h1>🧠 NeuroExapt</h1>
+    <div class="subtitle">Advanced Neural Architecture Search and Dynamic Morphogenesis Framework</div>
+    <div style="margin-top: 15px; font-size: 0.9em;">
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🚀 Dynamic Neural Morphogenesis
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🔬 Advanced Architecture Search
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            ⚡ High-Performance Computing
+        </span>
+    </div>
+</div>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! --><!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('md_neuroexapt_2utils_2README__dataset__loader.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div><div class="header">
+  <div class="headertitle"><div class="title">Advanced Dataset Loader</div></div>
+</div><!--header-->
+<div class="contents">
+<div class="textblock"><p><a class="anchor" id="autotoc_md0"></a> The Advanced Dataset Loader provides robust dataset downloading capabilities optimized for Chinese users, featuring P2P acceleration, intelligent caching, and multiple mirror support.</p>
+<h1><a class="anchor" id="autotoc_md1"></a>
+🌟 Key Features</h1>
+<h2><a class="anchor" id="autotoc_md2"></a>
+🚀 P2P Acceleration</h2>
+<ul>
+<li><b>Chunked Downloads</b>: Downloads files in configurable chunks for better control</li>
+<li><b>Resume Capability</b>: Automatically resumes interrupted downloads</li>
+<li><b>Progress Tracking</b>: Real-time progress bars with speed and ETA</li>
+<li><b>Concurrent Downloads</b>: Multiple connections for faster downloads</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md3"></a>
+🏪 Intelligent Caching</h2>
+<ul>
+<li><b>SHA256 Verification</b>: Ensures downloaded files are complete and uncorrupted</li>
+<li><b>Size Validation</b>: Checks file sizes against expected values</li>
+<li><b>Metadata Storage</b>: Tracks download timestamps and file information</li>
+<li><b>Cache Management</b>: Easy cache clearing and information retrieval</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md4"></a>
+🌍 Multiple Mirror Support</h2>
+<ul>
+<li><b>Chinese Mirrors</b>: Optimized for Chinese users with high-speed access<ul>
+<li>Tsinghua University Mirror</li>
+<li>USTC Mirror</li>
+<li>Huawei Cloud Mirror</li>
+<li>Aliyun Mirror</li>
+</ul>
+</li>
+<li><b>International Fallbacks</b>: Reliable international mirrors as backup</li>
+<li><b>Automatic Selection</b>: Chooses the fastest available mirror</li>
+<li><b>Connectivity Testing</b>: Tests mirror availability before downloading</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md5"></a>
+🔄 Robust Error Handling</h2>
+<ul>
+<li><b>Retry Logic</b>: Exponential backoff for failed downloads</li>
+<li><b>Mirror Fallback</b>: Automatically switches to alternative mirrors</li>
+<li><b>Graceful Degradation</b>: Falls back to standard downloads if P2P fails</li>
+<li><b>Detailed Logging</b>: Comprehensive error reporting and debugging</li>
+</ul>
+<h1><a class="anchor" id="autotoc_md6"></a>
+📦 Installation</h1>
+<p>The dataset loader is included with Neuro Exapt. Additional dependencies:</p>
+<div class="fragment"><div class="line">pip install requests&gt;=2.28.0</div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md7"></a>
+🚀 Quick Start</h1>
+<h2><a class="anchor" id="autotoc_md8"></a>
+Basic Usage</h2>
+<div class="fragment"><div class="line"><span class="keyword">from</span> <a class="code hl_namespace" href="namespaceneuroexapt_1_1utils_1_1dataset__loader.html">neuroexapt.utils.dataset_loader</a> <span class="keyword">import</span> AdvancedDatasetLoader</div>
+<div class="line"> </div>
+<div class="line"><span class="comment"># Initialize the loader</span></div>
+<div class="line">loader = AdvancedDatasetLoader(</div>
+<div class="line">    cache_dir=<span class="stringliteral">&quot;./data_cache&quot;</span>,      <span class="comment"># Cache directory</span></div>
+<div class="line">    download_dir=<span class="stringliteral">&quot;./data&quot;</span>,         <span class="comment"># Dataset directory</span></div>
+<div class="line">    use_p2p=<span class="keyword">True</span>,                  <span class="comment"># Enable P2P acceleration</span></div>
+<div class="line">    max_retries=3                  <span class="comment"># Retry attempts</span></div>
+<div class="line">)</div>
+<div class="line"> </div>
+<div class="line"><span class="comment"># Download and load CIFAR-10</span></div>
+<div class="line">train_loader, test_loader = loader.get_cifar10_dataloaders(</div>
+<div class="line">    batch_size=128,</div>
+<div class="line">    num_workers=2,</div>
+<div class="line">    download=<span class="keyword">True</span>,                 <span class="comment"># Auto-download if needed</span></div>
+<div class="line">    force_download=<span class="keyword">False</span>           <span class="comment"># Use cache if available</span></div>
+<div class="line">)</div>
+<div class="ttc" id="anamespaceneuroexapt_1_1utils_1_1dataset__loader_html"><div class="ttname"><a href="namespaceneuroexapt_1_1utils_1_1dataset__loader.html">neuroexapt.utils.dataset_loader</a></div><div class="ttdef"><b>Definition</b> <a href="dataset__loader_8py_source.html#l00001">dataset_loader.py:1</a></div></div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md9"></a>
+Advanced Configuration</h2>
+<div class="fragment"><div class="line"><span class="comment"># Custom configuration</span></div>
+<div class="line">loader = AdvancedDatasetLoader(</div>
+<div class="line">    cache_dir=<span class="stringliteral">&quot;/path/to/cache&quot;</span>,    <span class="comment"># Custom cache location</span></div>
+<div class="line">    download_dir=<span class="stringliteral">&quot;/path/to/data&quot;</span>,  <span class="comment"># Custom data location</span></div>
+<div class="line">    use_p2p=<span class="keyword">True</span>,                  <span class="comment"># Enable P2P</span></div>
+<div class="line">    max_retries=5                  <span class="comment"># More retries for unstable connections</span></div>
+<div class="line">)</div>
+<div class="line"> </div>
+<div class="line"><span class="comment"># Force re-download (ignores cache)</span></div>
+<div class="line">train_loader, test_loader = loader.get_cifar10_dataloaders(</div>
+<div class="line">    batch_size=64,</div>
+<div class="line">    force_download=<span class="keyword">True</span>            <span class="comment"># Force fresh download</span></div>
+<div class="line">)</div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md10"></a>
+📊 Supported Datasets</h1>
+<h2><a class="anchor" id="autotoc_md11"></a>
+CIFAR-10</h2>
+<ul>
+<li><b>Size</b>: ~170 MB</li>
+<li><b>Files</b>: <code>cifar-10-python.tar.gz</code></li>
+<li><b>Checksum</b>: SHA256 verification included</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md12"></a>
+CIFAR-100</h2>
+<ul>
+<li><b>Size</b>: ~169 MB</li>
+<li><b>Files</b>: <code>cifar-100-python.tar.gz</code></li>
+<li><b>Checksum</b>: SHA256 verification included</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md13"></a>
+MNIST</h2>
+<ul>
+<li><b>Size</b>: ~12 MB</li>
+<li><b>Files</b>: 4 separate gzipped files</li>
+<li><b>Individual file verification</b></li>
+</ul>
+<h1><a class="anchor" id="autotoc_md14"></a>
+🔧 API Reference</h1>
+<h2><a class="anchor" id="autotoc_md15"></a>
+AdvancedDatasetLoader</h2>
+<h3><a class="anchor" id="autotoc_md16"></a>
+Constructor</h3>
+<div class="fragment"><div class="line">AdvancedDatasetLoader(</div>
+<div class="line">    cache_dir: str = <span class="stringliteral">&quot;./data_cache&quot;</span>,</div>
+<div class="line">    download_dir: str = <span class="stringliteral">&quot;./data&quot;</span>,</div>
+<div class="line">    use_p2p: bool = <span class="keyword">True</span>,</div>
+<div class="line">    max_retries: int = 3</div>
+<div class="line">)</div>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md17"></a>
+Methods</h3>
+<h4><a class="anchor" id="autotoc_md18"></a>
+&lt;tt&gt;get_cifar10_dataloaders()&lt;/tt&gt;</h4>
+<div class="fragment"><div class="line">get_cifar10_dataloaders(</div>
+<div class="line">    batch_size: int = 128,</div>
+<div class="line">    num_workers: int = 2,</div>
+<div class="line">    download: bool = <span class="keyword">True</span>,</div>
+<div class="line">    force_download: bool = <span class="keyword">False</span></div>
+<div class="line">) -&gt; Tuple[DataLoader, DataLoader]</div>
+</div><!-- fragment --><h4><a class="anchor" id="autotoc_md19"></a>
+&lt;tt&gt;get_cifar100_dataloaders()&lt;/tt&gt;</h4>
+<div class="fragment"><div class="line">get_cifar100_dataloaders(</div>
+<div class="line">    batch_size: int = 128,</div>
+<div class="line">    num_workers: int = 2,</div>
+<div class="line">    download: bool = <span class="keyword">True</span>,</div>
+<div class="line">    force_download: bool = <span class="keyword">False</span></div>
+<div class="line">) -&gt; Tuple[DataLoader, DataLoader]</div>
+</div><!-- fragment --><h4><a class="anchor" id="autotoc_md20"></a>
+&lt;tt&gt;download_dataset()&lt;/tt&gt;</h4>
+<div class="fragment"><div class="line">download_dataset(</div>
+<div class="line">    dataset_name: str,</div>
+<div class="line">    force_download: bool = <span class="keyword">False</span></div>
+<div class="line">) -&gt; bool</div>
+</div><!-- fragment --><h4><a class="anchor" id="autotoc_md21"></a>
+&lt;tt&gt;clear_cache()&lt;/tt&gt;</h4>
+<div class="fragment"><div class="line">clear_cache(dataset_name: Optional[str] = <span class="keywordtype">None</span>)</div>
+</div><!-- fragment --><h4><a class="anchor" id="autotoc_md22"></a>
+&lt;tt&gt;get_cache_info()&lt;/tt&gt;</h4>
+<div class="fragment"><div class="line">get_cache_info() -&gt; Dict</div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md23"></a>
+🌍 Mirror Configuration</h1>
+<h2><a class="anchor" id="autotoc_md24"></a>
+Chinese Mirrors (Priority 1-2)</h2>
+<ul>
+<li><b>Tsinghua University</b>: <code><a href="https://mirrors.tuna.tsinghua.edu.cn/pytorch-datasets">https://mirrors.tuna.tsinghua.edu.cn/pytorch-datasets</a></code></li>
+<li><b>USTC</b>: <code><a href="https://mirrors.ustc.edu.cn/pytorch-datasets">https://mirrors.ustc.edu.cn/pytorch-datasets</a></code></li>
+<li><b>Huawei Cloud</b>: <code><a href="https://mirrors.huaweicloud.com/pytorch-datasets">https://mirrors.huaweicloud.com/pytorch-datasets</a></code></li>
+<li><b>Aliyun</b>: <code><a href="https://mirrors.aliyun.com/pytorch-datasets">https://mirrors.aliyun.com/pytorch-datasets</a></code></li>
+</ul>
+<h2><a class="anchor" id="autotoc_md25"></a>
+International Mirrors (Priority 3-4)</h2>
+<ul>
+<li><b>PyTorch Official</b>: <code><a href="https://download.pytorch.org/datasets">https://download.pytorch.org/datasets</a></code></li>
+<li><b>FastAI</b>: <code><a href="https://s3.amazonaws.com/fast-ai-datasets">https://s3.amazonaws.com/fast-ai-datasets</a></code></li>
+</ul>
+<h1><a class="anchor" id="autotoc_md26"></a>
+📈 Performance Optimization</h1>
+<h2><a class="anchor" id="autotoc_md27"></a>
+For Chinese Users</h2>
+<ol type="1">
+<li><b>Automatic Mirror Selection</b>: Chooses the fastest Chinese mirror</li>
+<li><b>P2P Acceleration</b>: Multiple connections for faster downloads</li>
+<li><b>Intelligent Caching</b>: Avoids re-downloading existing files</li>
+<li><b>Resume Capability</b>: Continues interrupted downloads</li>
+</ol>
+<h2><a class="anchor" id="autotoc_md28"></a>
+For International Users</h2>
+<ol type="1">
+<li><b>Fallback Mirrors</b>: Reliable international sources</li>
+<li><b>Standard Downloads</b>: Robust HTTP downloads</li>
+<li><b>Cache Benefits</b>: Same caching advantages</li>
+</ol>
+<h1><a class="anchor" id="autotoc_md29"></a>
+🔍 Monitoring and Debugging</h1>
+<h2><a class="anchor" id="autotoc_md30"></a>
+Cache Information</h2>
+<div class="fragment"><div class="line"><span class="comment"># Get cache statistics</span></div>
+<div class="line">cache_info = loader.get_cache_info()</div>
+<div class="line">print(f<span class="stringliteral">&quot;Total cache size: {cache_info[&#39;total_size&#39;] / (1024**3):.2f} GB&quot;</span>)</div>
+<div class="line"> </div>
+<div class="line"><span class="keywordflow">for</span> dataset, info <span class="keywordflow">in</span> cache_info[<span class="stringliteral">&#39;datasets&#39;</span>].items():</div>
+<div class="line">    print(f<span class="stringliteral">&quot;{dataset}: {info[&#39;files&#39;]} files, {info[&#39;size&#39;] / (1024**2):.2f} MB&quot;</span>)</div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md31"></a>
+Mirror Status</h2>
+<div class="fragment"><div class="line"><span class="comment"># Check mirror availability</span></div>
+<div class="line"><span class="keywordflow">for</span> mirror <span class="keywordflow">in</span> loader.mirrors:</div>
+<div class="line">    print(f<span class="stringliteral">&quot;{mirror.name}: {&#39;✓&#39; if mirror.is_available else &#39;✗&#39;} &quot;</span></div>
+<div class="line">          f<span class="stringliteral">&quot;[{mirror.response_time:.3f}s]&quot;</span>)</div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md32"></a>
+Logging</h2>
+<p>The loader provides detailed logging for debugging: </p><div class="fragment"><div class="line"><span class="keyword">import</span> logging</div>
+<div class="line">logging.basicConfig(level=logging.INFO)</div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md33"></a>
+🛠️ Troubleshooting</h1>
+<h2><a class="anchor" id="autotoc_md34"></a>
+Common Issues</h2>
+<h3><a class="anchor" id="autotoc_md35"></a>
+Slow Downloads</h3>
+<ul>
+<li><b>Solution</b>: Check mirror connectivity and switch to faster mirrors</li>
+<li><b>Command</b>: Run the test script to check mirror speeds</li>
+</ul>
+<h3><a class="anchor" id="autotoc_md36"></a>
+Cache Corruption</h3>
+<ul>
+<li><b>Solution</b>: Clear cache and re-download</li>
+<li><b>Command</b>: <code>loader.clear_cache("dataset_name")</code></li>
+</ul>
+<h3><a class="anchor" id="autotoc_md37"></a>
+Network Timeouts</h3>
+<ul>
+<li><b>Solution</b>: Increase retry attempts and timeout values</li>
+<li><b>Configuration</b>: Set <code>max_retries=5</code> or higher</li>
+</ul>
+<h3><a class="anchor" id="autotoc_md38"></a>
+P2P Failures</h3>
+<ul>
+<li><b>Solution</b>: Falls back to standard downloads automatically</li>
+<li><b>Disable</b>: Set <code>use_p2p=False</code> if issues persist</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md39"></a>
+Testing</h2>
+<p>Run the test script to verify functionality: </p><div class="fragment"><div class="line">python examples/test_dataset_loader.py</div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md40"></a>
+🔄 Migration from Standard Loaders</h1>
+<h2><a class="anchor" id="autotoc_md41"></a>
+Before (Standard PyTorch)</h2>
+<div class="fragment"><div class="line"><span class="keyword">import</span> torchvision</div>
+<div class="line"> </div>
+<div class="line">trainset = torchvision.datasets.CIFAR10(</div>
+<div class="line">    root=<span class="stringliteral">&#39;./data&#39;</span>, train=<span class="keyword">True</span>, download=<span class="keyword">True</span>, transform=transform</div>
+<div class="line">)</div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md42"></a>
+After (Advanced Loader)</h2>
+<div class="fragment"><div class="line"><span class="keyword">from</span> <a class="code hl_namespace" href="namespaceneuroexapt_1_1utils_1_1dataset__loader.html">neuroexapt.utils.dataset_loader</a> <span class="keyword">import</span> AdvancedDatasetLoader</div>
+<div class="line"> </div>
+<div class="line">loader = AdvancedDatasetLoader()</div>
+<div class="line">train_loader, test_loader = loader.get_cifar10_dataloaders(batch_size=128)</div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md43"></a>
+📊 Performance Benchmarks</h1>
+<h2><a class="anchor" id="autotoc_md44"></a>
+Download Speeds (China)</h2>
+<ul>
+<li><b>Standard Download</b>: 2-5 MB/s</li>
+<li><b>P2P Acceleration</b>: 10-50 MB/s</li>
+<li><b>Chinese Mirrors</b>: 5-20x faster than international</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md45"></a>
+Cache Benefits</h2>
+<ul>
+<li><b>First Download</b>: Normal time</li>
+<li><b>Subsequent Downloads</b>: Instant (from cache)</li>
+<li><b>Storage Efficiency</b>: ~10% overhead for metadata</li>
+</ul>
+<h1><a class="anchor" id="autotoc_md46"></a>
+🤝 Contributing</h1>
+<p>To add new datasets or mirrors:</p>
+<ol type="1">
+<li><b>Add Dataset Configuration</b>: <div class="fragment"><div class="line"><span class="stringliteral">&#39;new_dataset&#39;</span>: {</div>
+<div class="line">    <span class="stringliteral">&#39;files&#39;</span>: [<span class="stringliteral">&#39;file1.tar.gz&#39;</span>, <span class="stringliteral">&#39;file2.tar.gz&#39;</span>],</div>
+<div class="line">    <span class="stringliteral">&#39;expected_size&#39;</span>: 123456789,</div>
+<div class="line">    <span class="stringliteral">&#39;checksum&#39;</span>: <span class="stringliteral">&#39;sha256_hash&#39;</span></div>
+<div class="line">}</div>
+</div><!-- fragment --></li>
+<li><b>Add Mirror URLs</b>: <div class="fragment"><div class="line">DatasetMirror(<span class="stringliteral">&quot;NewMirror&quot;</span>, <span class="stringliteral">&quot;https://mirror.url/datasets&quot;</span>, <span class="stringliteral">&quot;REGION&quot;</span>, priority)</div>
+</div><!-- fragment --></li>
+<li><b>Test Thoroughly</b>: Run the test script with new configurations</li>
+</ol>
+<h1><a class="anchor" id="autotoc_md47"></a>
+📄 License</h1>
+<p>This module is part of Neuro Exapt and follows the same MIT license.</p>
+<hr  />
+<p><em>Optimized for Chinese users with global compatibility and robust error handling.</em> </p>
+</div></div><!-- contents -->
+</div><!-- PageDoc -->
+</div><!-- doc-content -->
+<!-- do not remove this div, it is closed by doxygen! -->
+</div>
+<!-- Custom Footer -->
+<div style="background: #f8f9fa; border-top: 1px solid #e9ecef; margin-top: 50px; padding: 30px 0; text-align: center;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-bottom: 20px;">
+            <!-- Project Info -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🧠 NeuroExapt</h4>
+                <p style="color: #6c757d; margin: 0; font-size: 0.9em;">
+                    Advanced Neural Architecture Search and Dynamic Morphogenesis Framework for next-generation AI research.
+                </p>
+            </div>
+            <!-- Quick Links -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">📚 Quick Links</h4>
+                <div style="text-align: left;">
+                    <a href="index.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🏠 Home</a>
+                    <a href="modules.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📦 Modules</a>
+                    <a href="examples.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💡 Examples</a>
+                    <a href="files.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📁 Files</a>
+                </div>
+            </div>
+            <!-- Resources -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🔗 Resources</h4>
+                <div style="text-align: left;">
+                    <a href="https://github.com/your-username/neuroexapt" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💻 GitHub Repository</a>
+                    <a href="https://github.com/your-username/neuroexapt/issues" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🐛 Issue Tracker</a>
+                    <a href="https://github.com/your-username/neuroexapt/wiki" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📖 Wiki</a>
+                    <a href="https://github.com/your-username/neuroexapt/releases" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🚀 Releases</a>
+                </div>
+            </div>
+        </div>
+        <hr style="border: 0; height: 1px; background: #e9ecef; margin: 20px 0;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+            <div style="color: #6c757d; font-size: 0.9em;">
+                © 2024 NeuroExapt Project. Generated with 
+                <a href="https://www.doxygen.nl/index.html" style="color: #667eea; text-decoration: none;">Doxygen 1.9.8</a>
+            </div>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <span style="font-size: 0.9em; color: #6c757d;">Built with ❤️ for AI Research</span>
+                <div style="display: flex; gap: 10px;">
+                    <span style="background: #28a745; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">🟢 Active</span>
+                    <span style="background: #17a2b8; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">v3.0</span>
+                </div>
+            </div>
+        </div>
+        <!-- Technology Stack -->
+        <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #e9ecef;">
+            <div style="font-size: 0.8em; color: #868e96; text-align: center;">
+                <strong>Built with:</strong>
+                <span style="margin: 0 5px;">🐍 Python</span>
+                <span style="margin: 0 5px;">🔥 PyTorch</span>
+                <span style="margin: 0 5px;">⚡ CUDA</span>
+                <span style="margin: 0 5px;">🧮 NumPy</span>
+                <span style="margin: 0 5px;">📊 Matplotlib</span>
+                <span style="margin: 0 5px;">🚀 Triton</span>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Back to top button -->
+<div id="back-to-top" style="position: fixed; bottom: 20px; right: 20px; display: none; z-index: 1000;">
+    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" 
+            style="background: #667eea; color: white; border: none; padding: 10px 15px; border-radius: 50%; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,0.2); font-size: 16px;">
+        ⬆️
+    </button>
+</div>
+<script>
+// Back to top button functionality
+window.addEventListener('scroll', function() {
+    const backToTop = document.getElementById('back-to-top');
+    if (window.pageYOffset > 300) {
+        backToTop.style.display = 'block';
+    } else {
+        backToTop.style.display = 'none';
+    }
+});
+// Enhanced search functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Add search enhancement if search box exists
+    const searchBox = document.getElementById('MSearchField');
+    if (searchBox) {
+        searchBox.placeholder = 'Search documentation... 🔍';
+        searchBox.style.borderRadius = '20px';
+        searchBox.style.padding = '8px 15px';
+    }
+    // Add copy code button to code blocks
+    const codeBlocks = document.querySelectorAll('.fragment');
+    codeBlocks.forEach(function(block) {
+        const copyBtn = document.createElement('button');
+        copyBtn.innerHTML = '📋';
+        copyBtn.title = 'Copy code';
+        copyBtn.style.cssText = 'position: absolute; top: 10px; right: 10px; background: #667eea; color: white; border: none; padding: 5px; border-radius: 3px; cursor: pointer; font-size: 12px;';
+        block.style.position = 'relative';
+        block.appendChild(copyBtn);
+        copyBtn.addEventListener('click', function() {
+            const text = block.textContent;
+            navigator.clipboard.writeText(text).then(function() {
+                copyBtn.innerHTML = '✅';
+                setTimeout(function() {
+                    copyBtn.innerHTML = '📋';
+                }, 2000);
+            });
+        });
+    });
+});
+// Dark mode toggle (optional)
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+}
+// Load saved dark mode preference
+if (localStorage.getItem('darkMode') === 'true') {
+    document.body.classList.add('dark-mode');
+}
+</script>
+</body>
+</html>

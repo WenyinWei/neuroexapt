@@ -1,0 +1,493 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="description" content="NeuroExapt - Advanced Neural Architecture Search and Dynamic Morphogenesis Framework">
+    <meta name="keywords" content="neural architecture search, dynamic morphogenesis, deep learning, AI, PyTorch">
+    <meta name="author" content="NeuroExapt Team">
+    <meta property="og:title" content="NeuroExapt Documentation">
+    <meta property="og:description" content="Advanced Neural Architecture Search Framework">
+    <meta property="og:type" content="website">
+
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>NeuroExapt: examples/demo_optimization_showcase.py Source File</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="custom.css" rel="stylesheet" type="text/css"/>
+<!-- NeuroExapt Custom Styles -->
+<style>
+/* Enhanced header styling */
+.header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+.header h1 {
+    margin: 0;
+    font-size: 2.5em;
+    font-weight: 300;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+.header .subtitle {
+    font-size: 1.2em;
+    opacity: 0.9;
+    margin-top: 10px;
+}
+/* Enhanced navigation */
+.tablist {
+    background: #f8f9fa;
+    border-bottom: 2px solid #e9ecef;
+}
+.tablist li.current a {
+    background: #667eea;
+    color: white;
+}
+/* Improved content layout */
+.contents {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+/* Code highlighting */
+.fragment {
+    background: #f8f9fa;
+    border-left: 4px solid #667eea;
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 0 8px 8px 0;
+}
+/* Enhanced tables */
+table.memberdecls {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 20px 0;
+}
+table.memberdecls td {
+    border: 1px solid #e9ecef;
+    padding: 12px;
+}
+/* Better typography */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #343a40;
+}
+h1, h2, h3, h4, h5, h6 {
+    color: #495057;
+    font-weight: 500;
+}
+/* Responsive design */
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 2em;
+    }
+    .contents {
+        padding: 15px;
+    }
+}
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #1a1a1a;
+        color: #e9ecef;
+    }
+    .header {
+        background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+    }
+    .fragment {
+        background: #2d3748;
+        color: #e9ecef;
+    }
+}
+</style>
+<!-- Analytics (if needed) -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<!--
+<script async src="https://www.googletagmanager.com/gtag/js?id=GA_TRACKING_ID"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'GA_TRACKING_ID');
+</script>
+-->
+</head>
+<body>
+<!-- Custom Header -->
+<div class="header">
+    <h1>🧠 NeuroExapt</h1>
+    <div class="subtitle">Advanced Neural Architecture Search and Dynamic Morphogenesis Framework</div>
+    <div style="margin-top: 15px; font-size: 0.9em;">
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🚀 Dynamic Neural Morphogenesis
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🔬 Advanced Architecture Search
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            ⚡ High-Performance Computing
+        </span>
+    </div>
+</div>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! --><!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function() { init_codefold(0); });
+/* @license-end */
+</script>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('demo__optimization__showcase_8py_source.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">demo_optimization_showcase.py</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="demo__optimization__showcase_8py.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno"><a class="line" href="namespaceexamples_1_1demo__optimization__showcase.html">    1</a></span><span class="comment">#!/usr/bin/env python3</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="stringliteral">&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="stringliteral">NeuroExapt Optimization Showcase</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="stringliteral"></span> </div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="stringliteral">This demo showcases the optimization infrastructure and expected benefits.</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="stringliteral">&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="keyword">import</span> torch</div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="keyword">import</span> time</div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="keyword">import</span> sys</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="keyword">import</span> os</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="comment"># Add the project root to path</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>sys.path.append(os.path.dirname(os.path.abspath(__file__)))</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
+<div class="foldopen" id="foldopen00016" data-start="" data-end="">
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno"><a class="line" href="namespaceexamples_1_1demo__optimization__showcase.html#a5ac6cddbd6ae6071f13ef1d7874e4af5">   16</a></span><span class="keyword">def </span><a class="code hl_function" href="namespaceexamples_1_1demo__optimization__showcase.html#a5ac6cddbd6ae6071f13ef1d7874e4af5">showcase_optimization_architecture</a>():</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>    <span class="stringliteral">&quot;&quot;&quot;Showcase the optimization architecture and availability&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>    print(<span class="stringliteral">&quot;🏗️ NeuroExapt Optimization Architecture&quot;</span>)</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    print(<span class="stringliteral">&quot;=&quot;</span> * 50)</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>    </div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    print(<span class="stringliteral">&quot;1. CUDA SoftmaxSum Extension:&quot;</span>)</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    <span class="keywordflow">try</span>:</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>        <span class="keyword">from</span> <a class="code hl_namespace" href="namespaceneuroexapt_1_1cuda__ops.html">neuroexapt.cuda_ops</a> <span class="keyword">import</span> CUDA_AVAILABLE, SoftmaxSumFunction</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>        print(f<span class="stringliteral">&quot;   ✅ Module loaded, CUDA available: {CUDA_AVAILABLE}&quot;</span>)</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>        </div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>        <span class="comment"># Test CPU fallback</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>        x = torch.randn(4, 1, 8, 8, 8)</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>        logits = torch.randn(4)</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>        output = SoftmaxSumFunction.apply(x, logits)</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>        print(f<span class="stringliteral">&quot;   ✅ CPU fallback working: {output.shape}&quot;</span>)</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>        </div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    <span class="keywordflow">except</span> Exception <span class="keyword">as</span> e:</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>        print(f<span class="stringliteral">&quot;   ❌ Error: {e}&quot;</span>)</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    </div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    print(<span class="stringliteral">&quot;\n2. Triton Kernels:&quot;</span>)</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    <span class="keywordflow">try</span>:</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>        <span class="keyword">from</span> <a class="code hl_namespace" href="namespaceneuroexapt_1_1kernels.html">neuroexapt.kernels</a> <span class="keyword">import</span> TRITON_AVAILABLE, sepconv_forward_generic</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>        print(f<span class="stringliteral">&quot;   ✅ Module loaded, Triton available: {TRITON_AVAILABLE}&quot;</span>)</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>        </div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>        <span class="comment"># Test fallback</span></div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>        x = torch.randn(2, 16, 16, 16)</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>        dw_weight = torch.randn(16, 1, 3, 3)</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>        pw_weight = torch.randn(32, 16, 1, 1)</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>        output = sepconv_forward_generic(x, dw_weight, pw_weight)</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        print(f<span class="stringliteral">&quot;   ✅ Fallback working: {output.shape}&quot;</span>)</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>        </div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="keywordflow">except</span> Exception <span class="keyword">as</span> e:</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>        print(f<span class="stringliteral">&quot;   ❌ Error: {e}&quot;</span>)</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    </div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    print(<span class="stringliteral">&quot;\n3. Triton Pooling:&quot;</span>)</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="keywordflow">try</span>:</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>        <span class="keyword">from</span> <a class="code hl_namespace" href="namespaceneuroexapt_1_1kernels_1_1pool__triton.html">neuroexapt.kernels.pool_triton</a> <span class="keyword">import</span> avg_pool3x3_forward</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        print(f<span class="stringliteral">&quot;   ✅ Module loaded&quot;</span>)</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        </div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        x = torch.randn(2, 16, 16, 16)</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>        output = avg_pool3x3_forward(x)</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>        print(f<span class="stringliteral">&quot;   ✅ Fallback working: {output.shape}&quot;</span>)</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        </div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    <span class="keywordflow">except</span> Exception <span class="keyword">as</span> e:</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>        print(f<span class="stringliteral">&quot;   ❌ Error: {e}&quot;</span>)</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    </div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    print()</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
+</div>
+<div class="foldopen" id="foldopen00064" data-start="" data-end="">
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno"><a class="line" href="namespaceexamples_1_1demo__optimization__showcase.html#a22af08741e4c63e07830abb584c8e5aa">   64</a></span><span class="keyword">def </span><a class="code hl_function" href="namespaceexamples_1_1demo__optimization__showcase.html#a22af08741e4c63e07830abb584c8e5aa">showcase_integrated_operations</a>():</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    <span class="stringliteral">&quot;&quot;&quot;Showcase integrated operations&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    print(<span class="stringliteral">&quot;🧬 Integrated Operations Showcase&quot;</span>)</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    print(<span class="stringliteral">&quot;=&quot;</span> * 50)</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    </div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    <span class="keywordflow">try</span>:</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>        <span class="keyword">from</span> <a class="code hl_namespace" href="namespaceneuroexapt_1_1core_1_1operations.html">neuroexapt.core.operations</a> <span class="keyword">import</span> MixedOp, SepConv</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>        </div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>        print(<span class="stringliteral">&quot;MixedOp with optimization support:&quot;</span>)</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>        C = 16</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>        stride = 1</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>        mixed_op = MixedOp(C, stride)</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>        </div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>        B, H, W = 2, 16, 16</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>        x = torch.randn(B, C, H, W)</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>        n_ops = len(mixed_op._ops)</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>        weights = torch.randn(n_ops, requires_grad=<span class="keyword">True</span>)</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>        </div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>        start = time.perf_counter()</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>        output = mixed_op(x, weights)</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>        end = time.perf_counter()</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>        </div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>        print(f<span class="stringliteral">&quot;   ✅ Forward pass: {output.shape}&quot;</span>)</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>        print(f<span class="stringliteral">&quot;   ⏱️ Time: {(end-start)*1000:.2f}ms&quot;</span>)</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>        print(f<span class="stringliteral">&quot;   📊 Operations: {n_ops}&quot;</span>)</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>        </div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    <span class="keywordflow">except</span> Exception <span class="keyword">as</span> e:</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>        print(f<span class="stringliteral">&quot;❌ Error: {e}&quot;</span>)</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    </div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    print()</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span> </div>
+</div>
+<div class="foldopen" id="foldopen00095" data-start="" data-end="">
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno"><a class="line" href="namespaceexamples_1_1demo__optimization__showcase.html#a1dc1348cfd66c4b0d23bcc0a0d6347af">   95</a></span><span class="keyword">def </span><a class="code hl_function" href="namespaceexamples_1_1demo__optimization__showcase.html#a1dc1348cfd66c4b0d23bcc0a0d6347af">showcase_performance_benefits</a>():</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    <span class="stringliteral">&quot;&quot;&quot;Showcase expected performance benefits&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    print(<span class="stringliteral">&quot;📈 Performance Benefits Summary&quot;</span>)</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>    print(<span class="stringliteral">&quot;=&quot;</span> * 50)</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>    </div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    print(<span class="stringliteral">&quot;Expected Optimizations (when CUDA/Triton available):&quot;</span>)</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    print()</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>    print(<span class="stringliteral">&quot;1. CUDA SoftmaxSum:&quot;</span>)</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    print(<span class="stringliteral">&quot;   • Fuses softmax + weighted sum in MixedOp&quot;</span>)</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    print(<span class="stringliteral">&quot;   • Reduces memory bandwidth by ~30-40%&quot;</span>)</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    print(<span class="stringliteral">&quot;   • Expected speedup: 1.5-2x&quot;</span>)</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>    print()</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    </div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>    print(<span class="stringliteral">&quot;2. Triton SepConv:&quot;</span>)</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    print(<span class="stringliteral">&quot;   • Optimized separable convolutions&quot;</span>)</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    print(<span class="stringliteral">&quot;   • Expected speedup: 1.5-2.5x&quot;</span>)</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>    print()</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>    </div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    print(<span class="stringliteral">&quot;3. Overall System:&quot;</span>)</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>    print(<span class="stringliteral">&quot;   • Combined speedup: 2-3x for DARTS/EXAPT&quot;</span>)</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    print(<span class="stringliteral">&quot;   • Automatic fallback for compatibility&quot;</span>)</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    print(<span class="stringliteral">&quot;   • Zero code changes required&quot;</span>)</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>    print()</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span> </div>
+</div>
+<div class="foldopen" id="foldopen00119" data-start="" data-end="">
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno"><a class="line" href="namespaceexamples_1_1demo__optimization__showcase.html#a63022ec0d1a9370aab01b987f0780b51">  119</a></span><span class="keyword">def </span><a class="code hl_function" href="namespaceexamples_1_1demo__optimization__showcase.html#a63022ec0d1a9370aab01b987f0780b51">main</a>():</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>    <span class="stringliteral">&quot;&quot;&quot;Run complete showcase&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    print(<span class="stringliteral">&quot;🚀 NeuroExapt Optimization Suite Showcase&quot;</span>)</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>    print(<span class="stringliteral">&quot;=&quot;</span> * 60)</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    print()</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>    </div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>    print(f<span class="stringliteral">&quot;Environment:&quot;</span>)</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>    print(f<span class="stringliteral">&quot;  PyTorch: {torch.__version__}&quot;</span>)</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>    print(f<span class="stringliteral">&quot;  CUDA: {torch.cuda.is_available()}&quot;</span>)</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>    print()</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>    </div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>    <a class="code hl_function" href="namespaceexamples_1_1demo__optimization__showcase.html#a5ac6cddbd6ae6071f13ef1d7874e4af5">showcase_optimization_architecture</a>()</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>    <a class="code hl_function" href="namespaceexamples_1_1demo__optimization__showcase.html#a22af08741e4c63e07830abb584c8e5aa">showcase_integrated_operations</a>()</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>    <a class="code hl_function" href="namespaceexamples_1_1demo__optimization__showcase.html#a1dc1348cfd66c4b0d23bcc0a0d6347af">showcase_performance_benefits</a>()</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>    </div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>    print(<span class="stringliteral">&quot;🎯 Integration Guide:&quot;</span>)</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>    print(<span class="stringliteral">&quot;  python examples/basic_classification.py --mode exapt --use_optimized_ops&quot;</span>)</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>    print()</div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>    print(<span class="stringliteral">&quot;✨ Ready for high-performance neural architecture search!&quot;</span>)</div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span> </div>
+</div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span><span class="keywordflow">if</span> __name__ == <span class="stringliteral">&quot;__main__&quot;</span>:</div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>    <a class="code hl_function" href="namespaceexamples_1_1demo__optimization__showcase.html#a63022ec0d1a9370aab01b987f0780b51">main</a>() </div>
+<div class="ttc" id="anamespaceexamples_1_1demo__optimization__showcase_html_a1dc1348cfd66c4b0d23bcc0a0d6347af"><div class="ttname"><a href="namespaceexamples_1_1demo__optimization__showcase.html#a1dc1348cfd66c4b0d23bcc0a0d6347af">examples.demo_optimization_showcase.showcase_performance_benefits</a></div><div class="ttdeci">showcase_performance_benefits()</div><div class="ttdef"><b>Definition</b> <a href="demo__optimization__showcase_8py_source.html#l00095">demo_optimization_showcase.py:95</a></div></div>
+<div class="ttc" id="anamespaceexamples_1_1demo__optimization__showcase_html_a22af08741e4c63e07830abb584c8e5aa"><div class="ttname"><a href="namespaceexamples_1_1demo__optimization__showcase.html#a22af08741e4c63e07830abb584c8e5aa">examples.demo_optimization_showcase.showcase_integrated_operations</a></div><div class="ttdeci">showcase_integrated_operations()</div><div class="ttdef"><b>Definition</b> <a href="demo__optimization__showcase_8py_source.html#l00064">demo_optimization_showcase.py:64</a></div></div>
+<div class="ttc" id="anamespaceexamples_1_1demo__optimization__showcase_html_a5ac6cddbd6ae6071f13ef1d7874e4af5"><div class="ttname"><a href="namespaceexamples_1_1demo__optimization__showcase.html#a5ac6cddbd6ae6071f13ef1d7874e4af5">examples.demo_optimization_showcase.showcase_optimization_architecture</a></div><div class="ttdeci">showcase_optimization_architecture()</div><div class="ttdef"><b>Definition</b> <a href="demo__optimization__showcase_8py_source.html#l00016">demo_optimization_showcase.py:16</a></div></div>
+<div class="ttc" id="anamespaceexamples_1_1demo__optimization__showcase_html_a63022ec0d1a9370aab01b987f0780b51"><div class="ttname"><a href="namespaceexamples_1_1demo__optimization__showcase.html#a63022ec0d1a9370aab01b987f0780b51">examples.demo_optimization_showcase.main</a></div><div class="ttdeci">main()</div><div class="ttdef"><b>Definition</b> <a href="demo__optimization__showcase_8py_source.html#l00119">demo_optimization_showcase.py:119</a></div></div>
+<div class="ttc" id="anamespaceneuroexapt_1_1core_1_1operations_html"><div class="ttname"><a href="namespaceneuroexapt_1_1core_1_1operations.html">neuroexapt.core.operations</a></div><div class="ttdef"><b>Definition</b> <a href="operations_8py_source.html#l00001">operations.py:1</a></div></div>
+<div class="ttc" id="anamespaceneuroexapt_1_1cuda__ops_html"><div class="ttname"><a href="namespaceneuroexapt_1_1cuda__ops.html">neuroexapt.cuda_ops</a></div><div class="ttdef"><b>Definition</b> <a href="neuroexapt_2cuda__ops_2____init_____8py_source.html#l00001">__init__.py:1</a></div></div>
+<div class="ttc" id="anamespaceneuroexapt_1_1kernels_1_1pool__triton_html"><div class="ttname"><a href="namespaceneuroexapt_1_1kernels_1_1pool__triton.html">neuroexapt.kernels.pool_triton</a></div><div class="ttdef"><b>Definition</b> <a href="pool__triton_8py_source.html#l00001">pool_triton.py:1</a></div></div>
+<div class="ttc" id="anamespaceneuroexapt_1_1kernels_html"><div class="ttname"><a href="namespaceneuroexapt_1_1kernels.html">neuroexapt.kernels</a></div><div class="ttdef"><b>Definition</b> <a href="neuroexapt_2kernels_2____init_____8py_source.html#l00001">__init__.py:1</a></div></div>
+</div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
+<!-- do not remove this div, it is closed by doxygen! -->
+</div>
+<!-- Custom Footer -->
+<div style="background: #f8f9fa; border-top: 1px solid #e9ecef; margin-top: 50px; padding: 30px 0; text-align: center;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-bottom: 20px;">
+            <!-- Project Info -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🧠 NeuroExapt</h4>
+                <p style="color: #6c757d; margin: 0; font-size: 0.9em;">
+                    Advanced Neural Architecture Search and Dynamic Morphogenesis Framework for next-generation AI research.
+                </p>
+            </div>
+            <!-- Quick Links -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">📚 Quick Links</h4>
+                <div style="text-align: left;">
+                    <a href="index.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🏠 Home</a>
+                    <a href="modules.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📦 Modules</a>
+                    <a href="examples.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💡 Examples</a>
+                    <a href="files.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📁 Files</a>
+                </div>
+            </div>
+            <!-- Resources -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🔗 Resources</h4>
+                <div style="text-align: left;">
+                    <a href="https://github.com/your-username/neuroexapt" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💻 GitHub Repository</a>
+                    <a href="https://github.com/your-username/neuroexapt/issues" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🐛 Issue Tracker</a>
+                    <a href="https://github.com/your-username/neuroexapt/wiki" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📖 Wiki</a>
+                    <a href="https://github.com/your-username/neuroexapt/releases" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🚀 Releases</a>
+                </div>
+            </div>
+        </div>
+        <hr style="border: 0; height: 1px; background: #e9ecef; margin: 20px 0;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+            <div style="color: #6c757d; font-size: 0.9em;">
+                © 2024 NeuroExapt Project. Generated with 
+                <a href="https://www.doxygen.nl/index.html" style="color: #667eea; text-decoration: none;">Doxygen 1.9.8</a>
+            </div>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <span style="font-size: 0.9em; color: #6c757d;">Built with ❤️ for AI Research</span>
+                <div style="display: flex; gap: 10px;">
+                    <span style="background: #28a745; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">🟢 Active</span>
+                    <span style="background: #17a2b8; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">v3.0</span>
+                </div>
+            </div>
+        </div>
+        <!-- Technology Stack -->
+        <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #e9ecef;">
+            <div style="font-size: 0.8em; color: #868e96; text-align: center;">
+                <strong>Built with:</strong>
+                <span style="margin: 0 5px;">🐍 Python</span>
+                <span style="margin: 0 5px;">🔥 PyTorch</span>
+                <span style="margin: 0 5px;">⚡ CUDA</span>
+                <span style="margin: 0 5px;">🧮 NumPy</span>
+                <span style="margin: 0 5px;">📊 Matplotlib</span>
+                <span style="margin: 0 5px;">🚀 Triton</span>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Back to top button -->
+<div id="back-to-top" style="position: fixed; bottom: 20px; right: 20px; display: none; z-index: 1000;">
+    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" 
+            style="background: #667eea; color: white; border: none; padding: 10px 15px; border-radius: 50%; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,0.2); font-size: 16px;">
+        ⬆️
+    </button>
+</div>
+<script>
+// Back to top button functionality
+window.addEventListener('scroll', function() {
+    const backToTop = document.getElementById('back-to-top');
+    if (window.pageYOffset > 300) {
+        backToTop.style.display = 'block';
+    } else {
+        backToTop.style.display = 'none';
+    }
+});
+// Enhanced search functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Add search enhancement if search box exists
+    const searchBox = document.getElementById('MSearchField');
+    if (searchBox) {
+        searchBox.placeholder = 'Search documentation... 🔍';
+        searchBox.style.borderRadius = '20px';
+        searchBox.style.padding = '8px 15px';
+    }
+    // Add copy code button to code blocks
+    const codeBlocks = document.querySelectorAll('.fragment');
+    codeBlocks.forEach(function(block) {
+        const copyBtn = document.createElement('button');
+        copyBtn.innerHTML = '📋';
+        copyBtn.title = 'Copy code';
+        copyBtn.style.cssText = 'position: absolute; top: 10px; right: 10px; background: #667eea; color: white; border: none; padding: 5px; border-radius: 3px; cursor: pointer; font-size: 12px;';
+        block.style.position = 'relative';
+        block.appendChild(copyBtn);
+        copyBtn.addEventListener('click', function() {
+            const text = block.textContent;
+            navigator.clipboard.writeText(text).then(function() {
+                copyBtn.innerHTML = '✅';
+                setTimeout(function() {
+                    copyBtn.innerHTML = '📋';
+                }, 2000);
+            });
+        });
+    });
+});
+// Dark mode toggle (optional)
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+}
+// Load saved dark mode preference
+if (localStorage.getItem('darkMode') === 'true') {
+    document.body.classList.add('dark-mode');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,630 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="description" content="NeuroExapt - Advanced Neural Architecture Search and Dynamic Morphogenesis Framework">
+    <meta name="keywords" content="neural architecture search, dynamic morphogenesis, deep learning, AI, PyTorch">
+    <meta name="author" content="NeuroExapt Team">
+    <meta property="og:title" content="NeuroExapt Documentation">
+    <meta property="og:description" content="Advanced Neural Architecture Search Framework">
+    <meta property="og:type" content="website">
+
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>NeuroExapt: examples.dnm_enhanced_test Namespace Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="custom.css" rel="stylesheet" type="text/css"/>
+<!-- NeuroExapt Custom Styles -->
+<style>
+/* Enhanced header styling */
+.header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+.header h1 {
+    margin: 0;
+    font-size: 2.5em;
+    font-weight: 300;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+.header .subtitle {
+    font-size: 1.2em;
+    opacity: 0.9;
+    margin-top: 10px;
+}
+/* Enhanced navigation */
+.tablist {
+    background: #f8f9fa;
+    border-bottom: 2px solid #e9ecef;
+}
+.tablist li.current a {
+    background: #667eea;
+    color: white;
+}
+/* Improved content layout */
+.contents {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+/* Code highlighting */
+.fragment {
+    background: #f8f9fa;
+    border-left: 4px solid #667eea;
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 0 8px 8px 0;
+}
+/* Enhanced tables */
+table.memberdecls {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 20px 0;
+}
+table.memberdecls td {
+    border: 1px solid #e9ecef;
+    padding: 12px;
+}
+/* Better typography */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #343a40;
+}
+h1, h2, h3, h4, h5, h6 {
+    color: #495057;
+    font-weight: 500;
+}
+/* Responsive design */
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 2em;
+    }
+    .contents {
+        padding: 15px;
+    }
+}
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #1a1a1a;
+        color: #e9ecef;
+    }
+    .header {
+        background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+    }
+    .fragment {
+        background: #2d3748;
+        color: #e9ecef;
+    }
+}
+</style>
+<!-- Analytics (if needed) -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<!--
+<script async src="https://www.googletagmanager.com/gtag/js?id=GA_TRACKING_ID"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'GA_TRACKING_ID');
+</script>
+-->
+</head>
+<body>
+<!-- Custom Header -->
+<div class="header">
+    <h1>🧠 NeuroExapt</h1>
+    <div class="subtitle">Advanced Neural Architecture Search and Dynamic Morphogenesis Framework</div>
+    <div style="margin-top: 15px; font-size: 0.9em;">
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🚀 Dynamic Neural Morphogenesis
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🔬 Advanced Architecture Search
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            ⚡ High-Performance Computing
+        </span>
+    </div>
+</div>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! --><!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('namespaceexamples_1_1dnm__enhanced__test.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
+  <div class="headertitle"><div class="title">examples.dnm_enhanced_test Namespace Reference</div></div>
+</div><!--header-->
+<div class="contents">
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classexamples_1_1dnm__enhanced__test_1_1ActivationHook.html">ActivationHook</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classexamples_1_1dnm__enhanced__test_1_1EnhancedCNNModel.html">EnhancedCNNModel</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classexamples_1_1dnm__enhanced__test_1_1GradientHook.html">GradientHook</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:ad5760bba6f803be5370cfdecab104eea" id="r_ad5760bba6f803be5370cfdecab104eea"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceexamples_1_1dnm__enhanced__test.html#ad5760bba6f803be5370cfdecab104eea">load_cifar10_data</a> (batch_size=64)</td></tr>
+<tr class="separator:ad5760bba6f803be5370cfdecab104eea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a737a15216bd7efbf17cbd12c5ccc3b27" id="r_a737a15216bd7efbf17cbd12c5ccc3b27"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceexamples_1_1dnm__enhanced__test.html#a737a15216bd7efbf17cbd12c5ccc3b27">train_epoch</a> (model, train_loader, optimizer, criterion, device, activation_hook, gradient_hook)</td></tr>
+<tr class="separator:a737a15216bd7efbf17cbd12c5ccc3b27"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aff6df81b7c9c93e66208cba4ae6dd3c9" id="r_aff6df81b7c9c93e66208cba4ae6dd3c9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceexamples_1_1dnm__enhanced__test.html#aff6df81b7c9c93e66208cba4ae6dd3c9">validate_epoch</a> (model, val_loader, criterion, device)</td></tr>
+<tr class="separator:aff6df81b7c9c93e66208cba4ae6dd3c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad22890deee5a0e79f44452b9faa0d7e5" id="r_ad22890deee5a0e79f44452b9faa0d7e5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceexamples_1_1dnm__enhanced__test.html#ad22890deee5a0e79f44452b9faa0d7e5">count_parameters</a> (model)</td></tr>
+<tr class="separator:ad22890deee5a0e79f44452b9faa0d7e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a59f6fd2c1b1a950361847f0ff93586c5" id="r_a59f6fd2c1b1a950361847f0ff93586c5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceexamples_1_1dnm__enhanced__test.html#a59f6fd2c1b1a950361847f0ff93586c5">analyze_model_structure</a> (model)</td></tr>
+<tr class="separator:a59f6fd2c1b1a950361847f0ff93586c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa2979241c0028ada26abe627d8c4050f" id="r_aa2979241c0028ada26abe627d8c4050f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceexamples_1_1dnm__enhanced__test.html#aa2979241c0028ada26abe627d8c4050f">main</a> ()</td></tr>
+<tr class="separator:aa2979241c0028ada26abe627d8c4050f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:a0cf0c7381d174f756efdd0f43b6a14d9" id="r_a0cf0c7381d174f756efdd0f43b6a14d9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceexamples_1_1dnm__enhanced__test.html#a0cf0c7381d174f756efdd0f43b6a14d9">level</a></td></tr>
+<tr class="separator:a0cf0c7381d174f756efdd0f43b6a14d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a963adc0f774b2e7394c6cbf737c3478e" id="r_a963adc0f774b2e7394c6cbf737c3478e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceexamples_1_1dnm__enhanced__test.html#a963adc0f774b2e7394c6cbf737c3478e">INFO</a></td></tr>
+<tr class="separator:a963adc0f774b2e7394c6cbf737c3478e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a52ad39eb51474d54db857fec6189df31" id="r_a52ad39eb51474d54db857fec6189df31"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceexamples_1_1dnm__enhanced__test.html#a52ad39eb51474d54db857fec6189df31">format</a></td></tr>
+<tr class="separator:a52ad39eb51474d54db857fec6189df31"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a12a0cab6ee2a2f6632115a9e2d941880" id="r_a12a0cab6ee2a2f6632115a9e2d941880"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceexamples_1_1dnm__enhanced__test.html#a12a0cab6ee2a2f6632115a9e2d941880">logger</a> = logging.getLogger('dnm_enhanced_test')</td></tr>
+<tr class="separator:a12a0cab6ee2a2f6632115a9e2d941880"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><pre class="fragment">DNM Enhanced Test - 增强版 DNM 框架测试
+
+🧬 特性:
+1. 集成增强的瓶颈检测器
+2. 基于性能导向的神经元分裂
+3. 多维度性能监控
+4. 智能触发机制
+5. 详细的分析报告
+
+🎯 目标: 验证增强的 DNM 框架能够显著提升分裂效果和准确率
+</pre> </div><h2 class="groupheader">Function Documentation</h2>
+<a id="a59f6fd2c1b1a950361847f0ff93586c5" name="a59f6fd2c1b1a950361847f0ff93586c5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a59f6fd2c1b1a950361847f0ff93586c5">&#9670;&#160;</a></span>analyze_model_structure()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">examples.dnm_enhanced_test.analyze_model_structure </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>model</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">分析模型结构</pre> 
+<p class="definition">Definition at line <a class="el" href="dnm__enhanced__test_8py_source.html#l00241">241</a> of file <a class="el" href="dnm__enhanced__test_8py_source.html">dnm_enhanced_test.py</a>.</p>
+
+</div>
+</div>
+<a id="ad22890deee5a0e79f44452b9faa0d7e5" name="ad22890deee5a0e79f44452b9faa0d7e5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad22890deee5a0e79f44452b9faa0d7e5">&#9670;&#160;</a></span>count_parameters()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">examples.dnm_enhanced_test.count_parameters </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>model</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">计算模型参数数量</pre> 
+<p class="definition">Definition at line <a class="el" href="dnm__enhanced__test_8py_source.html#l00237">237</a> of file <a class="el" href="dnm__enhanced__test_8py_source.html">dnm_enhanced_test.py</a>.</p>
+
+</div>
+</div>
+<a id="ad5760bba6f803be5370cfdecab104eea" name="ad5760bba6f803be5370cfdecab104eea"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad5760bba6f803be5370cfdecab104eea">&#9670;&#160;</a></span>load_cifar10_data()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">examples.dnm_enhanced_test.load_cifar10_data </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>batch_size</em> = <code>64</code></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">加载CIFAR-10数据集，使用较小的batch size以更好地观察分裂效果</pre> 
+<p class="definition">Definition at line <a class="el" href="dnm__enhanced__test_8py_source.html#l00149">149</a> of file <a class="el" href="dnm__enhanced__test_8py_source.html">dnm_enhanced_test.py</a>.</p>
+
+</div>
+</div>
+<a id="aa2979241c0028ada26abe627d8c4050f" name="aa2979241c0028ada26abe627d8c4050f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa2979241c0028ada26abe627d8c4050f">&#9670;&#160;</a></span>main()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">examples.dnm_enhanced_test.main </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">主训练循环</pre> 
+<p class="definition">Definition at line <a class="el" href="dnm__enhanced__test_8py_source.html#l00261">261</a> of file <a class="el" href="dnm__enhanced__test_8py_source.html">dnm_enhanced_test.py</a>.</p>
+
+</div>
+</div>
+<a id="a737a15216bd7efbf17cbd12c5ccc3b27" name="a737a15216bd7efbf17cbd12c5ccc3b27"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a737a15216bd7efbf17cbd12c5ccc3b27">&#9670;&#160;</a></span>train_epoch()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">examples.dnm_enhanced_test.train_epoch </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>model</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>train_loader</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>optimizer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>criterion</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>device</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>activation_hook</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>gradient_hook</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">训练一个epoch</pre> 
+<p class="definition">Definition at line <a class="el" href="dnm__enhanced__test_8py_source.html#l00172">172</a> of file <a class="el" href="dnm__enhanced__test_8py_source.html">dnm_enhanced_test.py</a>.</p>
+
+</div>
+</div>
+<a id="aff6df81b7c9c93e66208cba4ae6dd3c9" name="aff6df81b7c9c93e66208cba4ae6dd3c9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aff6df81b7c9c93e66208cba4ae6dd3c9">&#9670;&#160;</a></span>validate_epoch()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">examples.dnm_enhanced_test.validate_epoch </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>model</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>val_loader</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>criterion</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>device</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">验证一个epoch</pre> 
+<p class="definition">Definition at line <a class="el" href="dnm__enhanced__test_8py_source.html#l00214">214</a> of file <a class="el" href="dnm__enhanced__test_8py_source.html">dnm_enhanced_test.py</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Variable Documentation</h2>
+<a id="a52ad39eb51474d54db857fec6189df31" name="a52ad39eb51474d54db857fec6189df31"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a52ad39eb51474d54db857fec6189df31">&#9670;&#160;</a></span>format</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">examples.dnm_enhanced_test.format</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="dnm__enhanced__test_8py_source.html#l00038">38</a> of file <a class="el" href="dnm__enhanced__test_8py_source.html">dnm_enhanced_test.py</a>.</p>
+
+</div>
+</div>
+<a id="a963adc0f774b2e7394c6cbf737c3478e" name="a963adc0f774b2e7394c6cbf737c3478e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a963adc0f774b2e7394c6cbf737c3478e">&#9670;&#160;</a></span>INFO</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">examples.dnm_enhanced_test.INFO</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="dnm__enhanced__test_8py_source.html#l00038">38</a> of file <a class="el" href="dnm__enhanced__test_8py_source.html">dnm_enhanced_test.py</a>.</p>
+
+</div>
+</div>
+<a id="a0cf0c7381d174f756efdd0f43b6a14d9" name="a0cf0c7381d174f756efdd0f43b6a14d9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0cf0c7381d174f756efdd0f43b6a14d9">&#9670;&#160;</a></span>level</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">examples.dnm_enhanced_test.level</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="dnm__enhanced__test_8py_source.html#l00038">38</a> of file <a class="el" href="dnm__enhanced__test_8py_source.html">dnm_enhanced_test.py</a>.</p>
+
+</div>
+</div>
+<a id="a12a0cab6ee2a2f6632115a9e2d941880" name="a12a0cab6ee2a2f6632115a9e2d941880"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a12a0cab6ee2a2f6632115a9e2d941880">&#9670;&#160;</a></span>logger</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">examples.dnm_enhanced_test.logger = logging.getLogger('dnm_enhanced_test')</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="dnm__enhanced__test_8py_source.html#l00039">39</a> of file <a class="el" href="dnm__enhanced__test_8py_source.html">dnm_enhanced_test.py</a>.</p>
+
+</div>
+</div>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<!-- do not remove this div, it is closed by doxygen! -->
+</div>
+<!-- Custom Footer -->
+<div style="background: #f8f9fa; border-top: 1px solid #e9ecef; margin-top: 50px; padding: 30px 0; text-align: center;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-bottom: 20px;">
+            <!-- Project Info -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🧠 NeuroExapt</h4>
+                <p style="color: #6c757d; margin: 0; font-size: 0.9em;">
+                    Advanced Neural Architecture Search and Dynamic Morphogenesis Framework for next-generation AI research.
+                </p>
+            </div>
+            <!-- Quick Links -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">📚 Quick Links</h4>
+                <div style="text-align: left;">
+                    <a href="index.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🏠 Home</a>
+                    <a href="modules.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📦 Modules</a>
+                    <a href="examples.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💡 Examples</a>
+                    <a href="files.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📁 Files</a>
+                </div>
+            </div>
+            <!-- Resources -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🔗 Resources</h4>
+                <div style="text-align: left;">
+                    <a href="https://github.com/your-username/neuroexapt" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💻 GitHub Repository</a>
+                    <a href="https://github.com/your-username/neuroexapt/issues" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🐛 Issue Tracker</a>
+                    <a href="https://github.com/your-username/neuroexapt/wiki" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📖 Wiki</a>
+                    <a href="https://github.com/your-username/neuroexapt/releases" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🚀 Releases</a>
+                </div>
+            </div>
+        </div>
+        <hr style="border: 0; height: 1px; background: #e9ecef; margin: 20px 0;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+            <div style="color: #6c757d; font-size: 0.9em;">
+                © 2024 NeuroExapt Project. Generated with 
+                <a href="https://www.doxygen.nl/index.html" style="color: #667eea; text-decoration: none;">Doxygen 1.9.8</a>
+            </div>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <span style="font-size: 0.9em; color: #6c757d;">Built with ❤️ for AI Research</span>
+                <div style="display: flex; gap: 10px;">
+                    <span style="background: #28a745; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">🟢 Active</span>
+                    <span style="background: #17a2b8; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">v3.0</span>
+                </div>
+            </div>
+        </div>
+        <!-- Technology Stack -->
+        <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #e9ecef;">
+            <div style="font-size: 0.8em; color: #868e96; text-align: center;">
+                <strong>Built with:</strong>
+                <span style="margin: 0 5px;">🐍 Python</span>
+                <span style="margin: 0 5px;">🔥 PyTorch</span>
+                <span style="margin: 0 5px;">⚡ CUDA</span>
+                <span style="margin: 0 5px;">🧮 NumPy</span>
+                <span style="margin: 0 5px;">📊 Matplotlib</span>
+                <span style="margin: 0 5px;">🚀 Triton</span>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Back to top button -->
+<div id="back-to-top" style="position: fixed; bottom: 20px; right: 20px; display: none; z-index: 1000;">
+    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" 
+            style="background: #667eea; color: white; border: none; padding: 10px 15px; border-radius: 50%; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,0.2); font-size: 16px;">
+        ⬆️
+    </button>
+</div>
+<script>
+// Back to top button functionality
+window.addEventListener('scroll', function() {
+    const backToTop = document.getElementById('back-to-top');
+    if (window.pageYOffset > 300) {
+        backToTop.style.display = 'block';
+    } else {
+        backToTop.style.display = 'none';
+    }
+});
+// Enhanced search functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Add search enhancement if search box exists
+    const searchBox = document.getElementById('MSearchField');
+    if (searchBox) {
+        searchBox.placeholder = 'Search documentation... 🔍';
+        searchBox.style.borderRadius = '20px';
+        searchBox.style.padding = '8px 15px';
+    }
+    // Add copy code button to code blocks
+    const codeBlocks = document.querySelectorAll('.fragment');
+    codeBlocks.forEach(function(block) {
+        const copyBtn = document.createElement('button');
+        copyBtn.innerHTML = '📋';
+        copyBtn.title = 'Copy code';
+        copyBtn.style.cssText = 'position: absolute; top: 10px; right: 10px; background: #667eea; color: white; border: none; padding: 5px; border-radius: 3px; cursor: pointer; font-size: 12px;';
+        block.style.position = 'relative';
+        block.appendChild(copyBtn);
+        copyBtn.addEventListener('click', function() {
+            const text = block.textContent;
+            navigator.clipboard.writeText(text).then(function() {
+                copyBtn.innerHTML = '✅';
+                setTimeout(function() {
+                    copyBtn.innerHTML = '📋';
+                }, 2000);
+            });
+        });
+    });
+});
+// Dark mode toggle (optional)
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+}
+// Load saved dark mode preference
+if (localStorage.getItem('darkMode') === 'true') {
+    document.body.classList.add('dark-mode');
+}
+</script>
+</body>
+</html>

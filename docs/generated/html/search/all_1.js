@@ -1,0 +1,26 @@
+var searchData=
+[
+  ['2_0',['Chinese Mirrors (Priority 1-2)',['../md_neuroexapt_2utils_2README__dataset__loader.html#autotoc_md24',1,'']]],
+  ['2_20版本固定策略_1',['2. 版本固定策略',['../md_docs_2changelogs_2GITHUB__ACTIONS__UPDATE.html#autotoc_md120',1,'']]],
+  ['2_20现代化界面_2',['2. 现代化界面',['..//workspace/docs/README.md#autotoc_md245',1,'']]],
+  ['2_20自动检测_20auto_20detection_3',['2. 自动检测 (Auto-Detection)',['../md_docs_2xunlei__integration.html#autotoc_md357',1,'']]],
+  ['2_20迅雷设置_20迅雷_20settings_4',['2. 迅雷设置 (迅雷 Settings)',['../md_docs_2xunlei__integration.html#autotoc_md373',1,'']]],
+  ['2_20🎨_20现代化用户界面_5',['2. 🎨 现代化用户界面',['../md_docs_2changelogs_2DOCUMENTATION__SYSTEM__SETUP.html#autotoc_md73',1,'']]],
+  ['2_201_20continuous_20relaxation_6',['2.1 Continuous Relaxation',['../theory.html#autotoc_md331',1,'']]],
+  ['2_202_20parameter_20initialization_7',['2.2 Parameter Initialization',['../theory.html#autotoc_md332',1,'']]],
+  ['2_20actions_20upload_20pages_20artifact_8',['2. actions/upload-pages-artifact',['../md_docs_2changelogs_2GITHUB__ACTIONS__UPDATE.html#autotoc_md106',1,'']]],
+  ['2_20adaptive_20entropy_20threshold_9',['3.2 Adaptive Entropy Threshold',['../theory.html#autotoc_md335',1,'']]],
+  ['2_20cifar_2010基准测试_10',['2. CIFAR-10基准测试',['../index.html#autotoc_md54',1,'']]],
+  ['2_20computational_20efficiency_11',['6.2 Computational Efficiency',['../theory.html#autotoc_md346',1,'']]],
+  ['2_20continual_20learning_12',['7.2 Continual Learning',['..//workspace/docs/theory.md#autotoc_md350',1,'']]],
+  ['2_20development_20experience_13',['2. Development Experience',['../md_docs_2changelogs_2PROJECT__STRUCTURE__REFACTOR.html#autotoc_md167',1,'']]],
+  ['2_20discrete_20parameter_20optimization_14',['2. Discrete Parameter Optimization',['../theory.html#autotoc_md330',1,'']]],
+  ['2_20enhanced_20debugprinter_20class_20backward_20compatibility_15',['2. Enhanced DebugPrinter Class (Backward Compatibility)',['../md_docs_2changelogs_2LOGGER__METHOD__FIXES__SUMMARY.html#autotoc_md132',1,'']]],
+  ['2_20environment_20variables_16',['2. Environment Variables',['../md_docs_2changelogs_2SOURCERY__OPTIMIZATIONS.html#autotoc_md198',1,'']]],
+  ['2_20layer_20importance_20evaluation_17',['1.2 Layer Importance Evaluation',['../theory.html#autotoc_md328',1,'']]],
+  ['2_20logger_20instance_20caching_18',['2. Logger Instance Caching',['../md_docs_2changelogs_2SOURCERY__OPTIMIZATIONS.html#autotoc_md189',1,'']]],
+  ['2_20maintainability_19',['2. Maintainability',['../md_docs_2changelogs_2LOGGER__METHOD__FIXES__SUMMARY.html#autotoc_md140',1,'']]],
+  ['2_20project_20structure_20cleanup_20',['✅ 2. Project Structure Cleanup',['../md_docs_2changelogs_2PROJECT__STRUCTURE__REFACTOR.html#autotoc_md156',1,'']]],
+  ['2_20proof_20sketch_21',['4.2 Proof Sketch',['../theory.html#autotoc_md338',1,'']]],
+  ['2_20structural_20evolution_20algorithm_22',['5.2 Structural Evolution Algorithm',['../theory.html#autotoc_md342',1,'']]]
+];

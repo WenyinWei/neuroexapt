@@ -1,0 +1,748 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="description" content="NeuroExapt - Advanced Neural Architecture Search and Dynamic Morphogenesis Framework">
+    <meta name="keywords" content="neural architecture search, dynamic morphogenesis, deep learning, AI, PyTorch">
+    <meta name="author" content="NeuroExapt Team">
+    <meta property="og:title" content="NeuroExapt Documentation">
+    <meta property="og:description" content="Advanced Neural Architecture Search Framework">
+    <meta property="og:type" content="website">
+
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>NeuroExapt: examples.demo_subnetwork_evolution.ModularCNN Class Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="custom.css" rel="stylesheet" type="text/css"/>
+<!-- NeuroExapt Custom Styles -->
+<style>
+/* Enhanced header styling */
+.header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+.header h1 {
+    margin: 0;
+    font-size: 2.5em;
+    font-weight: 300;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+.header .subtitle {
+    font-size: 1.2em;
+    opacity: 0.9;
+    margin-top: 10px;
+}
+/* Enhanced navigation */
+.tablist {
+    background: #f8f9fa;
+    border-bottom: 2px solid #e9ecef;
+}
+.tablist li.current a {
+    background: #667eea;
+    color: white;
+}
+/* Improved content layout */
+.contents {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+/* Code highlighting */
+.fragment {
+    background: #f8f9fa;
+    border-left: 4px solid #667eea;
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 0 8px 8px 0;
+}
+/* Enhanced tables */
+table.memberdecls {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 20px 0;
+}
+table.memberdecls td {
+    border: 1px solid #e9ecef;
+    padding: 12px;
+}
+/* Better typography */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #343a40;
+}
+h1, h2, h3, h4, h5, h6 {
+    color: #495057;
+    font-weight: 500;
+}
+/* Responsive design */
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 2em;
+    }
+    .contents {
+        padding: 15px;
+    }
+}
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #1a1a1a;
+        color: #e9ecef;
+    }
+    .header {
+        background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+    }
+    .fragment {
+        background: #2d3748;
+        color: #e9ecef;
+    }
+}
+</style>
+<!-- Analytics (if needed) -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<!--
+<script async src="https://www.googletagmanager.com/gtag/js?id=GA_TRACKING_ID"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'GA_TRACKING_ID');
+</script>
+-->
+</head>
+<body>
+<!-- Custom Header -->
+<div class="header">
+    <h1>🧠 NeuroExapt</h1>
+    <div class="subtitle">Advanced Neural Architecture Search and Dynamic Morphogenesis Framework</div>
+    <div style="margin-top: 15px; font-size: 0.9em;">
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🚀 Dynamic Neural Morphogenesis
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🔬 Advanced Architecture Search
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            ⚡ High-Performance Computing
+        </span>
+    </div>
+</div>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! --><!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('classexamples_1_1demo__subnetwork__evolution_1_1ModularCNN.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="classexamples_1_1demo__subnetwork__evolution_1_1ModularCNN-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">examples.demo_subnetwork_evolution.ModularCNN Class Reference</div></div>
+</div><!--header-->
+<div class="contents">
+<div class="dynheader">
+Inheritance diagram for examples.demo_subnetwork_evolution.ModularCNN:</div>
+<div class="dyncontent">
+ <div class="center">
+  <img src="classexamples_1_1demo__subnetwork__evolution_1_1ModularCNN.png" alt=""/>
+ </div></div>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a3fb9e3b12bbfe67dbfb1d51a42cbd680" id="r_a3fb9e3b12bbfe67dbfb1d51a42cbd680"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classexamples_1_1demo__subnetwork__evolution_1_1ModularCNN.html#a3fb9e3b12bbfe67dbfb1d51a42cbd680">__init__</a> (self, num_classes=10)</td></tr>
+<tr class="separator:a3fb9e3b12bbfe67dbfb1d51a42cbd680"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a35797942a52cda1b8defa698871dc3be" id="r_a35797942a52cda1b8defa698871dc3be"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classexamples_1_1demo__subnetwork__evolution_1_1ModularCNN.html#a35797942a52cda1b8defa698871dc3be">forward</a> (self, x)</td></tr>
+<tr class="separator:a35797942a52cda1b8defa698871dc3be"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a709139e37c4c148f5f6eb2885ef9f2cd" id="r_a709139e37c4c148f5f6eb2885ef9f2cd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classexamples_1_1demo__subnetwork__evolution_1_1ModularCNN.html#a709139e37c4c148f5f6eb2885ef9f2cd">add_subnetwork</a> (self, subnetwork_type)</td></tr>
+<tr class="separator:a709139e37c4c148f5f6eb2885ef9f2cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6eccaf3fe7302c126275e568c7b5a82e" id="r_a6eccaf3fe7302c126275e568c7b5a82e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classexamples_1_1demo__subnetwork__evolution_1_1ModularCNN.html#a6eccaf3fe7302c126275e568c7b5a82e">remove_subnetwork</a> (self, subnetwork_type)</td></tr>
+<tr class="separator:a6eccaf3fe7302c126275e568c7b5a82e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adc19f0c39d6cfaaf375cb8b2bc8f7671" id="r_adc19f0c39d6cfaaf375cb8b2bc8f7671"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classexamples_1_1demo__subnetwork__evolution_1_1ModularCNN.html#adc19f0c39d6cfaaf375cb8b2bc8f7671">get_subnetwork_info</a> (self)</td></tr>
+<tr class="separator:adc19f0c39d6cfaaf375cb8b2bc8f7671"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a1efc4d1f127a78a3ef4dd57b28b5025c" id="r_a1efc4d1f127a78a3ef4dd57b28b5025c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classexamples_1_1demo__subnetwork__evolution_1_1ModularCNN.html#a1efc4d1f127a78a3ef4dd57b28b5025c">core_conv1</a></td></tr>
+<tr class="separator:a1efc4d1f127a78a3ef4dd57b28b5025c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a06f460bb0fa7987b94ee98e5f2919b8b" id="r_a06f460bb0fa7987b94ee98e5f2919b8b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classexamples_1_1demo__subnetwork__evolution_1_1ModularCNN.html#a06f460bb0fa7987b94ee98e5f2919b8b">core_conv2</a></td></tr>
+<tr class="separator:a06f460bb0fa7987b94ee98e5f2919b8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1e1d11a84581a37029a235af80b6dc01" id="r_a1e1d11a84581a37029a235af80b6dc01"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classexamples_1_1demo__subnetwork__evolution_1_1ModularCNN.html#a1e1d11a84581a37029a235af80b6dc01">optional_conv1</a></td></tr>
+<tr class="separator:a1e1d11a84581a37029a235af80b6dc01"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0647496b8d9c5b3bd7e1f76bbdd09ef9" id="r_a0647496b8d9c5b3bd7e1f76bbdd09ef9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classexamples_1_1demo__subnetwork__evolution_1_1ModularCNN.html#a0647496b8d9c5b3bd7e1f76bbdd09ef9">optional_conv2</a></td></tr>
+<tr class="separator:a0647496b8d9c5b3bd7e1f76bbdd09ef9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a85d55527dd6a79286497f25bcad60b0b" id="r_a85d55527dd6a79286497f25bcad60b0b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classexamples_1_1demo__subnetwork__evolution_1_1ModularCNN.html#a85d55527dd6a79286497f25bcad60b0b">attention_conv</a></td></tr>
+<tr class="separator:a85d55527dd6a79286497f25bcad60b0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abbafeebdc915c259c534f7a4ca3e2bf9" id="r_abbafeebdc915c259c534f7a4ca3e2bf9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classexamples_1_1demo__subnetwork__evolution_1_1ModularCNN.html#abbafeebdc915c259c534f7a4ca3e2bf9">attention_gate</a></td></tr>
+<tr class="separator:abbafeebdc915c259c534f7a4ca3e2bf9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9bc2cead6195616a9e5548f5164a4bd8" id="r_a9bc2cead6195616a9e5548f5164a4bd8"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classexamples_1_1demo__subnetwork__evolution_1_1ModularCNN.html#a9bc2cead6195616a9e5548f5164a4bd8">pool</a></td></tr>
+<tr class="separator:a9bc2cead6195616a9e5548f5164a4bd8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad834c1ccf612054bd7a0d70ec3a61f2e" id="r_ad834c1ccf612054bd7a0d70ec3a61f2e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classexamples_1_1demo__subnetwork__evolution_1_1ModularCNN.html#ad834c1ccf612054bd7a0d70ec3a61f2e">dropout</a></td></tr>
+<tr class="separator:ad834c1ccf612054bd7a0d70ec3a61f2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9cc66b6046409334b803835fa2a82699" id="r_a9cc66b6046409334b803835fa2a82699"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classexamples_1_1demo__subnetwork__evolution_1_1ModularCNN.html#a9cc66b6046409334b803835fa2a82699">classifier1</a></td></tr>
+<tr class="separator:a9cc66b6046409334b803835fa2a82699"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a03b9e5bdbf655a13e10b9c764c2f5f6a" id="r_a03b9e5bdbf655a13e10b9c764c2f5f6a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classexamples_1_1demo__subnetwork__evolution_1_1ModularCNN.html#a03b9e5bdbf655a13e10b9c764c2f5f6a">classifier2</a></td></tr>
+<tr class="separator:a03b9e5bdbf655a13e10b9c764c2f5f6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4359e50fe1ce798c7b08021334a97a1b" id="r_a4359e50fe1ce798c7b08021334a97a1b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classexamples_1_1demo__subnetwork__evolution_1_1ModularCNN.html#a4359e50fe1ce798c7b08021334a97a1b">classifier3</a></td></tr>
+<tr class="separator:a4359e50fe1ce798c7b08021334a97a1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a38ea4f5ebd601b99d347af921c87c165" id="r_a38ea4f5ebd601b99d347af921c87c165"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classexamples_1_1demo__subnetwork__evolution_1_1ModularCNN.html#a38ea4f5ebd601b99d347af921c87c165">active_subnetworks</a></td></tr>
+<tr class="separator:a38ea4f5ebd601b99d347af921c87c165"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a052ca27173613c212558f43fa20d8551" id="r_a052ca27173613c212558f43fa20d8551"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classexamples_1_1demo__subnetwork__evolution_1_1ModularCNN.html#a052ca27173613c212558f43fa20d8551">evolution_history</a></td></tr>
+<tr class="separator:a052ca27173613c212558f43fa20d8551"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><pre class="fragment">A modular CNN with explicit subnetworks that can be added/removed.
+
+This model demonstrates how Neuro Exapt can:
+- Add new feature extraction modules
+- Remove redundant processing paths
+- Optimize network topology based on information flow
+</pre> 
+<p class="definition">Definition at line <a class="el" href="demo__subnetwork__evolution_8py_source.html#l00025">25</a> of file <a class="el" href="demo__subnetwork__evolution_8py_source.html">demo_subnetwork_evolution.py</a>.</p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a3fb9e3b12bbfe67dbfb1d51a42cbd680" name="a3fb9e3b12bbfe67dbfb1d51a42cbd680"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3fb9e3b12bbfe67dbfb1d51a42cbd680">&#9670;&#160;</a></span>__init__()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">examples.demo_subnetwork_evolution.ModularCNN.__init__ </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>num_classes</em> = <code>10</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="demo__subnetwork__evolution_8py_source.html#l00035">35</a> of file <a class="el" href="demo__subnetwork__evolution_8py_source.html">demo_subnetwork_evolution.py</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a709139e37c4c148f5f6eb2885ef9f2cd" name="a709139e37c4c148f5f6eb2885ef9f2cd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a709139e37c4c148f5f6eb2885ef9f2cd">&#9670;&#160;</a></span>add_subnetwork()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">examples.demo_subnetwork_evolution.ModularCNN.add_subnetwork </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>subnetwork_type</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">Add a new subnetwork.</pre> 
+<p class="definition">Definition at line <a class="el" href="demo__subnetwork__evolution_8py_source.html#l00100">100</a> of file <a class="el" href="demo__subnetwork__evolution_8py_source.html">demo_subnetwork_evolution.py</a>.</p>
+
+</div>
+</div>
+<a id="a35797942a52cda1b8defa698871dc3be" name="a35797942a52cda1b8defa698871dc3be"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a35797942a52cda1b8defa698871dc3be">&#9670;&#160;</a></span>forward()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">examples.demo_subnetwork_evolution.ModularCNN.forward </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>x</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="demo__subnetwork__evolution_8py_source.html#l00073">73</a> of file <a class="el" href="demo__subnetwork__evolution_8py_source.html">demo_subnetwork_evolution.py</a>.</p>
+
+</div>
+</div>
+<a id="adc19f0c39d6cfaaf375cb8b2bc8f7671" name="adc19f0c39d6cfaaf375cb8b2bc8f7671"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adc19f0c39d6cfaaf375cb8b2bc8f7671">&#9670;&#160;</a></span>get_subnetwork_info()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">examples.demo_subnetwork_evolution.ModularCNN.get_subnetwork_info </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">Get information about active subnetworks.</pre> 
+<p class="definition">Definition at line <a class="el" href="demo__subnetwork__evolution_8py_source.html#l00116">116</a> of file <a class="el" href="demo__subnetwork__evolution_8py_source.html">demo_subnetwork_evolution.py</a>.</p>
+
+</div>
+</div>
+<a id="a6eccaf3fe7302c126275e568c7b5a82e" name="a6eccaf3fe7302c126275e568c7b5a82e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6eccaf3fe7302c126275e568c7b5a82e">&#9670;&#160;</a></span>remove_subnetwork()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">examples.demo_subnetwork_evolution.ModularCNN.remove_subnetwork </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>subnetwork_type</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">Remove a subnetwork.</pre> 
+<p class="definition">Definition at line <a class="el" href="demo__subnetwork__evolution_8py_source.html#l00108">108</a> of file <a class="el" href="demo__subnetwork__evolution_8py_source.html">demo_subnetwork_evolution.py</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a38ea4f5ebd601b99d347af921c87c165" name="a38ea4f5ebd601b99d347af921c87c165"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a38ea4f5ebd601b99d347af921c87c165">&#9670;&#160;</a></span>active_subnetworks</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">examples.demo_subnetwork_evolution.ModularCNN.active_subnetworks</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="demo__subnetwork__evolution_8py_source.html#l00064">64</a> of file <a class="el" href="demo__subnetwork__evolution_8py_source.html">demo_subnetwork_evolution.py</a>.</p>
+
+</div>
+</div>
+<a id="a85d55527dd6a79286497f25bcad60b0b" name="a85d55527dd6a79286497f25bcad60b0b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a85d55527dd6a79286497f25bcad60b0b">&#9670;&#160;</a></span>attention_conv</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">examples.demo_subnetwork_evolution.ModularCNN.attention_conv</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="demo__subnetwork__evolution_8py_source.html#l00047">47</a> of file <a class="el" href="demo__subnetwork__evolution_8py_source.html">demo_subnetwork_evolution.py</a>.</p>
+
+</div>
+</div>
+<a id="abbafeebdc915c259c534f7a4ca3e2bf9" name="abbafeebdc915c259c534f7a4ca3e2bf9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abbafeebdc915c259c534f7a4ca3e2bf9">&#9670;&#160;</a></span>attention_gate</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">examples.demo_subnetwork_evolution.ModularCNN.attention_gate</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="demo__subnetwork__evolution_8py_source.html#l00048">48</a> of file <a class="el" href="demo__subnetwork__evolution_8py_source.html">demo_subnetwork_evolution.py</a>.</p>
+
+</div>
+</div>
+<a id="a9cc66b6046409334b803835fa2a82699" name="a9cc66b6046409334b803835fa2a82699"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9cc66b6046409334b803835fa2a82699">&#9670;&#160;</a></span>classifier1</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">examples.demo_subnetwork_evolution.ModularCNN.classifier1</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="demo__subnetwork__evolution_8py_source.html#l00059">59</a> of file <a class="el" href="demo__subnetwork__evolution_8py_source.html">demo_subnetwork_evolution.py</a>.</p>
+
+</div>
+</div>
+<a id="a03b9e5bdbf655a13e10b9c764c2f5f6a" name="a03b9e5bdbf655a13e10b9c764c2f5f6a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a03b9e5bdbf655a13e10b9c764c2f5f6a">&#9670;&#160;</a></span>classifier2</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">examples.demo_subnetwork_evolution.ModularCNN.classifier2</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="demo__subnetwork__evolution_8py_source.html#l00060">60</a> of file <a class="el" href="demo__subnetwork__evolution_8py_source.html">demo_subnetwork_evolution.py</a>.</p>
+
+</div>
+</div>
+<a id="a4359e50fe1ce798c7b08021334a97a1b" name="a4359e50fe1ce798c7b08021334a97a1b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4359e50fe1ce798c7b08021334a97a1b">&#9670;&#160;</a></span>classifier3</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">examples.demo_subnetwork_evolution.ModularCNN.classifier3</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="demo__subnetwork__evolution_8py_source.html#l00061">61</a> of file <a class="el" href="demo__subnetwork__evolution_8py_source.html">demo_subnetwork_evolution.py</a>.</p>
+
+</div>
+</div>
+<a id="a1efc4d1f127a78a3ef4dd57b28b5025c" name="a1efc4d1f127a78a3ef4dd57b28b5025c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1efc4d1f127a78a3ef4dd57b28b5025c">&#9670;&#160;</a></span>core_conv1</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">examples.demo_subnetwork_evolution.ModularCNN.core_conv1</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="demo__subnetwork__evolution_8py_source.html#l00039">39</a> of file <a class="el" href="demo__subnetwork__evolution_8py_source.html">demo_subnetwork_evolution.py</a>.</p>
+
+</div>
+</div>
+<a id="a06f460bb0fa7987b94ee98e5f2919b8b" name="a06f460bb0fa7987b94ee98e5f2919b8b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a06f460bb0fa7987b94ee98e5f2919b8b">&#9670;&#160;</a></span>core_conv2</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">examples.demo_subnetwork_evolution.ModularCNN.core_conv2</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="demo__subnetwork__evolution_8py_source.html#l00040">40</a> of file <a class="el" href="demo__subnetwork__evolution_8py_source.html">demo_subnetwork_evolution.py</a>.</p>
+
+</div>
+</div>
+<a id="ad834c1ccf612054bd7a0d70ec3a61f2e" name="ad834c1ccf612054bd7a0d70ec3a61f2e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad834c1ccf612054bd7a0d70ec3a61f2e">&#9670;&#160;</a></span>dropout</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">examples.demo_subnetwork_evolution.ModularCNN.dropout</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="demo__subnetwork__evolution_8py_source.html#l00056">56</a> of file <a class="el" href="demo__subnetwork__evolution_8py_source.html">demo_subnetwork_evolution.py</a>.</p>
+
+</div>
+</div>
+<a id="a052ca27173613c212558f43fa20d8551" name="a052ca27173613c212558f43fa20d8551"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a052ca27173613c212558f43fa20d8551">&#9670;&#160;</a></span>evolution_history</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">examples.demo_subnetwork_evolution.ModularCNN.evolution_history</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="demo__subnetwork__evolution_8py_source.html#l00071">71</a> of file <a class="el" href="demo__subnetwork__evolution_8py_source.html">demo_subnetwork_evolution.py</a>.</p>
+
+</div>
+</div>
+<a id="a1e1d11a84581a37029a235af80b6dc01" name="a1e1d11a84581a37029a235af80b6dc01"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1e1d11a84581a37029a235af80b6dc01">&#9670;&#160;</a></span>optional_conv1</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">examples.demo_subnetwork_evolution.ModularCNN.optional_conv1</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="demo__subnetwork__evolution_8py_source.html#l00043">43</a> of file <a class="el" href="demo__subnetwork__evolution_8py_source.html">demo_subnetwork_evolution.py</a>.</p>
+
+</div>
+</div>
+<a id="a0647496b8d9c5b3bd7e1f76bbdd09ef9" name="a0647496b8d9c5b3bd7e1f76bbdd09ef9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0647496b8d9c5b3bd7e1f76bbdd09ef9">&#9670;&#160;</a></span>optional_conv2</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">examples.demo_subnetwork_evolution.ModularCNN.optional_conv2</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="demo__subnetwork__evolution_8py_source.html#l00044">44</a> of file <a class="el" href="demo__subnetwork__evolution_8py_source.html">demo_subnetwork_evolution.py</a>.</p>
+
+</div>
+</div>
+<a id="a9bc2cead6195616a9e5548f5164a4bd8" name="a9bc2cead6195616a9e5548f5164a4bd8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9bc2cead6195616a9e5548f5164a4bd8">&#9670;&#160;</a></span>pool</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">examples.demo_subnetwork_evolution.ModularCNN.pool</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="demo__subnetwork__evolution_8py_source.html#l00055">55</a> of file <a class="el" href="demo__subnetwork__evolution_8py_source.html">demo_subnetwork_evolution.py</a>.</p>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following file:<ul>
+<li>examples/<a class="el" href="demo__subnetwork__evolution_8py_source.html">demo_subnetwork_evolution.py</a></li>
+</ul>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<!-- do not remove this div, it is closed by doxygen! -->
+</div>
+<!-- Custom Footer -->
+<div style="background: #f8f9fa; border-top: 1px solid #e9ecef; margin-top: 50px; padding: 30px 0; text-align: center;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-bottom: 20px;">
+            <!-- Project Info -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🧠 NeuroExapt</h4>
+                <p style="color: #6c757d; margin: 0; font-size: 0.9em;">
+                    Advanced Neural Architecture Search and Dynamic Morphogenesis Framework for next-generation AI research.
+                </p>
+            </div>
+            <!-- Quick Links -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">📚 Quick Links</h4>
+                <div style="text-align: left;">
+                    <a href="index.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🏠 Home</a>
+                    <a href="modules.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📦 Modules</a>
+                    <a href="examples.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💡 Examples</a>
+                    <a href="files.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📁 Files</a>
+                </div>
+            </div>
+            <!-- Resources -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🔗 Resources</h4>
+                <div style="text-align: left;">
+                    <a href="https://github.com/your-username/neuroexapt" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💻 GitHub Repository</a>
+                    <a href="https://github.com/your-username/neuroexapt/issues" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🐛 Issue Tracker</a>
+                    <a href="https://github.com/your-username/neuroexapt/wiki" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📖 Wiki</a>
+                    <a href="https://github.com/your-username/neuroexapt/releases" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🚀 Releases</a>
+                </div>
+            </div>
+        </div>
+        <hr style="border: 0; height: 1px; background: #e9ecef; margin: 20px 0;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+            <div style="color: #6c757d; font-size: 0.9em;">
+                © 2024 NeuroExapt Project. Generated with 
+                <a href="https://www.doxygen.nl/index.html" style="color: #667eea; text-decoration: none;">Doxygen 1.9.8</a>
+            </div>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <span style="font-size: 0.9em; color: #6c757d;">Built with ❤️ for AI Research</span>
+                <div style="display: flex; gap: 10px;">
+                    <span style="background: #28a745; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">🟢 Active</span>
+                    <span style="background: #17a2b8; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">v3.0</span>
+                </div>
+            </div>
+        </div>
+        <!-- Technology Stack -->
+        <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #e9ecef;">
+            <div style="font-size: 0.8em; color: #868e96; text-align: center;">
+                <strong>Built with:</strong>
+                <span style="margin: 0 5px;">🐍 Python</span>
+                <span style="margin: 0 5px;">🔥 PyTorch</span>
+                <span style="margin: 0 5px;">⚡ CUDA</span>
+                <span style="margin: 0 5px;">🧮 NumPy</span>
+                <span style="margin: 0 5px;">📊 Matplotlib</span>
+                <span style="margin: 0 5px;">🚀 Triton</span>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Back to top button -->
+<div id="back-to-top" style="position: fixed; bottom: 20px; right: 20px; display: none; z-index: 1000;">
+    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" 
+            style="background: #667eea; color: white; border: none; padding: 10px 15px; border-radius: 50%; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,0.2); font-size: 16px;">
+        ⬆️
+    </button>
+</div>
+<script>
+// Back to top button functionality
+window.addEventListener('scroll', function() {
+    const backToTop = document.getElementById('back-to-top');
+    if (window.pageYOffset > 300) {
+        backToTop.style.display = 'block';
+    } else {
+        backToTop.style.display = 'none';
+    }
+});
+// Enhanced search functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Add search enhancement if search box exists
+    const searchBox = document.getElementById('MSearchField');
+    if (searchBox) {
+        searchBox.placeholder = 'Search documentation... 🔍';
+        searchBox.style.borderRadius = '20px';
+        searchBox.style.padding = '8px 15px';
+    }
+    // Add copy code button to code blocks
+    const codeBlocks = document.querySelectorAll('.fragment');
+    codeBlocks.forEach(function(block) {
+        const copyBtn = document.createElement('button');
+        copyBtn.innerHTML = '📋';
+        copyBtn.title = 'Copy code';
+        copyBtn.style.cssText = 'position: absolute; top: 10px; right: 10px; background: #667eea; color: white; border: none; padding: 5px; border-radius: 3px; cursor: pointer; font-size: 12px;';
+        block.style.position = 'relative';
+        block.appendChild(copyBtn);
+        copyBtn.addEventListener('click', function() {
+            const text = block.textContent;
+            navigator.clipboard.writeText(text).then(function() {
+                copyBtn.innerHTML = '✅';
+                setTimeout(function() {
+                    copyBtn.innerHTML = '📋';
+                }, 2000);
+            });
+        });
+    });
+});
+// Dark mode toggle (optional)
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+}
+// Load saved dark mode preference
+if (localStorage.getItem('darkMode') === 'true') {
+    document.body.classList.add('dark-mode');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+var classneuroexapt_1_1core_1_1device__manager_1_1DeviceManager =
+[
+    [ "__init__", "classneuroexapt_1_1core_1_1device__manager_1_1DeviceManager.html#a3f8ff3f55caf9188756dcc94b473f10a", null ],
+    [ "_log_device_info", "classneuroexapt_1_1core_1_1device__manager_1_1DeviceManager.html#a17ee4ac9e2027c1250c0bdcab14de9af", null ],
+    [ "_select_best_gpu", "classneuroexapt_1_1core_1_1device__manager_1_1DeviceManager.html#ad1a1711e40cee43aacae12ff8fbd8dbe", null ],
+    [ "checkpoint_memory_state", "classneuroexapt_1_1core_1_1device__manager_1_1DeviceManager.html#a2a9790de26d5558ae695d3e043d19ac7", null ],
+    [ "context_switch_model", "classneuroexapt_1_1core_1_1device__manager_1_1DeviceManager.html#aba8c0c5ec7c9e250b1324016e5be833e", null ],
+    [ "create_data_loader_wrapper", "classneuroexapt_1_1core_1_1device__manager_1_1DeviceManager.html#a843d8f614b9c4d4c63b4cdc29a083dab", null ],
+    [ "create_tensor", "classneuroexapt_1_1core_1_1device__manager_1_1DeviceManager.html#a633ea6228c487f4c6a7b624cda7a3406", null ],
+    [ "get_device_report", "classneuroexapt_1_1core_1_1device__manager_1_1DeviceManager.html#a288daf1d021e8745d0d0686b956bc055", null ],
+    [ "get_memory_stats", "classneuroexapt_1_1core_1_1device__manager_1_1DeviceManager.html#a642e2b603ea751dd13fcc691c5c32ebb", null ],
+    [ "ones_like", "classneuroexapt_1_1core_1_1device__manager_1_1DeviceManager.html#ae4e2cb598278c61a04973feff13ab289", null ],
+    [ "optimize_memory", "classneuroexapt_1_1core_1_1device__manager_1_1DeviceManager.html#a873761ed0e60de4a3495d795bca77b68", null ],
+    [ "register_model", "classneuroexapt_1_1core_1_1device__manager_1_1DeviceManager.html#ad74e36f01fc85bc4939570eb7fa077c9", null ],
+    [ "restore_memory_state", "classneuroexapt_1_1core_1_1device__manager_1_1DeviceManager.html#a3e449141a55cfd227d2921643e98296f", null ],
+    [ "safe_model_creation", "classneuroexapt_1_1core_1_1device__manager_1_1DeviceManager.html#a411e22941858ac8be4d9857b0188a82c", null ],
+    [ "to_device", "classneuroexapt_1_1core_1_1device__manager_1_1DeviceManager.html#a00e7a2279fac6b164581dafe9bfea14a", null ],
+    [ "transfer_model_state", "classneuroexapt_1_1core_1_1device__manager_1_1DeviceManager.html#adc6dbafaa174d164fabe0a2879c741d7", null ],
+    [ "zeros_like", "classneuroexapt_1_1core_1_1device__manager_1_1DeviceManager.html#a9bdd8519fdf162ecbffebb9eda2b16dd", null ],
+    [ "device", "classneuroexapt_1_1core_1_1device__manager_1_1DeviceManager.html#a258eaebc48300a42dbde63a6362eede6", null ],
+    [ "device_manager", "classneuroexapt_1_1core_1_1device__manager_1_1DeviceManager.html#aa99bc1ce4418698696767d43bfaf081f", null ],
+    [ "loader", "classneuroexapt_1_1core_1_1device__manager_1_1DeviceManager.html#ae08e3d917f8aa0655df38ddd72f9b2cb", null ],
+    [ "memory_fraction", "classneuroexapt_1_1core_1_1device__manager_1_1DeviceManager.html#a99cd9205d90c477e2d4b108436160b5d", null ],
+    [ "memory_history", "classneuroexapt_1_1core_1_1device__manager_1_1DeviceManager.html#adb5d4f8c96e5d3a74d4189027c7d1708", null ],
+    [ "peak_memory", "classneuroexapt_1_1core_1_1device__manager_1_1DeviceManager.html#a6bc9d84435d5b34b19d187250c38421d", null ],
+    [ "registered_models", "classneuroexapt_1_1core_1_1device__manager_1_1DeviceManager.html#adde3abe17df2b3f6f304e80b8d7b6a07", null ]
+];

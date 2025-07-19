@@ -1,4 +1,11 @@
 """
+"""
+\defgroup group_architecture_mutator Architecture Mutator
+\ingroup core
+Architecture Mutator module for NeuroExapt framework.
+"""
+
+
 架构突变器 (Architecture Mutator)
 
 ASO-SE框架的核心组件：负责执行架构的动态变化，包括：

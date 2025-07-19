@@ -1,0 +1,521 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="description" content="NeuroExapt - Advanced Neural Architecture Search and Dynamic Morphogenesis Framework">
+    <meta name="keywords" content="neural architecture search, dynamic morphogenesis, deep learning, AI, PyTorch">
+    <meta name="author" content="NeuroExapt Team">
+    <meta property="og:title" content="NeuroExapt Documentation">
+    <meta property="og:description" content="Advanced Neural Architecture Search Framework">
+    <meta property="og:type" content="website">
+
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>NeuroExapt: Sourcery Code Quality Optimizations Applied</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="custom.css" rel="stylesheet" type="text/css"/>
+<!-- NeuroExapt Custom Styles -->
+<style>
+/* Enhanced header styling */
+.header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+.header h1 {
+    margin: 0;
+    font-size: 2.5em;
+    font-weight: 300;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+.header .subtitle {
+    font-size: 1.2em;
+    opacity: 0.9;
+    margin-top: 10px;
+}
+/* Enhanced navigation */
+.tablist {
+    background: #f8f9fa;
+    border-bottom: 2px solid #e9ecef;
+}
+.tablist li.current a {
+    background: #667eea;
+    color: white;
+}
+/* Improved content layout */
+.contents {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+/* Code highlighting */
+.fragment {
+    background: #f8f9fa;
+    border-left: 4px solid #667eea;
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 0 8px 8px 0;
+}
+/* Enhanced tables */
+table.memberdecls {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 20px 0;
+}
+table.memberdecls td {
+    border: 1px solid #e9ecef;
+    padding: 12px;
+}
+/* Better typography */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #343a40;
+}
+h1, h2, h3, h4, h5, h6 {
+    color: #495057;
+    font-weight: 500;
+}
+/* Responsive design */
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 2em;
+    }
+    .contents {
+        padding: 15px;
+    }
+}
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #1a1a1a;
+        color: #e9ecef;
+    }
+    .header {
+        background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+    }
+    .fragment {
+        background: #2d3748;
+        color: #e9ecef;
+    }
+}
+</style>
+<!-- Analytics (if needed) -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<!--
+<script async src="https://www.googletagmanager.com/gtag/js?id=GA_TRACKING_ID"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'GA_TRACKING_ID');
+</script>
+-->
+</head>
+<body>
+<!-- Custom Header -->
+<div class="header">
+    <h1>🧠 NeuroExapt</h1>
+    <div class="subtitle">Advanced Neural Architecture Search and Dynamic Morphogenesis Framework</div>
+    <div style="margin-top: 15px; font-size: 0.9em;">
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🚀 Dynamic Neural Morphogenesis
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🔬 Advanced Architecture Search
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            ⚡ High-Performance Computing
+        </span>
+    </div>
+</div>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! --><!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('md_docs_2changelogs_2SOURCERY__OPTIMIZATIONS.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div><div class="header">
+  <div class="headertitle"><div class="title">Sourcery Code Quality Optimizations Applied</div></div>
+</div><!--header-->
+<div class="contents">
+<div class="textblock"><p><a class="anchor" id="autotoc_md185"></a> </p>
+<h1><a class="anchor" id="autotoc_md186"></a>
+📋 Overview</h1>
+<p>This document outlines the code quality improvements made based on Sourcery's recommendations to enhance maintainability, consistency, and organization of the NeuroExapt project.</p>
+<h1><a class="anchor" id="autotoc_md187"></a>
+🔧 Optimizations Applied</h1>
+<h2><a class="anchor" id="autotoc_md188"></a>
+1. Environment Variable Standardization</h2>
+<p><b>Issue</b>: Inconsistent environment variable naming for console logging</p><ul>
+<li><code>NEUROEXAPT_ENABLE_CONSOLE</code> (in <a class="el" href="logging__utils_8py.html">logging_utils.py</a>)</li>
+<li><code>NEUROEXAPT_CONSOLE_LOG</code> (in documentation)</li>
+</ul>
+<p><b>Solution</b>: Standardized to <code>NEUROEXAPT_ENABLE_CONSOLE</code> across all files</p>
+<p><b>Files Modified</b>:</p><ul>
+<li><code>SOURCERY_IMPROVEMENTS_IMPLEMENTED.md</code></li>
+<li>Documentation references updated</li>
+</ul>
+<p><b>Impact</b>:</p><ul>
+<li>✅ Consistent configuration across code and documentation</li>
+<li>✅ Eliminates confusion for users setting environment variables</li>
+<li>✅ Improved maintainability</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md189"></a>
+2. Logger Instance Caching</h2>
+<p><b>Issue</b>: <code>get_logger(name)</code> creates new <code>ConfigurableLogger</code> instances each time, leading to:</p><ul>
+<li>Lost section tracking state</li>
+<li>Inconsistent logging behavior</li>
+<li>Potential memory overhead</li>
+</ul>
+<p><b>Solution</b>: Implemented logger instance caching</p>
+<p><b>Code Changes</b>: </p><div class="fragment"><div class="line"><span class="comment"># Before</span></div>
+<div class="line"><span class="keyword">def </span>get_logger(name: str = <span class="keywordtype">None</span>) -&gt; ConfigurableLogger:</div>
+<div class="line">    <span class="keywordflow">if</span> name:</div>
+<div class="line">        <span class="keywordflow">return</span> ConfigurableLogger(name, _log_level, _enable_console)</div>
+<div class="line">    <span class="keywordflow">return</span> logger</div>
+<div class="line"> </div>
+<div class="line"><span class="comment"># After  </span></div>
+<div class="line">_logger_cache = {}</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">def </span>get_logger(name: str = <span class="keywordtype">None</span>) -&gt; ConfigurableLogger:</div>
+<div class="line">    <span class="keywordflow">if</span> name <span class="keywordflow">is</span> <span class="keywordtype">None</span>:</div>
+<div class="line">        <span class="keywordflow">return</span> logger</div>
+<div class="line">    </div>
+<div class="line">    <span class="keywordflow">if</span> name <span class="keywordflow">not</span> <span class="keywordflow">in</span> _logger_cache:</div>
+<div class="line">        _logger_cache[name] = ConfigurableLogger(name, _log_level, _enable_console)</div>
+<div class="line">    </div>
+<div class="line">    <span class="keywordflow">return</span> _logger_cache[name]</div>
+</div><!-- fragment --><p><b>Benefits</b>:</p><ul>
+<li>✅ Preserves section tracking state across calls</li>
+<li>✅ Consistent logger behavior</li>
+<li>✅ Reduced memory usage</li>
+<li>✅ Better performance for repeated logger access</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md190"></a>
+3. Documentation Organization</h2>
+<p><b>Issue</b>: Extremely detailed markdown summaries cluttering the repository root</p>
+<p><b>Solution</b>: Moved detailed documentation to structured location</p>
+<p><b>Organizational Changes</b>: </p><div class="fragment"><div class="line">Before:</div>
+<div class="line">├── PROJECT_STRUCTURE_REFACTOR.md (5.4KB)</div>
+<div class="line">├── LOGGER_METHOD_FIXES_SUMMARY.md (6.9KB)  </div>
+<div class="line">├── DOCUMENTATION_SYSTEM_SETUP.md (detailed)</div>
+<div class="line">└── [other files...]</div>
+<div class="line"> </div>
+<div class="line">After:</div>
+<div class="line">├── CHANGELOG.md (concise summary)</div>
+<div class="line">└── docs/</div>
+<div class="line">    └── changelogs/</div>
+<div class="line">        ├── PROJECT_STRUCTURE_REFACTOR.md</div>
+<div class="line">        ├── LOGGER_METHOD_FIXES_SUMMARY.md</div>
+<div class="line">        ├── DOCUMENTATION_SYSTEM_SETUP.md</div>
+<div class="line">        └── SOURCERY_OPTIMIZATIONS.md (this file)</div>
+</div><!-- fragment --><p><b>New Changelog Structure</b>:</p><ul>
+<li><b>Root CHANGELOG.md</b>: Concise, standard changelog format</li>
+<li><b>docs/changelogs/</b>: Detailed technical documentation</li>
+<li><b>Clear linking</b>: Root changelog links to detailed docs</li>
+</ul>
+<p><b>Benefits</b>:</p><ul>
+<li>✅ Cleaner repository root</li>
+<li>✅ Improved discoverability</li>
+<li>✅ Better organization for maintainers</li>
+<li>✅ Standard changelog format for users</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md191"></a>
+4. Documentation System Updates</h2>
+<p><b>Updated Files</b>:</p><ul>
+<li><code><a class="el" href="generate__docs_8py.html">docs/generate_docs.py</a></code>: Now recursively searches <code>docs/**/*.md</code></li>
+<li><code><a class="el" href="docs_2README_8md.html">docs/README.md</a></code>: Added links to changelogs</li>
+<li><code>README.md</code>: Added documentation badges and quick links</li>
+</ul>
+<p><b>New Features</b>:</p><ul>
+<li>📖 Documentation badge linking to GitHub Pages</li>
+<li>📝 Changelog badge for easy access</li>
+<li>🔧 Quick build commands in README</li>
+<li>📚 Structured documentation section</li>
+</ul>
+<h1><a class="anchor" id="autotoc_md192"></a>
+📊 Impact Summary</h1>
+<h2><a class="anchor" id="autotoc_md193"></a>
+Code Quality Improvements</h2>
+<ul>
+<li>✅ <b>Consistency</b>: Unified environment variable naming</li>
+<li>✅ <b>Performance</b>: Logger caching reduces object creation</li>
+<li>✅ <b>Maintainability</b>: Better state management in logging</li>
+<li>✅ <b>Organization</b>: Cleaner project structure</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md194"></a>
+Documentation Improvements</h2>
+<ul>
+<li>✅ <b>Usability</b>: Clear, concise root-level changelog</li>
+<li>✅ <b>Accessibility</b>: Easy navigation to detailed docs</li>
+<li>✅ <b>Discovery</b>: Better linking between related documents</li>
+<li>✅ <b>Standards</b>: Following conventional changelog format</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md195"></a>
+Developer Experience</h2>
+<ul>
+<li>✅ <b>Clarity</b>: Obvious where to find different types of information</li>
+<li>✅ <b>Efficiency</b>: Faster access to relevant documentation</li>
+<li>✅ <b>Onboarding</b>: Clearer project structure for new contributors</li>
+</ul>
+<h1><a class="anchor" id="autotoc_md196"></a>
+🎯 Best Practices Established</h1>
+<h2><a class="anchor" id="autotoc_md197"></a>
+1. Documentation Hierarchy</h2>
+<div class="fragment"><div class="line">Root Level: Concise, user-facing information</div>
+<div class="line">├── README.md (project overview)</div>
+<div class="line">├── CHANGELOG.md (concise updates)  </div>
+<div class="line">└── docs/ (detailed documentation)</div>
+<div class="line">    ├── README.md (documentation system guide)</div>
+<div class="line">    └── changelogs/ (technical details)</div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md198"></a>
+2. Environment Variables</h2>
+<ul>
+<li>Use consistent naming conventions</li>
+<li>Document all variables in one place</li>
+<li>Provide examples in documentation</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md199"></a>
+3. Logger Management</h2>
+<ul>
+<li>Cache logger instances for consistent state</li>
+<li>Provide clear factory functions</li>
+<li>Maintain backward compatibility</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md200"></a>
+4. Code Organization</h2>
+<ul>
+<li>Separate user-facing from developer-facing docs</li>
+<li>Use linking to connect related information</li>
+<li>Follow community standards (conventional commits, changelog format)</li>
+</ul>
+<h1><a class="anchor" id="autotoc_md201"></a>
+🔄 Future Recommendations</h1>
+<h2><a class="anchor" id="autotoc_md202"></a>
+Immediate</h2>
+<ol type="1">
+<li>✅ Test logger caching with complex section hierarchies</li>
+<li>✅ Validate environment variable consistency in CI</li>
+<li>✅ Update any remaining documentation references</li>
+</ol>
+<h2><a class="anchor" id="autotoc_md203"></a>
+Long-term</h2>
+<ol type="1">
+<li>Consider implementing structured logging</li>
+<li>Add automated changelog generation</li>
+<li>Create developer contribution guidelines</li>
+<li>Implement documentation versioning</li>
+</ol>
+<h1><a class="anchor" id="autotoc_md204"></a>
+📈 Metrics</h1>
+<h2><a class="anchor" id="autotoc_md205"></a>
+Before Optimization</h2>
+<ul>
+<li>🔴 2 different environment variable names</li>
+<li>🔴 New logger instances on each call</li>
+<li>🔴 3 large markdown files in root (17KB total)</li>
+<li>🔴 Inconsistent documentation organization</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md206"></a>
+After Optimization</h2>
+<ul>
+<li>🟢 1 standardized environment variable name</li>
+<li>🟢 Cached logger instances with preserved state</li>
+<li>🟢 Concise root changelog + organized detailed docs</li>
+<li>🟢 Clear documentation hierarchy and linking</li>
+</ul>
+<hr  />
+<p><b>Optimization completed</b>: All Sourcery recommendations addressed with comprehensive improvements to code quality, consistency, and organization. </p>
+</div></div><!-- contents -->
+</div><!-- PageDoc -->
+</div><!-- doc-content -->
+<!-- do not remove this div, it is closed by doxygen! -->
+</div>
+<!-- Custom Footer -->
+<div style="background: #f8f9fa; border-top: 1px solid #e9ecef; margin-top: 50px; padding: 30px 0; text-align: center;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-bottom: 20px;">
+            <!-- Project Info -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🧠 NeuroExapt</h4>
+                <p style="color: #6c757d; margin: 0; font-size: 0.9em;">
+                    Advanced Neural Architecture Search and Dynamic Morphogenesis Framework for next-generation AI research.
+                </p>
+            </div>
+            <!-- Quick Links -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">📚 Quick Links</h4>
+                <div style="text-align: left;">
+                    <a href="index.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🏠 Home</a>
+                    <a href="modules.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📦 Modules</a>
+                    <a href="examples.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💡 Examples</a>
+                    <a href="files.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📁 Files</a>
+                </div>
+            </div>
+            <!-- Resources -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🔗 Resources</h4>
+                <div style="text-align: left;">
+                    <a href="https://github.com/your-username/neuroexapt" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💻 GitHub Repository</a>
+                    <a href="https://github.com/your-username/neuroexapt/issues" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🐛 Issue Tracker</a>
+                    <a href="https://github.com/your-username/neuroexapt/wiki" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📖 Wiki</a>
+                    <a href="https://github.com/your-username/neuroexapt/releases" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🚀 Releases</a>
+                </div>
+            </div>
+        </div>
+        <hr style="border: 0; height: 1px; background: #e9ecef; margin: 20px 0;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+            <div style="color: #6c757d; font-size: 0.9em;">
+                © 2024 NeuroExapt Project. Generated with 
+                <a href="https://www.doxygen.nl/index.html" style="color: #667eea; text-decoration: none;">Doxygen 1.9.8</a>
+            </div>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <span style="font-size: 0.9em; color: #6c757d;">Built with ❤️ for AI Research</span>
+                <div style="display: flex; gap: 10px;">
+                    <span style="background: #28a745; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">🟢 Active</span>
+                    <span style="background: #17a2b8; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">v3.0</span>
+                </div>
+            </div>
+        </div>
+        <!-- Technology Stack -->
+        <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #e9ecef;">
+            <div style="font-size: 0.8em; color: #868e96; text-align: center;">
+                <strong>Built with:</strong>
+                <span style="margin: 0 5px;">🐍 Python</span>
+                <span style="margin: 0 5px;">🔥 PyTorch</span>
+                <span style="margin: 0 5px;">⚡ CUDA</span>
+                <span style="margin: 0 5px;">🧮 NumPy</span>
+                <span style="margin: 0 5px;">📊 Matplotlib</span>
+                <span style="margin: 0 5px;">🚀 Triton</span>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Back to top button -->
+<div id="back-to-top" style="position: fixed; bottom: 20px; right: 20px; display: none; z-index: 1000;">
+    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" 
+            style="background: #667eea; color: white; border: none; padding: 10px 15px; border-radius: 50%; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,0.2); font-size: 16px;">
+        ⬆️
+    </button>
+</div>
+<script>
+// Back to top button functionality
+window.addEventListener('scroll', function() {
+    const backToTop = document.getElementById('back-to-top');
+    if (window.pageYOffset > 300) {
+        backToTop.style.display = 'block';
+    } else {
+        backToTop.style.display = 'none';
+    }
+});
+// Enhanced search functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Add search enhancement if search box exists
+    const searchBox = document.getElementById('MSearchField');
+    if (searchBox) {
+        searchBox.placeholder = 'Search documentation... 🔍';
+        searchBox.style.borderRadius = '20px';
+        searchBox.style.padding = '8px 15px';
+    }
+    // Add copy code button to code blocks
+    const codeBlocks = document.querySelectorAll('.fragment');
+    codeBlocks.forEach(function(block) {
+        const copyBtn = document.createElement('button');
+        copyBtn.innerHTML = '📋';
+        copyBtn.title = 'Copy code';
+        copyBtn.style.cssText = 'position: absolute; top: 10px; right: 10px; background: #667eea; color: white; border: none; padding: 5px; border-radius: 3px; cursor: pointer; font-size: 12px;';
+        block.style.position = 'relative';
+        block.appendChild(copyBtn);
+        copyBtn.addEventListener('click', function() {
+            const text = block.textContent;
+            navigator.clipboard.writeText(text).then(function() {
+                copyBtn.innerHTML = '✅';
+                setTimeout(function() {
+                    copyBtn.innerHTML = '📋';
+                }, 2000);
+            });
+        });
+    });
+});
+// Dark mode toggle (optional)
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+}
+// Load saved dark mode preference
+if (localStorage.getItem('darkMode') === 'true') {
+    document.body.classList.add('dark-mode');
+}
+</script>
+</body>
+</html>

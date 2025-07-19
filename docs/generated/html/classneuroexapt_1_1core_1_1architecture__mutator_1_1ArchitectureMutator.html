@@ -1,0 +1,1635 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="description" content="NeuroExapt - Advanced Neural Architecture Search and Dynamic Morphogenesis Framework">
+    <meta name="keywords" content="neural architecture search, dynamic morphogenesis, deep learning, AI, PyTorch">
+    <meta name="author" content="NeuroExapt Team">
+    <meta property="og:title" content="NeuroExapt Documentation">
+    <meta property="og:description" content="Advanced Neural Architecture Search Framework">
+    <meta property="og:type" content="website">
+
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>NeuroExapt: neuroexapt.core.architecture_mutator.ArchitectureMutator Class Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="custom.css" rel="stylesheet" type="text/css"/>
+<!-- NeuroExapt Custom Styles -->
+<style>
+/* Enhanced header styling */
+.header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+.header h1 {
+    margin: 0;
+    font-size: 2.5em;
+    font-weight: 300;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+.header .subtitle {
+    font-size: 1.2em;
+    opacity: 0.9;
+    margin-top: 10px;
+}
+/* Enhanced navigation */
+.tablist {
+    background: #f8f9fa;
+    border-bottom: 2px solid #e9ecef;
+}
+.tablist li.current a {
+    background: #667eea;
+    color: white;
+}
+/* Improved content layout */
+.contents {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+/* Code highlighting */
+.fragment {
+    background: #f8f9fa;
+    border-left: 4px solid #667eea;
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 0 8px 8px 0;
+}
+/* Enhanced tables */
+table.memberdecls {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 20px 0;
+}
+table.memberdecls td {
+    border: 1px solid #e9ecef;
+    padding: 12px;
+}
+/* Better typography */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #343a40;
+}
+h1, h2, h3, h4, h5, h6 {
+    color: #495057;
+    font-weight: 500;
+}
+/* Responsive design */
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 2em;
+    }
+    .contents {
+        padding: 15px;
+    }
+}
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #1a1a1a;
+        color: #e9ecef;
+    }
+    .header {
+        background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+    }
+    .fragment {
+        background: #2d3748;
+        color: #e9ecef;
+    }
+}
+</style>
+<!-- Analytics (if needed) -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<!--
+<script async src="https://www.googletagmanager.com/gtag/js?id=GA_TRACKING_ID"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'GA_TRACKING_ID');
+</script>
+-->
+</head>
+<body>
+<!-- Custom Header -->
+<div class="header">
+    <h1>🧠 NeuroExapt</h1>
+    <div class="subtitle">Advanced Neural Architecture Search and Dynamic Morphogenesis Framework</div>
+    <div style="margin-top: 15px; font-size: 0.9em;">
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🚀 Dynamic Neural Morphogenesis
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🔬 Advanced Architecture Search
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            ⚡ High-Performance Computing
+        </span>
+    </div>
+</div>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! --><!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('classneuroexapt_1_1core_1_1architecture__mutator_1_1ArchitectureMutator.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#pro-methods">Protected Member Functions</a> &#124;
+<a href="classneuroexapt_1_1core_1_1architecture__mutator_1_1ArchitectureMutator-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">neuroexapt.core.architecture_mutator.ArchitectureMutator Class Reference</div></div>
+</div><!--header-->
+<div class="contents">
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a7abdfbbdfc68d48aaed357e2d6268304" id="r_a7abdfbbdfc68d48aaed357e2d6268304"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1architecture__mutator_1_1ArchitectureMutator.html#a7abdfbbdfc68d48aaed357e2d6268304">__init__</a> (self, bool <a class="el" href="classneuroexapt_1_1core_1_1architecture__mutator_1_1ArchitectureMutator.html#aa499020c56addf6aedfef55137e0b1ad">preserve_function</a>=True, float <a class="el" href="classneuroexapt_1_1core_1_1architecture__mutator_1_1ArchitectureMutator.html#af6406cf3536095230aab72fd84b9c361">mutation_strength</a>=0.3)</td></tr>
+<tr class="separator:a7abdfbbdfc68d48aaed357e2d6268304"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0956bfc19e4f9630f45456b88e5e9c60" id="r_a0956bfc19e4f9630f45456b88e5e9c60"><td class="memItemLeft" align="right" valign="top">nn.Module&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1architecture__mutator_1_1ArchitectureMutator.html#a0956bfc19e4f9630f45456b88e5e9c60">add_layer</a> (self, nn.Module model, int target_position, str layer_type=&quot;conv&quot;, **layer_kwargs)</td></tr>
+<tr class="separator:a0956bfc19e4f9630f45456b88e5e9c60"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aca82f5979410d4c0a5d9c07eb0084458" id="r_aca82f5979410d4c0a5d9c07eb0084458"><td class="memItemLeft" align="right" valign="top">nn.Module&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1architecture__mutator_1_1ArchitectureMutator.html#aca82f5979410d4c0a5d9c07eb0084458">expand_channels</a> (self, nn.Module model, str target_layer, float expansion_factor=1.5, str strategy=&quot;replicate&quot;)</td></tr>
+<tr class="separator:aca82f5979410d4c0a5d9c07eb0084458"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2bdd8b8a03dc76d16cc2bb94b86cf846" id="r_a2bdd8b8a03dc76d16cc2bb94b86cf846"><td class="memItemLeft" align="right" valign="top">nn.Module&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1architecture__mutator_1_1ArchitectureMutator.html#a2bdd8b8a03dc76d16cc2bb94b86cf846">add_branch</a> (self, nn.Module model, str <a class="el" href="classneuroexapt_1_1core_1_1architecture__mutator_1_1ArchitectureMutator.html#a01efbb7dbc9c75d47d8cc005e3fc90e1">branch_point</a>, List[Dict] branch_structure, str <a class="el" href="classneuroexapt_1_1core_1_1architecture__mutator_1_1ArchitectureMutator.html#a5db01eeff76f66344d9cce1238867e73">merge_strategy</a>=&quot;add&quot;)</td></tr>
+<tr class="separator:a2bdd8b8a03dc76d16cc2bb94b86cf846"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af1cddc864f8466cf29ecbc89c6a2a3d6" id="r_af1cddc864f8466cf29ecbc89c6a2a3d6"><td class="memItemLeft" align="right" valign="top">nn.Module&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1architecture__mutator_1_1ArchitectureMutator.html#af1cddc864f8466cf29ecbc89c6a2a3d6">replace_operation</a> (self, nn.Module model, str target_layer, str new_operation)</td></tr>
+<tr class="separator:af1cddc864f8466cf29ecbc89c6a2a3d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a041312b208a489fc1d45157bb3b48055" id="r_a041312b208a489fc1d45157bb3b48055"><td class="memItemLeft" align="right" valign="top">Genotype&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1architecture__mutator_1_1ArchitectureMutator.html#a041312b208a489fc1d45157bb3b48055">mutate_genotype</a> (self, Genotype current_genotype, str mutation_type=&quot;random&quot;)</td></tr>
+<tr class="separator:a041312b208a489fc1d45157bb3b48055"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3497f6035966ae0f312f4b3a4b0d7340" id="r_a3497f6035966ae0f312f4b3a4b0d7340"><td class="memItemLeft" align="right" valign="top">Dict&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1architecture__mutator_1_1ArchitectureMutator.html#a3497f6035966ae0f312f4b3a4b0d7340">get_mutation_report</a> (self)</td></tr>
+<tr class="separator:a3497f6035966ae0f312f4b3a4b0d7340"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:aa499020c56addf6aedfef55137e0b1ad" id="r_aa499020c56addf6aedfef55137e0b1ad"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1architecture__mutator_1_1ArchitectureMutator.html#aa499020c56addf6aedfef55137e0b1ad">preserve_function</a></td></tr>
+<tr class="separator:aa499020c56addf6aedfef55137e0b1ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af6406cf3536095230aab72fd84b9c361" id="r_af6406cf3536095230aab72fd84b9c361"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1architecture__mutator_1_1ArchitectureMutator.html#af6406cf3536095230aab72fd84b9c361">mutation_strength</a></td></tr>
+<tr class="separator:af6406cf3536095230aab72fd84b9c361"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a787f6fe5c251bd43e330ea3655adfedd" id="r_a787f6fe5c251bd43e330ea3655adfedd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1architecture__mutator_1_1ArchitectureMutator.html#a787f6fe5c251bd43e330ea3655adfedd">initializer</a></td></tr>
+<tr class="separator:a787f6fe5c251bd43e330ea3655adfedd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9be1f7bc545616c895810a683e239a5f" id="r_a9be1f7bc545616c895810a683e239a5f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1architecture__mutator_1_1ArchitectureMutator.html#a9be1f7bc545616c895810a683e239a5f">mutation_history</a></td></tr>
+<tr class="separator:a9be1f7bc545616c895810a683e239a5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1fe3822eac42212bbbb6662b3a097700" id="r_a1fe3822eac42212bbbb6662b3a097700"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1architecture__mutator_1_1ArchitectureMutator.html#a1fe3822eac42212bbbb6662b3a097700">mutation_count</a></td></tr>
+<tr class="separator:a1fe3822eac42212bbbb6662b3a097700"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a55020475da9d5b104a3e25c678115f75" id="r_a55020475da9d5b104a3e25c678115f75"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1architecture__mutator_1_1ArchitectureMutator.html#a55020475da9d5b104a3e25c678115f75">main_model</a></td></tr>
+<tr class="separator:a55020475da9d5b104a3e25c678115f75"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa6ed52afc989e51a37a728706aa133e6" id="r_aa6ed52afc989e51a37a728706aa133e6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1architecture__mutator_1_1ArchitectureMutator.html#aa6ed52afc989e51a37a728706aa133e6">branch</a></td></tr>
+<tr class="separator:aa6ed52afc989e51a37a728706aa133e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a01efbb7dbc9c75d47d8cc005e3fc90e1" id="r_a01efbb7dbc9c75d47d8cc005e3fc90e1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1architecture__mutator_1_1ArchitectureMutator.html#a01efbb7dbc9c75d47d8cc005e3fc90e1">branch_point</a></td></tr>
+<tr class="separator:a01efbb7dbc9c75d47d8cc005e3fc90e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5db01eeff76f66344d9cce1238867e73" id="r_a5db01eeff76f66344d9cce1238867e73"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1architecture__mutator_1_1ArchitectureMutator.html#a5db01eeff76f66344d9cce1238867e73">merge_strategy</a></td></tr>
+<tr class="separator:a5db01eeff76f66344d9cce1238867e73"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr class="memitem:ae7928e0cb872b13aa57c86b12ddde5ac" id="r_ae7928e0cb872b13aa57c86b12ddde5ac"><td class="memItemLeft" align="right" valign="top">nn.Sequential&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1architecture__mutator_1_1ArchitectureMutator.html#ae7928e0cb872b13aa57c86b12ddde5ac">_add_layer_to_sequential</a> (self, nn.Sequential model, int position, str layer_type, **kwargs)</td></tr>
+<tr class="separator:ae7928e0cb872b13aa57c86b12ddde5ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af3bdbcddb81257871ce9f8ed5e046617" id="r_af3bdbcddb81257871ce9f8ed5e046617"><td class="memItemLeft" align="right" valign="top">nn.Module&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1architecture__mutator_1_1ArchitectureMutator.html#af3bdbcddb81257871ce9f8ed5e046617">_create_conv_layer</a> (self, int in_channels, int out_channels, int kernel_size=3, **kwargs)</td></tr>
+<tr class="separator:af3bdbcddb81257871ce9f8ed5e046617"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0ee36305c68140c214cc2679196823d2" id="r_a0ee36305c68140c214cc2679196823d2"><td class="memItemLeft" align="right" valign="top">nn.Module&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1architecture__mutator_1_1ArchitectureMutator.html#a0ee36305c68140c214cc2679196823d2">_create_linear_layer</a> (self, int in_features, int out_features, **kwargs)</td></tr>
+<tr class="separator:a0ee36305c68140c214cc2679196823d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a342fddae84847dc92725e04946234ba7" id="r_a342fddae84847dc92725e04946234ba7"><td class="memItemLeft" align="right" valign="top">nn.Module&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1architecture__mutator_1_1ArchitectureMutator.html#a342fddae84847dc92725e04946234ba7">_create_residual_layer</a> (self, int in_channels, int out_channels, **kwargs)</td></tr>
+<tr class="separator:a342fddae84847dc92725e04946234ba7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4ec2de662131f57dad8d361bac14d47b" id="r_a4ec2de662131f57dad8d361bac14d47b"><td class="memItemLeft" align="right" valign="top">nn.Conv2d&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1architecture__mutator_1_1ArchitectureMutator.html#a4ec2de662131f57dad8d361bac14d47b">_create_expanded_conv</a> (self, nn.Conv2d original_conv, int new_channels)</td></tr>
+<tr class="separator:a4ec2de662131f57dad8d361bac14d47b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a64712511f7c7ae9027c26f940ab35c10" id="r_a64712511f7c7ae9027c26f940ab35c10"><td class="memItemLeft" align="right" valign="top">Optional[nn.Module]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1architecture__mutator_1_1ArchitectureMutator.html#a64712511f7c7ae9027c26f940ab35c10">_find_module_by_name</a> (self, nn.Module model, str name)</td></tr>
+<tr class="separator:a64712511f7c7ae9027c26f940ab35c10"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a86fc7068b73a6289ac2d7972416fa9b1" id="r_a86fc7068b73a6289ac2d7972416fa9b1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1architecture__mutator_1_1ArchitectureMutator.html#a86fc7068b73a6289ac2d7972416fa9b1">_replace_module_by_name</a> (self, nn.Module model, str name, nn.Module new_module)</td></tr>
+<tr class="separator:a86fc7068b73a6289ac2d7972416fa9b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b3b65bf7aa1504f34f4ed776c397846" id="r_a0b3b65bf7aa1504f34f4ed776c397846"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1architecture__mutator_1_1ArchitectureMutator.html#a0b3b65bf7aa1504f34f4ed776c397846">_update_subsequent_layers</a> (self, nn.Module model, str changed_layer, int new_channels)</td></tr>
+<tr class="separator:a0b3b65bf7aa1504f34f4ed776c397846"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae09d81820f07969fd7ba02d51ea7da84" id="r_ae09d81820f07969fd7ba02d51ea7da84"><td class="memItemLeft" align="right" valign="top">nn.Module&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1architecture__mutator_1_1ArchitectureMutator.html#ae09d81820f07969fd7ba02d51ea7da84">_create_branch_from_structure</a> (self, List[Dict] structure)</td></tr>
+<tr class="separator:ae09d81820f07969fd7ba02d51ea7da84"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8bc6e461ac7663accf3869e1ffbb668f" id="r_a8bc6e461ac7663accf3869e1ffbb668f"><td class="memItemLeft" align="right" valign="top">nn.Module&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1architecture__mutator_1_1ArchitectureMutator.html#a8bc6e461ac7663accf3869e1ffbb668f">_integrate_branch</a> (self, nn.Module model, str <a class="el" href="classneuroexapt_1_1core_1_1architecture__mutator_1_1ArchitectureMutator.html#a01efbb7dbc9c75d47d8cc005e3fc90e1">branch_point</a>, nn.Module <a class="el" href="classneuroexapt_1_1core_1_1architecture__mutator_1_1ArchitectureMutator.html#aa6ed52afc989e51a37a728706aa133e6">branch</a>, str <a class="el" href="classneuroexapt_1_1core_1_1architecture__mutator_1_1ArchitectureMutator.html#a5db01eeff76f66344d9cce1238867e73">merge_strategy</a>)</td></tr>
+<tr class="separator:a8bc6e461ac7663accf3869e1ffbb668f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae49436d1ef54f4bfd8ce7e6dd43ac129" id="r_ae49436d1ef54f4bfd8ce7e6dd43ac129"><td class="memItemLeft" align="right" valign="top">Genotype&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1architecture__mutator_1_1ArchitectureMutator.html#ae49436d1ef54f4bfd8ce7e6dd43ac129">_random_genotype_mutation</a> (self, Genotype genotype)</td></tr>
+<tr class="separator:ae49436d1ef54f4bfd8ce7e6dd43ac129"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8fbf3a8e798f2fbf3c7bf7d60f000331" id="r_a8fbf3a8e798f2fbf3c7bf7d60f000331"><td class="memItemLeft" align="right" valign="top">Genotype&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1architecture__mutator_1_1ArchitectureMutator.html#a8fbf3a8e798f2fbf3c7bf7d60f000331">_guided_genotype_mutation</a> (self, Genotype genotype)</td></tr>
+<tr class="separator:a8fbf3a8e798f2fbf3c7bf7d60f000331"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaf748097676f11a1df986b2ec439d8c6" id="r_aaf748097676f11a1df986b2ec439d8c6"><td class="memItemLeft" align="right" valign="top">Genotype&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1architecture__mutator_1_1ArchitectureMutator.html#aaf748097676f11a1df986b2ec439d8c6">_conservative_genotype_mutation</a> (self, Genotype genotype)</td></tr>
+<tr class="separator:aaf748097676f11a1df986b2ec439d8c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9c35c07de122107efe859847732dc9ff" id="r_a9c35c07de122107efe859847732dc9ff"><td class="memItemLeft" align="right" valign="top">nn.Module&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1architecture__mutator_1_1ArchitectureMutator.html#a9c35c07de122107efe859847732dc9ff">_create_operation</a> (self, str op_name, nn.Module reference_module)</td></tr>
+<tr class="separator:a9c35c07de122107efe859847732dc9ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a74aa3edd9093a8ac4ae436a9d5e955ca" id="r_a74aa3edd9093a8ac4ae436a9d5e955ca"><td class="memItemLeft" align="right" valign="top">nn.Module&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1architecture__mutator_1_1ArchitectureMutator.html#a74aa3edd9093a8ac4ae436a9d5e955ca">_preserve_function_in_replacement</a> (self, nn.Module old_module, nn.Module new_module)</td></tr>
+<tr class="separator:a74aa3edd9093a8ac4ae436a9d5e955ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a15f07ec3e82537a2bfbfff475cc9e9fa" id="r_a15f07ec3e82537a2bfbfff475cc9e9fa"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1architecture__mutator_1_1ArchitectureMutator.html#a15f07ec3e82537a2bfbfff475cc9e9fa">_record_mutation</a> (self, str mutation_type, Dict[str, Any] details)</td></tr>
+<tr class="separator:a15f07ec3e82537a2bfbfff475cc9e9fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><pre class="fragment">架构突变器
+
+负责执行各种架构变化操作，与函数保持初始化紧密集成
+</pre> 
+<p class="definition">Definition at line <a class="el" href="architecture__mutator_8py_source.html#l00030">30</a> of file <a class="el" href="architecture__mutator_8py_source.html">architecture_mutator.py</a>.</p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a7abdfbbdfc68d48aaed357e2d6268304" name="a7abdfbbdfc68d48aaed357e2d6268304"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7abdfbbdfc68d48aaed357e2d6268304">&#9670;&#160;</a></span>__init__()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.architecture_mutator.ArchitectureMutator.__init__ </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool &#160;</td>
+          <td class="paramname"><em>preserve_function</em> = <code>True</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float &#160;</td>
+          <td class="paramname"><em>mutation_strength</em> = <code>0.3</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">Args:
+    preserve_function: 是否使用函数保持初始化
+    mutation_strength: 突变强度，控制变化幅度
+</pre> 
+<p class="definition">Definition at line <a class="el" href="architecture__mutator_8py_source.html#l00037">37</a> of file <a class="el" href="architecture__mutator_8py_source.html">architecture_mutator.py</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="ae7928e0cb872b13aa57c86b12ddde5ac" name="ae7928e0cb872b13aa57c86b12ddde5ac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae7928e0cb872b13aa57c86b12ddde5ac">&#9670;&#160;</a></span>_add_layer_to_sequential()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> nn.Sequential neuroexapt.core.architecture_mutator.ArchitectureMutator._add_layer_to_sequential </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">nn.Sequential&#160;</td>
+          <td class="paramname"><em>model</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>position</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str&#160;</td>
+          <td class="paramname"><em>layer_type</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">**&#160;</td>
+          <td class="paramname"><em>kwargs</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">向Sequential模型添加层</pre> 
+<p class="definition">Definition at line <a class="el" href="architecture__mutator_8py_source.html#l00078">78</a> of file <a class="el" href="architecture__mutator_8py_source.html">architecture_mutator.py</a>.</p>
+
+</div>
+</div>
+<a id="aaf748097676f11a1df986b2ec439d8c6" name="aaf748097676f11a1df986b2ec439d8c6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaf748097676f11a1df986b2ec439d8c6">&#9670;&#160;</a></span>_conservative_genotype_mutation()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Genotype neuroexapt.core.architecture_mutator.ArchitectureMutator._conservative_genotype_mutation </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Genotype&#160;</td>
+          <td class="paramname"><em>genotype</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">保守式基因型突变（小幅度变化）</pre> 
+<p class="definition">Definition at line <a class="el" href="architecture__mutator_8py_source.html#l00375">375</a> of file <a class="el" href="architecture__mutator_8py_source.html">architecture_mutator.py</a>.</p>
+
+</div>
+</div>
+<a id="ae09d81820f07969fd7ba02d51ea7da84" name="ae09d81820f07969fd7ba02d51ea7da84"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae09d81820f07969fd7ba02d51ea7da84">&#9670;&#160;</a></span>_create_branch_from_structure()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> nn.Module neuroexapt.core.architecture_mutator.ArchitectureMutator._create_branch_from_structure </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">List[Dict]&#160;</td>
+          <td class="paramname"><em>structure</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">从结构定义创建分支</pre> 
+<p class="definition">Definition at line <a class="el" href="architecture__mutator_8py_source.html#l00303">303</a> of file <a class="el" href="architecture__mutator_8py_source.html">architecture_mutator.py</a>.</p>
+
+</div>
+</div>
+<a id="af3bdbcddb81257871ce9f8ed5e046617" name="af3bdbcddb81257871ce9f8ed5e046617"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af3bdbcddb81257871ce9f8ed5e046617">&#9670;&#160;</a></span>_create_conv_layer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> nn.Module neuroexapt.core.architecture_mutator.ArchitectureMutator._create_conv_layer </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>in_channels</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>out_channels</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int &#160;</td>
+          <td class="paramname"><em>kernel_size</em> = <code>3</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">**&#160;</td>
+          <td class="paramname"><em>kwargs</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">创建卷积层</pre> 
+<p class="definition">Definition at line <a class="el" href="architecture__mutator_8py_source.html#l00252">252</a> of file <a class="el" href="architecture__mutator_8py_source.html">architecture_mutator.py</a>.</p>
+
+</div>
+</div>
+<a id="a4ec2de662131f57dad8d361bac14d47b" name="a4ec2de662131f57dad8d361bac14d47b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4ec2de662131f57dad8d361bac14d47b">&#9670;&#160;</a></span>_create_expanded_conv()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> nn.Conv2d neuroexapt.core.architecture_mutator.ArchitectureMutator._create_expanded_conv </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">nn.Conv2d&#160;</td>
+          <td class="paramname"><em>original_conv</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>new_channels</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">创建扩展通道的卷积层</pre> 
+<p class="definition">Definition at line <a class="el" href="architecture__mutator_8py_source.html#l00266">266</a> of file <a class="el" href="architecture__mutator_8py_source.html">architecture_mutator.py</a>.</p>
+
+</div>
+</div>
+<a id="a0ee36305c68140c214cc2679196823d2" name="a0ee36305c68140c214cc2679196823d2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0ee36305c68140c214cc2679196823d2">&#9670;&#160;</a></span>_create_linear_layer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> nn.Module neuroexapt.core.architecture_mutator.ArchitectureMutator._create_linear_layer </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>in_features</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>out_features</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">**&#160;</td>
+          <td class="paramname"><em>kwargs</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">创建线性层</pre> 
+<p class="definition">Definition at line <a class="el" href="architecture__mutator_8py_source.html#l00258">258</a> of file <a class="el" href="architecture__mutator_8py_source.html">architecture_mutator.py</a>.</p>
+
+</div>
+</div>
+<a id="a9c35c07de122107efe859847732dc9ff" name="a9c35c07de122107efe859847732dc9ff"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9c35c07de122107efe859847732dc9ff">&#9670;&#160;</a></span>_create_operation()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> nn.Module neuroexapt.core.architecture_mutator.ArchitectureMutator._create_operation </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str&#160;</td>
+          <td class="paramname"><em>op_name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">nn.Module&#160;</td>
+          <td class="paramname"><em>reference_module</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">根据操作名称创建新操作</pre> 
+<p class="definition">Definition at line <a class="el" href="architecture__mutator_8py_source.html#l00387">387</a> of file <a class="el" href="architecture__mutator_8py_source.html">architecture_mutator.py</a>.</p>
+
+</div>
+</div>
+<a id="a342fddae84847dc92725e04946234ba7" name="a342fddae84847dc92725e04946234ba7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a342fddae84847dc92725e04946234ba7">&#9670;&#160;</a></span>_create_residual_layer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> nn.Module neuroexapt.core.architecture_mutator.ArchitectureMutator._create_residual_layer </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>in_channels</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>out_channels</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">**&#160;</td>
+          <td class="paramname"><em>kwargs</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">创建残差层</pre> 
+<p class="definition">Definition at line <a class="el" href="architecture__mutator_8py_source.html#l00262">262</a> of file <a class="el" href="architecture__mutator_8py_source.html">architecture_mutator.py</a>.</p>
+
+</div>
+</div>
+<a id="a64712511f7c7ae9027c26f940ab35c10" name="a64712511f7c7ae9027c26f940ab35c10"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a64712511f7c7ae9027c26f940ab35c10">&#9670;&#160;</a></span>_find_module_by_name()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Optional[nn.Module] neuroexapt.core.architecture_mutator.ArchitectureMutator._find_module_by_name </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">nn.Module&#160;</td>
+          <td class="paramname"><em>model</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str&#160;</td>
+          <td class="paramname"><em>name</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">根据名称查找模块</pre> 
+<p class="definition">Definition at line <a class="el" href="architecture__mutator_8py_source.html#l00280">280</a> of file <a class="el" href="architecture__mutator_8py_source.html">architecture_mutator.py</a>.</p>
+
+</div>
+</div>
+<a id="a8fbf3a8e798f2fbf3c7bf7d60f000331" name="a8fbf3a8e798f2fbf3c7bf7d60f000331"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8fbf3a8e798f2fbf3c7bf7d60f000331">&#9670;&#160;</a></span>_guided_genotype_mutation()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Genotype neuroexapt.core.architecture_mutator.ArchitectureMutator._guided_genotype_mutation </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Genotype&#160;</td>
+          <td class="paramname"><em>genotype</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">引导式基因型突变（基于性能历史）</pre> 
+<p class="definition">Definition at line <a class="el" href="architecture__mutator_8py_source.html#l00370">370</a> of file <a class="el" href="architecture__mutator_8py_source.html">architecture_mutator.py</a>.</p>
+
+</div>
+</div>
+<a id="a8bc6e461ac7663accf3869e1ffbb668f" name="a8bc6e461ac7663accf3869e1ffbb668f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8bc6e461ac7663accf3869e1ffbb668f">&#9670;&#160;</a></span>_integrate_branch()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> nn.Module neuroexapt.core.architecture_mutator.ArchitectureMutator._integrate_branch </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">nn.Module&#160;</td>
+          <td class="paramname"><em>model</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str&#160;</td>
+          <td class="paramname"><em>branch_point</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">nn.Module&#160;</td>
+          <td class="paramname"><em>branch</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str&#160;</td>
+          <td class="paramname"><em>merge_strategy</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">将分支集成到模型中</pre> 
+<p class="definition">Definition at line <a class="el" href="architecture__mutator_8py_source.html#l00316">316</a> of file <a class="el" href="architecture__mutator_8py_source.html">architecture_mutator.py</a>.</p>
+
+</div>
+</div>
+<a id="a74aa3edd9093a8ac4ae436a9d5e955ca" name="a74aa3edd9093a8ac4ae436a9d5e955ca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a74aa3edd9093a8ac4ae436a9d5e955ca">&#9670;&#160;</a></span>_preserve_function_in_replacement()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> nn.Module neuroexapt.core.architecture_mutator.ArchitectureMutator._preserve_function_in_replacement </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">nn.Module&#160;</td>
+          <td class="paramname"><em>old_module</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">nn.Module&#160;</td>
+          <td class="paramname"><em>new_module</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">在操作替换时保持函数</pre> 
+<p class="definition">Definition at line <a class="el" href="architecture__mutator_8py_source.html#l00393">393</a> of file <a class="el" href="architecture__mutator_8py_source.html">architecture_mutator.py</a>.</p>
+
+</div>
+</div>
+<a id="ae49436d1ef54f4bfd8ce7e6dd43ac129" name="ae49436d1ef54f4bfd8ce7e6dd43ac129"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae49436d1ef54f4bfd8ce7e6dd43ac129">&#9670;&#160;</a></span>_random_genotype_mutation()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Genotype neuroexapt.core.architecture_mutator.ArchitectureMutator._random_genotype_mutation </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Genotype&#160;</td>
+          <td class="paramname"><em>genotype</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">随机基因型突变</pre> 
+<p class="definition">Definition at line <a class="el" href="architecture__mutator_8py_source.html#l00342">342</a> of file <a class="el" href="architecture__mutator_8py_source.html">architecture_mutator.py</a>.</p>
+
+</div>
+</div>
+<a id="a15f07ec3e82537a2bfbfff475cc9e9fa" name="a15f07ec3e82537a2bfbfff475cc9e9fa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a15f07ec3e82537a2bfbfff475cc9e9fa">&#9670;&#160;</a></span>_record_mutation()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.architecture_mutator.ArchitectureMutator._record_mutation </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str&#160;</td>
+          <td class="paramname"><em>mutation_type</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Dict[str, Any]&#160;</td>
+          <td class="paramname"><em>details</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">记录突变历史</pre> 
+<p class="definition">Definition at line <a class="el" href="architecture__mutator_8py_source.html#l00402">402</a> of file <a class="el" href="architecture__mutator_8py_source.html">architecture_mutator.py</a>.</p>
+
+</div>
+</div>
+<a id="a86fc7068b73a6289ac2d7972416fa9b1" name="a86fc7068b73a6289ac2d7972416fa9b1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a86fc7068b73a6289ac2d7972416fa9b1">&#9670;&#160;</a></span>_replace_module_by_name()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.architecture_mutator.ArchitectureMutator._replace_module_by_name </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">nn.Module&#160;</td>
+          <td class="paramname"><em>model</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">nn.Module&#160;</td>
+          <td class="paramname"><em>new_module</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">根据名称替换模块</pre> 
+<p class="definition">Definition at line <a class="el" href="architecture__mutator_8py_source.html#l00287">287</a> of file <a class="el" href="architecture__mutator_8py_source.html">architecture_mutator.py</a>.</p>
+
+</div>
+</div>
+<a id="a0b3b65bf7aa1504f34f4ed776c397846" name="a0b3b65bf7aa1504f34f4ed776c397846"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0b3b65bf7aa1504f34f4ed776c397846">&#9670;&#160;</a></span>_update_subsequent_layers()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.architecture_mutator.ArchitectureMutator._update_subsequent_layers </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">nn.Module&#160;</td>
+          <td class="paramname"><em>model</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str&#160;</td>
+          <td class="paramname"><em>changed_layer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>new_channels</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">更新后续层以适应通道变化</pre> 
+<p class="definition">Definition at line <a class="el" href="architecture__mutator_8py_source.html#l00297">297</a> of file <a class="el" href="architecture__mutator_8py_source.html">architecture_mutator.py</a>.</p>
+
+</div>
+</div>
+<a id="a2bdd8b8a03dc76d16cc2bb94b86cf846" name="a2bdd8b8a03dc76d16cc2bb94b86cf846"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2bdd8b8a03dc76d16cc2bb94b86cf846">&#9670;&#160;</a></span>add_branch()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> nn.Module neuroexapt.core.architecture_mutator.ArchitectureMutator.add_branch </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">nn.Module&#160;</td>
+          <td class="paramname"><em>model</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str&#160;</td>
+          <td class="paramname"><em>branch_point</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">List[Dict]&#160;</td>
+          <td class="paramname"><em>branch_structure</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str &#160;</td>
+          <td class="paramname"><em>merge_strategy</em> = <code>&quot;add&quot;</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">添加分支结构
+
+Args:
+    model: 目标模型
+    branch_point: 分支点
+    branch_structure: 分支结构定义
+    merge_strategy: 合并策略 ("add", "concat", "attention")
+    
+Returns:
+    修改后的模型
+</pre> 
+<p class="definition">Definition at line <a class="el" href="architecture__mutator_8py_source.html#l00157">157</a> of file <a class="el" href="architecture__mutator_8py_source.html">architecture_mutator.py</a>.</p>
+
+</div>
+</div>
+<a id="a0956bfc19e4f9630f45456b88e5e9c60" name="a0956bfc19e4f9630f45456b88e5e9c60"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0956bfc19e4f9630f45456b88e5e9c60">&#9670;&#160;</a></span>add_layer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> nn.Module neuroexapt.core.architecture_mutator.ArchitectureMutator.add_layer </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">nn.Module&#160;</td>
+          <td class="paramname"><em>model</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>target_position</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str &#160;</td>
+          <td class="paramname"><em>layer_type</em> = <code>&quot;conv&quot;</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">**&#160;</td>
+          <td class="paramname"><em>layer_kwargs</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">添加新层
+
+Args:
+    model: 目标模型
+    target_position: 插入位置
+    layer_type: 层类型 ("conv", "linear", "residual")
+    **layer_kwargs: 层参数
+    
+Returns:
+    修改后的模型
+</pre> 
+<p class="definition">Definition at line <a class="el" href="architecture__mutator_8py_source.html#l00055">55</a> of file <a class="el" href="architecture__mutator_8py_source.html">architecture_mutator.py</a>.</p>
+
+</div>
+</div>
+<a id="aca82f5979410d4c0a5d9c07eb0084458" name="aca82f5979410d4c0a5d9c07eb0084458"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aca82f5979410d4c0a5d9c07eb0084458">&#9670;&#160;</a></span>expand_channels()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> nn.Module neuroexapt.core.architecture_mutator.ArchitectureMutator.expand_channels </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">nn.Module&#160;</td>
+          <td class="paramname"><em>model</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str&#160;</td>
+          <td class="paramname"><em>target_layer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float &#160;</td>
+          <td class="paramname"><em>expansion_factor</em> = <code>1.5</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str &#160;</td>
+          <td class="paramname"><em>strategy</em> = <code>&quot;replicate&quot;</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">扩展通道数
+
+Args:
+    model: 目标模型
+    target_layer: 目标层名称
+    expansion_factor: 扩展倍数
+    strategy: 扩展策略
+    
+Returns:
+    修改后的模型
+</pre> 
+<p class="definition">Definition at line <a class="el" href="architecture__mutator_8py_source.html#l00108">108</a> of file <a class="el" href="architecture__mutator_8py_source.html">architecture_mutator.py</a>.</p>
+
+</div>
+</div>
+<a id="a3497f6035966ae0f312f4b3a4b0d7340" name="a3497f6035966ae0f312f4b3a4b0d7340"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3497f6035966ae0f312f4b3a4b0d7340">&#9670;&#160;</a></span>get_mutation_report()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Dict neuroexapt.core.architecture_mutator.ArchitectureMutator.get_mutation_report </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">获取突变历史报告</pre> 
+<p class="definition">Definition at line <a class="el" href="architecture__mutator_8py_source.html#l00414">414</a> of file <a class="el" href="architecture__mutator_8py_source.html">architecture_mutator.py</a>.</p>
+
+</div>
+</div>
+<a id="a041312b208a489fc1d45157bb3b48055" name="a041312b208a489fc1d45157bb3b48055"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a041312b208a489fc1d45157bb3b48055">&#9670;&#160;</a></span>mutate_genotype()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Genotype neuroexapt.core.architecture_mutator.ArchitectureMutator.mutate_genotype </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Genotype&#160;</td>
+          <td class="paramname"><em>current_genotype</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str &#160;</td>
+          <td class="paramname"><em>mutation_type</em> = <code>&quot;random&quot;</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">突变基因型
+
+Args:
+    current_genotype: 当前基因型
+    mutation_type: 突变类型 ("random", "guided", "conservative")
+    
+Returns:
+    突变后的基因型
+</pre> 
+<p class="definition">Definition at line <a class="el" href="architecture__mutator_8py_source.html#l00229">229</a> of file <a class="el" href="architecture__mutator_8py_source.html">architecture_mutator.py</a>.</p>
+
+</div>
+</div>
+<a id="af1cddc864f8466cf29ecbc89c6a2a3d6" name="af1cddc864f8466cf29ecbc89c6a2a3d6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af1cddc864f8466cf29ecbc89c6a2a3d6">&#9670;&#160;</a></span>replace_operation()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> nn.Module neuroexapt.core.architecture_mutator.ArchitectureMutator.replace_operation </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">nn.Module&#160;</td>
+          <td class="paramname"><em>model</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str&#160;</td>
+          <td class="paramname"><em>target_layer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str&#160;</td>
+          <td class="paramname"><em>new_operation</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">替换操作
+
+Args:
+    model: 目标模型
+    target_layer: 目标层
+    new_operation: 新操作名称
+    
+Returns:
+    修改后的模型
+</pre> 
+<p class="definition">Definition at line <a class="el" href="architecture__mutator_8py_source.html#l00191">191</a> of file <a class="el" href="architecture__mutator_8py_source.html">architecture_mutator.py</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="aa6ed52afc989e51a37a728706aa133e6" name="aa6ed52afc989e51a37a728706aa133e6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa6ed52afc989e51a37a728706aa133e6">&#9670;&#160;</a></span>branch</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.architecture_mutator.ArchitectureMutator.branch</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="architecture__mutator_8py_source.html#l00324">324</a> of file <a class="el" href="architecture__mutator_8py_source.html">architecture_mutator.py</a>.</p>
+
+</div>
+</div>
+<a id="a01efbb7dbc9c75d47d8cc005e3fc90e1" name="a01efbb7dbc9c75d47d8cc005e3fc90e1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a01efbb7dbc9c75d47d8cc005e3fc90e1">&#9670;&#160;</a></span>branch_point</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.architecture_mutator.ArchitectureMutator.branch_point</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="architecture__mutator_8py_source.html#l00325">325</a> of file <a class="el" href="architecture__mutator_8py_source.html">architecture_mutator.py</a>.</p>
+
+</div>
+</div>
+<a id="a787f6fe5c251bd43e330ea3655adfedd" name="a787f6fe5c251bd43e330ea3655adfedd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a787f6fe5c251bd43e330ea3655adfedd">&#9670;&#160;</a></span>initializer</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.architecture_mutator.ArchitectureMutator.initializer</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="architecture__mutator_8py_source.html#l00045">45</a> of file <a class="el" href="architecture__mutator_8py_source.html">architecture_mutator.py</a>.</p>
+
+</div>
+</div>
+<a id="a55020475da9d5b104a3e25c678115f75" name="a55020475da9d5b104a3e25c678115f75"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a55020475da9d5b104a3e25c678115f75">&#9670;&#160;</a></span>main_model</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.architecture_mutator.ArchitectureMutator.main_model</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="architecture__mutator_8py_source.html#l00323">323</a> of file <a class="el" href="architecture__mutator_8py_source.html">architecture_mutator.py</a>.</p>
+
+</div>
+</div>
+<a id="a5db01eeff76f66344d9cce1238867e73" name="a5db01eeff76f66344d9cce1238867e73"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5db01eeff76f66344d9cce1238867e73">&#9670;&#160;</a></span>merge_strategy</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.architecture_mutator.ArchitectureMutator.merge_strategy</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="architecture__mutator_8py_source.html#l00326">326</a> of file <a class="el" href="architecture__mutator_8py_source.html">architecture_mutator.py</a>.</p>
+
+</div>
+</div>
+<a id="a1fe3822eac42212bbbb6662b3a097700" name="a1fe3822eac42212bbbb6662b3a097700"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1fe3822eac42212bbbb6662b3a097700">&#9670;&#160;</a></span>mutation_count</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.architecture_mutator.ArchitectureMutator.mutation_count</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="architecture__mutator_8py_source.html#l00049">49</a> of file <a class="el" href="architecture__mutator_8py_source.html">architecture_mutator.py</a>.</p>
+
+</div>
+</div>
+<a id="a9be1f7bc545616c895810a683e239a5f" name="a9be1f7bc545616c895810a683e239a5f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9be1f7bc545616c895810a683e239a5f">&#9670;&#160;</a></span>mutation_history</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.architecture_mutator.ArchitectureMutator.mutation_history</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="architecture__mutator_8py_source.html#l00048">48</a> of file <a class="el" href="architecture__mutator_8py_source.html">architecture_mutator.py</a>.</p>
+
+</div>
+</div>
+<a id="af6406cf3536095230aab72fd84b9c361" name="af6406cf3536095230aab72fd84b9c361"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af6406cf3536095230aab72fd84b9c361">&#9670;&#160;</a></span>mutation_strength</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.architecture_mutator.ArchitectureMutator.mutation_strength</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="architecture__mutator_8py_source.html#l00044">44</a> of file <a class="el" href="architecture__mutator_8py_source.html">architecture_mutator.py</a>.</p>
+
+</div>
+</div>
+<a id="aa499020c56addf6aedfef55137e0b1ad" name="aa499020c56addf6aedfef55137e0b1ad"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa499020c56addf6aedfef55137e0b1ad">&#9670;&#160;</a></span>preserve_function</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.architecture_mutator.ArchitectureMutator.preserve_function</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="architecture__mutator_8py_source.html#l00043">43</a> of file <a class="el" href="architecture__mutator_8py_source.html">architecture_mutator.py</a>.</p>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following file:<ul>
+<li>neuroexapt/core/<a class="el" href="architecture__mutator_8py_source.html">architecture_mutator.py</a></li>
+</ul>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<!-- do not remove this div, it is closed by doxygen! -->
+</div>
+<!-- Custom Footer -->
+<div style="background: #f8f9fa; border-top: 1px solid #e9ecef; margin-top: 50px; padding: 30px 0; text-align: center;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-bottom: 20px;">
+            <!-- Project Info -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🧠 NeuroExapt</h4>
+                <p style="color: #6c757d; margin: 0; font-size: 0.9em;">
+                    Advanced Neural Architecture Search and Dynamic Morphogenesis Framework for next-generation AI research.
+                </p>
+            </div>
+            <!-- Quick Links -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">📚 Quick Links</h4>
+                <div style="text-align: left;">
+                    <a href="index.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🏠 Home</a>
+                    <a href="modules.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📦 Modules</a>
+                    <a href="examples.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💡 Examples</a>
+                    <a href="files.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📁 Files</a>
+                </div>
+            </div>
+            <!-- Resources -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🔗 Resources</h4>
+                <div style="text-align: left;">
+                    <a href="https://github.com/your-username/neuroexapt" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💻 GitHub Repository</a>
+                    <a href="https://github.com/your-username/neuroexapt/issues" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🐛 Issue Tracker</a>
+                    <a href="https://github.com/your-username/neuroexapt/wiki" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📖 Wiki</a>
+                    <a href="https://github.com/your-username/neuroexapt/releases" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🚀 Releases</a>
+                </div>
+            </div>
+        </div>
+        <hr style="border: 0; height: 1px; background: #e9ecef; margin: 20px 0;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+            <div style="color: #6c757d; font-size: 0.9em;">
+                © 2024 NeuroExapt Project. Generated with 
+                <a href="https://www.doxygen.nl/index.html" style="color: #667eea; text-decoration: none;">Doxygen 1.9.8</a>
+            </div>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <span style="font-size: 0.9em; color: #6c757d;">Built with ❤️ for AI Research</span>
+                <div style="display: flex; gap: 10px;">
+                    <span style="background: #28a745; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">🟢 Active</span>
+                    <span style="background: #17a2b8; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">v3.0</span>
+                </div>
+            </div>
+        </div>
+        <!-- Technology Stack -->
+        <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #e9ecef;">
+            <div style="font-size: 0.8em; color: #868e96; text-align: center;">
+                <strong>Built with:</strong>
+                <span style="margin: 0 5px;">🐍 Python</span>
+                <span style="margin: 0 5px;">🔥 PyTorch</span>
+                <span style="margin: 0 5px;">⚡ CUDA</span>
+                <span style="margin: 0 5px;">🧮 NumPy</span>
+                <span style="margin: 0 5px;">📊 Matplotlib</span>
+                <span style="margin: 0 5px;">🚀 Triton</span>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Back to top button -->
+<div id="back-to-top" style="position: fixed; bottom: 20px; right: 20px; display: none; z-index: 1000;">
+    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" 
+            style="background: #667eea; color: white; border: none; padding: 10px 15px; border-radius: 50%; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,0.2); font-size: 16px;">
+        ⬆️
+    </button>
+</div>
+<script>
+// Back to top button functionality
+window.addEventListener('scroll', function() {
+    const backToTop = document.getElementById('back-to-top');
+    if (window.pageYOffset > 300) {
+        backToTop.style.display = 'block';
+    } else {
+        backToTop.style.display = 'none';
+    }
+});
+// Enhanced search functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Add search enhancement if search box exists
+    const searchBox = document.getElementById('MSearchField');
+    if (searchBox) {
+        searchBox.placeholder = 'Search documentation... 🔍';
+        searchBox.style.borderRadius = '20px';
+        searchBox.style.padding = '8px 15px';
+    }
+    // Add copy code button to code blocks
+    const codeBlocks = document.querySelectorAll('.fragment');
+    codeBlocks.forEach(function(block) {
+        const copyBtn = document.createElement('button');
+        copyBtn.innerHTML = '📋';
+        copyBtn.title = 'Copy code';
+        copyBtn.style.cssText = 'position: absolute; top: 10px; right: 10px; background: #667eea; color: white; border: none; padding: 5px; border-radius: 3px; cursor: pointer; font-size: 12px;';
+        block.style.position = 'relative';
+        block.appendChild(copyBtn);
+        copyBtn.addEventListener('click', function() {
+            const text = block.textContent;
+            navigator.clipboard.writeText(text).then(function() {
+                copyBtn.innerHTML = '✅';
+                setTimeout(function() {
+                    copyBtn.innerHTML = '📋';
+                }, 2000);
+            });
+        });
+    });
+});
+// Dark mode toggle (optional)
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+}
+// Load saved dark mode preference
+if (localStorage.getItem('darkMode') === 'true') {
+    document.body.classList.add('dark-mode');
+}
+</script>
+</body>
+</html>

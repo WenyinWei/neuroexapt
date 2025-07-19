@@ -1,4 +1,11 @@
 """
+"""
+\defgroup group_function_preserving_init Function Preserving Init
+\ingroup core
+Function Preserving Init module for NeuroExapt framework.
+"""
+
+
 函数保持初始化 (Function-Preserving Initialization)
 
 ASO-SE框架的核心机制之一：确保架构突变时新架构的输出与旧架构完全一致，

@@ -1,0 +1,394 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="description" content="NeuroExapt - Advanced Neural Architecture Search and Dynamic Morphogenesis Framework">
+    <meta name="keywords" content="neural architecture search, dynamic morphogenesis, deep learning, AI, PyTorch">
+    <meta name="author" content="NeuroExapt Team">
+    <meta property="og:title" content="NeuroExapt Documentation">
+    <meta property="og:description" content="Advanced Neural Architecture Search Framework">
+    <meta property="og:type" content="website">
+
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>NeuroExapt: Class Members - Functions</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="custom.css" rel="stylesheet" type="text/css"/>
+<!-- NeuroExapt Custom Styles -->
+<style>
+/* Enhanced header styling */
+.header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+.header h1 {
+    margin: 0;
+    font-size: 2.5em;
+    font-weight: 300;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+.header .subtitle {
+    font-size: 1.2em;
+    opacity: 0.9;
+    margin-top: 10px;
+}
+/* Enhanced navigation */
+.tablist {
+    background: #f8f9fa;
+    border-bottom: 2px solid #e9ecef;
+}
+.tablist li.current a {
+    background: #667eea;
+    color: white;
+}
+/* Improved content layout */
+.contents {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+/* Code highlighting */
+.fragment {
+    background: #f8f9fa;
+    border-left: 4px solid #667eea;
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 0 8px 8px 0;
+}
+/* Enhanced tables */
+table.memberdecls {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 20px 0;
+}
+table.memberdecls td {
+    border: 1px solid #e9ecef;
+    padding: 12px;
+}
+/* Better typography */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #343a40;
+}
+h1, h2, h3, h4, h5, h6 {
+    color: #495057;
+    font-weight: 500;
+}
+/* Responsive design */
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 2em;
+    }
+    .contents {
+        padding: 15px;
+    }
+}
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #1a1a1a;
+        color: #e9ecef;
+    }
+    .header {
+        background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+    }
+    .fragment {
+        background: #2d3748;
+        color: #e9ecef;
+    }
+}
+</style>
+<!-- Analytics (if needed) -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<!--
+<script async src="https://www.googletagmanager.com/gtag/js?id=GA_TRACKING_ID"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'GA_TRACKING_ID');
+</script>
+-->
+</head>
+<body>
+<!-- Custom Header -->
+<div class="header">
+    <h1>🧠 NeuroExapt</h1>
+    <div class="subtitle">Advanced Neural Architecture Search and Dynamic Morphogenesis Framework</div>
+    <div style="margin-top: 15px; font-size: 0.9em;">
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🚀 Dynamic Neural Morphogenesis
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🔬 Advanced Architecture Search
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            ⚡ High-Performance Computing
+        </span>
+    </div>
+</div>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! --><!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('functions_func_g.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="contents">
+<div class="textblock">Here is a list of all functions with links to the classes they belong to:</div>
+
+<h3><a id="index_g" name="index_g"></a>- g -</h3><ul>
+<li>generate_documentation()&#160;:&#160;<a class="el" href="classgenerate__docs_1_1DocumentationGenerator.html#adb042d45402ccf854b344df3c1a95f29">generate_docs.DocumentationGenerator</a></li>
+<li>genotype()&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1clean__model_1_1CleanNetwork.html#a7e481d32bad8332403b7e5eda3323d86">neuroexapt.core.clean_model.CleanNetwork</a>, <a class="el" href="classneuroexapt_1_1core_1_1model_1_1Network.html#ae16fdcd2f19d5d64688d6a1904c02f77">neuroexapt.core.model.Network</a></li>
+<li>get_absolute_position()&#160;:&#160;<a class="el" href="classneuroexapt_1_1utils_1_1visualization_1_1LayoutNode.html#a9a33b417dc52a2dc05d1631ac18e4dc4">neuroexapt.utils.visualization.LayoutNode</a></li>
+<li>get_activation_analysis()&#160;:&#160;<a class="el" href="classexamples_1_1enhanced__deep__classification_1_1DeepEvolvableCNN.html#a8a860b1d22b3d39dff022a765c68b3c8">examples.enhanced_deep_classification.DeepEvolvableCNN</a></li>
+<li>get_analysis_summary()&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1enhanced__bottleneck__detector_1_1EnhancedBottleneckDetector.html#a71e277f9d414c9b1c89a00dfb69f0c17">neuroexapt.core.enhanced_bottleneck_detector.EnhancedBottleneckDetector</a></li>
+<li>get_arch_statistics()&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a267fbd9bc2cde10563220bf5b2b82c13">neuroexapt.core.optimized_architect.OptimizedArchitect</a></li>
+<li>get_architecture_summary()&#160;:&#160;<a class="el" href="classexamples_1_1demo__bayesian__architecture__evolution_1_1BayesianEvolvableCNN.html#a20f5792a96f15da92de3bff41560a266">examples.demo_bayesian_architecture_evolution.BayesianEvolvableCNN</a>, <a class="el" href="classexamples_1_1dynamic__architecture__evolution_1_1DynamicArchitecture.html#afee487d73a6b8dcb95e7e93238f876c6">examples.dynamic_architecture_evolution.DynamicArchitecture</a></li>
+<li>get_best_checkpoint()&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1evolution__checkpoint_1_1EvolutionCheckpointManager.html#aba626c36be9a6156e8fe04dbe2571d8a">neuroexapt.core.evolution_checkpoint.EvolutionCheckpointManager</a></li>
+<li>get_best_model()&#160;:&#160;<a class="el" href="classneuroexapt_1_1trainer_1_1Trainer.html#afc9d4a3665c802ddbfe95506f1173878">neuroexapt.trainer.Trainer</a></li>
+<li>get_cache_info()&#160;:&#160;<a class="el" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#ac2239398a2cc2fb4611099c935e1f05b">neuroexapt.utils.dataset_loader.AdvancedDatasetLoader</a></li>
+<li>get_cache_path()&#160;:&#160;<a class="el" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetCache.html#ac323ffd6786571ca88acea2c5967631c">neuroexapt.utils.dataset_loader.DatasetCache</a></li>
+<li>get_center_x()&#160;:&#160;<a class="el" href="classneuroexapt_1_1utils_1_1visualization_1_1LayoutNode.html#a00d5f465779048856ab72c46783d7a53">neuroexapt.utils.visualization.LayoutNode</a></li>
+<li>get_cifar100_dataloaders()&#160;:&#160;<a class="el" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#a790b462aced6b612446a87de24778f8b">neuroexapt.utils.dataset_loader.AdvancedDatasetLoader</a></li>
+<li>get_cifar10_dataloaders()&#160;:&#160;<a class="el" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#ac8b512c7f82ad5dd961152b080a02814">neuroexapt.utils.dataset_loader.AdvancedDatasetLoader</a></li>
+<li>get_comprehensive_report()&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1stability__monitor_1_1StabilityMonitor.html#ae6083150cafebc429e4a75b75aacfdd9">neuroexapt.core.stability_monitor.StabilityMonitor</a></li>
+<li>get_convergence_report()&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1stability__monitor_1_1ConvergenceAnalyzer.html#aff5ca6c4ca4c76df8f993024de558c87">neuroexapt.core.stability_monitor.ConvergenceAnalyzer</a></li>
+<li>get_current_download_path()&#160;:&#160;<a class="el" href="classneuroexapt_1_1utils_1_1xunlei__config__helper_1_1XunleiConfigHelper.html#a471efc633ac2a3beec3af931e896788f">neuroexapt.utils.xunlei_config_helper.XunleiConfigHelper</a></li>
+<li>get_degradation_report()&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1stability__monitor_1_1PerformanceDegradationDetector.html#a82cc78aad528e6d6bc2090ca73a360ff">neuroexapt.core.stability_monitor.PerformanceDegradationDetector</a></li>
+<li>get_device_report()&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1device__manager_1_1DeviceManager.html#a288daf1d021e8745d0d0686b956bc055">neuroexapt.core.device_manager.DeviceManager</a></li>
+<li>get_division_statistics()&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1dnm__neuron__division_1_1AdaptiveNeuronDivision.html#a751981827f0b4170186a270e7c19d0d1">neuroexapt.core.dnm_neuron_division.AdaptiveNeuronDivision</a></li>
+<li>get_division_summary()&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1performance__guided__division_1_1PerformanceGuidedDivision.html#a6953d4284e9eb33b0922ac27642345ce">neuroexapt.core.performance_guided_division.PerformanceGuidedDivision</a></li>
+<li>get_dominant_operation()&#160;:&#160;<a class="el" href="classexamples_1_1dynamic__architecture__evolution_1_1EvolvableBlock.html#ab92fef323d44b7880eb62b97897576cb">examples.dynamic_architecture_evolution.EvolvableBlock</a></li>
+<li>get_dominant_ops()&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1fast__operations_1_1BatchedArchitectureUpdate.html#a8af68f5e746dcdbd90185ab642d7c8fc">neuroexapt.core.fast_operations.BatchedArchitectureUpdate</a></li>
+<li>get_download_progress()&#160;:&#160;<a class="el" href="classneuroexapt_1_1utils_1_1xunlei__downloader_1_1XunleiDownloader.html#ac209d1f89284231dc60616e17f74b6dc">neuroexapt.utils.xunlei_downloader.XunleiDownloader</a></li>
+<li>get_download_url()&#160;:&#160;<a class="el" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetMirror.html#a17fd216e7d20f86c1c812e6f05259894">neuroexapt.utils.dataset_loader.DatasetMirror</a></li>
+<li>get_evolution_lineage()&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1evolution__checkpoint_1_1EvolutionCheckpointManager.html#af9f4fbf457900a2b863240093c89f16f">neuroexapt.core.evolution_checkpoint.EvolutionCheckpointManager</a></li>
+<li>get_evolution_stats()&#160;:&#160;<a class="el" href="classexamples_1_1enhanced__deep__classification_1_1DeepEvolvableCNN.html#a68549b07bef2fd0e0027f72c9caebc6b">examples.enhanced_deep_classification.DeepEvolvableCNN</a>, <a class="el" href="classexamples_1_1robust__classification_1_1RobustEvolvableCNN.html#af3a0b8f98f7f339837646efba4e39177">examples.robust_classification.RobustEvolvableCNN</a></li>
+<li>get_evolution_summary()&#160;:&#160;<a class="el" href="classneuroexapt_1_1neuroexapt__v3_1_1NeuroExaptV3.html#a1e7c9d976af50586fa7aab1f59603a94">neuroexapt.neuroexapt_v3.NeuroExaptV3</a>, <a class="el" href="classneuroexapt_1_1trainer_1_1Trainer.html#aee426a1877fe4f5472d42f4c01428654">neuroexapt.trainer.Trainer</a></li>
+<li>get_exploration_report()&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1gumbel__softmax__explorer_1_1GumbelSoftmaxExplorer.html#a1adb367af5df119e2e30c4f2922b455f">neuroexapt.core.gumbel_softmax_explorer.GumbelSoftmaxExplorer</a></li>
+<li>get_exploration_schedule()&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1gumbel__softmax__explorer_1_1GumbelSoftmaxExplorer.html#a96ce3f991aee86292061812062dbb9f7">neuroexapt.core.gumbel_softmax_explorer.GumbelSoftmaxExplorer</a></li>
+<li>get_final_statistics()&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1separated__training_1_1SeparatedTrainer.html#af91aacc8c6d60ba42a03c2a1579bcf1f">neuroexapt.core.separated_training.SeparatedTrainer</a></li>
+<li>get_growth_summary()&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1dnm__connection__growth_1_1DNMConnectionGrowth.html#a7878f0785ac7a92d476d14cb4f6d4c0d">neuroexapt.core.dnm_connection_growth.DNMConnectionGrowth</a></li>
+<li>get_lr()&#160;:&#160;<a class="el" href="classexamples_1_1high__performance__training_1_1CosineAnnealingWarmUpRestarts.html#a9dab45d4852c3c699bd1b56a633643e0">examples.high_performance_training.CosineAnnealingWarmUpRestarts</a>, <a class="el" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#aca9e789f720abf9ab058fe3b69404972">neuroexapt.core.optimized_architect.ArchitectureSpaceOptimizer</a></li>
+<li>get_lr_schedulers()&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1separated__training_1_1SeparatedOptimizer.html#aeb2f8b7ae6e3b803749788b236f947af">neuroexapt.core.separated_training.SeparatedOptimizer</a></li>
+<li>get_memory_stats()&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1device__manager_1_1DeviceManager.html#a642e2b603ea751dd13fcc691c5c32ebb">neuroexapt.core.device_manager.DeviceManager</a>, <a class="el" href="classneuroexapt_1_1utils_1_1gpu__manager_1_1GPUManager.html#a6727419730eee412ef871ffab1899e0e">neuroexapt.utils.gpu_manager.GPUManager</a></li>
+<li>get_memory_usage()&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1fast__operations_1_1MemoryEfficientCell.html#ab010934a912dda9b5042d183289ac4e0">neuroexapt.core.fast_operations.MemoryEfficientCell</a></li>
+<li>get_model()&#160;:&#160;<a class="el" href="classneuroexapt_1_1neuroexapt_1_1NeuroExapt.html#a865bd3e69127bd3aa6534845643f25da">neuroexapt.neuroexapt.NeuroExapt</a>, <a class="el" href="classneuroexapt_1_1neuroexapt__v3_1_1NeuroExaptV3.html#aed9094e21f9611a753de3e3d2d98a207">neuroexapt.neuroexapt_v3.NeuroExaptV3</a>, <a class="el" href="classneuroexapt_1_1trainer_1_1Trainer.html#a41bf94e78881dc283a8bbddca83038c5">neuroexapt.trainer.Trainer</a></li>
+<li>get_morphogenesis_summary()&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1dnm__framework_1_1DNMFramework.html#a11804733006721550c953b35b620df8b">neuroexapt.core.dnm_framework.DNMFramework</a>, <a class="el" href="classneuroexapt_1_1core_1_1enhanced__dnm__framework_1_1EnhancedDNMFramework.html#a35ea5089d5120a4a387f92babbd510b0">neuroexapt.core.enhanced_dnm_framework.EnhancedDNMFramework</a></li>
+<li>get_mutation_report()&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1architecture__mutator_1_1ArchitectureMutator.html#a3497f6035966ae0f312f4b3a4b0d7340">neuroexapt.core.architecture_mutator.ArchitectureMutator</a></li>
+<li>get_operation_ranking()&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1fast__operations_1_1OperationProfiler.html#a1955399a3d613bece52fb5e37c304b9b">neuroexapt.core.fast_operations.OperationProfiler</a></li>
+<li>get_optimal_batch_size()&#160;:&#160;<a class="el" href="classneuroexapt_1_1utils_1_1gpu__manager_1_1GPUManager.html#a27b834c88daec70b39cf9ad751f3f7ec">neuroexapt.utils.gpu_manager.GPUManager</a></li>
+<li>get_optimization_summary()&#160;:&#160;<a class="el" href="classneuroexapt_1_1math_1_1pareto__optimization_1_1DNMMultiObjectiveOptimization.html#a3c1a4e4a1771519808e922987fcd5744">neuroexapt.math.pareto_optimization.DNMMultiObjectiveOptimization</a></li>
+<li>get_performance_report()&#160;:&#160;<a class="el" href="classneuroexapt_1_1utils_1_1performance__monitor_1_1PerformanceMonitor.html#a0f8ba97b80c8b27389c0342ea85b99cf">neuroexapt.utils.performance_monitor.PerformanceMonitor</a></li>
+<li>get_performance_stats()&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1fast__operations_1_1FastMixedOp.html#a81c45b2bc963127fad3396c7cfd5f38c">neuroexapt.core.fast_operations.FastMixedOp</a></li>
+<li>get_priority()&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1dnm__framework_1_1BiologicalPrinciplesTrigger.html#af695288ba93d85ede7bc1e1ea5911b80">neuroexapt.core.dnm_framework.BiologicalPrinciplesTrigger</a>, <a class="el" href="classneuroexapt_1_1core_1_1dnm__framework_1_1CognitiveScienceTrigger.html#af329ed78d4c3838d2ac6e0c5142b5832">neuroexapt.core.dnm_framework.CognitiveScienceTrigger</a>, <a class="el" href="classneuroexapt_1_1core_1_1dnm__framework_1_1DynamicalSystemsTrigger.html#a7645e29ad7587d9f9b6ae7133f46ad0d">neuroexapt.core.dnm_framework.DynamicalSystemsTrigger</a>, <a class="el" href="classneuroexapt_1_1core_1_1dnm__framework_1_1InformationTheoryTrigger.html#ad7b749d6aa00f18ff5feb43e5f8c03c1">neuroexapt.core.dnm_framework.InformationTheoryTrigger</a>, <a class="el" href="classneuroexapt_1_1core_1_1dnm__framework_1_1MorphogenesisTrigger.html#a2a08b56a4c0fa840de657a6ba7963621">neuroexapt.core.dnm_framework.MorphogenesisTrigger</a>, <a class="el" href="classneuroexapt_1_1core_1_1dnm__framework_1_1NetworkScienceTrigger.html#a77f7aa8aa3c47ac28e7cc06a73ad1889">neuroexapt.core.dnm_framework.NetworkScienceTrigger</a></li>
+<li>get_recent_checkpoints()&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1evolution__checkpoint_1_1EvolutionCheckpointManager.html#a6e8736d00520f0d6b45e54e74f74cd79">neuroexapt.core.evolution_checkpoint.EvolutionCheckpointManager</a></li>
+<li>get_report()&#160;:&#160;<a class="el" href="classneuroexapt_1_1math_1_1fast__math_1_1PerformanceProfiler.html#af53883460da435aeab443fa7b77aab8f">neuroexapt.math.fast_math.PerformanceProfiler</a></li>
+<li>get_schedule_summary()&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1separated__training_1_1SeparatedTrainingStrategy.html#a7ce85196959fb8a77ce2b7830eb00d31">neuroexapt.core.separated_training.SeparatedTrainingStrategy</a></li>
+<li>get_stability_report()&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1stability__monitor_1_1LossOscillationDetector.html#a8c88f963ce559cb75ebd2f5123d98391">neuroexapt.core.stability_monitor.LossOscillationDetector</a></li>
+<li>get_stats()&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1fast__operations_1_1FastDeviceManager.html#a2f83962b390fc7d032280fc5922cba95">neuroexapt.core.fast_operations.FastDeviceManager</a>, <a class="el" href="classneuroexapt_1_1core_1_1model_1_1PerformanceMonitor.html#a13d194e43124763b3b812dca8094e6ba">neuroexapt.core.model.PerformanceMonitor</a>, <a class="el" href="classneuroexapt_1_1core_1_1simple__architect_1_1SimpleArchitect.html#a2e01d04533a7378230d41f5a7593306c">neuroexapt.core.simple_architect.SimpleArchitect</a>, <a class="el" href="classneuroexapt_1_1neuroexapt_1_1NeuroExapt.html#a8f9b1e3a173d857aa38b4470e5027b99">neuroexapt.neuroexapt.NeuroExapt</a>, <a class="el" href="classneuroexapt_1_1utils_1_1minimal__monitor_1_1MinimalMonitor.html#a16b3d89876fca3063b3871416af07db5">neuroexapt.utils.minimal_monitor.MinimalMonitor</a></li>
+<li>get_status()&#160;:&#160;<a class="el" href="classneuroexapt_1_1utils_1_1xunlei__downloader_1_1XunleiDatasetDownloader.html#af4d3cd57d1ebd139f6909d31bcdf426e">neuroexapt.utils.xunlei_downloader.XunleiDatasetDownloader</a></li>
+<li>get_subnetwork_info()&#160;:&#160;<a class="el" href="classexamples_1_1demo__subnetwork__evolution_1_1ModularCNN.html#adc19f0c39d6cfaaf375cb8b2bc8f7671">examples.demo_subnetwork_evolution.ModularCNN</a></li>
+<li>get_tensor_from_pool()&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1fast__operations_1_1FastDeviceManager.html#aeeb4c33a2354cdd7da4e3908f135d34c">neuroexapt.core.fast_operations.FastDeviceManager</a></li>
+<li>get_test_transform()&#160;:&#160;<a class="el" href="classexamples_1_1high__performance__training_1_1AdvancedCIFAR10Transforms.html#a70f8f978b2461f4ba05b8d2683d008f5">examples.high_performance_training.AdvancedCIFAR10Transforms</a></li>
+<li>get_top_bottlenecks()&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1enhanced__bottleneck__detector_1_1EnhancedBottleneckDetector.html#ace8f6a22d5913990d41f9122071ef2f9">neuroexapt.core.enhanced_bottleneck_detector.EnhancedBottleneckDetector</a></li>
+<li>get_train_transform()&#160;:&#160;<a class="el" href="classexamples_1_1high__performance__training_1_1AdvancedCIFAR10Transforms.html#a96462e8a605617a02477ea523acd3268">examples.high_performance_training.AdvancedCIFAR10Transforms</a></li>
+<li>get_training_mode()&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1separated__training_1_1SeparatedTrainingStrategy.html#aa121a6d0cb83a89cb63772e7ffaddef4">neuroexapt.core.separated_training.SeparatedTrainingStrategy</a></li>
+<li>get_training_progress()&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1checkpoint__manager_1_1CheckpointManager.html#a711f5ff778cd1a7e666d9e1902946077">neuroexapt.core.checkpoint_manager.CheckpointManager</a></li>
+<li>get_transfer_history()&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1net2net__transfer_1_1Net2NetTransfer.html#ab52d62bcde3d9a46c25e9642899aeaa6">neuroexapt.core.net2net_transfer.Net2NetTransfer</a></li>
+<li>gradient_similarity()&#160;:&#160;<a class="el" href="classneuroexapt_1_1math_1_1fast__math_1_1FastGradients.html#a5814c4f8ab00b196197b1e6b5e32f729">neuroexapt.math.fast_math.FastGradients</a></li>
+<li>gumbel_noise()&#160;:&#160;<a class="el" href="classneuroexapt_1_1math_1_1fast__math_1_1FastNumerical.html#aab1417e3163eb8fc11432c9da416db64">neuroexapt.math.fast_math.FastNumerical</a></li>
+</ul>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<!-- do not remove this div, it is closed by doxygen! -->
+</div>
+<!-- Custom Footer -->
+<div style="background: #f8f9fa; border-top: 1px solid #e9ecef; margin-top: 50px; padding: 30px 0; text-align: center;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-bottom: 20px;">
+            <!-- Project Info -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🧠 NeuroExapt</h4>
+                <p style="color: #6c757d; margin: 0; font-size: 0.9em;">
+                    Advanced Neural Architecture Search and Dynamic Morphogenesis Framework for next-generation AI research.
+                </p>
+            </div>
+            <!-- Quick Links -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">📚 Quick Links</h4>
+                <div style="text-align: left;">
+                    <a href="index.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🏠 Home</a>
+                    <a href="modules.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📦 Modules</a>
+                    <a href="examples.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💡 Examples</a>
+                    <a href="files.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📁 Files</a>
+                </div>
+            </div>
+            <!-- Resources -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🔗 Resources</h4>
+                <div style="text-align: left;">
+                    <a href="https://github.com/your-username/neuroexapt" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💻 GitHub Repository</a>
+                    <a href="https://github.com/your-username/neuroexapt/issues" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🐛 Issue Tracker</a>
+                    <a href="https://github.com/your-username/neuroexapt/wiki" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📖 Wiki</a>
+                    <a href="https://github.com/your-username/neuroexapt/releases" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🚀 Releases</a>
+                </div>
+            </div>
+        </div>
+        <hr style="border: 0; height: 1px; background: #e9ecef; margin: 20px 0;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+            <div style="color: #6c757d; font-size: 0.9em;">
+                © 2024 NeuroExapt Project. Generated with 
+                <a href="https://www.doxygen.nl/index.html" style="color: #667eea; text-decoration: none;">Doxygen 1.9.8</a>
+            </div>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <span style="font-size: 0.9em; color: #6c757d;">Built with ❤️ for AI Research</span>
+                <div style="display: flex; gap: 10px;">
+                    <span style="background: #28a745; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">🟢 Active</span>
+                    <span style="background: #17a2b8; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">v3.0</span>
+                </div>
+            </div>
+        </div>
+        <!-- Technology Stack -->
+        <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #e9ecef;">
+            <div style="font-size: 0.8em; color: #868e96; text-align: center;">
+                <strong>Built with:</strong>
+                <span style="margin: 0 5px;">🐍 Python</span>
+                <span style="margin: 0 5px;">🔥 PyTorch</span>
+                <span style="margin: 0 5px;">⚡ CUDA</span>
+                <span style="margin: 0 5px;">🧮 NumPy</span>
+                <span style="margin: 0 5px;">📊 Matplotlib</span>
+                <span style="margin: 0 5px;">🚀 Triton</span>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Back to top button -->
+<div id="back-to-top" style="position: fixed; bottom: 20px; right: 20px; display: none; z-index: 1000;">
+    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" 
+            style="background: #667eea; color: white; border: none; padding: 10px 15px; border-radius: 50%; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,0.2); font-size: 16px;">
+        ⬆️
+    </button>
+</div>
+<script>
+// Back to top button functionality
+window.addEventListener('scroll', function() {
+    const backToTop = document.getElementById('back-to-top');
+    if (window.pageYOffset > 300) {
+        backToTop.style.display = 'block';
+    } else {
+        backToTop.style.display = 'none';
+    }
+});
+// Enhanced search functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Add search enhancement if search box exists
+    const searchBox = document.getElementById('MSearchField');
+    if (searchBox) {
+        searchBox.placeholder = 'Search documentation... 🔍';
+        searchBox.style.borderRadius = '20px';
+        searchBox.style.padding = '8px 15px';
+    }
+    // Add copy code button to code blocks
+    const codeBlocks = document.querySelectorAll('.fragment');
+    codeBlocks.forEach(function(block) {
+        const copyBtn = document.createElement('button');
+        copyBtn.innerHTML = '📋';
+        copyBtn.title = 'Copy code';
+        copyBtn.style.cssText = 'position: absolute; top: 10px; right: 10px; background: #667eea; color: white; border: none; padding: 5px; border-radius: 3px; cursor: pointer; font-size: 12px;';
+        block.style.position = 'relative';
+        block.appendChild(copyBtn);
+        copyBtn.addEventListener('click', function() {
+            const text = block.textContent;
+            navigator.clipboard.writeText(text).then(function() {
+                copyBtn.innerHTML = '✅';
+                setTimeout(function() {
+                    copyBtn.innerHTML = '📋';
+                }, 2000);
+            });
+        });
+    });
+});
+// Dark mode toggle (optional)
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+}
+// Load saved dark mode preference
+if (localStorage.getItem('darkMode') === 'true') {
+    document.body.classList.add('dark-mode');
+}
+</script>
+</body>
+</html>

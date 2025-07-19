@@ -1,4 +1,11 @@
 """
+"""
+\defgroup group_stability_monitor Stability Monitor
+\ingroup core
+Stability Monitor module for NeuroExapt framework.
+"""
+
+
 稳定性监控器 (Stability Monitor)
 
 ASO-SE框架的辅助组件：监控训练过程的稳定性，包括：

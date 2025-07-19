@@ -1,0 +1,699 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="description" content="NeuroExapt - Advanced Neural Architecture Search and Dynamic Morphogenesis Framework">
+    <meta name="keywords" content="neural architecture search, dynamic morphogenesis, deep learning, AI, PyTorch">
+    <meta name="author" content="NeuroExapt Team">
+    <meta property="og:title" content="NeuroExapt Documentation">
+    <meta property="og:description" content="Advanced Neural Architecture Search Framework">
+    <meta property="og:type" content="website">
+
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>NeuroExapt: neuroexapt.core.separated_training.SeparatedOptimizer Class Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="custom.css" rel="stylesheet" type="text/css"/>
+<!-- NeuroExapt Custom Styles -->
+<style>
+/* Enhanced header styling */
+.header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+.header h1 {
+    margin: 0;
+    font-size: 2.5em;
+    font-weight: 300;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+.header .subtitle {
+    font-size: 1.2em;
+    opacity: 0.9;
+    margin-top: 10px;
+}
+/* Enhanced navigation */
+.tablist {
+    background: #f8f9fa;
+    border-bottom: 2px solid #e9ecef;
+}
+.tablist li.current a {
+    background: #667eea;
+    color: white;
+}
+/* Improved content layout */
+.contents {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+/* Code highlighting */
+.fragment {
+    background: #f8f9fa;
+    border-left: 4px solid #667eea;
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 0 8px 8px 0;
+}
+/* Enhanced tables */
+table.memberdecls {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 20px 0;
+}
+table.memberdecls td {
+    border: 1px solid #e9ecef;
+    padding: 12px;
+}
+/* Better typography */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #343a40;
+}
+h1, h2, h3, h4, h5, h6 {
+    color: #495057;
+    font-weight: 500;
+}
+/* Responsive design */
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 2em;
+    }
+    .contents {
+        padding: 15px;
+    }
+}
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #1a1a1a;
+        color: #e9ecef;
+    }
+    .header {
+        background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+    }
+    .fragment {
+        background: #2d3748;
+        color: #e9ecef;
+    }
+}
+</style>
+<!-- Analytics (if needed) -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<!--
+<script async src="https://www.googletagmanager.com/gtag/js?id=GA_TRACKING_ID"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'GA_TRACKING_ID');
+</script>
+-->
+</head>
+<body>
+<!-- Custom Header -->
+<div class="header">
+    <h1>🧠 NeuroExapt</h1>
+    <div class="subtitle">Advanced Neural Architecture Search and Dynamic Morphogenesis Framework</div>
+    <div style="margin-top: 15px; font-size: 0.9em;">
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🚀 Dynamic Neural Morphogenesis
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🔬 Advanced Architecture Search
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            ⚡ High-Performance Computing
+        </span>
+    </div>
+</div>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! --><!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('classneuroexapt_1_1core_1_1separated__training_1_1SeparatedOptimizer.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="classneuroexapt_1_1core_1_1separated__training_1_1SeparatedOptimizer-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">neuroexapt.core.separated_training.SeparatedOptimizer Class Reference</div></div>
+</div><!--header-->
+<div class="contents">
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a61cfab4a6b4ac97d8ac2402d200123ef" id="r_a61cfab4a6b4ac97d8ac2402d200123ef"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1separated__training_1_1SeparatedOptimizer.html#a61cfab4a6b4ac97d8ac2402d200123ef">__init__</a> (self, nn.Module <a class="el" href="classneuroexapt_1_1core_1_1separated__training_1_1SeparatedOptimizer.html#a4039ffd00ebc8f189a1e42611c97a46e">model</a>, float weight_lr=0.025, float arch_lr=3e-4, float weight_momentum=0.9, float weight_decay=3e-4)</td></tr>
+<tr class="separator:a61cfab4a6b4ac97d8ac2402d200123ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acb6e54378ad762df0f2138b05e53855d" id="r_acb6e54378ad762df0f2138b05e53855d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1separated__training_1_1SeparatedOptimizer.html#acb6e54378ad762df0f2138b05e53855d">zero_grad_weights</a> (self)</td></tr>
+<tr class="separator:acb6e54378ad762df0f2138b05e53855d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acf6e848d4ac93010341b972f6c1c1e91" id="r_acf6e848d4ac93010341b972f6c1c1e91"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1separated__training_1_1SeparatedOptimizer.html#acf6e848d4ac93010341b972f6c1c1e91">zero_grad_arch</a> (self)</td></tr>
+<tr class="separator:acf6e848d4ac93010341b972f6c1c1e91"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aca09ad00f1ee0e7304f76263321c5113" id="r_aca09ad00f1ee0e7304f76263321c5113"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1separated__training_1_1SeparatedOptimizer.html#aca09ad00f1ee0e7304f76263321c5113">step_weights</a> (self)</td></tr>
+<tr class="separator:aca09ad00f1ee0e7304f76263321c5113"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5c8aaeec63a19746fbbc24b7625d596e" id="r_a5c8aaeec63a19746fbbc24b7625d596e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1separated__training_1_1SeparatedOptimizer.html#a5c8aaeec63a19746fbbc24b7625d596e">step_arch</a> (self)</td></tr>
+<tr class="separator:a5c8aaeec63a19746fbbc24b7625d596e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab2dd471247b55dd35d8abaaa1441952c" id="r_ab2dd471247b55dd35d8abaaa1441952c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1separated__training_1_1SeparatedOptimizer.html#ab2dd471247b55dd35d8abaaa1441952c">freeze_arch_params</a> (self)</td></tr>
+<tr class="separator:ab2dd471247b55dd35d8abaaa1441952c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7c5a4487d388dd1badc82397ca67bb7b" id="r_a7c5a4487d388dd1badc82397ca67bb7b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1separated__training_1_1SeparatedOptimizer.html#a7c5a4487d388dd1badc82397ca67bb7b">unfreeze_arch_params</a> (self)</td></tr>
+<tr class="separator:a7c5a4487d388dd1badc82397ca67bb7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0468a2a509d88d469843cd01faa52b9c" id="r_a0468a2a509d88d469843cd01faa52b9c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1separated__training_1_1SeparatedOptimizer.html#a0468a2a509d88d469843cd01faa52b9c">freeze_weight_params</a> (self)</td></tr>
+<tr class="separator:a0468a2a509d88d469843cd01faa52b9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa9abe02cf0a910c3e56e5fc6da85eb73" id="r_aa9abe02cf0a910c3e56e5fc6da85eb73"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1separated__training_1_1SeparatedOptimizer.html#aa9abe02cf0a910c3e56e5fc6da85eb73">unfreeze_weight_params</a> (self)</td></tr>
+<tr class="separator:aa9abe02cf0a910c3e56e5fc6da85eb73"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb2f8b7ae6e3b803749788b236f947af" id="r_aeb2f8b7ae6e3b803749788b236f947af"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1separated__training_1_1SeparatedOptimizer.html#aeb2f8b7ae6e3b803749788b236f947af">get_lr_schedulers</a> (self)</td></tr>
+<tr class="separator:aeb2f8b7ae6e3b803749788b236f947af"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a4039ffd00ebc8f189a1e42611c97a46e" id="r_a4039ffd00ebc8f189a1e42611c97a46e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1separated__training_1_1SeparatedOptimizer.html#a4039ffd00ebc8f189a1e42611c97a46e">model</a></td></tr>
+<tr class="separator:a4039ffd00ebc8f189a1e42611c97a46e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ade75406b5664603325f789b5554e664f" id="r_ade75406b5664603325f789b5554e664f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1separated__training_1_1SeparatedOptimizer.html#ade75406b5664603325f789b5554e664f">weight_params</a></td></tr>
+<tr class="separator:ade75406b5664603325f789b5554e664f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3924e0cbe9599046bda2505ce68755e5" id="r_a3924e0cbe9599046bda2505ce68755e5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1separated__training_1_1SeparatedOptimizer.html#a3924e0cbe9599046bda2505ce68755e5">arch_params</a></td></tr>
+<tr class="separator:a3924e0cbe9599046bda2505ce68755e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a313d5071bd98950ac7be8106214c247a" id="r_a313d5071bd98950ac7be8106214c247a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1separated__training_1_1SeparatedOptimizer.html#a313d5071bd98950ac7be8106214c247a">weight_optimizer</a></td></tr>
+<tr class="separator:a313d5071bd98950ac7be8106214c247a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3584365c7f746567c4af893085401f6c" id="r_a3584365c7f746567c4af893085401f6c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1separated__training_1_1SeparatedOptimizer.html#a3584365c7f746567c4af893085401f6c">arch_optimizer</a></td></tr>
+<tr class="separator:a3584365c7f746567c4af893085401f6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><pre class="fragment">分离优化器
+
+分别管理网络权重和架构参数的优化器
+</pre> 
+<p class="definition">Definition at line <a class="el" href="separated__training_8py_source.html#l00107">107</a> of file <a class="el" href="separated__training_8py_source.html">separated_training.py</a>.</p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a61cfab4a6b4ac97d8ac2402d200123ef" name="a61cfab4a6b4ac97d8ac2402d200123ef"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a61cfab4a6b4ac97d8ac2402d200123ef">&#9670;&#160;</a></span>__init__()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.separated_training.SeparatedOptimizer.__init__ </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">nn.Module&#160;</td>
+          <td class="paramname"><em>model</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float &#160;</td>
+          <td class="paramname"><em>weight_lr</em> = <code>0.025</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float &#160;</td>
+          <td class="paramname"><em>arch_lr</em> = <code>3e-4</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float &#160;</td>
+          <td class="paramname"><em>weight_momentum</em> = <code>0.9</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float &#160;</td>
+          <td class="paramname"><em>weight_decay</em> = <code>3e-4</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="separated__training_8py_source.html#l00114">114</a> of file <a class="el" href="separated__training_8py_source.html">separated_training.py</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="ab2dd471247b55dd35d8abaaa1441952c" name="ab2dd471247b55dd35d8abaaa1441952c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab2dd471247b55dd35d8abaaa1441952c">&#9670;&#160;</a></span>freeze_arch_params()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.separated_training.SeparatedOptimizer.freeze_arch_params </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">冻结架构参数</pre> 
+<p class="definition">Definition at line <a class="el" href="separated__training_8py_source.html#l00176">176</a> of file <a class="el" href="separated__training_8py_source.html">separated_training.py</a>.</p>
+
+</div>
+</div>
+<a id="a0468a2a509d88d469843cd01faa52b9c" name="a0468a2a509d88d469843cd01faa52b9c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0468a2a509d88d469843cd01faa52b9c">&#9670;&#160;</a></span>freeze_weight_params()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.separated_training.SeparatedOptimizer.freeze_weight_params </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">冻结网络权重参数</pre> 
+<p class="definition">Definition at line <a class="el" href="separated__training_8py_source.html#l00186">186</a> of file <a class="el" href="separated__training_8py_source.html">separated_training.py</a>.</p>
+
+</div>
+</div>
+<a id="aeb2f8b7ae6e3b803749788b236f947af" name="aeb2f8b7ae6e3b803749788b236f947af"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeb2f8b7ae6e3b803749788b236f947af">&#9670;&#160;</a></span>get_lr_schedulers()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.separated_training.SeparatedOptimizer.get_lr_schedulers </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">获取学习率调度器</pre> 
+<p class="definition">Definition at line <a class="el" href="separated__training_8py_source.html#l00196">196</a> of file <a class="el" href="separated__training_8py_source.html">separated_training.py</a>.</p>
+
+</div>
+</div>
+<a id="a5c8aaeec63a19746fbbc24b7625d596e" name="a5c8aaeec63a19746fbbc24b7625d596e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5c8aaeec63a19746fbbc24b7625d596e">&#9670;&#160;</a></span>step_arch()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.separated_training.SeparatedOptimizer.step_arch </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">更新架构参数</pre> 
+<p class="definition">Definition at line <a class="el" href="separated__training_8py_source.html#l00172">172</a> of file <a class="el" href="separated__training_8py_source.html">separated_training.py</a>.</p>
+
+</div>
+</div>
+<a id="aca09ad00f1ee0e7304f76263321c5113" name="aca09ad00f1ee0e7304f76263321c5113"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aca09ad00f1ee0e7304f76263321c5113">&#9670;&#160;</a></span>step_weights()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.separated_training.SeparatedOptimizer.step_weights </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">更新网络权重</pre> 
+<p class="definition">Definition at line <a class="el" href="separated__training_8py_source.html#l00168">168</a> of file <a class="el" href="separated__training_8py_source.html">separated_training.py</a>.</p>
+
+</div>
+</div>
+<a id="a7c5a4487d388dd1badc82397ca67bb7b" name="a7c5a4487d388dd1badc82397ca67bb7b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7c5a4487d388dd1badc82397ca67bb7b">&#9670;&#160;</a></span>unfreeze_arch_params()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.separated_training.SeparatedOptimizer.unfreeze_arch_params </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">解冻架构参数</pre> 
+<p class="definition">Definition at line <a class="el" href="separated__training_8py_source.html#l00181">181</a> of file <a class="el" href="separated__training_8py_source.html">separated_training.py</a>.</p>
+
+</div>
+</div>
+<a id="aa9abe02cf0a910c3e56e5fc6da85eb73" name="aa9abe02cf0a910c3e56e5fc6da85eb73"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa9abe02cf0a910c3e56e5fc6da85eb73">&#9670;&#160;</a></span>unfreeze_weight_params()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.separated_training.SeparatedOptimizer.unfreeze_weight_params </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">解冻网络权重参数</pre> 
+<p class="definition">Definition at line <a class="el" href="separated__training_8py_source.html#l00191">191</a> of file <a class="el" href="separated__training_8py_source.html">separated_training.py</a>.</p>
+
+</div>
+</div>
+<a id="acf6e848d4ac93010341b972f6c1c1e91" name="acf6e848d4ac93010341b972f6c1c1e91"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acf6e848d4ac93010341b972f6c1c1e91">&#9670;&#160;</a></span>zero_grad_arch()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.separated_training.SeparatedOptimizer.zero_grad_arch </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">清零架构参数梯度</pre> 
+<p class="definition">Definition at line <a class="el" href="separated__training_8py_source.html#l00164">164</a> of file <a class="el" href="separated__training_8py_source.html">separated_training.py</a>.</p>
+
+</div>
+</div>
+<a id="acb6e54378ad762df0f2138b05e53855d" name="acb6e54378ad762df0f2138b05e53855d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acb6e54378ad762df0f2138b05e53855d">&#9670;&#160;</a></span>zero_grad_weights()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.separated_training.SeparatedOptimizer.zero_grad_weights </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">清零网络权重梯度</pre> 
+<p class="definition">Definition at line <a class="el" href="separated__training_8py_source.html#l00160">160</a> of file <a class="el" href="separated__training_8py_source.html">separated_training.py</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a3584365c7f746567c4af893085401f6c" name="a3584365c7f746567c4af893085401f6c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3584365c7f746567c4af893085401f6c">&#9670;&#160;</a></span>arch_optimizer</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.separated_training.SeparatedOptimizer.arch_optimizer</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="separated__training_8py_source.html#l00141">141</a> of file <a class="el" href="separated__training_8py_source.html">separated_training.py</a>.</p>
+
+</div>
+</div>
+<a id="a3924e0cbe9599046bda2505ce68755e5" name="a3924e0cbe9599046bda2505ce68755e5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3924e0cbe9599046bda2505ce68755e5">&#9670;&#160;</a></span>arch_params</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.separated_training.SeparatedOptimizer.arch_params</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="separated__training_8py_source.html#l00121">121</a> of file <a class="el" href="separated__training_8py_source.html">separated_training.py</a>.</p>
+
+</div>
+</div>
+<a id="a4039ffd00ebc8f189a1e42611c97a46e" name="a4039ffd00ebc8f189a1e42611c97a46e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4039ffd00ebc8f189a1e42611c97a46e">&#9670;&#160;</a></span>model</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.separated_training.SeparatedOptimizer.model</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="separated__training_8py_source.html#l00117">117</a> of file <a class="el" href="separated__training_8py_source.html">separated_training.py</a>.</p>
+
+</div>
+</div>
+<a id="a313d5071bd98950ac7be8106214c247a" name="a313d5071bd98950ac7be8106214c247a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a313d5071bd98950ac7be8106214c247a">&#9670;&#160;</a></span>weight_optimizer</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.separated_training.SeparatedOptimizer.weight_optimizer</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="separated__training_8py_source.html#l00134">134</a> of file <a class="el" href="separated__training_8py_source.html">separated_training.py</a>.</p>
+
+</div>
+</div>
+<a id="ade75406b5664603325f789b5554e664f" name="ade75406b5664603325f789b5554e664f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ade75406b5664603325f789b5554e664f">&#9670;&#160;</a></span>weight_params</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.separated_training.SeparatedOptimizer.weight_params</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="separated__training_8py_source.html#l00120">120</a> of file <a class="el" href="separated__training_8py_source.html">separated_training.py</a>.</p>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following file:<ul>
+<li>neuroexapt/core/<a class="el" href="separated__training_8py_source.html">separated_training.py</a></li>
+</ul>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<!-- do not remove this div, it is closed by doxygen! -->
+</div>
+<!-- Custom Footer -->
+<div style="background: #f8f9fa; border-top: 1px solid #e9ecef; margin-top: 50px; padding: 30px 0; text-align: center;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-bottom: 20px;">
+            <!-- Project Info -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🧠 NeuroExapt</h4>
+                <p style="color: #6c757d; margin: 0; font-size: 0.9em;">
+                    Advanced Neural Architecture Search and Dynamic Morphogenesis Framework for next-generation AI research.
+                </p>
+            </div>
+            <!-- Quick Links -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">📚 Quick Links</h4>
+                <div style="text-align: left;">
+                    <a href="index.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🏠 Home</a>
+                    <a href="modules.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📦 Modules</a>
+                    <a href="examples.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💡 Examples</a>
+                    <a href="files.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📁 Files</a>
+                </div>
+            </div>
+            <!-- Resources -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🔗 Resources</h4>
+                <div style="text-align: left;">
+                    <a href="https://github.com/your-username/neuroexapt" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💻 GitHub Repository</a>
+                    <a href="https://github.com/your-username/neuroexapt/issues" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🐛 Issue Tracker</a>
+                    <a href="https://github.com/your-username/neuroexapt/wiki" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📖 Wiki</a>
+                    <a href="https://github.com/your-username/neuroexapt/releases" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🚀 Releases</a>
+                </div>
+            </div>
+        </div>
+        <hr style="border: 0; height: 1px; background: #e9ecef; margin: 20px 0;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+            <div style="color: #6c757d; font-size: 0.9em;">
+                © 2024 NeuroExapt Project. Generated with 
+                <a href="https://www.doxygen.nl/index.html" style="color: #667eea; text-decoration: none;">Doxygen 1.9.8</a>
+            </div>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <span style="font-size: 0.9em; color: #6c757d;">Built with ❤️ for AI Research</span>
+                <div style="display: flex; gap: 10px;">
+                    <span style="background: #28a745; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">🟢 Active</span>
+                    <span style="background: #17a2b8; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">v3.0</span>
+                </div>
+            </div>
+        </div>
+        <!-- Technology Stack -->
+        <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #e9ecef;">
+            <div style="font-size: 0.8em; color: #868e96; text-align: center;">
+                <strong>Built with:</strong>
+                <span style="margin: 0 5px;">🐍 Python</span>
+                <span style="margin: 0 5px;">🔥 PyTorch</span>
+                <span style="margin: 0 5px;">⚡ CUDA</span>
+                <span style="margin: 0 5px;">🧮 NumPy</span>
+                <span style="margin: 0 5px;">📊 Matplotlib</span>
+                <span style="margin: 0 5px;">🚀 Triton</span>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Back to top button -->
+<div id="back-to-top" style="position: fixed; bottom: 20px; right: 20px; display: none; z-index: 1000;">
+    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" 
+            style="background: #667eea; color: white; border: none; padding: 10px 15px; border-radius: 50%; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,0.2); font-size: 16px;">
+        ⬆️
+    </button>
+</div>
+<script>
+// Back to top button functionality
+window.addEventListener('scroll', function() {
+    const backToTop = document.getElementById('back-to-top');
+    if (window.pageYOffset > 300) {
+        backToTop.style.display = 'block';
+    } else {
+        backToTop.style.display = 'none';
+    }
+});
+// Enhanced search functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Add search enhancement if search box exists
+    const searchBox = document.getElementById('MSearchField');
+    if (searchBox) {
+        searchBox.placeholder = 'Search documentation... 🔍';
+        searchBox.style.borderRadius = '20px';
+        searchBox.style.padding = '8px 15px';
+    }
+    // Add copy code button to code blocks
+    const codeBlocks = document.querySelectorAll('.fragment');
+    codeBlocks.forEach(function(block) {
+        const copyBtn = document.createElement('button');
+        copyBtn.innerHTML = '📋';
+        copyBtn.title = 'Copy code';
+        copyBtn.style.cssText = 'position: absolute; top: 10px; right: 10px; background: #667eea; color: white; border: none; padding: 5px; border-radius: 3px; cursor: pointer; font-size: 12px;';
+        block.style.position = 'relative';
+        block.appendChild(copyBtn);
+        copyBtn.addEventListener('click', function() {
+            const text = block.textContent;
+            navigator.clipboard.writeText(text).then(function() {
+                copyBtn.innerHTML = '✅';
+                setTimeout(function() {
+                    copyBtn.innerHTML = '📋';
+                }, 2000);
+            });
+        });
+    });
+});
+// Dark mode toggle (optional)
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+}
+// Load saved dark mode preference
+if (localStorage.getItem('darkMode') === 'true') {
+    document.body.classList.add('dark-mode');
+}
+</script>
+</body>
+</html>

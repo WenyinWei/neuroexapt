@@ -1,0 +1,709 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="description" content="NeuroExapt - Advanced Neural Architecture Search and Dynamic Morphogenesis Framework">
+    <meta name="keywords" content="neural architecture search, dynamic morphogenesis, deep learning, AI, PyTorch">
+    <meta name="author" content="NeuroExapt Team">
+    <meta property="og:title" content="NeuroExapt Documentation">
+    <meta property="og:description" content="Advanced Neural Architecture Search Framework">
+    <meta property="og:type" content="website">
+
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>NeuroExapt: neuroexapt.core.dnm_framework.NetworkScienceTrigger Class Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="custom.css" rel="stylesheet" type="text/css"/>
+<!-- NeuroExapt Custom Styles -->
+<style>
+/* Enhanced header styling */
+.header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+.header h1 {
+    margin: 0;
+    font-size: 2.5em;
+    font-weight: 300;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+.header .subtitle {
+    font-size: 1.2em;
+    opacity: 0.9;
+    margin-top: 10px;
+}
+/* Enhanced navigation */
+.tablist {
+    background: #f8f9fa;
+    border-bottom: 2px solid #e9ecef;
+}
+.tablist li.current a {
+    background: #667eea;
+    color: white;
+}
+/* Improved content layout */
+.contents {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+/* Code highlighting */
+.fragment {
+    background: #f8f9fa;
+    border-left: 4px solid #667eea;
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 0 8px 8px 0;
+}
+/* Enhanced tables */
+table.memberdecls {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 20px 0;
+}
+table.memberdecls td {
+    border: 1px solid #e9ecef;
+    padding: 12px;
+}
+/* Better typography */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #343a40;
+}
+h1, h2, h3, h4, h5, h6 {
+    color: #495057;
+    font-weight: 500;
+}
+/* Responsive design */
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 2em;
+    }
+    .contents {
+        padding: 15px;
+    }
+}
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #1a1a1a;
+        color: #e9ecef;
+    }
+    .header {
+        background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+    }
+    .fragment {
+        background: #2d3748;
+        color: #e9ecef;
+    }
+}
+</style>
+<!-- Analytics (if needed) -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<!--
+<script async src="https://www.googletagmanager.com/gtag/js?id=GA_TRACKING_ID"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'GA_TRACKING_ID');
+</script>
+-->
+</head>
+<body>
+<!-- Custom Header -->
+<div class="header">
+    <h1>🧠 NeuroExapt</h1>
+    <div class="subtitle">Advanced Neural Architecture Search and Dynamic Morphogenesis Framework</div>
+    <div style="margin-top: 15px; font-size: 0.9em;">
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🚀 Dynamic Neural Morphogenesis
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🔬 Advanced Architecture Search
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            ⚡ High-Performance Computing
+        </span>
+    </div>
+</div>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! --><!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('classneuroexapt_1_1core_1_1dnm__framework_1_1NetworkScienceTrigger.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#pro-methods">Protected Member Functions</a> &#124;
+<a href="classneuroexapt_1_1core_1_1dnm__framework_1_1NetworkScienceTrigger-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">neuroexapt.core.dnm_framework.NetworkScienceTrigger Class Reference</div></div>
+</div><!--header-->
+<div class="contents">
+<div class="dynheader">
+Inheritance diagram for neuroexapt.core.dnm_framework.NetworkScienceTrigger:</div>
+<div class="dyncontent">
+ <div class="center">
+  <img src="classneuroexapt_1_1core_1_1dnm__framework_1_1NetworkScienceTrigger.png" usemap="#neuroexapt.core.dnm_5Fframework.NetworkScienceTrigger_map" alt=""/>
+  <map id="neuroexapt.core.dnm_5Fframework.NetworkScienceTrigger_map" name="neuroexapt.core.dnm_5Fframework.NetworkScienceTrigger_map">
+<area href="classneuroexapt_1_1core_1_1dnm__framework_1_1MorphogenesisTrigger.html" alt="neuroexapt.core.dnm_framework.MorphogenesisTrigger" shape="rect" coords="0,56,335,80"/>
+  </map>
+</div></div>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a4419d35d37e29942834ea02641ab53d5" id="r_a4419d35d37e29942834ea02641ab53d5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1dnm__framework_1_1NetworkScienceTrigger.html#a4419d35d37e29942834ea02641ab53d5">__init__</a> (self)</td></tr>
+<tr class="separator:a4419d35d37e29942834ea02641ab53d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ade3918e3030894760c0a7dd9fc8a7df9" id="r_ade3918e3030894760c0a7dd9fc8a7df9"><td class="memItemLeft" align="right" valign="top">Tuple[bool, str]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1dnm__framework_1_1NetworkScienceTrigger.html#ade3918e3030894760c0a7dd9fc8a7df9">should_trigger</a> (self, Dict[str, Any] context)</td></tr>
+<tr class="separator:ade3918e3030894760c0a7dd9fc8a7df9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a77f7aa8aa3c47ac28e7cc06a73ad1889" id="r_a77f7aa8aa3c47ac28e7cc06a73ad1889"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1dnm__framework_1_1NetworkScienceTrigger.html#a77f7aa8aa3c47ac28e7cc06a73ad1889">get_priority</a> (self)</td></tr>
+<tr class="separator:a77f7aa8aa3c47ac28e7cc06a73ad1889"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a0dad3fd1dfd4954ac1ebe64452a0776c" id="r_a0dad3fd1dfd4954ac1ebe64452a0776c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1dnm__framework_1_1NetworkScienceTrigger.html#a0dad3fd1dfd4954ac1ebe64452a0776c">connectivity_history</a></td></tr>
+<tr class="separator:a0dad3fd1dfd4954ac1ebe64452a0776c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr class="memitem:a6cb1b56bea36fd859eddf1e9b8997c5d" id="r_a6cb1b56bea36fd859eddf1e9b8997c5d"><td class="memItemLeft" align="right" valign="top">Dict[str, float]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1dnm__framework_1_1NetworkScienceTrigger.html#a6cb1b56bea36fd859eddf1e9b8997c5d">_analyze_network_topology</a> (self, nn.Module model, Dict[str, torch.Tensor] activations)</td></tr>
+<tr class="separator:a6cb1b56bea36fd859eddf1e9b8997c5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af0ed7e14c3d42de723c3a3c1a09474fc" id="r_af0ed7e14c3d42de723c3a3c1a09474fc"><td class="memItemLeft" align="right" valign="top">Dict[str, float]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1dnm__framework_1_1NetworkScienceTrigger.html#af0ed7e14c3d42de723c3a3c1a09474fc">_compute_layer_connections</a> (self, nn.Module model)</td></tr>
+<tr class="separator:af0ed7e14c3d42de723c3a3c1a09474fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad5e4c8d30c7aa83ac7e3749f472ef865" id="r_ad5e4c8d30c7aa83ac7e3749f472ef865"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1dnm__framework_1_1NetworkScienceTrigger.html#ad5e4c8d30c7aa83ac7e3749f472ef865">_compute_network_centrality</a> (self, Dict[str, torch.Tensor] activations)</td></tr>
+<tr class="separator:ad5e4c8d30c7aa83ac7e3749f472ef865"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af25df1c0f53dfd84c2a70894957b079c" id="r_af25df1c0f53dfd84c2a70894957b079c"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1dnm__framework_1_1NetworkScienceTrigger.html#af25df1c0f53dfd84c2a70894957b079c">_compute_clustering_coefficient</a> (self, Dict[str, torch.Tensor] activations)</td></tr>
+<tr class="separator:af25df1c0f53dfd84c2a70894957b079c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac3396e35f3fa22894539124c14e4a450" id="r_ac3396e35f3fa22894539124c14e4a450"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1dnm__framework_1_1NetworkScienceTrigger.html#ac3396e35f3fa22894539124c14e4a450">_detect_network_bottleneck</a> (self, Dict[str, float] metrics)</td></tr>
+<tr class="separator:ac3396e35f3fa22894539124c14e4a450"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a13691e175c450e2b8a8065618d9e5bc0" id="r_a13691e175c450e2b8a8065618d9e5bc0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1dnm__framework_1_1NetworkScienceTrigger.html#a13691e175c450e2b8a8065618d9e5bc0">_detect_connectivity_imbalance</a> (self, Dict[str, float] metrics)</td></tr>
+<tr class="separator:a13691e175c450e2b8a8065618d9e5bc0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><pre class="fragment">基于网络科学的触发器</pre> 
+<p class="definition">Definition at line <a class="el" href="dnm__framework_8py_source.html#l00446">446</a> of file <a class="el" href="dnm__framework_8py_source.html">dnm_framework.py</a>.</p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a4419d35d37e29942834ea02641ab53d5" name="a4419d35d37e29942834ea02641ab53d5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4419d35d37e29942834ea02641ab53d5">&#9670;&#160;</a></span>__init__()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.dnm_framework.NetworkScienceTrigger.__init__ </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="dnm__framework_8py_source.html#l00449">449</a> of file <a class="el" href="dnm__framework_8py_source.html">dnm_framework.py</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a6cb1b56bea36fd859eddf1e9b8997c5d" name="a6cb1b56bea36fd859eddf1e9b8997c5d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6cb1b56bea36fd859eddf1e9b8997c5d">&#9670;&#160;</a></span>_analyze_network_topology()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Dict[str, float] neuroexapt.core.dnm_framework.NetworkScienceTrigger._analyze_network_topology </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">nn.Module&#160;</td>
+          <td class="paramname"><em>model</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Dict[str, torch.Tensor]&#160;</td>
+          <td class="paramname"><em>activations</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">分析网络拓扑特性</pre> 
+<p class="definition">Definition at line <a class="el" href="dnm__framework_8py_source.html#l00473">473</a> of file <a class="el" href="dnm__framework_8py_source.html">dnm_framework.py</a>.</p>
+
+</div>
+</div>
+<a id="af25df1c0f53dfd84c2a70894957b079c" name="af25df1c0f53dfd84c2a70894957b079c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af25df1c0f53dfd84c2a70894957b079c">&#9670;&#160;</a></span>_compute_clustering_coefficient()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> float neuroexapt.core.dnm_framework.NetworkScienceTrigger._compute_clustering_coefficient </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Dict[str, torch.Tensor]&#160;</td>
+          <td class="paramname"><em>activations</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">计算聚类系数</pre> 
+<p class="definition">Definition at line <a class="el" href="dnm__framework_8py_source.html#l00523">523</a> of file <a class="el" href="dnm__framework_8py_source.html">dnm_framework.py</a>.</p>
+
+</div>
+</div>
+<a id="af0ed7e14c3d42de723c3a3c1a09474fc" name="af0ed7e14c3d42de723c3a3c1a09474fc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af0ed7e14c3d42de723c3a3c1a09474fc">&#9670;&#160;</a></span>_compute_layer_connections()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Dict[str, float] neuroexapt.core.dnm_framework.NetworkScienceTrigger._compute_layer_connections </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">nn.Module&#160;</td>
+          <td class="paramname"><em>model</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">计算层间连接强度</pre> 
+<p class="definition">Definition at line <a class="el" href="dnm__framework_8py_source.html#l00491">491</a> of file <a class="el" href="dnm__framework_8py_source.html">dnm_framework.py</a>.</p>
+
+</div>
+</div>
+<a id="ad5e4c8d30c7aa83ac7e3749f472ef865" name="ad5e4c8d30c7aa83ac7e3749f472ef865"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad5e4c8d30c7aa83ac7e3749f472ef865">&#9670;&#160;</a></span>_compute_network_centrality()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> float neuroexapt.core.dnm_framework.NetworkScienceTrigger._compute_network_centrality </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Dict[str, torch.Tensor]&#160;</td>
+          <td class="paramname"><em>activations</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">计算网络中心性</pre> 
+<p class="definition">Definition at line <a class="el" href="dnm__framework_8py_source.html#l00503">503</a> of file <a class="el" href="dnm__framework_8py_source.html">dnm_framework.py</a>.</p>
+
+</div>
+</div>
+<a id="a13691e175c450e2b8a8065618d9e5bc0" name="a13691e175c450e2b8a8065618d9e5bc0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a13691e175c450e2b8a8065618d9e5bc0">&#9670;&#160;</a></span>_detect_connectivity_imbalance()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> bool neuroexapt.core.dnm_framework.NetworkScienceTrigger._detect_connectivity_imbalance </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Dict[str, float]&#160;</td>
+          <td class="paramname"><em>metrics</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">检测连接不平衡</pre> 
+<p class="definition">Definition at line <a class="el" href="dnm__framework_8py_source.html#l00548">548</a> of file <a class="el" href="dnm__framework_8py_source.html">dnm_framework.py</a>.</p>
+
+</div>
+</div>
+<a id="ac3396e35f3fa22894539124c14e4a450" name="ac3396e35f3fa22894539124c14e4a450"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac3396e35f3fa22894539124c14e4a450">&#9670;&#160;</a></span>_detect_network_bottleneck()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> bool neuroexapt.core.dnm_framework.NetworkScienceTrigger._detect_network_bottleneck </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Dict[str, float]&#160;</td>
+          <td class="paramname"><em>metrics</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">检测网络瓶颈</pre> 
+<p class="definition">Definition at line <a class="el" href="dnm__framework_8py_source.html#l00543">543</a> of file <a class="el" href="dnm__framework_8py_source.html">dnm_framework.py</a>.</p>
+
+</div>
+</div>
+<a id="a77f7aa8aa3c47ac28e7cc06a73ad1889" name="a77f7aa8aa3c47ac28e7cc06a73ad1889"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a77f7aa8aa3c47ac28e7cc06a73ad1889">&#9670;&#160;</a></span>get_priority()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> float neuroexapt.core.dnm_framework.NetworkScienceTrigger.get_priority </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">获取触发器优先级</pre> 
+<p>Reimplemented from <a class="el" href="classneuroexapt_1_1core_1_1dnm__framework_1_1MorphogenesisTrigger.html#a2a08b56a4c0fa840de657a6ba7963621">neuroexapt.core.dnm_framework.MorphogenesisTrigger</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="dnm__framework_8py_source.html#l00560">560</a> of file <a class="el" href="dnm__framework_8py_source.html">dnm_framework.py</a>.</p>
+
+</div>
+</div>
+<a id="ade3918e3030894760c0a7dd9fc8a7df9" name="ade3918e3030894760c0a7dd9fc8a7df9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ade3918e3030894760c0a7dd9fc8a7df9">&#9670;&#160;</a></span>should_trigger()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Tuple[bool, str] neuroexapt.core.dnm_framework.NetworkScienceTrigger.should_trigger </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Dict[str, Any]&#160;</td>
+          <td class="paramname"><em>context</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">判断是否应该触发形态发生</pre> 
+<p>Reimplemented from <a class="el" href="classneuroexapt_1_1core_1_1dnm__framework_1_1MorphogenesisTrigger.html#a9a2974339734d856fffb1079f6d6b8b9">neuroexapt.core.dnm_framework.MorphogenesisTrigger</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="dnm__framework_8py_source.html#l00452">452</a> of file <a class="el" href="dnm__framework_8py_source.html">dnm_framework.py</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a0dad3fd1dfd4954ac1ebe64452a0776c" name="a0dad3fd1dfd4954ac1ebe64452a0776c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0dad3fd1dfd4954ac1ebe64452a0776c">&#9670;&#160;</a></span>connectivity_history</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.dnm_framework.NetworkScienceTrigger.connectivity_history</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="dnm__framework_8py_source.html#l00450">450</a> of file <a class="el" href="dnm__framework_8py_source.html">dnm_framework.py</a>.</p>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following file:<ul>
+<li>neuroexapt/core/<a class="el" href="dnm__framework_8py_source.html">dnm_framework.py</a></li>
+</ul>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<!-- do not remove this div, it is closed by doxygen! -->
+</div>
+<!-- Custom Footer -->
+<div style="background: #f8f9fa; border-top: 1px solid #e9ecef; margin-top: 50px; padding: 30px 0; text-align: center;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-bottom: 20px;">
+            <!-- Project Info -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🧠 NeuroExapt</h4>
+                <p style="color: #6c757d; margin: 0; font-size: 0.9em;">
+                    Advanced Neural Architecture Search and Dynamic Morphogenesis Framework for next-generation AI research.
+                </p>
+            </div>
+            <!-- Quick Links -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">📚 Quick Links</h4>
+                <div style="text-align: left;">
+                    <a href="index.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🏠 Home</a>
+                    <a href="modules.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📦 Modules</a>
+                    <a href="examples.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💡 Examples</a>
+                    <a href="files.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📁 Files</a>
+                </div>
+            </div>
+            <!-- Resources -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🔗 Resources</h4>
+                <div style="text-align: left;">
+                    <a href="https://github.com/your-username/neuroexapt" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💻 GitHub Repository</a>
+                    <a href="https://github.com/your-username/neuroexapt/issues" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🐛 Issue Tracker</a>
+                    <a href="https://github.com/your-username/neuroexapt/wiki" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📖 Wiki</a>
+                    <a href="https://github.com/your-username/neuroexapt/releases" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🚀 Releases</a>
+                </div>
+            </div>
+        </div>
+        <hr style="border: 0; height: 1px; background: #e9ecef; margin: 20px 0;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+            <div style="color: #6c757d; font-size: 0.9em;">
+                © 2024 NeuroExapt Project. Generated with 
+                <a href="https://www.doxygen.nl/index.html" style="color: #667eea; text-decoration: none;">Doxygen 1.9.8</a>
+            </div>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <span style="font-size: 0.9em; color: #6c757d;">Built with ❤️ for AI Research</span>
+                <div style="display: flex; gap: 10px;">
+                    <span style="background: #28a745; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">🟢 Active</span>
+                    <span style="background: #17a2b8; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">v3.0</span>
+                </div>
+            </div>
+        </div>
+        <!-- Technology Stack -->
+        <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #e9ecef;">
+            <div style="font-size: 0.8em; color: #868e96; text-align: center;">
+                <strong>Built with:</strong>
+                <span style="margin: 0 5px;">🐍 Python</span>
+                <span style="margin: 0 5px;">🔥 PyTorch</span>
+                <span style="margin: 0 5px;">⚡ CUDA</span>
+                <span style="margin: 0 5px;">🧮 NumPy</span>
+                <span style="margin: 0 5px;">📊 Matplotlib</span>
+                <span style="margin: 0 5px;">🚀 Triton</span>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Back to top button -->
+<div id="back-to-top" style="position: fixed; bottom: 20px; right: 20px; display: none; z-index: 1000;">
+    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" 
+            style="background: #667eea; color: white; border: none; padding: 10px 15px; border-radius: 50%; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,0.2); font-size: 16px;">
+        ⬆️
+    </button>
+</div>
+<script>
+// Back to top button functionality
+window.addEventListener('scroll', function() {
+    const backToTop = document.getElementById('back-to-top');
+    if (window.pageYOffset > 300) {
+        backToTop.style.display = 'block';
+    } else {
+        backToTop.style.display = 'none';
+    }
+});
+// Enhanced search functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Add search enhancement if search box exists
+    const searchBox = document.getElementById('MSearchField');
+    if (searchBox) {
+        searchBox.placeholder = 'Search documentation... 🔍';
+        searchBox.style.borderRadius = '20px';
+        searchBox.style.padding = '8px 15px';
+    }
+    // Add copy code button to code blocks
+    const codeBlocks = document.querySelectorAll('.fragment');
+    codeBlocks.forEach(function(block) {
+        const copyBtn = document.createElement('button');
+        copyBtn.innerHTML = '📋';
+        copyBtn.title = 'Copy code';
+        copyBtn.style.cssText = 'position: absolute; top: 10px; right: 10px; background: #667eea; color: white; border: none; padding: 5px; border-radius: 3px; cursor: pointer; font-size: 12px;';
+        block.style.position = 'relative';
+        block.appendChild(copyBtn);
+        copyBtn.addEventListener('click', function() {
+            const text = block.textContent;
+            navigator.clipboard.writeText(text).then(function() {
+                copyBtn.innerHTML = '✅';
+                setTimeout(function() {
+                    copyBtn.innerHTML = '📋';
+                }, 2000);
+            });
+        });
+    });
+});
+// Dark mode toggle (optional)
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+}
+// Load saved dark mode preference
+if (localStorage.getItem('darkMode') === 'true') {
+    document.body.classList.add('dark-mode');
+}
+</script>
+</body>
+</html>

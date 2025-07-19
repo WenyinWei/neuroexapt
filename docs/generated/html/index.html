@@ -1,0 +1,499 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="description" content="NeuroExapt - Advanced Neural Architecture Search and Dynamic Morphogenesis Framework">
+    <meta name="keywords" content="neural architecture search, dynamic morphogenesis, deep learning, AI, PyTorch">
+    <meta name="author" content="NeuroExapt Team">
+    <meta property="og:title" content="NeuroExapt Documentation">
+    <meta property="og:description" content="Advanced Neural Architecture Search Framework">
+    <meta property="og:type" content="website">
+
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>NeuroExapt: DNM Framework Examples</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="custom.css" rel="stylesheet" type="text/css"/>
+<!-- NeuroExapt Custom Styles -->
+<style>
+/* Enhanced header styling */
+.header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+.header h1 {
+    margin: 0;
+    font-size: 2.5em;
+    font-weight: 300;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+.header .subtitle {
+    font-size: 1.2em;
+    opacity: 0.9;
+    margin-top: 10px;
+}
+/* Enhanced navigation */
+.tablist {
+    background: #f8f9fa;
+    border-bottom: 2px solid #e9ecef;
+}
+.tablist li.current a {
+    background: #667eea;
+    color: white;
+}
+/* Improved content layout */
+.contents {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+/* Code highlighting */
+.fragment {
+    background: #f8f9fa;
+    border-left: 4px solid #667eea;
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 0 8px 8px 0;
+}
+/* Enhanced tables */
+table.memberdecls {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 20px 0;
+}
+table.memberdecls td {
+    border: 1px solid #e9ecef;
+    padding: 12px;
+}
+/* Better typography */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #343a40;
+}
+h1, h2, h3, h4, h5, h6 {
+    color: #495057;
+    font-weight: 500;
+}
+/* Responsive design */
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 2em;
+    }
+    .contents {
+        padding: 15px;
+    }
+}
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #1a1a1a;
+        color: #e9ecef;
+    }
+    .header {
+        background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+    }
+    .fragment {
+        background: #2d3748;
+        color: #e9ecef;
+    }
+}
+</style>
+<!-- Analytics (if needed) -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<!--
+<script async src="https://www.googletagmanager.com/gtag/js?id=GA_TRACKING_ID"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'GA_TRACKING_ID');
+</script>
+-->
+</head>
+<body>
+<!-- Custom Header -->
+<div class="header">
+    <h1>🧠 NeuroExapt</h1>
+    <div class="subtitle">Advanced Neural Architecture Search and Dynamic Morphogenesis Framework</div>
+    <div style="margin-top: 15px; font-size: 0.9em;">
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🚀 Dynamic Neural Morphogenesis
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🔬 Advanced Architecture Search
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            ⚡ High-Performance Computing
+        </span>
+    </div>
+</div>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! --><!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('index.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div><div class="header">
+  <div class="headertitle"><div class="title">DNM Framework Examples </div></div>
+</div><!--header-->
+<div class="contents">
+<div class="textblock"><p><a class="anchor" id="md_examples_2README"></a> </p>
+<h1><a class="anchor" id="autotoc_md50"></a>
+🧬 Dynamic Neural Morphogenesis (DNM) 框架示例</h1>
+<p>这个目录包含了DNM框架的使用示例，从简单测试到CIFAR-10基准测试。</p>
+<h2><a class="anchor" id="autotoc_md51"></a>
+📁 文件说明</h2>
+<ol type="1">
+<li>**<code><a class="el" href="dnm__simple__test_8py.html">dnm_simple_test.py</a></code>** - 简化的DNM测试<ul>
+<li>修复了原始代码中的问题</li>
+<li>使用简单CNN模型验证DNM功能</li>
+<li>适合快速测试和调试</li>
+</ul>
+</li>
+<li>**<code><a class="el" href="cifar10__dnm__benchmark_8py.html">cifar10_dnm_benchmark.py</a></code>** - CIFAR-10基准测试<ul>
+<li>使用ResNet-18变体作为初始架构</li>
+<li>目标：95准确率</li>
+<li>完整的训练流程和性能分析</li>
+</ul>
+</li>
+</ol>
+<h2><a class="anchor" id="autotoc_md52"></a>
+🚀 快速开始</h2>
+<h3><a class="anchor" id="autotoc_md53"></a>
+1. 简单测试</h3>
+<div class="fragment"><div class="line">cd examples</div>
+<div class="line">python dnm_simple_test.py</div>
+</div><!-- fragment --><p>这将运行一个30个epoch的简化测试，验证：</p><ul>
+<li>DNM框架是否正常工作</li>
+<li>神经元分裂是否发生</li>
+<li>连接生长是否有效</li>
+<li>模型参数是否实际增长</li>
+</ul>
+<h3><a class="anchor" id="autotoc_md54"></a>
+2. CIFAR-10基准测试</h3>
+<div class="fragment"><div class="line">cd examples</div>
+<div class="line">python cifar10_dnm_benchmark.py</div>
+</div><!-- fragment --><p>这将运行完整的CIFAR-10基准测试：</p><ul>
+<li>200个epoch的训练</li>
+<li>使用强化的数据增强</li>
+<li>目标95验证准确率</li>
+<li>完整的DNM演化分析</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md55"></a>
+🔧 解决的问题</h2>
+<p>相比原始的<code>dynamic_neural_morphogenesis.py</code>，新的示例解决了：</p>
+<ol type="1">
+<li>**<code>view size is not compatible</code>错误**<ul>
+<li>增强的形状兼容性检查</li>
+<li>安全的tensor重塑操作</li>
+<li>更好的错误处理</li>
+</ul>
+</li>
+<li><b>架构实际未演化</b><ul>
+<li>降低了分裂和连接阈值</li>
+<li>增加了演化频率</li>
+<li>更激进的配置参数</li>
+</ul>
+</li>
+<li><b>性能不理想</b><ul>
+<li>优化的网络架构</li>
+<li>更好的数据增强</li>
+<li>改进的训练策略</li>
+</ul>
+</li>
+</ol>
+<h2><a class="anchor" id="autotoc_md56"></a>
+📊 预期结果</h2>
+<h3><a class="anchor" id="autotoc_md57"></a>
+简单测试 (&lt;tt&gt;dnm_simple_test.py&lt;/tt&gt;)</h3>
+<ul>
+<li>**准确率**：60-80%</li>
+<li>**参数增长**：5-15%</li>
+<li>**形态发生事件**：3-8个</li>
+<li>**训练时间**：2-5分钟</li>
+</ul>
+<h3><a class="anchor" id="autotoc_md58"></a>
+CIFAR-10基准 (&lt;tt&gt;cifar10_dnm_benchmark.py&lt;/tt&gt;)</h3>
+<ul>
+<li>**准确率**：90-95%</li>
+<li>**参数增长**：10-30%</li>
+<li>**形态发生事件**：8-20个</li>
+<li>**训练时间**：30-60分钟</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md59"></a>
+🎯 配置调优</h2>
+<h3><a class="anchor" id="autotoc_md60"></a>
+更激进的演化</h3>
+<div class="fragment"><div class="line">config = {</div>
+<div class="line">    <span class="stringliteral">&#39;neuron_division&#39;</span>: {</div>
+<div class="line">        <span class="stringliteral">&#39;splitter&#39;</span>: {</div>
+<div class="line">            <span class="stringliteral">&#39;entropy_threshold&#39;</span>: 0.3,    <span class="comment"># 更低阈值</span></div>
+<div class="line">            <span class="stringliteral">&#39;split_probability&#39;</span>: 0.9     <span class="comment"># 更高概率</span></div>
+<div class="line">        }</div>
+<div class="line">    },</div>
+<div class="line">    <span class="stringliteral">&#39;framework&#39;</span>: {</div>
+<div class="line">        <span class="stringliteral">&#39;morphogenesis_frequency&#39;</span>: 2  <span class="comment"># 更频繁</span></div>
+<div class="line">    }</div>
+<div class="line">}</div>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md61"></a>
+更保守的演化</h3>
+<div class="fragment"><div class="line">config = {</div>
+<div class="line">    <span class="stringliteral">&#39;neuron_division&#39;</span>: {</div>
+<div class="line">        <span class="stringliteral">&#39;splitter&#39;</span>: {</div>
+<div class="line">            <span class="stringliteral">&#39;entropy_threshold&#39;</span>: 0.8,    <span class="comment"># 更高阈值</span></div>
+<div class="line">            <span class="stringliteral">&#39;split_probability&#39;</span>: 0.3     <span class="comment"># 更低概率</span></div>
+<div class="line">        }</div>
+<div class="line">    },</div>
+<div class="line">    <span class="stringliteral">&#39;framework&#39;</span>: {</div>
+<div class="line">        <span class="stringliteral">&#39;morphogenesis_frequency&#39;</span>: 8  <span class="comment"># 更少频率</span></div>
+<div class="line">    }</div>
+<div class="line">}</div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md62"></a>
+🐛 调试技巧</h2>
+<ol type="1">
+<li>**如果没有形态发生事件**：<ul>
+<li>降低<code>entropy_threshold</code>和<code>overload_threshold</code></li>
+<li>增加<code>split_probability</code></li>
+<li>减少<code>morphogenesis_frequency</code></li>
+</ul>
+</li>
+<li>**如果训练不稳定**：<ul>
+<li>增加<code>inheritance_noise</code>的值</li>
+<li>减少<code>max_splits_per_layer</code></li>
+<li>使用更小的学习率</li>
+</ul>
+</li>
+<li>**如果内存不足**：<ul>
+<li>减少<code>population_size</code></li>
+<li>减少batch size</li>
+<li>禁用多目标优化</li>
+</ul>
+</li>
+</ol>
+<h2><a class="anchor" id="autotoc_md63"></a>
+📈 性能监控</h2>
+<p>训练过程中可以观察：</p>
+<div class="fragment"><div class="line">📈 Epoch 0: Train=15.20%, Val=18.40%, Params=425,356 (+0.0%)</div>
+<div class="line">📈 Epoch 6: Train=45.30%, Val=48.20%, Params=425,356 (+0.0%)</div>
+<div class="line">🔄 Triggering morphogenesis analysis...</div>
+<div class="line">   🧬 2 neuron splits executed</div>
+<div class="line">   🔗 1 connection grown</div>
+<div class="line">📈 Epoch 12: Train=62.10%, Val=65.30%, Params=438,892 (+3.2%)</div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md64"></a>
+🏆 成功标志</h2>
+<ul>
+<li><b>参数增长</b> &gt; 0：模型结构实际演化</li>
+<li><b>形态发生事件</b> &gt; 0：DNM机制正常工作</li>
+<li>**准确率提升**：演化带来性能改善</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md65"></a>
+💡 最佳实践</h2>
+<ol type="1">
+<li>**渐进式训练**：先用保守配置训练，再用激进配置演化</li>
+<li>**监控资源**：注意GPU内存和训练时间</li>
+<li>**保存检查点**：定期保存演化后的模型</li>
+<li>**分析日志**：关注形态发生事件的触发模式</li>
+</ol>
+<h2><a class="anchor" id="autotoc_md66"></a>
+🔗 更多资源</h2>
+<ul>
+<li><code>../DNM_Framework_Integration_Guide.md</code> - 完整集成指南</li>
+<li><code>../neuroexapt/core/</code> - DNM核心模块代码</li>
+<li><code>../neuroexapt/math/</code> - 多目标优化模块</li>
+</ul>
+<hr  />
+<p><b>让神经网络真正活起来！</b> 🧬✨ </p>
+</div></div><!-- PageDoc -->
+</div><!-- contents -->
+</div><!-- doc-content -->
+<!-- do not remove this div, it is closed by doxygen! -->
+</div>
+<!-- Custom Footer -->
+<div style="background: #f8f9fa; border-top: 1px solid #e9ecef; margin-top: 50px; padding: 30px 0; text-align: center;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-bottom: 20px;">
+            <!-- Project Info -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🧠 NeuroExapt</h4>
+                <p style="color: #6c757d; margin: 0; font-size: 0.9em;">
+                    Advanced Neural Architecture Search and Dynamic Morphogenesis Framework for next-generation AI research.
+                </p>
+            </div>
+            <!-- Quick Links -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">📚 Quick Links</h4>
+                <div style="text-align: left;">
+                    <a href="index.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🏠 Home</a>
+                    <a href="modules.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📦 Modules</a>
+                    <a href="examples.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💡 Examples</a>
+                    <a href="files.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📁 Files</a>
+                </div>
+            </div>
+            <!-- Resources -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🔗 Resources</h4>
+                <div style="text-align: left;">
+                    <a href="https://github.com/your-username/neuroexapt" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💻 GitHub Repository</a>
+                    <a href="https://github.com/your-username/neuroexapt/issues" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🐛 Issue Tracker</a>
+                    <a href="https://github.com/your-username/neuroexapt/wiki" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📖 Wiki</a>
+                    <a href="https://github.com/your-username/neuroexapt/releases" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🚀 Releases</a>
+                </div>
+            </div>
+        </div>
+        <hr style="border: 0; height: 1px; background: #e9ecef; margin: 20px 0;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+            <div style="color: #6c757d; font-size: 0.9em;">
+                © 2024 NeuroExapt Project. Generated with 
+                <a href="https://www.doxygen.nl/index.html" style="color: #667eea; text-decoration: none;">Doxygen 1.9.8</a>
+            </div>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <span style="font-size: 0.9em; color: #6c757d;">Built with ❤️ for AI Research</span>
+                <div style="display: flex; gap: 10px;">
+                    <span style="background: #28a745; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">🟢 Active</span>
+                    <span style="background: #17a2b8; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">v3.0</span>
+                </div>
+            </div>
+        </div>
+        <!-- Technology Stack -->
+        <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #e9ecef;">
+            <div style="font-size: 0.8em; color: #868e96; text-align: center;">
+                <strong>Built with:</strong>
+                <span style="margin: 0 5px;">🐍 Python</span>
+                <span style="margin: 0 5px;">🔥 PyTorch</span>
+                <span style="margin: 0 5px;">⚡ CUDA</span>
+                <span style="margin: 0 5px;">🧮 NumPy</span>
+                <span style="margin: 0 5px;">📊 Matplotlib</span>
+                <span style="margin: 0 5px;">🚀 Triton</span>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Back to top button -->
+<div id="back-to-top" style="position: fixed; bottom: 20px; right: 20px; display: none; z-index: 1000;">
+    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" 
+            style="background: #667eea; color: white; border: none; padding: 10px 15px; border-radius: 50%; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,0.2); font-size: 16px;">
+        ⬆️
+    </button>
+</div>
+<script>
+// Back to top button functionality
+window.addEventListener('scroll', function() {
+    const backToTop = document.getElementById('back-to-top');
+    if (window.pageYOffset > 300) {
+        backToTop.style.display = 'block';
+    } else {
+        backToTop.style.display = 'none';
+    }
+});
+// Enhanced search functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Add search enhancement if search box exists
+    const searchBox = document.getElementById('MSearchField');
+    if (searchBox) {
+        searchBox.placeholder = 'Search documentation... 🔍';
+        searchBox.style.borderRadius = '20px';
+        searchBox.style.padding = '8px 15px';
+    }
+    // Add copy code button to code blocks
+    const codeBlocks = document.querySelectorAll('.fragment');
+    codeBlocks.forEach(function(block) {
+        const copyBtn = document.createElement('button');
+        copyBtn.innerHTML = '📋';
+        copyBtn.title = 'Copy code';
+        copyBtn.style.cssText = 'position: absolute; top: 10px; right: 10px; background: #667eea; color: white; border: none; padding: 5px; border-radius: 3px; cursor: pointer; font-size: 12px;';
+        block.style.position = 'relative';
+        block.appendChild(copyBtn);
+        copyBtn.addEventListener('click', function() {
+            const text = block.textContent;
+            navigator.clipboard.writeText(text).then(function() {
+                copyBtn.innerHTML = '✅';
+                setTimeout(function() {
+                    copyBtn.innerHTML = '📋';
+                }, 2000);
+            });
+        });
+    });
+});
+// Dark mode toggle (optional)
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+}
+// Load saved dark mode preference
+if (localStorage.getItem('darkMode') === 'true') {
+    document.body.classList.add('dark-mode');
+}
+</script>
+</body>
+</html>

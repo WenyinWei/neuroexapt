@@ -1,0 +1,646 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="description" content="NeuroExapt - Advanced Neural Architecture Search and Dynamic Morphogenesis Framework">
+    <meta name="keywords" content="neural architecture search, dynamic morphogenesis, deep learning, AI, PyTorch">
+    <meta name="author" content="NeuroExapt Team">
+    <meta property="og:title" content="NeuroExapt Documentation">
+    <meta property="og:description" content="Advanced Neural Architecture Search Framework">
+    <meta property="og:type" content="website">
+
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>NeuroExapt: examples.deep_classification.FixedResNet Class Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="custom.css" rel="stylesheet" type="text/css"/>
+<!-- NeuroExapt Custom Styles -->
+<style>
+/* Enhanced header styling */
+.header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+.header h1 {
+    margin: 0;
+    font-size: 2.5em;
+    font-weight: 300;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+.header .subtitle {
+    font-size: 1.2em;
+    opacity: 0.9;
+    margin-top: 10px;
+}
+/* Enhanced navigation */
+.tablist {
+    background: #f8f9fa;
+    border-bottom: 2px solid #e9ecef;
+}
+.tablist li.current a {
+    background: #667eea;
+    color: white;
+}
+/* Improved content layout */
+.contents {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+/* Code highlighting */
+.fragment {
+    background: #f8f9fa;
+    border-left: 4px solid #667eea;
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 0 8px 8px 0;
+}
+/* Enhanced tables */
+table.memberdecls {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 20px 0;
+}
+table.memberdecls td {
+    border: 1px solid #e9ecef;
+    padding: 12px;
+}
+/* Better typography */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #343a40;
+}
+h1, h2, h3, h4, h5, h6 {
+    color: #495057;
+    font-weight: 500;
+}
+/* Responsive design */
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 2em;
+    }
+    .contents {
+        padding: 15px;
+    }
+}
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #1a1a1a;
+        color: #e9ecef;
+    }
+    .header {
+        background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+    }
+    .fragment {
+        background: #2d3748;
+        color: #e9ecef;
+    }
+}
+</style>
+<!-- Analytics (if needed) -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<!--
+<script async src="https://www.googletagmanager.com/gtag/js?id=GA_TRACKING_ID"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'GA_TRACKING_ID');
+</script>
+-->
+</head>
+<body>
+<!-- Custom Header -->
+<div class="header">
+    <h1>🧠 NeuroExapt</h1>
+    <div class="subtitle">Advanced Neural Architecture Search and Dynamic Morphogenesis Framework</div>
+    <div style="margin-top: 15px; font-size: 0.9em;">
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🚀 Dynamic Neural Morphogenesis
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🔬 Advanced Architecture Search
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            ⚡ High-Performance Computing
+        </span>
+    </div>
+</div>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! --><!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('classexamples_1_1deep__classification_1_1FixedResNet.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#pro-methods">Protected Member Functions</a> &#124;
+<a href="classexamples_1_1deep__classification_1_1FixedResNet-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">examples.deep_classification.FixedResNet Class Reference</div></div>
+</div><!--header-->
+<div class="contents">
+<div class="dynheader">
+Inheritance diagram for examples.deep_classification.FixedResNet:</div>
+<div class="dyncontent">
+ <div class="center">
+  <img src="classexamples_1_1deep__classification_1_1FixedResNet.png" alt=""/>
+ </div></div>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:ae36b842974a5ea635fbcdc5471fd29cf" id="r_ae36b842974a5ea635fbcdc5471fd29cf"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classexamples_1_1deep__classification_1_1FixedResNet.html#ae36b842974a5ea635fbcdc5471fd29cf">__init__</a> (self, block, num_blocks, num_classes=10, base_width=64)</td></tr>
+<tr class="separator:ae36b842974a5ea635fbcdc5471fd29cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaa8183fc7a6aa220733a35fc841e20d1" id="r_aaa8183fc7a6aa220733a35fc841e20d1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classexamples_1_1deep__classification_1_1FixedResNet.html#aaa8183fc7a6aa220733a35fc841e20d1">forward</a> (self, x)</td></tr>
+<tr class="separator:aaa8183fc7a6aa220733a35fc841e20d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a835034b0d87e5108054ca420b86723e0" id="r_a835034b0d87e5108054ca420b86723e0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classexamples_1_1deep__classification_1_1FixedResNet.html#a835034b0d87e5108054ca420b86723e0">in_planes</a></td></tr>
+<tr class="separator:a835034b0d87e5108054ca420b86723e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a02fc6140fb8ea76408a32754e9dbeb15" id="r_a02fc6140fb8ea76408a32754e9dbeb15"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classexamples_1_1deep__classification_1_1FixedResNet.html#a02fc6140fb8ea76408a32754e9dbeb15">conv1</a></td></tr>
+<tr class="separator:a02fc6140fb8ea76408a32754e9dbeb15"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5ca9caae23aa174d28593ed27b1ad6ed" id="r_a5ca9caae23aa174d28593ed27b1ad6ed"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classexamples_1_1deep__classification_1_1FixedResNet.html#a5ca9caae23aa174d28593ed27b1ad6ed">bn1</a></td></tr>
+<tr class="separator:a5ca9caae23aa174d28593ed27b1ad6ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a65603a9d52fdbd57d05cd21f0fd2ec3c" id="r_a65603a9d52fdbd57d05cd21f0fd2ec3c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classexamples_1_1deep__classification_1_1FixedResNet.html#a65603a9d52fdbd57d05cd21f0fd2ec3c">layer1</a></td></tr>
+<tr class="separator:a65603a9d52fdbd57d05cd21f0fd2ec3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1984afc887ccaf57b2e1deaa5c8aad35" id="r_a1984afc887ccaf57b2e1deaa5c8aad35"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classexamples_1_1deep__classification_1_1FixedResNet.html#a1984afc887ccaf57b2e1deaa5c8aad35">layer2</a></td></tr>
+<tr class="separator:a1984afc887ccaf57b2e1deaa5c8aad35"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9f415444617d897ba5a9d4350df96781" id="r_a9f415444617d897ba5a9d4350df96781"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classexamples_1_1deep__classification_1_1FixedResNet.html#a9f415444617d897ba5a9d4350df96781">layer3</a></td></tr>
+<tr class="separator:a9f415444617d897ba5a9d4350df96781"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aad0e24386dfd38331ef219cc86f50e14" id="r_aad0e24386dfd38331ef219cc86f50e14"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classexamples_1_1deep__classification_1_1FixedResNet.html#aad0e24386dfd38331ef219cc86f50e14">layer4</a></td></tr>
+<tr class="separator:aad0e24386dfd38331ef219cc86f50e14"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab54ba5113fe225b1fd38e678b82fdafe" id="r_ab54ba5113fe225b1fd38e678b82fdafe"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classexamples_1_1deep__classification_1_1FixedResNet.html#ab54ba5113fe225b1fd38e678b82fdafe">linear</a></td></tr>
+<tr class="separator:ab54ba5113fe225b1fd38e678b82fdafe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr class="memitem:af980964d28e6143e022b6b3598190877" id="r_af980964d28e6143e022b6b3598190877"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classexamples_1_1deep__classification_1_1FixedResNet.html#af980964d28e6143e022b6b3598190877">_make_layer</a> (self, block, planes, num_blocks, stride)</td></tr>
+<tr class="separator:af980964d28e6143e022b6b3598190877"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><pre class="fragment">Fixed ResNet architecture for fast training</pre> 
+<p class="definition">Definition at line <a class="el" href="deep__classification_8py_source.html#l00098">98</a> of file <a class="el" href="deep__classification_8py_source.html">deep_classification.py</a>.</p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="ae36b842974a5ea635fbcdc5471fd29cf" name="ae36b842974a5ea635fbcdc5471fd29cf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae36b842974a5ea635fbcdc5471fd29cf">&#9670;&#160;</a></span>__init__()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">examples.deep_classification.FixedResNet.__init__ </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>block</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>num_blocks</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>num_classes</em> = <code>10</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>base_width</em> = <code>64</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="deep__classification_8py_source.html#l00100">100</a> of file <a class="el" href="deep__classification_8py_source.html">deep_classification.py</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="af980964d28e6143e022b6b3598190877" name="af980964d28e6143e022b6b3598190877"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af980964d28e6143e022b6b3598190877">&#9670;&#160;</a></span>_make_layer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">examples.deep_classification.FixedResNet._make_layer </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>block</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>planes</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>num_blocks</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>stride</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="deep__classification_8py_source.html#l00112">112</a> of file <a class="el" href="deep__classification_8py_source.html">deep_classification.py</a>.</p>
+
+</div>
+</div>
+<a id="aaa8183fc7a6aa220733a35fc841e20d1" name="aaa8183fc7a6aa220733a35fc841e20d1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaa8183fc7a6aa220733a35fc841e20d1">&#9670;&#160;</a></span>forward()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">examples.deep_classification.FixedResNet.forward </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>x</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="deep__classification_8py_source.html#l00120">120</a> of file <a class="el" href="deep__classification_8py_source.html">deep_classification.py</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a5ca9caae23aa174d28593ed27b1ad6ed" name="a5ca9caae23aa174d28593ed27b1ad6ed"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5ca9caae23aa174d28593ed27b1ad6ed">&#9670;&#160;</a></span>bn1</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">examples.deep_classification.FixedResNet.bn1</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="deep__classification_8py_source.html#l00105">105</a> of file <a class="el" href="deep__classification_8py_source.html">deep_classification.py</a>.</p>
+
+</div>
+</div>
+<a id="a02fc6140fb8ea76408a32754e9dbeb15" name="a02fc6140fb8ea76408a32754e9dbeb15"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a02fc6140fb8ea76408a32754e9dbeb15">&#9670;&#160;</a></span>conv1</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">examples.deep_classification.FixedResNet.conv1</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="deep__classification_8py_source.html#l00104">104</a> of file <a class="el" href="deep__classification_8py_source.html">deep_classification.py</a>.</p>
+
+</div>
+</div>
+<a id="a835034b0d87e5108054ca420b86723e0" name="a835034b0d87e5108054ca420b86723e0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a835034b0d87e5108054ca420b86723e0">&#9670;&#160;</a></span>in_planes</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">examples.deep_classification.FixedResNet.in_planes</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="deep__classification_8py_source.html#l00102">102</a> of file <a class="el" href="deep__classification_8py_source.html">deep_classification.py</a>.</p>
+
+</div>
+</div>
+<a id="a65603a9d52fdbd57d05cd21f0fd2ec3c" name="a65603a9d52fdbd57d05cd21f0fd2ec3c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a65603a9d52fdbd57d05cd21f0fd2ec3c">&#9670;&#160;</a></span>layer1</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">examples.deep_classification.FixedResNet.layer1</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="deep__classification_8py_source.html#l00106">106</a> of file <a class="el" href="deep__classification_8py_source.html">deep_classification.py</a>.</p>
+
+</div>
+</div>
+<a id="a1984afc887ccaf57b2e1deaa5c8aad35" name="a1984afc887ccaf57b2e1deaa5c8aad35"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1984afc887ccaf57b2e1deaa5c8aad35">&#9670;&#160;</a></span>layer2</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">examples.deep_classification.FixedResNet.layer2</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="deep__classification_8py_source.html#l00107">107</a> of file <a class="el" href="deep__classification_8py_source.html">deep_classification.py</a>.</p>
+
+</div>
+</div>
+<a id="a9f415444617d897ba5a9d4350df96781" name="a9f415444617d897ba5a9d4350df96781"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9f415444617d897ba5a9d4350df96781">&#9670;&#160;</a></span>layer3</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">examples.deep_classification.FixedResNet.layer3</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="deep__classification_8py_source.html#l00108">108</a> of file <a class="el" href="deep__classification_8py_source.html">deep_classification.py</a>.</p>
+
+</div>
+</div>
+<a id="aad0e24386dfd38331ef219cc86f50e14" name="aad0e24386dfd38331ef219cc86f50e14"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aad0e24386dfd38331ef219cc86f50e14">&#9670;&#160;</a></span>layer4</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">examples.deep_classification.FixedResNet.layer4</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="deep__classification_8py_source.html#l00109">109</a> of file <a class="el" href="deep__classification_8py_source.html">deep_classification.py</a>.</p>
+
+</div>
+</div>
+<a id="ab54ba5113fe225b1fd38e678b82fdafe" name="ab54ba5113fe225b1fd38e678b82fdafe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab54ba5113fe225b1fd38e678b82fdafe">&#9670;&#160;</a></span>linear</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">examples.deep_classification.FixedResNet.linear</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="deep__classification_8py_source.html#l00110">110</a> of file <a class="el" href="deep__classification_8py_source.html">deep_classification.py</a>.</p>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following file:<ul>
+<li>examples/<a class="el" href="deep__classification_8py_source.html">deep_classification.py</a></li>
+</ul>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<!-- do not remove this div, it is closed by doxygen! -->
+</div>
+<!-- Custom Footer -->
+<div style="background: #f8f9fa; border-top: 1px solid #e9ecef; margin-top: 50px; padding: 30px 0; text-align: center;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-bottom: 20px;">
+            <!-- Project Info -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🧠 NeuroExapt</h4>
+                <p style="color: #6c757d; margin: 0; font-size: 0.9em;">
+                    Advanced Neural Architecture Search and Dynamic Morphogenesis Framework for next-generation AI research.
+                </p>
+            </div>
+            <!-- Quick Links -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">📚 Quick Links</h4>
+                <div style="text-align: left;">
+                    <a href="index.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🏠 Home</a>
+                    <a href="modules.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📦 Modules</a>
+                    <a href="examples.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💡 Examples</a>
+                    <a href="files.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📁 Files</a>
+                </div>
+            </div>
+            <!-- Resources -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🔗 Resources</h4>
+                <div style="text-align: left;">
+                    <a href="https://github.com/your-username/neuroexapt" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💻 GitHub Repository</a>
+                    <a href="https://github.com/your-username/neuroexapt/issues" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🐛 Issue Tracker</a>
+                    <a href="https://github.com/your-username/neuroexapt/wiki" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📖 Wiki</a>
+                    <a href="https://github.com/your-username/neuroexapt/releases" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🚀 Releases</a>
+                </div>
+            </div>
+        </div>
+        <hr style="border: 0; height: 1px; background: #e9ecef; margin: 20px 0;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+            <div style="color: #6c757d; font-size: 0.9em;">
+                © 2024 NeuroExapt Project. Generated with 
+                <a href="https://www.doxygen.nl/index.html" style="color: #667eea; text-decoration: none;">Doxygen 1.9.8</a>
+            </div>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <span style="font-size: 0.9em; color: #6c757d;">Built with ❤️ for AI Research</span>
+                <div style="display: flex; gap: 10px;">
+                    <span style="background: #28a745; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">🟢 Active</span>
+                    <span style="background: #17a2b8; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">v3.0</span>
+                </div>
+            </div>
+        </div>
+        <!-- Technology Stack -->
+        <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #e9ecef;">
+            <div style="font-size: 0.8em; color: #868e96; text-align: center;">
+                <strong>Built with:</strong>
+                <span style="margin: 0 5px;">🐍 Python</span>
+                <span style="margin: 0 5px;">🔥 PyTorch</span>
+                <span style="margin: 0 5px;">⚡ CUDA</span>
+                <span style="margin: 0 5px;">🧮 NumPy</span>
+                <span style="margin: 0 5px;">📊 Matplotlib</span>
+                <span style="margin: 0 5px;">🚀 Triton</span>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Back to top button -->
+<div id="back-to-top" style="position: fixed; bottom: 20px; right: 20px; display: none; z-index: 1000;">
+    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" 
+            style="background: #667eea; color: white; border: none; padding: 10px 15px; border-radius: 50%; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,0.2); font-size: 16px;">
+        ⬆️
+    </button>
+</div>
+<script>
+// Back to top button functionality
+window.addEventListener('scroll', function() {
+    const backToTop = document.getElementById('back-to-top');
+    if (window.pageYOffset > 300) {
+        backToTop.style.display = 'block';
+    } else {
+        backToTop.style.display = 'none';
+    }
+});
+// Enhanced search functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Add search enhancement if search box exists
+    const searchBox = document.getElementById('MSearchField');
+    if (searchBox) {
+        searchBox.placeholder = 'Search documentation... 🔍';
+        searchBox.style.borderRadius = '20px';
+        searchBox.style.padding = '8px 15px';
+    }
+    // Add copy code button to code blocks
+    const codeBlocks = document.querySelectorAll('.fragment');
+    codeBlocks.forEach(function(block) {
+        const copyBtn = document.createElement('button');
+        copyBtn.innerHTML = '📋';
+        copyBtn.title = 'Copy code';
+        copyBtn.style.cssText = 'position: absolute; top: 10px; right: 10px; background: #667eea; color: white; border: none; padding: 5px; border-radius: 3px; cursor: pointer; font-size: 12px;';
+        block.style.position = 'relative';
+        block.appendChild(copyBtn);
+        copyBtn.addEventListener('click', function() {
+            const text = block.textContent;
+            navigator.clipboard.writeText(text).then(function() {
+                copyBtn.innerHTML = '✅';
+                setTimeout(function() {
+                    copyBtn.innerHTML = '📋';
+                }, 2000);
+            });
+        });
+    });
+});
+// Dark mode toggle (optional)
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+}
+// Load saved dark mode preference
+if (localStorage.getItem('darkMode') === 'true') {
+    document.body.classList.add('dark-mode');
+}
+</script>
+</body>
+</html>

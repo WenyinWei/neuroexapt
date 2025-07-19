@@ -1,3 +1,10 @@
+"""
+\defgroup group_performance_monitor Performance Monitor
+\ingroup core
+Performance Monitor module for NeuroExapt framework.
+"""
+
+
 import time
 import logging
 import json

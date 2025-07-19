@@ -1,4 +1,11 @@
 """
+"""
+\defgroup group_dataset_loader Dataset Loader
+\ingroup core
+Dataset Loader module for NeuroExapt framework.
+"""
+
+
 Advanced Dataset Loader with P2P Acceleration and Caching.
 
 This module provides robust dataset downloading capabilities optimized for Chinese users,

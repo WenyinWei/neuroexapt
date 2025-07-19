@@ -1,0 +1,606 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="description" content="NeuroExapt - Advanced Neural Architecture Search and Dynamic Morphogenesis Framework">
+    <meta name="keywords" content="neural architecture search, dynamic morphogenesis, deep learning, AI, PyTorch">
+    <meta name="author" content="NeuroExapt Team">
+    <meta property="og:title" content="NeuroExapt Documentation">
+    <meta property="og:description" content="Advanced Neural Architecture Search Framework">
+    <meta property="og:type" content="website">
+
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>NeuroExapt: 迅雷 (Xunlei/Thunder) Integration Guide for Chinese Users</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="custom.css" rel="stylesheet" type="text/css"/>
+<!-- NeuroExapt Custom Styles -->
+<style>
+/* Enhanced header styling */
+.header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+.header h1 {
+    margin: 0;
+    font-size: 2.5em;
+    font-weight: 300;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+.header .subtitle {
+    font-size: 1.2em;
+    opacity: 0.9;
+    margin-top: 10px;
+}
+/* Enhanced navigation */
+.tablist {
+    background: #f8f9fa;
+    border-bottom: 2px solid #e9ecef;
+}
+.tablist li.current a {
+    background: #667eea;
+    color: white;
+}
+/* Improved content layout */
+.contents {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+/* Code highlighting */
+.fragment {
+    background: #f8f9fa;
+    border-left: 4px solid #667eea;
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 0 8px 8px 0;
+}
+/* Enhanced tables */
+table.memberdecls {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 20px 0;
+}
+table.memberdecls td {
+    border: 1px solid #e9ecef;
+    padding: 12px;
+}
+/* Better typography */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #343a40;
+}
+h1, h2, h3, h4, h5, h6 {
+    color: #495057;
+    font-weight: 500;
+}
+/* Responsive design */
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 2em;
+    }
+    .contents {
+        padding: 15px;
+    }
+}
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #1a1a1a;
+        color: #e9ecef;
+    }
+    .header {
+        background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+    }
+    .fragment {
+        background: #2d3748;
+        color: #e9ecef;
+    }
+}
+</style>
+<!-- Analytics (if needed) -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<!--
+<script async src="https://www.googletagmanager.com/gtag/js?id=GA_TRACKING_ID"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'GA_TRACKING_ID');
+</script>
+-->
+</head>
+<body>
+<!-- Custom Header -->
+<div class="header">
+    <h1>🧠 NeuroExapt</h1>
+    <div class="subtitle">Advanced Neural Architecture Search and Dynamic Morphogenesis Framework</div>
+    <div style="margin-top: 15px; font-size: 0.9em;">
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🚀 Dynamic Neural Morphogenesis
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🔬 Advanced Architecture Search
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            ⚡ High-Performance Computing
+        </span>
+    </div>
+</div>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! --><!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('md_docs_2xunlei__integration.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div><div class="header">
+  <div class="headertitle"><div class="title">迅雷 (Xunlei/Thunder) Integration Guide for Chinese Users</div></div>
+</div><!--header-->
+<div class="contents">
+<div class="textblock"><p><a class="anchor" id="autotoc_md353"></a> </p>
+<h1><a class="anchor" id="autotoc_md354"></a>
+🇨🇳 概述 (Overview)</h1>
+<p>迅雷 (Xunlei/Thunder) 是中国最流行的下载管理器之一，使用P2P技术可以显著加速数据集下载。本指南将帮助中国用户使用迅雷来加速Neuro Exapt框架的数据集下载。</p>
+<h1><a class="anchor" id="autotoc_md355"></a>
+🚀 快速开始 (Quick Start)</h1>
+<h2><a class="anchor" id="autotoc_md356"></a>
+1. 安装迅雷 (Install 迅雷)</h2>
+<p><b>Windows:</b></p><ul>
+<li>访问 <a href="https://www.xunlei.com/">https://www.xunlei.com/</a> 下载最新版本</li>
+<li>或从Microsoft Store安装</li>
+</ul>
+<p><b>macOS:</b></p><ul>
+<li>从Mac App Store安装</li>
+<li>或访问 <a href="https://www.xunlei.com/">https://www.xunlei.com/</a> 下载</li>
+</ul>
+<p><b>Linux:</b></p><ul>
+<li>访问 <a href="https://www.xunlei.com/">https://www.xunlei.com/</a> 下载Linux版本</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md357"></a>
+2. 自动检测 (Auto-Detection)</h2>
+<p>Neuro Exapt会自动检测系统中安装的迅雷：</p>
+<div class="fragment"><div class="line"><span class="keyword">from</span> <a class="code hl_namespace" href="namespaceneuroexapt_1_1utils_1_1xunlei__downloader.html">neuroexapt.utils.xunlei_downloader</a> <span class="keyword">import</span> XunleiDownloader</div>
+<div class="line"> </div>
+<div class="line"><span class="comment"># 自动检测迅雷</span></div>
+<div class="line">downloader = XunleiDownloader()</div>
+<div class="line"><span class="keywordflow">if</span> downloader.is_available:</div>
+<div class="line">    print(f<span class="stringliteral">&quot;✅ 迅雷已检测到: {downloader.xunlei_path}&quot;</span>)</div>
+<div class="line"><span class="keywordflow">else</span>:</div>
+<div class="line">    print(<span class="stringliteral">&quot;❌ 未检测到迅雷，请先安装&quot;</span>)</div>
+<div class="ttc" id="anamespaceneuroexapt_1_1utils_1_1xunlei__downloader_html"><div class="ttname"><a href="namespaceneuroexapt_1_1utils_1_1xunlei__downloader.html">neuroexapt.utils.xunlei_downloader</a></div><div class="ttdef"><b>Definition</b> <a href="xunlei__downloader_8py_source.html#l00001">xunlei_downloader.py:1</a></div></div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md358"></a>
+3. 下载数据集 (Download Datasets)</h2>
+<div class="fragment"><div class="line"><span class="keyword">from</span> <a class="code hl_namespace" href="namespaceneuroexapt_1_1utils_1_1xunlei__downloader.html">neuroexapt.utils.xunlei_downloader</a> <span class="keyword">import</span> XunleiDatasetDownloader</div>
+<div class="line"> </div>
+<div class="line"><span class="comment"># 创建下载器</span></div>
+<div class="line">downloader = XunleiDatasetDownloader(data_dir=<span class="stringliteral">&quot;./data&quot;</span>)</div>
+<div class="line"> </div>
+<div class="line"><span class="comment"># 下载CIFAR-10数据集</span></div>
+<div class="line">success = downloader.download_dataset(<span class="stringliteral">&#39;cifar10&#39;</span>)</div>
+<div class="line"><span class="keywordflow">if</span> success:</div>
+<div class="line">    print(<span class="stringliteral">&quot;✅ 下载已启动，请查看迅雷&quot;</span>)</div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md359"></a>
+📋 支持的数据集 (Supported Datasets)</h1>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">数据集   </th><th class="markdownTableHeadNone">大小   </th><th class="markdownTableHeadNone">描述   </th><th class="markdownTableHeadNone">下载URL    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">CIFAR-10   </td><td class="markdownTableBodyNone">162MB   </td><td class="markdownTableBodyNone">图像分类数据集   </td><td class="markdownTableBodyNone"><a href="https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz">https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz</a>    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">CIFAR-100   </td><td class="markdownTableBodyNone">161MB   </td><td class="markdownTableBodyNone">图像分类数据集   </td><td class="markdownTableBodyNone"><a href="https://www.cs.toronto.edu/~kriz/cifar-100-python.tar.gz">https://www.cs.toronto.edu/~kriz/cifar-100-python.tar.gz</a>    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">MNIST   </td><td class="markdownTableBodyNone">9.4MB   </td><td class="markdownTableBodyNone">手写数字数据集   </td><td class="markdownTableBodyNone"><a href="http://yann.lecun.com/exdb/mnist/">http://yann.lecun.com/exdb/mnist/</a>   </td></tr>
+</table>
+<h1><a class="anchor" id="autotoc_md360"></a>
+🔧 使用方法 (Usage Methods)</h1>
+<h2><a class="anchor" id="autotoc_md361"></a>
+方法1: 自动下载 (Automatic Download)</h2>
+<div class="fragment"><div class="line"><span class="comment"># 最简单的方法</span></div>
+<div class="line">downloader = XunleiDatasetDownloader()</div>
+<div class="line">downloader.download_dataset(<span class="stringliteral">&#39;cifar10&#39;</span>)</div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md362"></a>
+方法2: 手动下载 (Manual Download)</h2>
+<ol type="1">
+<li>打开迅雷</li>
+<li>复制数据集URL</li>
+<li>粘贴到迅雷下载对话框</li>
+<li>设置保存路径为 <code>./data</code></li>
+<li>开始下载</li>
+</ol>
+<h2><a class="anchor" id="autotoc_md363"></a>
+方法3: 任务文件 (Task File)</h2>
+<div class="fragment"><div class="line"><span class="comment"># 创建迅雷任务文件</span></div>
+<div class="line">downloader = XunleiDownloader()</div>
+<div class="line">thunder_file = downloader.create_download_task_file(</div>
+<div class="line">    url=<span class="stringliteral">&quot;https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz&quot;</span>,</div>
+<div class="line">    save_path=<span class="stringliteral">&quot;./data&quot;</span>,</div>
+<div class="line">    filename=<span class="stringliteral">&quot;cifar-10-python.tar.gz&quot;</span></div>
+<div class="line">)</div>
+<div class="line"><span class="comment"># 双击.thunder文件即可在迅雷中打开</span></div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md364"></a>
+⚡ 迅雷优化设置 (迅雷 Optimization Settings)</h1>
+<h2><a class="anchor" id="autotoc_md365"></a>
+基本设置 (Basic Settings)</h2>
+<ol type="1">
+<li><b>启用迅雷加速</b> (Enable 迅雷 Acceleration)<ul>
+<li>打开迅雷设置</li>
+<li>找到"下载设置"</li>
+<li>启用"迅雷加速"</li>
+</ul>
+</li>
+<li><b>设置下载路径</b> (Set Download Path)<ul>
+<li>默认路径: <code>./data</code></li>
+<li>确保有足够的磁盘空间</li>
+</ul>
+</li>
+<li><b>连接数设置</b> (Connection Settings)<ul>
+<li>建议设置: 10-20个连接</li>
+<li>根据网络情况调整</li>
+</ul>
+</li>
+</ol>
+<h2><a class="anchor" id="autotoc_md366"></a>
+高级设置 (Advanced Settings)</h2>
+<ol type="1">
+<li><b>P2P加速</b> (P2P Acceleration)<ul>
+<li>启用P2P下载</li>
+<li>允许上传以加速其他用户</li>
+</ul>
+</li>
+<li><b>带宽限制</b> (Bandwidth Limit)<ul>
+<li>根据网络情况设置</li>
+<li>避免影响其他网络活动</li>
+</ul>
+</li>
+<li><b>下载优先级</b> (Download Priority)<ul>
+<li>设置数据集下载为高优先级</li>
+<li>确保快速完成</li>
+</ul>
+</li>
+</ol>
+<h1><a class="anchor" id="autotoc_md367"></a>
+🎯 性能对比 (Performance Comparison)</h1>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">下载方式   </th><th class="markdownTableHeadNone">速度   </th><th class="markdownTableHeadNone">稳定性   </th><th class="markdownTableHeadNone">推荐度    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">直接下载   </td><td class="markdownTableBodyNone">慢 (10-50KB/s)   </td><td class="markdownTableBodyNone">不稳定   </td><td class="markdownTableBodyNone">⭐⭐    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">迅雷下载   </td><td class="markdownTableBodyNone">快 (1-10MB/s)   </td><td class="markdownTableBodyNone">稳定   </td><td class="markdownTableBodyNone">⭐⭐⭐⭐⭐    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">迅雷VIP   </td><td class="markdownTableBodyNone">极快 (10-50MB/s)   </td><td class="markdownTableBodyNone">非常稳定   </td><td class="markdownTableBodyNone">⭐⭐⭐⭐⭐   </td></tr>
+</table>
+<h1><a class="anchor" id="autotoc_md368"></a>
+🔍 故障排除 (Troubleshooting)</h1>
+<h2><a class="anchor" id="autotoc_md369"></a>
+常见问题 (Common Issues)</h2>
+<p><b>1. 迅雷未检测到</b> </p><div class="fragment"><div class="line"><span class="comment"># 手动指定迅雷路径</span></div>
+<div class="line">downloader = XunleiDownloader(xunlei_path=<span class="stringliteral">&quot;C:/Program Files/Thunder Network/Thunder/Program/Thunder.exe&quot;</span>)</div>
+</div><!-- fragment --><p><b>2. 下载速度慢</b></p><ul>
+<li>检查网络连接</li>
+<li>启用迅雷加速</li>
+<li>考虑升级迅雷VIP</li>
+</ul>
+<p><b>3. 下载中断</b></p><ul>
+<li>迅雷支持断点续传</li>
+<li>重新启动下载即可继续</li>
+</ul>
+<p><b>4. 文件损坏</b> </p><div class="fragment"><div class="line"><span class="comment"># 验证文件完整性</span></div>
+<div class="line"><span class="keyword">from</span> <a class="code hl_namespace" href="namespaceneuroexapt_1_1utils_1_1xunlei__downloader.html">neuroexapt.utils.xunlei_downloader</a> <span class="keyword">import</span> XunleiDatasetDownloader</div>
+<div class="line">downloader = XunleiDatasetDownloader()</div>
+<div class="line">status = downloader.get_status()</div>
+<div class="line">print(status[<span class="stringliteral">&#39;datasets&#39;</span>][<span class="stringliteral">&#39;cifar10&#39;</span>])</div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md370"></a>
+错误代码 (Error Codes)</h2>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">错误代码   </th><th class="markdownTableHeadNone">含义   </th><th class="markdownTableHeadNone">解决方案    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">404   </td><td class="markdownTableBodyNone">文件不存在   </td><td class="markdownTableBodyNone">检查URL是否正确    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">403   </td><td class="markdownTableBodyNone">访问被拒绝   </td><td class="markdownTableBodyNone">尝试使用VPN    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">500   </td><td class="markdownTableBodyNone">服务器错误   </td><td class="markdownTableBodyNone">稍后重试    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">连接超时   </td><td class="markdownTableBodyNone">网络问题   </td><td class="markdownTableBodyNone">检查网络连接   </td></tr>
+</table>
+<h1><a class="anchor" id="autotoc_md371"></a>
+💡 最佳实践 (Best Practices)</h1>
+<h2><a class="anchor" id="autotoc_md372"></a>
+1. 网络优化 (Network Optimization)</h2>
+<ul>
+<li>使用有线网络连接</li>
+<li>关闭其他下载任务</li>
+<li>选择网络空闲时段下载</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md373"></a>
+2. 迅雷设置 (迅雷 Settings)</h2>
+<ul>
+<li>定期更新迅雷版本</li>
+<li>启用所有加速功能</li>
+<li>设置合理的下载限制</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md374"></a>
+3. 文件管理 (File Management)</h2>
+<ul>
+<li>定期清理下载缓存</li>
+<li>备份重要数据集</li>
+<li>使用SSD存储以提高速度</li>
+</ul>
+<h1><a class="anchor" id="autotoc_md375"></a>
+🚀 高级功能 (Advanced Features)</h1>
+<h2><a class="anchor" id="autotoc_md376"></a>
+批量下载 (Batch Download)</h2>
+<div class="fragment"><div class="line"><span class="comment"># 批量下载多个数据集</span></div>
+<div class="line">datasets = [<span class="stringliteral">&#39;cifar10&#39;</span>, <span class="stringliteral">&#39;cifar100&#39;</span>, <span class="stringliteral">&#39;mnist&#39;</span>]</div>
+<div class="line">downloader = XunleiDatasetDownloader()</div>
+<div class="line"> </div>
+<div class="line"><span class="keywordflow">for</span> dataset <span class="keywordflow">in</span> datasets:</div>
+<div class="line">    print(f<span class="stringliteral">&quot;开始下载 {dataset}...&quot;</span>)</div>
+<div class="line">    downloader.download_dataset(dataset)</div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md377"></a>
+进度监控 (Progress Monitoring)</h2>
+<div class="fragment"><div class="line"><span class="comment"># 监控下载进度</span></div>
+<div class="line"><span class="keyword">import</span> time</div>
+<div class="line"> </div>
+<div class="line">downloader = XunleiDatasetDownloader()</div>
+<div class="line">downloader.download_dataset(<span class="stringliteral">&#39;cifar10&#39;</span>, wait_for_completion=<span class="keyword">False</span>)</div>
+<div class="line"> </div>
+<div class="line"><span class="keywordflow">while</span> <span class="keyword">True</span>:</div>
+<div class="line">    status = downloader.get_status()</div>
+<div class="line">    cifar10_status = status[<span class="stringliteral">&#39;datasets&#39;</span>][<span class="stringliteral">&#39;cifar10&#39;</span>]</div>
+<div class="line">    </div>
+<div class="line">    <span class="keywordflow">if</span> cifar10_status[<span class="stringliteral">&#39;downloaded&#39;</span>] <span class="keywordflow">and</span> cifar10_status[<span class="stringliteral">&#39;complete&#39;</span>]:</div>
+<div class="line">        print(<span class="stringliteral">&quot;✅ 下载完成!&quot;</span>)</div>
+<div class="line">        <span class="keywordflow">break</span></div>
+<div class="line">    <span class="keywordflow">elif</span> cifar10_status[<span class="stringliteral">&#39;downloaded&#39;</span>]:</div>
+<div class="line">        print(f<span class="stringliteral">&quot;⏳ 下载进度: {cifar10_status[&#39;progress&#39;]:.1f}%&quot;</span>)</div>
+<div class="line">    </div>
+<div class="line">    time.sleep(5)</div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md378"></a>
+自定义配置 (Custom Configuration)</h2>
+<div class="fragment"><div class="line"><span class="comment"># 自定义下载配置</span></div>
+<div class="line"><span class="keyword">class </span>CustomXunleiDownloader(XunleiDatasetDownloader):</div>
+<div class="line">    <span class="keyword">def </span>__init__(self):</div>
+<div class="line">        super().__init__(</div>
+<div class="line">            data_dir=<span class="stringliteral">&quot;./custom_data&quot;</span>,</div>
+<div class="line">            xunlei_path=<span class="stringliteral">&quot;C:/Custom/Path/To/Thunder.exe&quot;</span></div>
+<div class="line">        )</div>
+<div class="line">    </div>
+<div class="line">    <span class="keyword">def </span>download_dataset(self, dataset_name, **kwargs):</div>
+<div class="line">        <span class="comment"># 自定义下载逻辑</span></div>
+<div class="line">        print(f<span class="stringliteral">&quot;使用自定义配置下载 {dataset_name}&quot;</span>)</div>
+<div class="line">        <span class="keywordflow">return</span> super().download_dataset(dataset_name, **kwargs)</div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md379"></a>
+📞 技术支持 (Technical Support)</h1>
+<h2><a class="anchor" id="autotoc_md380"></a>
+获取帮助 (Getting Help)</h2>
+<ol type="1">
+<li><b>查看日志</b> (Check Logs) <div class="fragment"><div class="line"><span class="keyword">import</span> logging</div>
+<div class="line">logging.basicConfig(level=logging.DEBUG)</div>
+</div><!-- fragment --></li>
+<li><b>报告问题</b> (Report Issues)</li>
+</ol>
+<ul>
+<li>GitHub Issues: <a href="https://github.com/yourusername/neuroexapt/issues">https://github.com/yourusername/neuroexapt/issues</a></li>
+<li>邮件支持: <a href="#" onclick="location.href='mai'+'lto:'+'tea'+'m@'+'neu'+'ro'+'exa'+'pt'+'.ai'; return false;">team@<span class="obfuscator">.nosp@m.</span>neur<span class="obfuscator">.nosp@m.</span>oexap<span class="obfuscator">.nosp@m.</span>t.ai</a></li>
+</ul>
+<ol type="1">
+<li><b>社区讨论</b> (Community Discussion)</li>
+</ol>
+<ul>
+<li>GitHub Discussions: <a href="https://github.com/yourusername/neuroexapt/discussions">https://github.com/yourusername/neuroexapt/discussions</a></li>
+</ul>
+<h2><a class="anchor" id="autotoc_md381"></a>
+贡献代码 (Contributing)</h2>
+<p>欢迎贡献代码来改进迅雷集成功能：</p>
+<ol type="1">
+<li>Fork项目</li>
+<li>创建功能分支</li>
+<li>提交Pull Request</li>
+<li>等待代码审查</li>
+</ol>
+<h1><a class="anchor" id="autotoc_md382"></a>
+📚 相关资源 (Related Resources)</h1>
+<ul>
+<li><a href="https://www.xunlei.com/">迅雷官方网站</a></li>
+<li><a href="docs/html/index.html">Neuro Exapt文档</a></li>
+<li><a href="https://pytorch.org/vision/stable/datasets.html">PyTorch数据集</a></li>
+<li><a href="https://mirrors.tuna.tsinghua.edu.cn/">中国镜像站点</a></li>
+</ul>
+<hr  />
+<p><em>本指南专为中国用户设计，帮助您充分利用迅雷的加速功能来快速下载机器学习数据集。</em> </p>
+</div></div><!-- contents -->
+</div><!-- PageDoc -->
+</div><!-- doc-content -->
+<!-- do not remove this div, it is closed by doxygen! -->
+</div>
+<!-- Custom Footer -->
+<div style="background: #f8f9fa; border-top: 1px solid #e9ecef; margin-top: 50px; padding: 30px 0; text-align: center;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-bottom: 20px;">
+            <!-- Project Info -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🧠 NeuroExapt</h4>
+                <p style="color: #6c757d; margin: 0; font-size: 0.9em;">
+                    Advanced Neural Architecture Search and Dynamic Morphogenesis Framework for next-generation AI research.
+                </p>
+            </div>
+            <!-- Quick Links -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">📚 Quick Links</h4>
+                <div style="text-align: left;">
+                    <a href="index.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🏠 Home</a>
+                    <a href="modules.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📦 Modules</a>
+                    <a href="examples.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💡 Examples</a>
+                    <a href="files.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📁 Files</a>
+                </div>
+            </div>
+            <!-- Resources -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🔗 Resources</h4>
+                <div style="text-align: left;">
+                    <a href="https://github.com/your-username/neuroexapt" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💻 GitHub Repository</a>
+                    <a href="https://github.com/your-username/neuroexapt/issues" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🐛 Issue Tracker</a>
+                    <a href="https://github.com/your-username/neuroexapt/wiki" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📖 Wiki</a>
+                    <a href="https://github.com/your-username/neuroexapt/releases" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🚀 Releases</a>
+                </div>
+            </div>
+        </div>
+        <hr style="border: 0; height: 1px; background: #e9ecef; margin: 20px 0;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+            <div style="color: #6c757d; font-size: 0.9em;">
+                © 2024 NeuroExapt Project. Generated with 
+                <a href="https://www.doxygen.nl/index.html" style="color: #667eea; text-decoration: none;">Doxygen 1.9.8</a>
+            </div>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <span style="font-size: 0.9em; color: #6c757d;">Built with ❤️ for AI Research</span>
+                <div style="display: flex; gap: 10px;">
+                    <span style="background: #28a745; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">🟢 Active</span>
+                    <span style="background: #17a2b8; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">v3.0</span>
+                </div>
+            </div>
+        </div>
+        <!-- Technology Stack -->
+        <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #e9ecef;">
+            <div style="font-size: 0.8em; color: #868e96; text-align: center;">
+                <strong>Built with:</strong>
+                <span style="margin: 0 5px;">🐍 Python</span>
+                <span style="margin: 0 5px;">🔥 PyTorch</span>
+                <span style="margin: 0 5px;">⚡ CUDA</span>
+                <span style="margin: 0 5px;">🧮 NumPy</span>
+                <span style="margin: 0 5px;">📊 Matplotlib</span>
+                <span style="margin: 0 5px;">🚀 Triton</span>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Back to top button -->
+<div id="back-to-top" style="position: fixed; bottom: 20px; right: 20px; display: none; z-index: 1000;">
+    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" 
+            style="background: #667eea; color: white; border: none; padding: 10px 15px; border-radius: 50%; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,0.2); font-size: 16px;">
+        ⬆️
+    </button>
+</div>
+<script>
+// Back to top button functionality
+window.addEventListener('scroll', function() {
+    const backToTop = document.getElementById('back-to-top');
+    if (window.pageYOffset > 300) {
+        backToTop.style.display = 'block';
+    } else {
+        backToTop.style.display = 'none';
+    }
+});
+// Enhanced search functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Add search enhancement if search box exists
+    const searchBox = document.getElementById('MSearchField');
+    if (searchBox) {
+        searchBox.placeholder = 'Search documentation... 🔍';
+        searchBox.style.borderRadius = '20px';
+        searchBox.style.padding = '8px 15px';
+    }
+    // Add copy code button to code blocks
+    const codeBlocks = document.querySelectorAll('.fragment');
+    codeBlocks.forEach(function(block) {
+        const copyBtn = document.createElement('button');
+        copyBtn.innerHTML = '📋';
+        copyBtn.title = 'Copy code';
+        copyBtn.style.cssText = 'position: absolute; top: 10px; right: 10px; background: #667eea; color: white; border: none; padding: 5px; border-radius: 3px; cursor: pointer; font-size: 12px;';
+        block.style.position = 'relative';
+        block.appendChild(copyBtn);
+        copyBtn.addEventListener('click', function() {
+            const text = block.textContent;
+            navigator.clipboard.writeText(text).then(function() {
+                copyBtn.innerHTML = '✅';
+                setTimeout(function() {
+                    copyBtn.innerHTML = '📋';
+                }, 2000);
+            });
+        });
+    });
+});
+// Dark mode toggle (optional)
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+}
+// Load saved dark mode preference
+if (localStorage.getItem('darkMode') === 'true') {
+    document.body.classList.add('dark-mode');
+}
+</script>
+</body>
+</html>

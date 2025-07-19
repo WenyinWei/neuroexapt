@@ -1,3 +1,10 @@
+"""
+\defgroup group_minimal_monitor Minimal Monitor
+\ingroup core
+Minimal Monitor module for NeuroExapt framework.
+"""
+
+
 import time
 import logging
 import os

@@ -1,0 +1,472 @@
+/**
+ * @file custom.css
+ * @brief Custom Doxygen stylesheet for Neuro Exapt
+ * 
+ * Elegant documentation styling with white background and azure blue accents
+ * for the Information-Theoretic Dynamic Architecture Optimization Framework
+ */
+
+/* ===== ROOT VARIABLES ===== */
+:root {
+    /* Azure Blue Color Palette */
+    --primary-azure: #007ACC;
+    --light-azure: #3498DB;
+    --dark-azure: #005A9E;
+    --azure-tint: #E6F3FF;
+    
+    /* Neutral Colors */
+    --white: #FFFFFF;
+    --light-gray: #F8F9FA;
+    --medium-gray: #E9ECEF;
+    --dark-gray: #6C757D;
+    --text-dark: #343A40;
+    
+    /* Mathematical Formula Colors */
+    --math-bg: #F7F9FC;
+    --math-border: #DEE2E6;
+    
+    /* Code Colors */
+    --code-bg: #F8F9FA;
+    --code-border: #E9ECEF;
+    
+    /* Fonts */
+    --font-primary: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    --font-mono: 'Consolas', 'Monaco', 'Courier New', monospace;
+    --font-math: 'STIX Two Math', 'Times New Roman', serif;
+}
+
+/* ===== BASE STYLING ===== */
+body {
+    font-family: var(--font-primary);
+    background-color: var(--white);
+    color: var(--text-dark);
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+}
+
+/* ===== HEADER AND NAVIGATION ===== */
+#top {
+    background: linear-gradient(135deg, var(--primary-azure), var(--light-azure));
+    border-bottom: 2px solid var(--dark-azure);
+    padding: 0;
+    margin: 0;
+}
+
+.header {
+    background: transparent;
+    border-bottom: none;
+}
+
+.header .headertitle {
+    background: transparent;
+    border-bottom: none;
+}
+
+.title {
+    color: var(--white) !important;
+    font-size: 2.2em;
+    font-weight: 300;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    margin: 20px 0;
+}
+
+.ingroups {
+    color: var(--azure-tint) !important;
+}
+
+/* Navigation Tabs */
+.tabs, .tabs2, .tabs3 {
+    background: var(--white);
+    border-bottom: 1px solid var(--medium-gray);
+    margin: 0;
+    padding: 0;
+}
+
+.tablist {
+    margin: 0;
+    padding: 0;
+    background: transparent;
+}
+
+.tablist li {
+    background: transparent;
+    border: none;
+    margin-right: 2px;
+}
+
+.tablist li.current a {
+    background: var(--primary-azure);
+    color: var(--white);
+    border: none;
+    border-radius: 4px 4px 0 0;
+}
+
+.tablist a {
+    background: var(--light-gray);
+    color: var(--primary-azure);
+    border: 1px solid var(--medium-gray);
+    border-bottom: none;
+    padding: 10px 16px;
+    font-weight: 500;
+    text-decoration: none;
+    border-radius: 4px 4px 0 0;
+    transition: all 0.3s ease;
+}
+
+.tablist a:hover {
+    background: var(--azure-tint);
+    color: var(--dark-azure);
+}
+
+/* ===== HEADINGS ===== */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--primary-azure);
+    font-weight: 600;
+    margin-top: 2em;
+    margin-bottom: 1em;
+    line-height: 1.3;
+}
+
+h1 {
+    font-size: 2.5em;
+    border-bottom: 3px solid var(--primary-azure);
+    padding-bottom: 0.5em;
+    color: var(--dark-azure);
+}
+
+h2 {
+    font-size: 2em;
+    border-bottom: 2px solid var(--light-azure);
+    padding-bottom: 0.3em;
+}
+
+h3 {
+    font-size: 1.5em;
+    color: var(--primary-azure);
+}
+
+h4 {
+    font-size: 1.3em;
+    color: var(--dark-azure);
+}
+
+h5, h6 {
+    font-size: 1.1em;
+    color: var(--primary-azure);
+}
+
+/* ===== MAIN CONTENT AREA ===== */
+#main-nav {
+    background-color: var(--white);
+    border-right: 1px solid var(--medium-gray);
+}
+
+.contents {
+    background-color: var(--white);
+    padding: 20px;
+    margin: 0;
+}
+
+.textblock {
+    background-color: var(--white);
+    border: none;
+    padding: 0;
+    margin: 1em 0;
+}
+
+/* ===== MATHEMATICAL FORMULAS ===== */
+.formula {
+    background-color: var(--math-bg);
+    border: 1px solid var(--math-border);
+    border-radius: 6px;
+    padding: 15px;
+    margin: 20px 0;
+    text-align: center;
+    font-family: var(--font-math);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.formula-inline {
+    background-color: var(--azure-tint);
+    border-radius: 3px;
+    padding: 2px 6px;
+    font-family: var(--font-math);
+}
+
+/* MathJax containers */
+.MathJax_Display {
+    background-color: var(--math-bg);
+    border: 1px solid var(--math-border);
+    border-radius: 6px;
+    padding: 15px;
+    margin: 20px 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* ===== CODE BLOCKS ===== */
+.fragment {
+    background-color: var(--code-bg);
+    border: 1px solid var(--code-border);
+    border-radius: 6px;
+    padding: 15px;
+    margin: 15px 0;
+    font-family: var(--font-mono);
+    overflow-x: auto;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+code {
+    background-color: var(--azure-tint);
+    border-radius: 3px;
+    padding: 2px 6px;
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    color: var(--dark-azure);
+}
+
+pre {
+    background-color: var(--code-bg);
+    border: 1px solid var(--code-border);
+    border-radius: 6px;
+    padding: 15px;
+    margin: 15px 0;
+    font-family: var(--font-mono);
+    overflow-x: auto;
+    line-height: 1.4;
+}
+
+/* ===== TABLES ===== */
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 20px 0;
+    background-color: var(--white);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+th {
+    background: linear-gradient(135deg, var(--primary-azure), var(--light-azure));
+    color: var(--white);
+    padding: 12px 15px;
+    text-align: left;
+    font-weight: 600;
+    border: none;
+}
+
+td {
+    padding: 12px 15px;
+    border-bottom: 1px solid var(--medium-gray);
+    background-color: var(--white);
+}
+
+tr:nth-child(even) td {
+    background-color: var(--light-gray);
+}
+
+tr:hover td {
+    background-color: var(--azure-tint);
+}
+
+.markdownTable {
+    border: 1px solid var(--medium-gray);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+/* ===== CLASS AND MEMBER DOCUMENTATION ===== */
+.memitem {
+    background-color: var(--white);
+    border: 1px solid var(--medium-gray);
+    border-radius: 6px;
+    margin: 15px 0;
+    padding: 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.memproto {
+    background: linear-gradient(135deg, var(--azure-tint), var(--light-gray));
+    border-bottom: 1px solid var(--medium-gray);
+    padding: 15px;
+    font-family: var(--font-mono);
+    font-weight: 600;
+    color: var(--dark-azure);
+}
+
+.memdoc {
+    background-color: var(--white);
+    padding: 20px;
+}
+
+.memname {
+    color: var(--primary-azure);
+    font-weight: bold;
+}
+
+.paramname {
+    color: var(--dark-azure);
+    font-style: italic;
+}
+
+/* ===== NAVIGATION TREE ===== */
+#nav-tree {
+    background-color: var(--white);
+    border-right: 1px solid var(--medium-gray);
+}
+
+#nav-tree .children_ul {
+    margin: 0;
+    padding: 0;
+}
+
+#nav-tree .item {
+    background-color: var(--white);
+    border: none;
+    color: var(--text-dark);
+}
+
+#nav-tree .selected {
+    background-color: var(--azure-tint);
+    color: var(--dark-azure);
+    font-weight: 600;
+}
+
+#nav-tree a {
+    color: var(--primary-azure);
+    text-decoration: none;
+}
+
+#nav-tree a:hover {
+    color: var(--dark-azure);
+    background-color: var(--azure-tint);
+}
+
+/* ===== LINKS ===== */
+a {
+    color: var(--primary-azure);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: var(--dark-azure);
+    text-decoration: underline;
+}
+
+a:visited {
+    color: var(--dark-azure);
+}
+
+/* ===== ALERTS AND NOTICES ===== */
+.note, .warning, .attention {
+    border-radius: 6px;
+    padding: 15px;
+    margin: 20px 0;
+    border-left: 4px solid;
+}
+
+.note {
+    background-color: var(--azure-tint);
+    border-left-color: var(--primary-azure);
+}
+
+.warning {
+    background-color: #FFF3CD;
+    border-left-color: #FFC107;
+}
+
+.attention {
+    background-color: #F8D7DA;
+    border-left-color: #DC3545;
+}
+
+/* ===== SEARCH BOX ===== */
+#MSearchBox {
+    background-color: var(--white);
+    border: 2px solid var(--primary-azure);
+    border-radius: 20px;
+    padding: 5px 15px;
+}
+
+#MSearchField {
+    background: transparent;
+    border: none;
+    color: var(--text-dark);
+    font-family: var(--font-primary);
+}
+
+#MSearchField:focus {
+    outline: none;
+}
+
+/* ===== FOOTER ===== */
+.footer {
+    background: linear-gradient(135deg, var(--primary-azure), var(--light-azure));
+    color: var(--white);
+    text-align: center;
+    padding: 20px;
+    margin-top: 40px;
+    border-top: 2px solid var(--dark-azure);
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+    .title {
+        font-size: 1.8em;
+    }
+    
+    h1 {
+        font-size: 2em;
+    }
+    
+    h2 {
+        font-size: 1.6em;
+    }
+    
+    .contents {
+        padding: 15px;
+    }
+    
+    .formula, .fragment, pre {
+        padding: 10px;
+        font-size: 0.9em;
+    }
+    
+    table {
+        font-size: 0.9em;
+    }
+    
+    th, td {
+        padding: 8px 10px;
+    }
+}
+
+/* ===== PRINT STYLES ===== */
+@media print {
+    body {
+        background: white;
+        color: black;
+        font-size: 12pt;
+    }
+    
+    .header, .footer, #nav-tree, .tabs {
+        display: none;
+    }
+    
+    h1, h2, h3, h4, h5, h6 {
+        color: black;
+        page-break-after: avoid;
+    }
+    
+    .formula, .fragment, pre {
+        border: 1px solid #ccc;
+        background: #f9f9f9;
+        page-break-inside: avoid;
+    }
+    
+    table {
+        page-break-inside: avoid;
+    }
+} 

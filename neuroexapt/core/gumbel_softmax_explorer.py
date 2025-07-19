@@ -1,4 +1,11 @@
 """
+"""
+\defgroup group_gumbel_softmax_explorer Gumbel Softmax Explorer
+\ingroup core
+Gumbel Softmax Explorer module for NeuroExapt framework.
+"""
+
+
 Gumbel-Softmax引导式探索 (Gumbel-Softmax Guided Exploration)
 
 ASO-SE框架的核心机制之二：通过Gumbel-Softmax技巧进行引导式架构探索，

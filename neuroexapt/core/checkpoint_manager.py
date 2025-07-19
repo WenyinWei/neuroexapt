@@ -1,4 +1,11 @@
 """
+"""
+\defgroup group_checkpoint_manager Checkpoint Manager
+\ingroup core
+Checkpoint Manager module for NeuroExapt framework.
+"""
+
+
 断点续练管理器 (Checkpoint Manager)
 
 像下载软件的断点续传一样，支持训练的断点续练，从任何中断点无缝恢复训练。

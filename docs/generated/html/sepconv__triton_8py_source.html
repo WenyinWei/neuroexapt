@@ -1,0 +1,561 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="description" content="NeuroExapt - Advanced Neural Architecture Search and Dynamic Morphogenesis Framework">
+    <meta name="keywords" content="neural architecture search, dynamic morphogenesis, deep learning, AI, PyTorch">
+    <meta name="author" content="NeuroExapt Team">
+    <meta property="og:title" content="NeuroExapt Documentation">
+    <meta property="og:description" content="Advanced Neural Architecture Search Framework">
+    <meta property="og:type" content="website">
+
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>NeuroExapt: neuroexapt/kernels/sepconv_triton.py Source File</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="custom.css" rel="stylesheet" type="text/css"/>
+<!-- NeuroExapt Custom Styles -->
+<style>
+/* Enhanced header styling */
+.header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+.header h1 {
+    margin: 0;
+    font-size: 2.5em;
+    font-weight: 300;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+.header .subtitle {
+    font-size: 1.2em;
+    opacity: 0.9;
+    margin-top: 10px;
+}
+/* Enhanced navigation */
+.tablist {
+    background: #f8f9fa;
+    border-bottom: 2px solid #e9ecef;
+}
+.tablist li.current a {
+    background: #667eea;
+    color: white;
+}
+/* Improved content layout */
+.contents {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+/* Code highlighting */
+.fragment {
+    background: #f8f9fa;
+    border-left: 4px solid #667eea;
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 0 8px 8px 0;
+}
+/* Enhanced tables */
+table.memberdecls {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 20px 0;
+}
+table.memberdecls td {
+    border: 1px solid #e9ecef;
+    padding: 12px;
+}
+/* Better typography */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #343a40;
+}
+h1, h2, h3, h4, h5, h6 {
+    color: #495057;
+    font-weight: 500;
+}
+/* Responsive design */
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 2em;
+    }
+    .contents {
+        padding: 15px;
+    }
+}
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #1a1a1a;
+        color: #e9ecef;
+    }
+    .header {
+        background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+    }
+    .fragment {
+        background: #2d3748;
+        color: #e9ecef;
+    }
+}
+</style>
+<!-- Analytics (if needed) -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<!--
+<script async src="https://www.googletagmanager.com/gtag/js?id=GA_TRACKING_ID"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'GA_TRACKING_ID');
+</script>
+-->
+</head>
+<body>
+<!-- Custom Header -->
+<div class="header">
+    <h1>🧠 NeuroExapt</h1>
+    <div class="subtitle">Advanced Neural Architecture Search and Dynamic Morphogenesis Framework</div>
+    <div style="margin-top: 15px; font-size: 0.9em;">
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🚀 Dynamic Neural Morphogenesis
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🔬 Advanced Architecture Search
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            ⚡ High-Performance Computing
+        </span>
+    </div>
+</div>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! --><!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function() { init_codefold(0); });
+/* @license-end */
+</script>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('sepconv__triton_8py_source.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">sepconv_triton.py</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="sepconv__triton_8py.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno"><a class="line" href="namespaceneuroexapt_1_1kernels_1_1sepconv__triton.html">    1</a></span><span class="keyword">import</span> torch</div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="keyword">from</span> typing <span class="keyword">import</span> Optional</div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span> </div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"># Try to import Triton. If unavailable, we silently fall back to the PyTorch implementation.</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="keywordflow">try</span>:</div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span>    <span class="keyword">import</span> triton  <span class="comment"># type: ignore</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span>    <span class="keyword">import</span> triton.language <span class="keyword">as</span> tl  <span class="comment"># type: ignore</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno"><a class="line" href="namespaceneuroexapt_1_1kernels_1_1sepconv__triton.html#ad37178e08093d5d357fa9bdaee832dee">    8</a></span>    TRITON_AVAILABLE = <span class="keyword">True</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="keywordflow">except</span> ImportError:  <span class="comment"># pragma: no cover – execution environment may miss triton</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>    TRITON_AVAILABLE = <span class="keyword">False</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="keywordflow">if</span> TRITON_AVAILABLE:</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>    <span class="preprocessor">@triton.jit</span></div>
+<div class="foldopen" id="foldopen00019" data-start="" data-end="">
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno"><a class="line" href="namespaceneuroexapt_1_1kernels_1_1sepconv__triton.html#ac01b28196ebcb6e87c9447fbc189bea9">   19</a></span>    <span class="keyword">def </span><a class="code hl_function" href="namespaceneuroexapt_1_1kernels_1_1sepconv__triton.html#ac01b28196ebcb6e87c9447fbc189bea9">_dwconv3x3_kernel</a>(</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>        x_ptr,  <span class="comment"># [B, C, H, W]</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>        w_ptr,  <span class="comment"># [C, 1, 3, 3]</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>        y_ptr,</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>        B, C, H, W,</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>        stride: tl.constexpr,</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>        BLOCK_SIZE: tl.constexpr,</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    ):</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>        <span class="stringliteral">&quot;&quot;&quot;Depth-wise 3×3 conv (padding=1) with optional stride.&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>        pid = tl.program_id(0)</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>        </div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>        OH = (H + 2 - 3) // stride + 1</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>        OW = (W + 2 - 3) // stride + 1</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>        total_outputs = B * C * OH * OW</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>        </div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>        offsets = pid * BLOCK_SIZE + tl.arange(0, BLOCK_SIZE)</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>        mask = offsets &lt; total_outputs</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>        </div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>        <span class="comment"># 将1D索引转换为4D坐标 (b, c, oh, ow)</span></div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>        ow = offsets % OW</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>        oh = (offsets // OW) % OH</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>        c = (offsets // (OW * OH)) % C</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>        b = offsets // (OW * OH * C)</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>        </div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>        acc = tl.zeros((BLOCK_SIZE,), dtype=tl.float32)</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>        </div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        <span class="comment"># 3x3深度卷积</span></div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>        <span class="keywordflow">for</span> kh <span class="keywordflow">in</span> tl.static_range(3):</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>            <span class="keywordflow">for</span> kw <span class="keywordflow">in</span> tl.static_range(3):</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>                ih = oh * stride + kh - 1  <span class="comment"># padding=1</span></div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>                iw = ow * stride + kw - 1</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>                </div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>                <span class="comment"># 边界检查</span></div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>                valid = mask &amp; (ih &gt;= 0) &amp; (ih &lt; H) &amp; (iw &gt;= 0) &amp; (iw &lt; W)</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>                </div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>                <span class="comment"># 输入索引</span></div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>                input_idx = b * C * H * W + c * H * W + ih * W + iw</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>                <span class="comment"># 权重索引 (每个通道有自己的3x3权重)</span></div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>                weight_idx = c * 9 + kh * 3 + kw  <span class="comment"># 9 = 3*3</span></div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>                </div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>                x_val = tl.load(x_ptr + input_idx, mask=valid, other=0.0)</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>                w_val = tl.load(w_ptr + weight_idx, mask=(c &lt; C), other=0.0)</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>                </div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>                acc += x_val * w_val</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>        </div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>        <span class="comment"># 存储结果</span></div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>        output_idx = b * C * OH * OW + c * OH * OW + oh * OW + ow</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>        tl.store(y_ptr + output_idx, acc, mask=mask)</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span> </div>
+</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    <span class="preprocessor">@triton.jit</span>  </div>
+<div class="foldopen" id="foldopen00069" data-start="" data-end="">
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno"><a class="line" href="namespaceneuroexapt_1_1kernels_1_1sepconv__triton.html#a1464a0605b2f57432ccd3aefc4489fd6">   69</a></span>    <span class="keyword">def </span><a class="code hl_function" href="namespaceneuroexapt_1_1kernels_1_1sepconv__triton.html#a1464a0605b2f57432ccd3aefc4489fd6">_pointwise_conv_kernel</a>(</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>        x_ptr,  <span class="comment"># [B, C_in, H, W]</span></div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>        w_ptr,  <span class="comment"># [C_out, C_in, 1, 1]</span></div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>        bias_ptr,  <span class="comment"># [C_out]</span></div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>        y_ptr,  <span class="comment"># [B, C_out, H, W]</span></div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>        B, C_in, C_out, H, W,</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>        BLOCK_SIZE: tl.constexpr,</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    ):</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>        <span class="stringliteral">&quot;&quot;&quot;Point-wise 1×1 conv.&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>        pid = tl.program_id(0)</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>        </div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>        total_outputs = B * C_out * H * W</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>        </div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>        offsets = pid * BLOCK_SIZE + tl.arange(0, BLOCK_SIZE)</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>        mask = offsets &lt; total_outputs</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>        </div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>        <span class="comment"># 将1D索引转换为4D坐标 (b, c_out, h, w)</span></div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>        w_idx = offsets % W</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>        h_idx = (offsets // W) % H</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>        c_out = (offsets // (W * H)) % C_out</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>        b = offsets // (W * H * C_out)</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>        </div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>        acc = tl.zeros((BLOCK_SIZE,), dtype=tl.float32)</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>        </div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>        <span class="comment"># 点卷积：对所有输入通道求和</span></div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>        <span class="keywordflow">for</span> c_in <span class="keywordflow">in</span> range(C_in):</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>            input_idx = b * C_in * H * W + c_in * H * W + h_idx * W + w_idx</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>            weight_idx = c_out * C_in + c_in  <span class="comment"># 1x1卷积权重</span></div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>            </div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>            x_val = tl.load(x_ptr + input_idx, mask=mask, other=0.0)</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>            w_val = tl.load(w_ptr + weight_idx, mask=(c_out &lt; C_out), other=0.0)</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>            </div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>            acc += x_val * w_val</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>        </div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>        <span class="comment"># 加bias</span></div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>        <span class="keywordflow">if</span> bias_ptr <span class="keywordflow">is</span> <span class="keywordflow">not</span> <span class="keywordtype">None</span>:</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>            bias_val = tl.load(bias_ptr + c_out, mask=(c_out &lt; C_out), other=0.0)</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>            acc += bias_val</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>        </div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>        <span class="comment"># 存储结果</span></div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>        output_idx = b * C_out * H * W + c_out * H * W + h_idx * W + w_idx</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>        tl.store(y_ptr + output_idx, acc, mask=mask)</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span> </div>
+</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span> </div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span> </div>
+<div class="foldopen" id="foldopen00116" data-start="" data-end="">
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno"><a class="line" href="namespaceneuroexapt_1_1kernels_1_1sepconv__triton.html#a6ff2345d9b0320a12329d8570360782d">  116</a></span><span class="keyword">def </span>sepconv_forward_generic(</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>    x: torch.Tensor,</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>    dw_weight: torch.Tensor,</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>    pw_weight: torch.Tensor,</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>    bias: Optional[torch.Tensor] = <span class="keywordtype">None</span>,</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    kernel_size: int = 3,</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>    stride: int = 1,</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    dilation: int = 1,</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>) -&gt; torch.Tensor:</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>    <span class="stringliteral">&quot;&quot;&quot;Generic separable convolution: depth-wise + point-wise.&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>    </div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>    <span class="comment"># 如果Triton不可用或参数不支持，使用PyTorch fallback</span></div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>    <span class="keywordflow">if</span> <span class="keywordflow">not</span> TRITON_AVAILABLE <span class="keywordflow">or</span> kernel_size != 3 <span class="keywordflow">or</span> stride != 1 <span class="keywordflow">or</span> dilation != 1:</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>        <span class="comment"># PyTorch fallback implementation</span></div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>        y = torch.nn.functional.conv2d(</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>            x, dw_weight, bias=<span class="keywordtype">None</span>, stride=stride, </div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>            padding=((kernel_size - 1) * dilation) // 2, </div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>            dilation=dilation, groups=x.size(1)</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>        )</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>        y = torch.nn.functional.conv2d(y, pw_weight, bias=bias)</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>        <span class="keywordflow">return</span> y</div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>    </div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>    B, C, H, W = x.shape</div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>    C_out = pw_weight.size(0)</div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>    </div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>    <span class="comment"># 第一步: 深度卷积</span></div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>    OH = (H + 2 - 3) // stride + 1</div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>    OW = (W + 2 - 3) // stride + 1</div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>    dw_out = torch.empty(B, C, OH, OW, device=x.device, dtype=x.dtype)</div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>    </div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>    total_outputs = B * C * OH * OW</div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>    BLOCK_SIZE = 256</div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>    grid = (triton.cdiv(total_outputs, BLOCK_SIZE),)</div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>    </div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>    _dwconv3x3_kernel[grid](</div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>        x, dw_weight, dw_out, B, C, H, W, stride, BLOCK_SIZE</div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>    )</div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>    </div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>    <span class="comment"># 第二步: 点卷积</span></div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>    pw_out = torch.empty(B, C_out, OH, OW, device=x.device, dtype=x.dtype)</div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>    </div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>    total_outputs = B * C_out * OH * OW</div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>    grid = (triton.cdiv(total_outputs, BLOCK_SIZE),)</div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>    </div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>    _pointwise_conv_kernel[grid](</div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>        dw_out, pw_weight, bias, pw_out, B, C, C_out, OH, OW, BLOCK_SIZE</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>    )</div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>    </div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>    <span class="keywordflow">return</span> pw_out</div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span> </div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span><span class="comment"># 为了保持向后兼容，提供一些特化版本</span></div>
+</div>
+<div class="foldopen" id="foldopen00167" data-start="" data-end="">
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno"><a class="line" href="namespaceneuroexapt_1_1kernels_1_1sepconv__triton.html#aec60bce9da1dac01bd75c43f44ee0744">  167</a></span><span class="keyword">def </span><a class="code hl_function" href="namespaceneuroexapt_1_1kernels_1_1sepconv__triton.html#aec60bce9da1dac01bd75c43f44ee0744">sepconv3x3_forward</a>(</div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>    x: torch.Tensor,</div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>    dw_weight: torch.Tensor,</div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>    pw_weight: torch.Tensor,</div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>    bias: Optional[torch.Tensor] = <span class="keywordtype">None</span>,</div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>    stride: int = 1,</div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>) -&gt; torch.Tensor:</div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>    <span class="stringliteral">&quot;&quot;&quot;3x3 separable convolution.&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>    <span class="keywordflow">return</span> sepconv_forward_generic(x, dw_weight, pw_weight, bias, 3, stride, 1)</div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span> </div>
+</div>
+<div class="foldopen" id="foldopen00177" data-start="" data-end="">
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno"><a class="line" href="namespaceneuroexapt_1_1kernels_1_1sepconv__triton.html#a8ec845597d9b26588f3c51beb7e1f3c3">  177</a></span><span class="keyword">def </span><a class="code hl_function" href="namespaceneuroexapt_1_1kernels_1_1sepconv__triton.html#a8ec845597d9b26588f3c51beb7e1f3c3">sepconv5x5_forward</a>(</div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>    x: torch.Tensor,</div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>    dw_weight: torch.Tensor,</div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>    pw_weight: torch.Tensor,</div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>    bias: Optional[torch.Tensor] = <span class="keywordtype">None</span>,</div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>    stride: int = 1,</div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>) -&gt; torch.Tensor:</div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>    <span class="stringliteral">&quot;&quot;&quot;5x5 separable convolution (fallback to PyTorch).&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>    <span class="keywordflow">return</span> sepconv_forward_generic(x, dw_weight, pw_weight, bias, 5, stride, 1)</div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span> </div>
+</div>
+<div class="foldopen" id="foldopen00187" data-start="" data-end="">
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno"><a class="line" href="namespaceneuroexapt_1_1kernels_1_1sepconv__triton.html#a429c299b1bc3f54627b47e67ce25a807">  187</a></span><span class="keyword">def </span><a class="code hl_function" href="namespaceneuroexapt_1_1kernels_1_1sepconv__triton.html#a429c299b1bc3f54627b47e67ce25a807">sepconv7x7_forward</a>(</div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>    x: torch.Tensor,</div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>    dw_weight: torch.Tensor, </div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>    pw_weight: torch.Tensor,</div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>    bias: Optional[torch.Tensor] = <span class="keywordtype">None</span>,</div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>    stride: int = 1,</div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>) -&gt; torch.Tensor:</div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>    <span class="stringliteral">&quot;&quot;&quot;7x7 separable convolution (fallback to PyTorch).&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>    <span class="keywordflow">return</span> sepconv_forward_generic(x, dw_weight, pw_weight, bias, 7, stride, 1)</div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span> </div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span><span class="comment"># 为了向后兼容，提供原始的函数名</span></div>
+</div>
+<div class="foldopen" id="foldopen00198" data-start="" data-end="">
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno"><a class="line" href="namespaceneuroexapt_1_1kernels_1_1sepconv__triton.html#ae9a2367181d80ef836d3a51c42964451">  198</a></span><span class="keyword">def </span>sepconv_forward(</div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>    x: torch.Tensor,</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>    dw_weight: torch.Tensor,</div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>    pw_weight: torch.Tensor,</div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>    bias: Optional[torch.Tensor] = <span class="keywordtype">None</span>,</div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>    *,</div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>    kernel_size: int = 3,</div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>    stride: int = 1,</div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>    dilation: int = 1,</div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>) -&gt; torch.Tensor:</div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>    <span class="stringliteral">&quot;&quot;&quot;Backward compatibility alias for sepconv_forward_generic.&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>    <span class="keywordflow">return</span> sepconv_forward_generic(x, dw_weight, pw_weight, bias, kernel_size, stride, dilation) </div>
+</div>
+<div class="ttc" id="anamespaceneuroexapt_1_1kernels_1_1sepconv__triton_html_a1464a0605b2f57432ccd3aefc4489fd6"><div class="ttname"><a href="namespaceneuroexapt_1_1kernels_1_1sepconv__triton.html#a1464a0605b2f57432ccd3aefc4489fd6">neuroexapt.kernels.sepconv_triton._pointwise_conv_kernel</a></div><div class="ttdeci">_pointwise_conv_kernel(x_ptr, w_ptr, bias_ptr, y_ptr, B, C_in, C_out, H, W, tl.constexpr BLOCK_SIZE)</div><div class="ttdef"><b>Definition</b> <a href="sepconv__triton_8py_source.html#l00069">sepconv_triton.py:76</a></div></div>
+<div class="ttc" id="anamespaceneuroexapt_1_1kernels_1_1sepconv__triton_html_a429c299b1bc3f54627b47e67ce25a807"><div class="ttname"><a href="namespaceneuroexapt_1_1kernels_1_1sepconv__triton.html#a429c299b1bc3f54627b47e67ce25a807">neuroexapt.kernels.sepconv_triton.sepconv7x7_forward</a></div><div class="ttdeci">torch.Tensor sepconv7x7_forward(torch.Tensor x, torch.Tensor dw_weight, torch.Tensor pw_weight, Optional[torch.Tensor] bias=None, int stride=1)</div><div class="ttdef"><b>Definition</b> <a href="sepconv__triton_8py_source.html#l00187">sepconv_triton.py:193</a></div></div>
+<div class="ttc" id="anamespaceneuroexapt_1_1kernels_1_1sepconv__triton_html_a8ec845597d9b26588f3c51beb7e1f3c3"><div class="ttname"><a href="namespaceneuroexapt_1_1kernels_1_1sepconv__triton.html#a8ec845597d9b26588f3c51beb7e1f3c3">neuroexapt.kernels.sepconv_triton.sepconv5x5_forward</a></div><div class="ttdeci">torch.Tensor sepconv5x5_forward(torch.Tensor x, torch.Tensor dw_weight, torch.Tensor pw_weight, Optional[torch.Tensor] bias=None, int stride=1)</div><div class="ttdef"><b>Definition</b> <a href="sepconv__triton_8py_source.html#l00177">sepconv_triton.py:183</a></div></div>
+<div class="ttc" id="anamespaceneuroexapt_1_1kernels_1_1sepconv__triton_html_ac01b28196ebcb6e87c9447fbc189bea9"><div class="ttname"><a href="namespaceneuroexapt_1_1kernels_1_1sepconv__triton.html#ac01b28196ebcb6e87c9447fbc189bea9">neuroexapt.kernels.sepconv_triton._dwconv3x3_kernel</a></div><div class="ttdeci">_dwconv3x3_kernel(x_ptr, w_ptr, y_ptr, B, C, H, W, tl.constexpr stride, tl.constexpr BLOCK_SIZE)</div><div class="ttdoc">Triton kernel #.</div><div class="ttdef"><b>Definition</b> <a href="sepconv__triton_8py_source.html#l00019">sepconv_triton.py:26</a></div></div>
+<div class="ttc" id="anamespaceneuroexapt_1_1kernels_1_1sepconv__triton_html_aec60bce9da1dac01bd75c43f44ee0744"><div class="ttname"><a href="namespaceneuroexapt_1_1kernels_1_1sepconv__triton.html#aec60bce9da1dac01bd75c43f44ee0744">neuroexapt.kernels.sepconv_triton.sepconv3x3_forward</a></div><div class="ttdeci">torch.Tensor sepconv3x3_forward(torch.Tensor x, torch.Tensor dw_weight, torch.Tensor pw_weight, Optional[torch.Tensor] bias=None, int stride=1)</div><div class="ttdef"><b>Definition</b> <a href="sepconv__triton_8py_source.html#l00167">sepconv_triton.py:173</a></div></div>
+</div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
+<!-- do not remove this div, it is closed by doxygen! -->
+</div>
+<!-- Custom Footer -->
+<div style="background: #f8f9fa; border-top: 1px solid #e9ecef; margin-top: 50px; padding: 30px 0; text-align: center;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-bottom: 20px;">
+            <!-- Project Info -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🧠 NeuroExapt</h4>
+                <p style="color: #6c757d; margin: 0; font-size: 0.9em;">
+                    Advanced Neural Architecture Search and Dynamic Morphogenesis Framework for next-generation AI research.
+                </p>
+            </div>
+            <!-- Quick Links -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">📚 Quick Links</h4>
+                <div style="text-align: left;">
+                    <a href="index.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🏠 Home</a>
+                    <a href="modules.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📦 Modules</a>
+                    <a href="examples.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💡 Examples</a>
+                    <a href="files.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📁 Files</a>
+                </div>
+            </div>
+            <!-- Resources -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🔗 Resources</h4>
+                <div style="text-align: left;">
+                    <a href="https://github.com/your-username/neuroexapt" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💻 GitHub Repository</a>
+                    <a href="https://github.com/your-username/neuroexapt/issues" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🐛 Issue Tracker</a>
+                    <a href="https://github.com/your-username/neuroexapt/wiki" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📖 Wiki</a>
+                    <a href="https://github.com/your-username/neuroexapt/releases" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🚀 Releases</a>
+                </div>
+            </div>
+        </div>
+        <hr style="border: 0; height: 1px; background: #e9ecef; margin: 20px 0;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+            <div style="color: #6c757d; font-size: 0.9em;">
+                © 2024 NeuroExapt Project. Generated with 
+                <a href="https://www.doxygen.nl/index.html" style="color: #667eea; text-decoration: none;">Doxygen 1.9.8</a>
+            </div>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <span style="font-size: 0.9em; color: #6c757d;">Built with ❤️ for AI Research</span>
+                <div style="display: flex; gap: 10px;">
+                    <span style="background: #28a745; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">🟢 Active</span>
+                    <span style="background: #17a2b8; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">v3.0</span>
+                </div>
+            </div>
+        </div>
+        <!-- Technology Stack -->
+        <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #e9ecef;">
+            <div style="font-size: 0.8em; color: #868e96; text-align: center;">
+                <strong>Built with:</strong>
+                <span style="margin: 0 5px;">🐍 Python</span>
+                <span style="margin: 0 5px;">🔥 PyTorch</span>
+                <span style="margin: 0 5px;">⚡ CUDA</span>
+                <span style="margin: 0 5px;">🧮 NumPy</span>
+                <span style="margin: 0 5px;">📊 Matplotlib</span>
+                <span style="margin: 0 5px;">🚀 Triton</span>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Back to top button -->
+<div id="back-to-top" style="position: fixed; bottom: 20px; right: 20px; display: none; z-index: 1000;">
+    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" 
+            style="background: #667eea; color: white; border: none; padding: 10px 15px; border-radius: 50%; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,0.2); font-size: 16px;">
+        ⬆️
+    </button>
+</div>
+<script>
+// Back to top button functionality
+window.addEventListener('scroll', function() {
+    const backToTop = document.getElementById('back-to-top');
+    if (window.pageYOffset > 300) {
+        backToTop.style.display = 'block';
+    } else {
+        backToTop.style.display = 'none';
+    }
+});
+// Enhanced search functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Add search enhancement if search box exists
+    const searchBox = document.getElementById('MSearchField');
+    if (searchBox) {
+        searchBox.placeholder = 'Search documentation... 🔍';
+        searchBox.style.borderRadius = '20px';
+        searchBox.style.padding = '8px 15px';
+    }
+    // Add copy code button to code blocks
+    const codeBlocks = document.querySelectorAll('.fragment');
+    codeBlocks.forEach(function(block) {
+        const copyBtn = document.createElement('button');
+        copyBtn.innerHTML = '📋';
+        copyBtn.title = 'Copy code';
+        copyBtn.style.cssText = 'position: absolute; top: 10px; right: 10px; background: #667eea; color: white; border: none; padding: 5px; border-radius: 3px; cursor: pointer; font-size: 12px;';
+        block.style.position = 'relative';
+        block.appendChild(copyBtn);
+        copyBtn.addEventListener('click', function() {
+            const text = block.textContent;
+            navigator.clipboard.writeText(text).then(function() {
+                copyBtn.innerHTML = '✅';
+                setTimeout(function() {
+                    copyBtn.innerHTML = '📋';
+                }, 2000);
+            });
+        });
+    });
+});
+// Dark mode toggle (optional)
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+}
+// Load saved dark mode preference
+if (localStorage.getItem('darkMode') === 'true') {
+    document.body.classList.add('dark-mode');
+}
+</script>
+</body>
+</html>

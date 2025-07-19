@@ -1,0 +1,778 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="description" content="NeuroExapt - Advanced Neural Architecture Search and Dynamic Morphogenesis Framework">
+    <meta name="keywords" content="neural architecture search, dynamic morphogenesis, deep learning, AI, PyTorch">
+    <meta name="author" content="NeuroExapt Team">
+    <meta property="og:title" content="NeuroExapt Documentation">
+    <meta property="og:description" content="Advanced Neural Architecture Search Framework">
+    <meta property="og:type" content="website">
+
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>NeuroExapt: examples/cifar10_dnm_benchmark.py Source File</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="custom.css" rel="stylesheet" type="text/css"/>
+<!-- NeuroExapt Custom Styles -->
+<style>
+/* Enhanced header styling */
+.header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+.header h1 {
+    margin: 0;
+    font-size: 2.5em;
+    font-weight: 300;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+.header .subtitle {
+    font-size: 1.2em;
+    opacity: 0.9;
+    margin-top: 10px;
+}
+/* Enhanced navigation */
+.tablist {
+    background: #f8f9fa;
+    border-bottom: 2px solid #e9ecef;
+}
+.tablist li.current a {
+    background: #667eea;
+    color: white;
+}
+/* Improved content layout */
+.contents {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+/* Code highlighting */
+.fragment {
+    background: #f8f9fa;
+    border-left: 4px solid #667eea;
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 0 8px 8px 0;
+}
+/* Enhanced tables */
+table.memberdecls {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 20px 0;
+}
+table.memberdecls td {
+    border: 1px solid #e9ecef;
+    padding: 12px;
+}
+/* Better typography */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #343a40;
+}
+h1, h2, h3, h4, h5, h6 {
+    color: #495057;
+    font-weight: 500;
+}
+/* Responsive design */
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 2em;
+    }
+    .contents {
+        padding: 15px;
+    }
+}
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #1a1a1a;
+        color: #e9ecef;
+    }
+    .header {
+        background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+    }
+    .fragment {
+        background: #2d3748;
+        color: #e9ecef;
+    }
+}
+</style>
+<!-- Analytics (if needed) -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<!--
+<script async src="https://www.googletagmanager.com/gtag/js?id=GA_TRACKING_ID"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'GA_TRACKING_ID');
+</script>
+-->
+</head>
+<body>
+<!-- Custom Header -->
+<div class="header">
+    <h1>🧠 NeuroExapt</h1>
+    <div class="subtitle">Advanced Neural Architecture Search and Dynamic Morphogenesis Framework</div>
+    <div style="margin-top: 15px; font-size: 0.9em;">
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🚀 Dynamic Neural Morphogenesis
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🔬 Advanced Architecture Search
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            ⚡ High-Performance Computing
+        </span>
+    </div>
+</div>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! --><!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function() { init_codefold(0); });
+/* @license-end */
+</script>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('cifar10__dnm__benchmark_8py_source.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">cifar10_dnm_benchmark.py</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="cifar10__dnm__benchmark_8py.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno"><a class="line" href="namespaceexamples_1_1cifar10__dnm__benchmark.html">    1</a></span><span class="comment">#!/usr/bin/env python3</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="stringliteral">&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="stringliteral">CIFAR-10 DNM Benchmark - 目标准确率 95%</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="stringliteral"></span> </div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="stringliteral">使用DNM框架在CIFAR-10数据集上进行基准测试</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="stringliteral">初始架构采用ResNet-18变体，通过DNM演化实现95%准确率突破</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="stringliteral">&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="keyword">import</span> torch</div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="keyword">import</span> torch.optim <span class="keyword">as</span> optim</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="keyword">import</span> torchvision</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="keyword">import</span> torchvision.transforms <span class="keyword">as</span> transforms</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="keyword">from</span> torch.utils.data <span class="keyword">import</span> DataLoader</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">import</span> time</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="keyword">import</span> os</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="keyword">import</span> sys</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="keyword">import</span> logging</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="comment"># 添加项目路径</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="comment"># 导入DNM框架</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="keyword">from</span> <a class="code hl_namespace" href="namespaceneuroexapt_1_1core_1_1dnm__framework.html">neuroexapt.core.dnm_framework</a> <span class="keyword">import</span> train_with_dnm</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="keyword">from</span> <a class="code hl_namespace" href="namespaceneuroexapt_1_1core_1_1dnm__neuron__division.html">neuroexapt.core.dnm_neuron_division</a> <span class="keyword">import</span> DNMNeuronDivision</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="keyword">from</span> <a class="code hl_namespace" href="namespaceneuroexapt_1_1core_1_1dnm__connection__growth.html">neuroexapt.core.dnm_connection_growth</a> <span class="keyword">import</span> DNMConnectionGrowth</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="keyword">from</span> <a class="code hl_namespace" href="namespaceneuroexapt_1_1math_1_1pareto__optimization.html">neuroexapt.math.pareto_optimization</a> <span class="keyword">import</span> DNMMultiObjectiveOptimization</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="comment"># 配置日志</span></div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>logging.basicConfig(</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno"><a class="line" href="namespaceexamples_1_1cifar10__dnm__benchmark.html#aa8fcb34909962e2105152028a429d43e">   32</a></span>    level=logging.INFO,  <span class="comment"># 改为INFO级别以显示BatchNorm同步日志</span></div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="namespaceexamples_1_1cifar10__dnm__benchmark.html#a678291429b265ca12652afb000ce7a0f">   33</a></span>    format=<span class="stringliteral">&#39;%(asctime)s - %(name)s - %(levelname)s - %(message)s&#39;</span>,</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno"><a class="line" href="namespaceexamples_1_1cifar10__dnm__benchmark.html#abe865418163ab860f321fef479132f91">   34</a></span>    handlers=[</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>        logging.FileHandler(<span class="stringliteral">&#39;dnm_benchmark.log&#39;</span>),</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>        logging.StreamHandler()</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    ]</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>)</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno"><a class="line" href="namespaceexamples_1_1cifar10__dnm__benchmark.html#a6a2e42ad318077e28a5fffff2d763c92">   40</a></span>logger = logging.getLogger(__name__)</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
+<div class="foldopen" id="foldopen00043" data-start="" data-end="">
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno"><a class="line" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18.html">   43</a></span><span class="keyword">class </span><a class="code hl_class" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18.html">EvolvableResNet18</a>(nn.Module):</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    <span class="stringliteral">&quot;&quot;&quot;可演化的ResNet-18架构 - 专门设计用于DNM演化&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    </div>
+<div class="foldopen" id="foldopen00046" data-start="" data-end="">
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18.html#abb92816b7f59acafd1f574909d09ccee">   46</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18.html#abb92816b7f59acafd1f574909d09ccee">__init__</a>(self, num_classes=10, initial_channels=64):</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>        super().<a class="code hl_function" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18.html#abb92816b7f59acafd1f574909d09ccee">__init__</a>()</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno"><a class="line" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18.html#aee460555dc9601fef5b05dd55d6075fb">   48</a></span>        self.<a class="code hl_variable" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18.html#aee460555dc9601fef5b05dd55d6075fb">initial_channels</a> = initial_channels</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        </div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>        <span class="comment"># 初始卷积层</span></div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno"><a class="line" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18.html#a92084fde84d0c07fc9778935f5961316">   51</a></span>        self.<a class="code hl_variable" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18.html#a92084fde84d0c07fc9778935f5961316">conv1</a> = nn.Conv2d(3, initial_channels, kernel_size=3, stride=1, padding=1, bias=<span class="keyword">False</span>)</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno"><a class="line" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18.html#ad434d90414e5fe0eeb60368e0f4d40cd">   52</a></span>        self.<a class="code hl_variable" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18.html#ad434d90414e5fe0eeb60368e0f4d40cd">bn1</a> = nn.BatchNorm2d(initial_channels)</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno"><a class="line" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18.html#a78cc8763a28f5cabfc3cbce921c91649">   53</a></span>        self.<a class="code hl_variable" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18.html#a78cc8763a28f5cabfc3cbce921c91649">relu</a> = nn.ReLU(inplace=<span class="keyword">True</span>)</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        </div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        <span class="comment"># 可演化的残差块</span></div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno"><a class="line" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18.html#af4bcab6b3a1080844d552b6eb42fcdfb">   56</a></span>        self.<a class="code hl_variable" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18.html#af4bcab6b3a1080844d552b6eb42fcdfb">layer1</a> = self.<a class="code hl_function" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18.html#a6c3b9ab4118752ca1be4644442e0d595">_make_layer</a>(initial_channels, initial_channels, 2, stride=1)</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno"><a class="line" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18.html#a860dccafea93aeddd150eab244035bc8">   57</a></span>        self.<a class="code hl_variable" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18.html#a860dccafea93aeddd150eab244035bc8">layer2</a> = self.<a class="code hl_function" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18.html#a6c3b9ab4118752ca1be4644442e0d595">_make_layer</a>(initial_channels, initial_channels * 2, 2, stride=2)</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno"><a class="line" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18.html#adc5122f3c21b7a4f33496008db0c95a1">   58</a></span>        self.<a class="code hl_variable" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18.html#adc5122f3c21b7a4f33496008db0c95a1">layer3</a> = self.<a class="code hl_function" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18.html#a6c3b9ab4118752ca1be4644442e0d595">_make_layer</a>(initial_channels * 2, initial_channels * 4, 2, stride=2)</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno"><a class="line" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18.html#a7b71099abf969d179066a9cfb8740fe0">   59</a></span>        self.<a class="code hl_variable" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18.html#a7b71099abf969d179066a9cfb8740fe0">layer4</a> = self.<a class="code hl_function" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18.html#a6c3b9ab4118752ca1be4644442e0d595">_make_layer</a>(initial_channels * 4, initial_channels * 8, 2, stride=2)</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>        </div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>        <span class="comment"># 可演化的分类器</span></div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno"><a class="line" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18.html#aa3b17a9505d4546fd3607d7244621e02">   62</a></span>        self.<a class="code hl_variable" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18.html#aa3b17a9505d4546fd3607d7244621e02">avgpool</a> = nn.AdaptiveAvgPool2d((1, 1))</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno"><a class="line" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18.html#a8aeb7a3186741d249aab68659cbb05e1">   63</a></span>        self.<a class="code hl_variable" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18.html#a8aeb7a3186741d249aab68659cbb05e1">fc_layers</a> = nn.Sequential(</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>            nn.Flatten(),</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>            nn.Linear(initial_channels * 8, initial_channels * 4),</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>            nn.ReLU(inplace=<span class="keyword">True</span>),</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>            nn.Dropout(0.3),</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>            nn.Linear(initial_channels * 4, initial_channels * 2),</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>            nn.ReLU(inplace=<span class="keyword">True</span>),</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>            nn.Dropout(0.2),</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>            nn.Linear(initial_channels * 2, num_classes)</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>        )</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>        </div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>        <span class="comment"># 初始化权重</span></div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>        self.<a class="code hl_function" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18.html#a742fe35d6f7e0eb2adc3115af57613d0">_initialize_weights</a>()</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    </div>
+</div>
+<div class="foldopen" id="foldopen00077" data-start="" data-end="">
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno"><a class="line" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18.html#a6c3b9ab4118752ca1be4644442e0d595">   77</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18.html#a6c3b9ab4118752ca1be4644442e0d595">_make_layer</a>(self, in_channels, out_channels, blocks, stride=1):</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>        layers = []</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>        </div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>        <span class="comment"># 第一个块可能需要降采样</span></div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>        layers.append(<a class="code hl_class" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableBasicBlock.html">EvolvableBasicBlock</a>(in_channels, out_channels, stride))</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>        </div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>        <span class="comment"># 其余块</span></div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>        <span class="keywordflow">for</span> _ <span class="keywordflow">in</span> range(1, blocks):</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>            layers.append(<a class="code hl_class" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableBasicBlock.html">EvolvableBasicBlock</a>(out_channels, out_channels, 1))</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>        </div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>        <span class="keywordflow">return</span> nn.Sequential(*layers)</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    </div>
+</div>
+<div class="foldopen" id="foldopen00089" data-start="" data-end="">
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno"><a class="line" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18.html#a742fe35d6f7e0eb2adc3115af57613d0">   89</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18.html#a742fe35d6f7e0eb2adc3115af57613d0">_initialize_weights</a>(self):</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>        <span class="keywordflow">for</span> m <span class="keywordflow">in</span> self.modules():</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>            <span class="keywordflow">if</span> isinstance(m, nn.Conv2d):</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>                nn.init.kaiming_normal_(m.weight, mode=<span class="stringliteral">&#39;fan_out&#39;</span>, nonlinearity=<span class="stringliteral">&#39;relu&#39;</span>)</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>            <span class="keywordflow">elif</span> isinstance(m, nn.BatchNorm2d):</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>                nn.init.constant_(m.weight, 1)</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>                nn.init.constant_(m.bias, 0)</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>            <span class="keywordflow">elif</span> isinstance(m, nn.Linear):</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>                nn.init.normal_(m.weight, 0, 0.01)</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>                nn.init.constant_(m.bias, 0)</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>    </div>
+</div>
+<div class="foldopen" id="foldopen00100" data-start="" data-end="">
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno"><a class="line" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18.html#a2d2f940d90acfa4ecda0bfd7cb0c4736">  100</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18.html#a2d2f940d90acfa4ecda0bfd7cb0c4736">forward</a>(self, x):</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>        <span class="comment"># 初始特征提取</span></div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>        x = self.<a class="code hl_variable" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18.html#a92084fde84d0c07fc9778935f5961316">conv1</a>(x)</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>        x = self.<a class="code hl_variable" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18.html#ad434d90414e5fe0eeb60368e0f4d40cd">bn1</a>(x)</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>        x = self.<a class="code hl_variable" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18.html#a78cc8763a28f5cabfc3cbce921c91649">relu</a>(x)</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>        </div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>        <span class="comment"># 残差层</span></div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>        x = self.<a class="code hl_variable" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18.html#af4bcab6b3a1080844d552b6eb42fcdfb">layer1</a>(x)</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>        x = self.<a class="code hl_variable" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18.html#a860dccafea93aeddd150eab244035bc8">layer2</a>(x)</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>        x = self.<a class="code hl_variable" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18.html#adc5122f3c21b7a4f33496008db0c95a1">layer3</a>(x)</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>        x = self.<a class="code hl_variable" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18.html#a7b71099abf969d179066a9cfb8740fe0">layer4</a>(x)</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>        </div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>        <span class="comment"># 分类</span></div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>        x = self.<a class="code hl_variable" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18.html#aa3b17a9505d4546fd3607d7244621e02">avgpool</a>(x)</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>        x = self.<a class="code hl_variable" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18.html#a8aeb7a3186741d249aab68659cbb05e1">fc_layers</a>(x)</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>        </div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>        <span class="keywordflow">return</span> x</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span> </div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span> </div>
+</div>
+</div>
+<div class="foldopen" id="foldopen00119" data-start="" data-end="">
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno"><a class="line" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableBasicBlock.html">  119</a></span><span class="keyword">class </span><a class="code hl_class" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableBasicBlock.html">EvolvableBasicBlock</a>(nn.Module):</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>    <span class="stringliteral">&quot;&quot;&quot;可演化的基础残差块&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    </div>
+<div class="foldopen" id="foldopen00122" data-start="" data-end="">
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno"><a class="line" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableBasicBlock.html#a732968834c75e214652a48f61f964b9a">  122</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableBasicBlock.html#a732968834c75e214652a48f61f964b9a">__init__</a>(self, in_channels, out_channels, stride=1):</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>        super().<a class="code hl_function" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableBasicBlock.html#a732968834c75e214652a48f61f964b9a">__init__</a>()</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>        </div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno"><a class="line" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableBasicBlock.html#a913e3ce721e46f6b85e0b329e17a6b98">  125</a></span>        self.<a class="code hl_variable" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableBasicBlock.html#a913e3ce721e46f6b85e0b329e17a6b98">conv1</a> = nn.Conv2d(in_channels, out_channels, kernel_size=3, </div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>                              stride=stride, padding=1, bias=<span class="keyword">False</span>)</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno"><a class="line" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableBasicBlock.html#a6151a210b334ef01ada9d82eedc49f54">  127</a></span>        self.<a class="code hl_variable" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableBasicBlock.html#a6151a210b334ef01ada9d82eedc49f54">bn1</a> = nn.BatchNorm2d(out_channels)</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno"><a class="line" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableBasicBlock.html#aa3ac22cb5db92d4186d4b7a3816bbda1">  128</a></span>        self.<a class="code hl_variable" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableBasicBlock.html#aa3ac22cb5db92d4186d4b7a3816bbda1">conv2</a> = nn.Conv2d(out_channels, out_channels, kernel_size=3,</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>                              stride=1, padding=1, bias=<span class="keyword">False</span>)</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno"><a class="line" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableBasicBlock.html#a89c736bfb0c3418d13a714124a2897fa">  130</a></span>        self.<a class="code hl_variable" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableBasicBlock.html#a89c736bfb0c3418d13a714124a2897fa">bn2</a> = nn.BatchNorm2d(out_channels)</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno"><a class="line" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableBasicBlock.html#a4f1606691e9dd9048c0a59dbbd488a27">  131</a></span>        self.<a class="code hl_variable" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableBasicBlock.html#a4f1606691e9dd9048c0a59dbbd488a27">relu</a> = nn.ReLU(inplace=<span class="keyword">True</span>)</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>        </div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>        <span class="comment"># 跳跃连接</span></div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>        <span class="keywordflow">if</span> stride != 1 <span class="keywordflow">or</span> in_channels != out_channels:</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno"><a class="line" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableBasicBlock.html#abc091fd4be2ca80781ff6fe4e14a93a3">  135</a></span>            self.<a class="code hl_variable" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableBasicBlock.html#abc091fd4be2ca80781ff6fe4e14a93a3">shortcut</a> = nn.Sequential(</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>                nn.Conv2d(in_channels, out_channels, kernel_size=1, </div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>                         stride=stride, bias=<span class="keyword">False</span>),</div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>                nn.BatchNorm2d(out_channels)</div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>            )</div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>        <span class="keywordflow">else</span>:</div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>            self.<a class="code hl_variable" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableBasicBlock.html#abc091fd4be2ca80781ff6fe4e14a93a3">shortcut</a> = nn.Identity()</div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>    </div>
+</div>
+<div class="foldopen" id="foldopen00143" data-start="" data-end="">
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno"><a class="line" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableBasicBlock.html#a527ed17943559aab5c338f964158da8e">  143</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableBasicBlock.html#a527ed17943559aab5c338f964158da8e">forward</a>(self, x):</div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>        identity = self.<a class="code hl_variable" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableBasicBlock.html#abc091fd4be2ca80781ff6fe4e14a93a3">shortcut</a>(x)</div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>        </div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>        out = self.<a class="code hl_variable" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableBasicBlock.html#a913e3ce721e46f6b85e0b329e17a6b98">conv1</a>(x)</div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>        out = self.<a class="code hl_variable" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableBasicBlock.html#a6151a210b334ef01ada9d82eedc49f54">bn1</a>(out)</div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>        out = self.<a class="code hl_variable" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableBasicBlock.html#a4f1606691e9dd9048c0a59dbbd488a27">relu</a>(out)</div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>        </div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>        out = self.<a class="code hl_variable" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableBasicBlock.html#aa3ac22cb5db92d4186d4b7a3816bbda1">conv2</a>(out)</div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>        out = self.<a class="code hl_variable" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableBasicBlock.html#a89c736bfb0c3418d13a714124a2897fa">bn2</a>(out)</div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>        </div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>        out += identity</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>        out = self.<a class="code hl_variable" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableBasicBlock.html#a4f1606691e9dd9048c0a59dbbd488a27">relu</a>(out)</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>        </div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>        <span class="keywordflow">return</span> out</div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span> </div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span> </div>
+</div>
+</div>
+<div class="foldopen" id="foldopen00159" data-start="" data-end="">
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno"><a class="line" href="namespaceexamples_1_1cifar10__dnm__benchmark.html#a32a19e2ae2b5366736a1f894fb278b28">  159</a></span><span class="keyword">def </span><a class="code hl_function" href="namespaceexamples_1_1cifar10__dnm__benchmark.html#a32a19e2ae2b5366736a1f894fb278b28">prepare_cifar10_data</a>(batch_size=128, num_workers=4):</div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>    <span class="stringliteral">&quot;&quot;&quot;准备CIFAR-10数据集&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>    </div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>    <span class="comment"># 数据增强策略</span></div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>    transform_train = transforms.Compose([</div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>        transforms.RandomCrop(32, padding=4),</div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>        transforms.RandomHorizontalFlip(p=0.5),</div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>        transforms.RandomRotation(15),</div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>        transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.1),</div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>        transforms.ToTensor(),</div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>        transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2470, 0.2435, 0.2616))</div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>    ])</div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>    </div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>    transform_test = transforms.Compose([</div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>        transforms.ToTensor(),</div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>        transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2470, 0.2435, 0.2616))</div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>    ])</div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>    </div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>    <span class="comment"># 加载数据集</span></div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>    trainset = torchvision.datasets.CIFAR10(</div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>        root=<span class="stringliteral">&#39;./data&#39;</span>, train=<span class="keyword">True</span>, download=<span class="keyword">True</span>, transform=transform_train</div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>    )</div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>    testset = torchvision.datasets.CIFAR10(</div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>        root=<span class="stringliteral">&#39;./data&#39;</span>, train=<span class="keyword">False</span>, download=<span class="keyword">True</span>, transform=transform_test</div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>    )</div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>    </div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>    train_loader = DataLoader(</div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>        trainset, batch_size=batch_size, shuffle=<span class="keyword">True</span>, </div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>        num_workers=num_workers, pin_memory=<span class="keyword">True</span></div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>    )</div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>    test_loader = DataLoader(</div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>        testset, batch_size=batch_size, shuffle=<span class="keyword">False</span>,</div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>        num_workers=num_workers, pin_memory=<span class="keyword">True</span></div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>    )</div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>    </div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>    print(f<span class="stringliteral">&quot;📊 CIFAR-10 Dataset loaded:&quot;</span>)</div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>    print(f<span class="stringliteral">&quot;   Training samples: {len(trainset)}&quot;</span>)</div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>    print(f<span class="stringliteral">&quot;   Test samples: {len(testset)}&quot;</span>)</div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>    print(f<span class="stringliteral">&quot;   Batch size: {batch_size}&quot;</span>)</div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>    </div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>    <span class="keywordflow">return</span> train_loader, test_loader</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span> </div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span> </div>
+</div>
+<div class="foldopen" id="foldopen00202" data-start="" data-end="">
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno"><a class="line" href="namespaceexamples_1_1cifar10__dnm__benchmark.html#ad3efa7b03398ff26fa9639d59b522bc5">  202</a></span><span class="keyword">def </span><a class="code hl_function" href="namespaceexamples_1_1cifar10__dnm__benchmark.html#ad3efa7b03398ff26fa9639d59b522bc5">create_optimized_dnm_config</a>():</div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>    <span class="stringliteral">&quot;&quot;&quot;创建优化的DNM配置，目标95%准确率&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>    </div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>    <span class="keywordflow">return</span> {</div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>        <span class="stringliteral">&#39;neuron_division&#39;</span>: {</div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>            <span class="stringliteral">&#39;splitter&#39;</span>: {</div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>                <span class="stringliteral">&#39;entropy_threshold&#39;</span>: 0.6,        <span class="comment"># 适中的分裂阈值</span></div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>                <span class="stringliteral">&#39;overload_threshold&#39;</span>: 0.5,       <span class="comment"># 较低的过载阈值，更积极分裂</span></div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>                <span class="stringliteral">&#39;split_probability&#39;</span>: 0.6,        <span class="comment"># 提高分裂概率</span></div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>                <span class="stringliteral">&#39;max_splits_per_layer&#39;</span>: 4,       <span class="comment"># 允许更多分裂</span></div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>                <span class="stringliteral">&#39;inheritance_noise&#39;</span>: 0.05        <span class="comment"># 较小的继承噪声</span></div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>            },</div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>            <span class="stringliteral">&#39;monitoring&#39;</span>: {</div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>                <span class="stringliteral">&#39;target_layers&#39;</span>: [<span class="stringliteral">&#39;conv&#39;</span>, <span class="stringliteral">&#39;linear&#39;</span>],</div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>                <span class="stringliteral">&#39;analysis_frequency&#39;</span>: 4,         <span class="comment"># 更频繁的分析</span></div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>                <span class="stringliteral">&#39;min_epoch_before_split&#39;</span>: 8      <span class="comment"># 更早开始分裂</span></div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>            }</div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>        },</div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>        <span class="stringliteral">&#39;connection_growth&#39;</span>: {</div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>            <span class="stringliteral">&#39;analyzer&#39;</span>: {</div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>                <span class="stringliteral">&#39;correlation_threshold&#39;</span>: 0.12,   <span class="comment"># 较低的相关性阈值</span></div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>                <span class="stringliteral">&#39;history_length&#39;</span>: 10             <span class="comment"># 更长的历史记录</span></div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>            },</div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>            <span class="stringliteral">&#39;growth&#39;</span>: {</div>
+<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>                <span class="stringliteral">&#39;max_new_connections&#39;</span>: 4,        <span class="comment"># 更多连接</span></div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>                <span class="stringliteral">&#39;min_correlation_threshold&#39;</span>: 0.08,</div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>                <span class="stringliteral">&#39;growth_frequency&#39;</span>: 6,           <span class="comment"># 更频繁的连接生长</span></div>
+<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>                <span class="stringliteral">&#39;connection_types&#39;</span>: [<span class="stringliteral">&#39;skip_connection&#39;</span>, <span class="stringliteral">&#39;attention_connection&#39;</span>]</div>
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>            },</div>
+<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>            <span class="stringliteral">&#39;filtering&#39;</span>: {</div>
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>                <span class="stringliteral">&#39;min_layer_distance&#39;</span>: 1,         <span class="comment"># 允许相邻层连接</span></div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>                <span class="stringliteral">&#39;max_layer_distance&#39;</span>: 8,         <span class="comment"># 更大的连接范围</span></div>
+<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>                <span class="stringliteral">&#39;avoid_redundant_connections&#39;</span>: <span class="keyword">True</span></div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>            }</div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>        },</div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>        <span class="stringliteral">&#39;multi_objective&#39;</span>: {</div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>            <span class="stringliteral">&#39;evolution&#39;</span>: {</div>
+<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>                <span class="stringliteral">&#39;population_size&#39;</span>: 10,           <span class="comment"># 适中的种群大小</span></div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>                <span class="stringliteral">&#39;max_generations&#39;</span>: 12,           <span class="comment"># 适中的代数</span></div>
+<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>                <span class="stringliteral">&#39;mutation_rate&#39;</span>: 0.4,</div>
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>                <span class="stringliteral">&#39;crossover_rate&#39;</span>: 0.8,</div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>                <span class="stringliteral">&#39;elitism_ratio&#39;</span>: 0.2</div>
+<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>            },</div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>            <span class="stringliteral">&#39;optimization&#39;</span>: {</div>
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>                <span class="stringliteral">&#39;trigger_frequency&#39;</span>: 15,         <span class="comment"># 适中的触发频率</span></div>
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>                <span class="stringliteral">&#39;performance_plateau_threshold&#39;</span>: 0.005,</div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>                <span class="stringliteral">&#39;min_improvement_epochs&#39;</span>: 3</div>
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>            }</div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>        },</div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>        <span class="stringliteral">&#39;framework&#39;</span>: {</div>
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>            <span class="stringliteral">&#39;morphogenesis_frequency&#39;</span>: 4,       <span class="comment"># 更频繁的形态发生</span></div>
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>            <span class="stringliteral">&#39;performance_tracking_window&#39;</span>: 8,</div>
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>            <span class="stringliteral">&#39;early_stopping_patience&#39;</span>: 25,</div>
+<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>            <span class="stringliteral">&#39;target_accuracy_threshold&#39;</span>: 95.0, <span class="comment"># 目标95%</span></div>
+<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>            <span class="stringliteral">&#39;enable_architecture_snapshots&#39;</span>: <span class="keyword">True</span>,</div>
+<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>            <span class="stringliteral">&#39;adaptive_morphogenesis&#39;</span>: <span class="keyword">True</span></div>
+<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>        }</div>
+<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>    }</div>
+<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span> </div>
+<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span> </div>
+</div>
+<div class="foldopen" id="foldopen00262" data-start="" data-end="">
+<div class="line"><a id="l00262" name="l00262"></a><span class="lineno"><a class="line" href="namespaceexamples_1_1cifar10__dnm__benchmark.html#ae00c683e6f5e6bbea50c9774e7e45256">  262</a></span><span class="keyword">def </span><a class="code hl_function" href="namespaceexamples_1_1cifar10__dnm__benchmark.html#ae00c683e6f5e6bbea50c9774e7e45256">run_cifar10_dnm_benchmark</a>():</div>
+<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>    <span class="stringliteral">&quot;&quot;&quot;运行CIFAR-10 DNM基准测试&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>    </div>
+<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>    print(<span class="stringliteral">&quot;🧬 CIFAR-10 DNM Benchmark - Target: 95% Accuracy&quot;</span>)</div>
+<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>    print(<span class="stringliteral">&quot;=&quot;</span> * 60)</div>
+<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>    </div>
+<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>    <span class="comment"># 设置设备</span></div>
+<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>    device = torch.device(<span class="stringliteral">&#39;cuda&#39;</span> <span class="keywordflow">if</span> torch.cuda.is_available() <span class="keywordflow">else</span> <span class="stringliteral">&#39;cpu&#39;</span>)</div>
+<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>    print(f<span class="stringliteral">&quot;🔧 Device: {device}&quot;</span>)</div>
+<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>    </div>
+<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>    <span class="comment"># 准备数据</span></div>
+<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>    train_loader, test_loader = <a class="code hl_function" href="namespaceexamples_1_1cifar10__dnm__benchmark.html#a32a19e2ae2b5366736a1f894fb278b28">prepare_cifar10_data</a>(batch_size=128)</div>
+<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>    </div>
+<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>    <span class="comment"># 创建可演化模型</span></div>
+<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>    model = <a class="code hl_class" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18.html">EvolvableResNet18</a>(num_classes=10, initial_channels=64)</div>
+<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>    initial_params = sum(p.numel() <span class="keywordflow">for</span> p <span class="keywordflow">in</span> model.parameters())</div>
+<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>    print(f<span class="stringliteral">&quot;🏗️ Initial model: {initial_params:,} parameters&quot;</span>)</div>
+<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>    </div>
+<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>    <span class="comment"># 创建优化的DNM配置</span></div>
+<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>    dnm_config = <a class="code hl_function" href="namespaceexamples_1_1cifar10__dnm__benchmark.html#ad3efa7b03398ff26fa9639d59b522bc5">create_optimized_dnm_config</a>()</div>
+<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>    </div>
+<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>    <span class="comment"># 创建优化器和学习率调度器</span></div>
+<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>    optimizer = optim.SGD(model.parameters(), lr=0.1, momentum=0.9, weight_decay=5e-4)</div>
+<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span>    scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=200, eta_min=1e-6)</div>
+<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>    </div>
+<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span>    <span class="comment"># 损失函数</span></div>
+<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span>    criterion = nn.CrossEntropyLoss(label_smoothing=0.1)</div>
+<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span>    </div>
+<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span>    print(f<span class="stringliteral">&quot;\n🚀 Starting DNM Training (Target: 95% accuracy)&quot;</span>)</div>
+<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span>    print(<span class="stringliteral">&quot;=&quot;</span> * 60)</div>
+<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span>    </div>
+<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span>    <span class="comment"># 记录开始时间</span></div>
+<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span>    start_time = time.time()</div>
+<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span>    </div>
+<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span>    <span class="comment"># 回调函数</span></div>
+<div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span>    <span class="keyword">def </span>progress_callback(dnm_framework, model, epoch_record):</div>
+<div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span>        epoch = epoch_record[<span class="stringliteral">&#39;epoch&#39;</span>]</div>
+<div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span>        val_acc = epoch_record[<span class="stringliteral">&#39;val_acc&#39;</span>]</div>
+<div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span>        train_acc = epoch_record[<span class="stringliteral">&#39;train_acc&#39;</span>]</div>
+<div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span>        params = epoch_record[<span class="stringliteral">&#39;model_params&#39;</span>]</div>
+<div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span>        </div>
+<div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span>        <span class="comment"># 更新学习率</span></div>
+<div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span>        scheduler.step()</div>
+<div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span>        current_lr = scheduler.get_last_lr()[0]</div>
+<div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span>        </div>
+<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span>        <span class="keywordflow">if</span> epoch % 5 == 0:</div>
+<div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span>            param_growth = (params - initial_params) / initial_params * 100</div>
+<div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span>            print(f<span class="stringliteral">&quot;📈 Epoch {epoch}: Train={train_acc:.2f}%, Val={val_acc:.2f}%, &quot;</span></div>
+<div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span>                  f<span class="stringliteral">&quot;Params={params:,} (+{param_growth:.1f}%), LR={current_lr:.6f}&quot;</span>)</div>
+<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span>    </div>
+<div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span>    <span class="comment"># 使用DNM训练</span></div>
+<div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span>    <span class="keywordflow">try</span>:</div>
+<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span>        result = train_with_dnm(</div>
+<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>            model=model,</div>
+<div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span>            train_loader=train_loader,</div>
+<div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span>            val_loader=test_loader,</div>
+<div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span>            epochs=200,</div>
+<div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span>            optimizer=optimizer,</div>
+<div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span>            criterion=criterion,</div>
+<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span>            config=dnm_config,</div>
+<div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span>            callbacks=[progress_callback]</div>
+<div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span>        )</div>
+<div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span>        </div>
+<div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span>        <span class="comment"># 训练完成统计</span></div>
+<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>        training_time = time.time() - start_time</div>
+<div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span>        final_params = sum(p.numel() <span class="keywordflow">for</span> p <span class="keywordflow">in</span> result[<span class="stringliteral">&#39;model&#39;</span>].parameters())</div>
+<div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>        param_growth = (final_params - initial_params) / initial_params * 100</div>
+<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>        </div>
+<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span>        print(<span class="stringliteral">&quot;\n🎉 DNM Training Completed!&quot;</span>)</div>
+<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>        print(<span class="stringliteral">&quot;=&quot;</span> * 60)</div>
+<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span>        print(f<span class="stringliteral">&quot;📊 Results Summary:&quot;</span>)</div>
+<div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span>        print(f<span class="stringliteral">&quot;   Best Validation Accuracy: {result[&#39;best_val_accuracy&#39;]:.2f}%&quot;</span>)</div>
+<div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span>        print(f<span class="stringliteral">&quot;   Final Validation Accuracy: {result[&#39;final_val_accuracy&#39;]:.2f}%&quot;</span>)</div>
+<div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span>        print(f<span class="stringliteral">&quot;   Parameter Growth: +{param_growth:.1f}% ({initial_params:,} → {final_params:,})&quot;</span>)</div>
+<div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span>        print(f<span class="stringliteral">&quot;   Training Time: {training_time/60:.1f} minutes&quot;</span>)</div>
+<div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span>        print(f<span class="stringliteral">&quot;   Morphogenesis Events: {len(result[&#39;morphogenesis_events&#39;])}&quot;</span>)</div>
+<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>        print(f<span class="stringliteral">&quot;   Total Neuron Splits: {result[&#39;statistics&#39;][&#39;total_neuron_splits&#39;]}&quot;</span>)</div>
+<div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>        print(f<span class="stringliteral">&quot;   Total Connections Grown: {result[&#39;statistics&#39;][&#39;total_connections_grown&#39;]}&quot;</span>)</div>
+<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>        </div>
+<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>        <span class="comment"># 详细分析形态发生事件</span></div>
+<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span>        <span class="keywordflow">if</span> result[<span class="stringliteral">&#39;morphogenesis_events&#39;</span>]:</div>
+<div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span>            print(f<span class="stringliteral">&quot;\n🧬 Morphogenesis Analysis:&quot;</span>)</div>
+<div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span>            <span class="keywordflow">for</span> i, event <span class="keywordflow">in</span> enumerate(result[<span class="stringliteral">&#39;morphogenesis_events&#39;</span>][-5:]):  <span class="comment"># 显示最后5个事件</span></div>
+<div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span>                print(f<span class="stringliteral">&quot;   Event {i+1} (Epoch {event[&#39;epoch&#39;]}):&quot;</span>)</div>
+<div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span>                print(f<span class="stringliteral">&quot;     Neuron splits: {event[&#39;neuron_splits&#39;]}&quot;</span>)</div>
+<div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span>                print(f<span class="stringliteral">&quot;     Connections grown: {event[&#39;connections_grown&#39;]}&quot;</span>)</div>
+<div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span>                print(f<span class="stringliteral">&quot;     Performance before: {event[&#39;performance_before&#39;]:.2f}%&quot;</span>)</div>
+<div class="line"><a id="l00349" name="l00349"></a><span class="lineno">  349</span>        </div>
+<div class="line"><a id="l00350" name="l00350"></a><span class="lineno">  350</span>        <span class="comment"># 保存模型</span></div>
+<div class="line"><a id="l00351" name="l00351"></a><span class="lineno">  351</span>        model_path = f<span class="stringliteral">&quot;cifar10_dnm_evolved_{result[&#39;best_val_accuracy&#39;]:.1f}percent.pth&quot;</span></div>
+<div class="line"><a id="l00352" name="l00352"></a><span class="lineno">  352</span>        torch.save({</div>
+<div class="line"><a id="l00353" name="l00353"></a><span class="lineno">  353</span>            <span class="stringliteral">&#39;model_state_dict&#39;</span>: result[<span class="stringliteral">&#39;model&#39;</span>].state_dict(),</div>
+<div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span>            <span class="stringliteral">&#39;config&#39;</span>: dnm_config,</div>
+<div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span>            <span class="stringliteral">&#39;results&#39;</span>: result,</div>
+<div class="line"><a id="l00356" name="l00356"></a><span class="lineno">  356</span>            <span class="stringliteral">&#39;final_accuracy&#39;</span>: result[<span class="stringliteral">&#39;best_val_accuracy&#39;</span>]</div>
+<div class="line"><a id="l00357" name="l00357"></a><span class="lineno">  357</span>        }, model_path)</div>
+<div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span>        print(f<span class="stringliteral">&quot;💾 Model saved: {model_path}&quot;</span>)</div>
+<div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span>        </div>
+<div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span>        <span class="comment"># 成功标志</span></div>
+<div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span>        <span class="keywordflow">if</span> result[<span class="stringliteral">&#39;best_val_accuracy&#39;</span>] &gt;= 95.0:</div>
+<div class="line"><a id="l00362" name="l00362"></a><span class="lineno">  362</span>            print(f<span class="stringliteral">&quot;\n🏆 SUCCESS: Achieved target 95% accuracy! ({result[&#39;best_val_accuracy&#39;]:.2f}%)&quot;</span>)</div>
+<div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span>        <span class="keywordflow">elif</span> result[<span class="stringliteral">&#39;best_val_accuracy&#39;</span>] &gt;= 90.0:</div>
+<div class="line"><a id="l00364" name="l00364"></a><span class="lineno">  364</span>            print(f<span class="stringliteral">&quot;\n🎯 GOOD: Close to target! ({result[&#39;best_val_accuracy&#39;]:.2f}%)&quot;</span>)</div>
+<div class="line"><a id="l00365" name="l00365"></a><span class="lineno">  365</span>        <span class="keywordflow">else</span>:</div>
+<div class="line"><a id="l00366" name="l00366"></a><span class="lineno">  366</span>            print(f<span class="stringliteral">&quot;\n🔄 IMPROVING: Need more optimization ({result[&#39;best_val_accuracy&#39;]:.2f}%)&quot;</span>)</div>
+<div class="line"><a id="l00367" name="l00367"></a><span class="lineno">  367</span>        </div>
+<div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span>        <span class="keywordflow">return</span> result</div>
+<div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span>        </div>
+<div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span>    <span class="keywordflow">except</span> Exception <span class="keyword">as</span> e:</div>
+<div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span>        print(f<span class="stringliteral">&quot;\n❌ Training failed: {e}&quot;</span>)</div>
+<div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span>        <span class="keyword">import</span> traceback</div>
+<div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span>        traceback.print_exc()</div>
+<div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span>        <span class="keywordflow">return</span> <span class="keywordtype">None</span></div>
+<div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span> </div>
+<div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span> </div>
+</div>
+<div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span><span class="keywordflow">if</span> __name__ == <span class="stringliteral">&quot;__main__&quot;</span>:</div>
+<div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span>    <span class="comment"># 设置随机种子</span></div>
+<div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span>    torch.manual_seed(42)</div>
+<div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span>    torch.cuda.manual_seed(42)</div>
+<div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span>    </div>
+<div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span>    <span class="comment"># 运行基准测试</span></div>
+<div class="line"><a id="l00383" name="l00383"></a><span class="lineno"><a class="line" href="namespaceexamples_1_1cifar10__dnm__benchmark.html#af34da452819cb9c76e375dbd363df7f8">  383</a></span>    result = <a class="code hl_function" href="namespaceexamples_1_1cifar10__dnm__benchmark.html#ae00c683e6f5e6bbea50c9774e7e45256">run_cifar10_dnm_benchmark</a>()</div>
+<div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span>    </div>
+<div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span>    <span class="keywordflow">if</span> result:</div>
+<div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span>        print(f<span class="stringliteral">&quot;\n✅ Benchmark completed successfully!&quot;</span>)</div>
+<div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span>    <span class="keywordflow">else</span>:</div>
+<div class="line"><a id="l00388" name="l00388"></a><span class="lineno">  388</span>        print(f<span class="stringliteral">&quot;\n❌ Benchmark failed!&quot;</span>)</div>
+<div class="ttc" id="aclassexamples_1_1cifar10__dnm__benchmark_1_1EvolvableBasicBlock_html"><div class="ttname"><a href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableBasicBlock.html">examples.cifar10_dnm_benchmark.EvolvableBasicBlock</a></div><div class="ttdef"><b>Definition</b> <a href="cifar10__dnm__benchmark_8py_source.html#l00119">cifar10_dnm_benchmark.py:119</a></div></div>
+<div class="ttc" id="aclassexamples_1_1cifar10__dnm__benchmark_1_1EvolvableBasicBlock_html_a4f1606691e9dd9048c0a59dbbd488a27"><div class="ttname"><a href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableBasicBlock.html#a4f1606691e9dd9048c0a59dbbd488a27">examples.cifar10_dnm_benchmark.EvolvableBasicBlock.relu</a></div><div class="ttdeci">relu</div><div class="ttdef"><b>Definition</b> <a href="cifar10__dnm__benchmark_8py_source.html#l00131">cifar10_dnm_benchmark.py:131</a></div></div>
+<div class="ttc" id="aclassexamples_1_1cifar10__dnm__benchmark_1_1EvolvableBasicBlock_html_a527ed17943559aab5c338f964158da8e"><div class="ttname"><a href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableBasicBlock.html#a527ed17943559aab5c338f964158da8e">examples.cifar10_dnm_benchmark.EvolvableBasicBlock.forward</a></div><div class="ttdeci">forward(self, x)</div><div class="ttdef"><b>Definition</b> <a href="cifar10__dnm__benchmark_8py_source.html#l00143">cifar10_dnm_benchmark.py:143</a></div></div>
+<div class="ttc" id="aclassexamples_1_1cifar10__dnm__benchmark_1_1EvolvableBasicBlock_html_a6151a210b334ef01ada9d82eedc49f54"><div class="ttname"><a href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableBasicBlock.html#a6151a210b334ef01ada9d82eedc49f54">examples.cifar10_dnm_benchmark.EvolvableBasicBlock.bn1</a></div><div class="ttdeci">bn1</div><div class="ttdef"><b>Definition</b> <a href="cifar10__dnm__benchmark_8py_source.html#l00127">cifar10_dnm_benchmark.py:127</a></div></div>
+<div class="ttc" id="aclassexamples_1_1cifar10__dnm__benchmark_1_1EvolvableBasicBlock_html_a732968834c75e214652a48f61f964b9a"><div class="ttname"><a href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableBasicBlock.html#a732968834c75e214652a48f61f964b9a">examples.cifar10_dnm_benchmark.EvolvableBasicBlock.__init__</a></div><div class="ttdeci">__init__(self, in_channels, out_channels, stride=1)</div><div class="ttdef"><b>Definition</b> <a href="cifar10__dnm__benchmark_8py_source.html#l00122">cifar10_dnm_benchmark.py:122</a></div></div>
+<div class="ttc" id="aclassexamples_1_1cifar10__dnm__benchmark_1_1EvolvableBasicBlock_html_a89c736bfb0c3418d13a714124a2897fa"><div class="ttname"><a href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableBasicBlock.html#a89c736bfb0c3418d13a714124a2897fa">examples.cifar10_dnm_benchmark.EvolvableBasicBlock.bn2</a></div><div class="ttdeci">bn2</div><div class="ttdef"><b>Definition</b> <a href="cifar10__dnm__benchmark_8py_source.html#l00130">cifar10_dnm_benchmark.py:130</a></div></div>
+<div class="ttc" id="aclassexamples_1_1cifar10__dnm__benchmark_1_1EvolvableBasicBlock_html_a913e3ce721e46f6b85e0b329e17a6b98"><div class="ttname"><a href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableBasicBlock.html#a913e3ce721e46f6b85e0b329e17a6b98">examples.cifar10_dnm_benchmark.EvolvableBasicBlock.conv1</a></div><div class="ttdeci">conv1</div><div class="ttdef"><b>Definition</b> <a href="cifar10__dnm__benchmark_8py_source.html#l00125">cifar10_dnm_benchmark.py:125</a></div></div>
+<div class="ttc" id="aclassexamples_1_1cifar10__dnm__benchmark_1_1EvolvableBasicBlock_html_aa3ac22cb5db92d4186d4b7a3816bbda1"><div class="ttname"><a href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableBasicBlock.html#aa3ac22cb5db92d4186d4b7a3816bbda1">examples.cifar10_dnm_benchmark.EvolvableBasicBlock.conv2</a></div><div class="ttdeci">conv2</div><div class="ttdef"><b>Definition</b> <a href="cifar10__dnm__benchmark_8py_source.html#l00128">cifar10_dnm_benchmark.py:128</a></div></div>
+<div class="ttc" id="aclassexamples_1_1cifar10__dnm__benchmark_1_1EvolvableBasicBlock_html_abc091fd4be2ca80781ff6fe4e14a93a3"><div class="ttname"><a href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableBasicBlock.html#abc091fd4be2ca80781ff6fe4e14a93a3">examples.cifar10_dnm_benchmark.EvolvableBasicBlock.shortcut</a></div><div class="ttdeci">shortcut</div><div class="ttdef"><b>Definition</b> <a href="cifar10__dnm__benchmark_8py_source.html#l00135">cifar10_dnm_benchmark.py:135</a></div></div>
+<div class="ttc" id="aclassexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18_html"><div class="ttname"><a href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18.html">examples.cifar10_dnm_benchmark.EvolvableResNet18</a></div><div class="ttdef"><b>Definition</b> <a href="cifar10__dnm__benchmark_8py_source.html#l00043">cifar10_dnm_benchmark.py:43</a></div></div>
+<div class="ttc" id="aclassexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18_html_a2d2f940d90acfa4ecda0bfd7cb0c4736"><div class="ttname"><a href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18.html#a2d2f940d90acfa4ecda0bfd7cb0c4736">examples.cifar10_dnm_benchmark.EvolvableResNet18.forward</a></div><div class="ttdeci">forward(self, x)</div><div class="ttdef"><b>Definition</b> <a href="cifar10__dnm__benchmark_8py_source.html#l00100">cifar10_dnm_benchmark.py:100</a></div></div>
+<div class="ttc" id="aclassexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18_html_a6c3b9ab4118752ca1be4644442e0d595"><div class="ttname"><a href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18.html#a6c3b9ab4118752ca1be4644442e0d595">examples.cifar10_dnm_benchmark.EvolvableResNet18._make_layer</a></div><div class="ttdeci">_make_layer(self, in_channels, out_channels, blocks, stride=1)</div><div class="ttdef"><b>Definition</b> <a href="cifar10__dnm__benchmark_8py_source.html#l00077">cifar10_dnm_benchmark.py:77</a></div></div>
+<div class="ttc" id="aclassexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18_html_a742fe35d6f7e0eb2adc3115af57613d0"><div class="ttname"><a href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18.html#a742fe35d6f7e0eb2adc3115af57613d0">examples.cifar10_dnm_benchmark.EvolvableResNet18._initialize_weights</a></div><div class="ttdeci">_initialize_weights(self)</div><div class="ttdef"><b>Definition</b> <a href="cifar10__dnm__benchmark_8py_source.html#l00089">cifar10_dnm_benchmark.py:89</a></div></div>
+<div class="ttc" id="aclassexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18_html_a78cc8763a28f5cabfc3cbce921c91649"><div class="ttname"><a href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18.html#a78cc8763a28f5cabfc3cbce921c91649">examples.cifar10_dnm_benchmark.EvolvableResNet18.relu</a></div><div class="ttdeci">relu</div><div class="ttdef"><b>Definition</b> <a href="cifar10__dnm__benchmark_8py_source.html#l00053">cifar10_dnm_benchmark.py:53</a></div></div>
+<div class="ttc" id="aclassexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18_html_a7b71099abf969d179066a9cfb8740fe0"><div class="ttname"><a href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18.html#a7b71099abf969d179066a9cfb8740fe0">examples.cifar10_dnm_benchmark.EvolvableResNet18.layer4</a></div><div class="ttdeci">layer4</div><div class="ttdef"><b>Definition</b> <a href="cifar10__dnm__benchmark_8py_source.html#l00059">cifar10_dnm_benchmark.py:59</a></div></div>
+<div class="ttc" id="aclassexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18_html_a860dccafea93aeddd150eab244035bc8"><div class="ttname"><a href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18.html#a860dccafea93aeddd150eab244035bc8">examples.cifar10_dnm_benchmark.EvolvableResNet18.layer2</a></div><div class="ttdeci">layer2</div><div class="ttdef"><b>Definition</b> <a href="cifar10__dnm__benchmark_8py_source.html#l00057">cifar10_dnm_benchmark.py:57</a></div></div>
+<div class="ttc" id="aclassexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18_html_a8aeb7a3186741d249aab68659cbb05e1"><div class="ttname"><a href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18.html#a8aeb7a3186741d249aab68659cbb05e1">examples.cifar10_dnm_benchmark.EvolvableResNet18.fc_layers</a></div><div class="ttdeci">fc_layers</div><div class="ttdef"><b>Definition</b> <a href="cifar10__dnm__benchmark_8py_source.html#l00063">cifar10_dnm_benchmark.py:63</a></div></div>
+<div class="ttc" id="aclassexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18_html_a92084fde84d0c07fc9778935f5961316"><div class="ttname"><a href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18.html#a92084fde84d0c07fc9778935f5961316">examples.cifar10_dnm_benchmark.EvolvableResNet18.conv1</a></div><div class="ttdeci">conv1</div><div class="ttdef"><b>Definition</b> <a href="cifar10__dnm__benchmark_8py_source.html#l00051">cifar10_dnm_benchmark.py:51</a></div></div>
+<div class="ttc" id="aclassexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18_html_aa3b17a9505d4546fd3607d7244621e02"><div class="ttname"><a href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18.html#aa3b17a9505d4546fd3607d7244621e02">examples.cifar10_dnm_benchmark.EvolvableResNet18.avgpool</a></div><div class="ttdeci">avgpool</div><div class="ttdef"><b>Definition</b> <a href="cifar10__dnm__benchmark_8py_source.html#l00062">cifar10_dnm_benchmark.py:62</a></div></div>
+<div class="ttc" id="aclassexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18_html_abb92816b7f59acafd1f574909d09ccee"><div class="ttname"><a href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18.html#abb92816b7f59acafd1f574909d09ccee">examples.cifar10_dnm_benchmark.EvolvableResNet18.__init__</a></div><div class="ttdeci">__init__(self, num_classes=10, initial_channels=64)</div><div class="ttdef"><b>Definition</b> <a href="cifar10__dnm__benchmark_8py_source.html#l00046">cifar10_dnm_benchmark.py:46</a></div></div>
+<div class="ttc" id="aclassexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18_html_ad434d90414e5fe0eeb60368e0f4d40cd"><div class="ttname"><a href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18.html#ad434d90414e5fe0eeb60368e0f4d40cd">examples.cifar10_dnm_benchmark.EvolvableResNet18.bn1</a></div><div class="ttdeci">bn1</div><div class="ttdef"><b>Definition</b> <a href="cifar10__dnm__benchmark_8py_source.html#l00052">cifar10_dnm_benchmark.py:52</a></div></div>
+<div class="ttc" id="aclassexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18_html_adc5122f3c21b7a4f33496008db0c95a1"><div class="ttname"><a href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18.html#adc5122f3c21b7a4f33496008db0c95a1">examples.cifar10_dnm_benchmark.EvolvableResNet18.layer3</a></div><div class="ttdeci">layer3</div><div class="ttdef"><b>Definition</b> <a href="cifar10__dnm__benchmark_8py_source.html#l00058">cifar10_dnm_benchmark.py:58</a></div></div>
+<div class="ttc" id="aclassexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18_html_aee460555dc9601fef5b05dd55d6075fb"><div class="ttname"><a href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18.html#aee460555dc9601fef5b05dd55d6075fb">examples.cifar10_dnm_benchmark.EvolvableResNet18.initial_channels</a></div><div class="ttdeci">initial_channels</div><div class="ttdef"><b>Definition</b> <a href="cifar10__dnm__benchmark_8py_source.html#l00048">cifar10_dnm_benchmark.py:48</a></div></div>
+<div class="ttc" id="aclassexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18_html_af4bcab6b3a1080844d552b6eb42fcdfb"><div class="ttname"><a href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18.html#af4bcab6b3a1080844d552b6eb42fcdfb">examples.cifar10_dnm_benchmark.EvolvableResNet18.layer1</a></div><div class="ttdeci">layer1</div><div class="ttdef"><b>Definition</b> <a href="cifar10__dnm__benchmark_8py_source.html#l00056">cifar10_dnm_benchmark.py:56</a></div></div>
+<div class="ttc" id="anamespaceexamples_1_1cifar10__dnm__benchmark_html_a32a19e2ae2b5366736a1f894fb278b28"><div class="ttname"><a href="namespaceexamples_1_1cifar10__dnm__benchmark.html#a32a19e2ae2b5366736a1f894fb278b28">examples.cifar10_dnm_benchmark.prepare_cifar10_data</a></div><div class="ttdeci">prepare_cifar10_data(batch_size=128, num_workers=4)</div><div class="ttdef"><b>Definition</b> <a href="cifar10__dnm__benchmark_8py_source.html#l00159">cifar10_dnm_benchmark.py:159</a></div></div>
+<div class="ttc" id="anamespaceexamples_1_1cifar10__dnm__benchmark_html_ad3efa7b03398ff26fa9639d59b522bc5"><div class="ttname"><a href="namespaceexamples_1_1cifar10__dnm__benchmark.html#ad3efa7b03398ff26fa9639d59b522bc5">examples.cifar10_dnm_benchmark.create_optimized_dnm_config</a></div><div class="ttdeci">create_optimized_dnm_config()</div><div class="ttdef"><b>Definition</b> <a href="cifar10__dnm__benchmark_8py_source.html#l00202">cifar10_dnm_benchmark.py:202</a></div></div>
+<div class="ttc" id="anamespaceexamples_1_1cifar10__dnm__benchmark_html_ae00c683e6f5e6bbea50c9774e7e45256"><div class="ttname"><a href="namespaceexamples_1_1cifar10__dnm__benchmark.html#ae00c683e6f5e6bbea50c9774e7e45256">examples.cifar10_dnm_benchmark.run_cifar10_dnm_benchmark</a></div><div class="ttdeci">run_cifar10_dnm_benchmark()</div><div class="ttdef"><b>Definition</b> <a href="cifar10__dnm__benchmark_8py_source.html#l00262">cifar10_dnm_benchmark.py:262</a></div></div>
+<div class="ttc" id="anamespaceneuroexapt_1_1core_1_1dnm__connection__growth_html"><div class="ttname"><a href="namespaceneuroexapt_1_1core_1_1dnm__connection__growth.html">neuroexapt.core.dnm_connection_growth</a></div><div class="ttdef"><b>Definition</b> <a href="dnm__connection__growth_8py_source.html#l00001">dnm_connection_growth.py:1</a></div></div>
+<div class="ttc" id="anamespaceneuroexapt_1_1core_1_1dnm__framework_html"><div class="ttname"><a href="namespaceneuroexapt_1_1core_1_1dnm__framework.html">neuroexapt.core.dnm_framework</a></div><div class="ttdef"><b>Definition</b> <a href="dnm__framework_8py_source.html#l00001">dnm_framework.py:1</a></div></div>
+<div class="ttc" id="anamespaceneuroexapt_1_1core_1_1dnm__neuron__division_html"><div class="ttname"><a href="namespaceneuroexapt_1_1core_1_1dnm__neuron__division.html">neuroexapt.core.dnm_neuron_division</a></div><div class="ttdef"><b>Definition</b> <a href="dnm__neuron__division_8py_source.html#l00001">dnm_neuron_division.py:1</a></div></div>
+<div class="ttc" id="anamespaceneuroexapt_1_1math_1_1pareto__optimization_html"><div class="ttname"><a href="namespaceneuroexapt_1_1math_1_1pareto__optimization.html">neuroexapt.math.pareto_optimization</a></div><div class="ttdef"><b>Definition</b> <a href="pareto__optimization_8py_source.html#l00001">pareto_optimization.py:1</a></div></div>
+</div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
+<!-- do not remove this div, it is closed by doxygen! -->
+</div>
+<!-- Custom Footer -->
+<div style="background: #f8f9fa; border-top: 1px solid #e9ecef; margin-top: 50px; padding: 30px 0; text-align: center;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-bottom: 20px;">
+            <!-- Project Info -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🧠 NeuroExapt</h4>
+                <p style="color: #6c757d; margin: 0; font-size: 0.9em;">
+                    Advanced Neural Architecture Search and Dynamic Morphogenesis Framework for next-generation AI research.
+                </p>
+            </div>
+            <!-- Quick Links -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">📚 Quick Links</h4>
+                <div style="text-align: left;">
+                    <a href="index.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🏠 Home</a>
+                    <a href="modules.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📦 Modules</a>
+                    <a href="examples.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💡 Examples</a>
+                    <a href="files.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📁 Files</a>
+                </div>
+            </div>
+            <!-- Resources -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🔗 Resources</h4>
+                <div style="text-align: left;">
+                    <a href="https://github.com/your-username/neuroexapt" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💻 GitHub Repository</a>
+                    <a href="https://github.com/your-username/neuroexapt/issues" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🐛 Issue Tracker</a>
+                    <a href="https://github.com/your-username/neuroexapt/wiki" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📖 Wiki</a>
+                    <a href="https://github.com/your-username/neuroexapt/releases" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🚀 Releases</a>
+                </div>
+            </div>
+        </div>
+        <hr style="border: 0; height: 1px; background: #e9ecef; margin: 20px 0;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+            <div style="color: #6c757d; font-size: 0.9em;">
+                © 2024 NeuroExapt Project. Generated with 
+                <a href="https://www.doxygen.nl/index.html" style="color: #667eea; text-decoration: none;">Doxygen 1.9.8</a>
+            </div>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <span style="font-size: 0.9em; color: #6c757d;">Built with ❤️ for AI Research</span>
+                <div style="display: flex; gap: 10px;">
+                    <span style="background: #28a745; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">🟢 Active</span>
+                    <span style="background: #17a2b8; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">v3.0</span>
+                </div>
+            </div>
+        </div>
+        <!-- Technology Stack -->
+        <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #e9ecef;">
+            <div style="font-size: 0.8em; color: #868e96; text-align: center;">
+                <strong>Built with:</strong>
+                <span style="margin: 0 5px;">🐍 Python</span>
+                <span style="margin: 0 5px;">🔥 PyTorch</span>
+                <span style="margin: 0 5px;">⚡ CUDA</span>
+                <span style="margin: 0 5px;">🧮 NumPy</span>
+                <span style="margin: 0 5px;">📊 Matplotlib</span>
+                <span style="margin: 0 5px;">🚀 Triton</span>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Back to top button -->
+<div id="back-to-top" style="position: fixed; bottom: 20px; right: 20px; display: none; z-index: 1000;">
+    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" 
+            style="background: #667eea; color: white; border: none; padding: 10px 15px; border-radius: 50%; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,0.2); font-size: 16px;">
+        ⬆️
+    </button>
+</div>
+<script>
+// Back to top button functionality
+window.addEventListener('scroll', function() {
+    const backToTop = document.getElementById('back-to-top');
+    if (window.pageYOffset > 300) {
+        backToTop.style.display = 'block';
+    } else {
+        backToTop.style.display = 'none';
+    }
+});
+// Enhanced search functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Add search enhancement if search box exists
+    const searchBox = document.getElementById('MSearchField');
+    if (searchBox) {
+        searchBox.placeholder = 'Search documentation... 🔍';
+        searchBox.style.borderRadius = '20px';
+        searchBox.style.padding = '8px 15px';
+    }
+    // Add copy code button to code blocks
+    const codeBlocks = document.querySelectorAll('.fragment');
+    codeBlocks.forEach(function(block) {
+        const copyBtn = document.createElement('button');
+        copyBtn.innerHTML = '📋';
+        copyBtn.title = 'Copy code';
+        copyBtn.style.cssText = 'position: absolute; top: 10px; right: 10px; background: #667eea; color: white; border: none; padding: 5px; border-radius: 3px; cursor: pointer; font-size: 12px;';
+        block.style.position = 'relative';
+        block.appendChild(copyBtn);
+        copyBtn.addEventListener('click', function() {
+            const text = block.textContent;
+            navigator.clipboard.writeText(text).then(function() {
+                copyBtn.innerHTML = '✅';
+                setTimeout(function() {
+                    copyBtn.innerHTML = '📋';
+                }, 2000);
+            });
+        });
+    });
+});
+// Dark mode toggle (optional)
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+}
+// Load saved dark mode preference
+if (localStorage.getItem('darkMode') === 'true') {
+    document.body.classList.add('dark-mode');
+}
+</script>
+</body>
+</html>
