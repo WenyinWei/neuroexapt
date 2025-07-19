@@ -1,4 +1,5 @@
 # Core components for NeuroExapt
+# Core architectural components
 from .model import Network
 from .operations import OPS
 from .genotypes import Genotype, PRIMITIVES
@@ -54,6 +55,8 @@ __all__ = [
     # Core Components
     'Network', 'OPS', 'PRIMITIVES', 'Genotype',
     'EvolvableNetwork', 'EvolvableCell',
+    # Logging utilities
+    'logger', 'ConfigurableLogger', 'DebugPrinter', 'get_logger',
     # High-Performance Components
     'FastMixedOp', 'BatchedArchitectureUpdate', 'MemoryEfficientCell',
     'FastDeviceManager', 'get_fast_device_manager', 'OperationProfiler',
