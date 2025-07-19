@@ -574,6 +574,8 @@ class EnhancedDNMFramework:
                 MultiPointMutationPlanner,
                 AggressiveMorphogenesisExecutor
             )
+            from .net2net_subnetwork_analyzer import Net2NetSubnetworkAnalyzer
+            
             self.aggressive_analyzer = AggressiveMorphogenesisAnalyzer(
                 accuracy_plateau_threshold=self.config['accuracy_plateau_threshold'],
                 plateau_window=self.config['plateau_detection_window']
@@ -583,6 +585,7 @@ class EnhancedDNMFramework:
                 parameter_budget=self.config['morphogenesis_budget']
             )
             self.aggressive_executor = AggressiveMorphogenesisExecutor()
+            self.net2net_analyzer = Net2NetSubnetworkAnalyzer()
         
         # 记录和监控
         self.morphogenesis_events = []
@@ -671,13 +674,38 @@ class EnhancedDNMFramework:
 
     def execute_morphogenesis(self,
                             model: nn.Module,
-                            activations: Dict[str, torch.Tensor],
-                            gradients: Dict[str, torch.Tensor],
-                            performance_history: List[float],
-                            epoch: int) -> Dict[str, Any]:
+                            activations_or_context,  # 兼容老接口：可以是context dict或activations dict
+                            gradients: Optional[Dict[str, torch.Tensor]] = None,
+                            performance_history: Optional[List[float]] = None,
+                            epoch: Optional[int] = None,
+                            targets: Optional[torch.Tensor] = None) -> Dict[str, Any]:
         """执行形态发生 - 支持传统和激进模式"""
         logger.enter_section("增强形态发生执行")
         logger.log_model_info(model, "输入模型")
+        
+        # 兼容性处理：支持老的context接口和新的参数接口
+        if isinstance(activations_or_context, dict) and gradients is None:
+            # 老接口：传入的是context字典
+            context = activations_or_context
+            activations = context.get('activations', {})
+            gradients = context.get('gradients', {})
+            performance_history = context.get('performance_history', [])
+            epoch = context.get('epoch', 0)
+            targets = context.get('targets')
+        else:
+            # 新接口：直接传入参数
+            activations = activations_or_context
+            if gradients is None or performance_history is None or epoch is None:
+                logger.error("新接口需要提供所有必需参数：gradients, performance_history, epoch")
+                return {
+                    'model_modified': False,
+                    'new_model': model,
+                    'parameters_added': 0,
+                    'morphogenesis_events': [],
+                    'morphogenesis_type': 'error',
+                    'trigger_reasons': [],
+                    'error': 'missing_parameters'
+                }
         
         try:
             # 检查是否满足触发条件
@@ -702,7 +730,7 @@ class EnhancedDNMFramework:
             # 激进模式路径
             if self.aggressive_mode_active and self.config['enable_aggressive_mode']:
                 return self._execute_aggressive_morphogenesis(
-                    model, activations, gradients, performance_history, epoch, trigger_reasons
+                    model, activations, gradients, targets, performance_history, epoch, trigger_reasons
                 )
             
             # 传统形态发生路径
@@ -729,6 +757,7 @@ class EnhancedDNMFramework:
                                         model: nn.Module,
                                         activations: Dict[str, torch.Tensor],
                                         gradients: Dict[str, torch.Tensor],
+                                        targets: Optional[torch.Tensor],
                                         performance_history: List[float],
                                         epoch: int,
                                         trigger_reasons: List[str]) -> Dict[str, Any]:
@@ -737,7 +766,13 @@ class EnhancedDNMFramework:
         
         try:
             # 反向梯度投影分析
-            output_targets = torch.randint(0, 10, (128,))  # 模拟目标，实际使用时应传入真实targets
+            if targets is None:
+                # 如果没有提供真实targets，使用模拟targets
+                logger.warning("未提供真实targets，使用模拟targets进行分析")
+                output_targets = torch.randint(0, 10, (128,))
+            else:
+                output_targets = targets
+            
             bottleneck_signatures = self.aggressive_analyzer.analyze_reverse_gradient_projection(
                 activations, gradients, output_targets
             )
@@ -748,12 +783,41 @@ class EnhancedDNMFramework:
                     model, activations, gradients, performance_history, epoch, trigger_reasons
                 )
             
+            # 使用Net2Net分析器进一步分析每个瓶颈层的变异潜力
+            logger.enter_section("Net2Net子网络潜力分析")
+            net2net_analyses = {}
+            current_accuracy = performance_history[-1] if performance_history else 0.0
+            
+            for layer_name, signature in bottleneck_signatures.items():
+                if signature.severity > 0.3:  # 只分析严重瓶颈
+                    try:
+                        net2net_analysis = self.net2net_analyzer.analyze_layer_mutation_potential(
+                            model, layer_name, activations, gradients, output_targets, current_accuracy
+                        )
+                        net2net_analyses[layer_name] = net2net_analysis
+                        
+                        # 记录Net2Net分析结果
+                        recommendation = net2net_analysis.get('recommendation', {})
+                        logger.info(f"层{layer_name}: {recommendation.get('action', 'unknown')} "
+                                  f"(潜力={net2net_analysis.get('mutation_prediction', {}).get('improvement_potential', 0):.3f})")
+                        
+                    except Exception as e:
+                        logger.warning(f"层{layer_name}的Net2Net分析失败: {e}")
+            
+            logger.info(f"完成{len(net2net_analyses)}个层的Net2Net分析")
+            logger.exit_section("Net2Net子网络潜力分析")
+            
             # 检测停滞严重程度
             _, stagnation_severity = self.aggressive_analyzer.detect_accuracy_plateau(performance_history)
             
+            # 基于Net2Net分析结果改进变异规划
+            enhanced_bottleneck_signatures = self._enhance_bottleneck_signatures_with_net2net(
+                bottleneck_signatures, net2net_analyses
+            )
+            
             # 规划多点变异
             mutations = self.mutation_planner.plan_aggressive_mutations(
-                bottleneck_signatures, performance_history, stagnation_severity
+                enhanced_bottleneck_signatures, performance_history, stagnation_severity
             )
             
             if not mutations:
@@ -807,7 +871,8 @@ class EnhancedDNMFramework:
                     'target_locations': best_mutation.target_locations,
                     'bottleneck_count': len(bottleneck_signatures),
                     'stagnation_severity': stagnation_severity,
-                    'execution_result': execution_result
+                    'execution_result': execution_result,
+                    'net2net_analyses': net2net_analyses  # 包含Net2Net分析结果
                 }
             }
             
@@ -941,6 +1006,41 @@ class EnhancedDNMFramework:
             }
         finally:
             logger.exit_section("传统形态发生")
+    
+    def _enhance_bottleneck_signatures_with_net2net(self, 
+                                                   bottleneck_signatures: Dict,
+                                                   net2net_analyses: Dict) -> Dict:
+        """使用Net2Net分析结果增强瓶颈签名"""
+        
+        enhanced_signatures = copy.deepcopy(bottleneck_signatures)
+        
+        for layer_name, signature in enhanced_signatures.items():
+            if layer_name in net2net_analyses:
+                net2net_analysis = net2net_analyses[layer_name]
+                
+                # 获取变异预测信息
+                mutation_prediction = net2net_analysis.get('mutation_prediction', {})
+                improvement_potential = mutation_prediction.get('improvement_potential', 0.0)
+                risk_assessment = mutation_prediction.get('risk_assessment', {})
+                
+                # 根据Net2Net分析调整瓶颈严重程度
+                original_severity = signature.severity
+                net2net_adjustment = improvement_potential * 0.5  # Net2Net改进潜力的权重
+                
+                # 综合严重程度 = 原始严重程度 + Net2Net改进潜力 - 风险调整
+                adjusted_severity = original_severity + net2net_adjustment - risk_assessment.get('overall_risk', 0) * 0.2
+                signature.severity = max(0.0, min(1.0, adjusted_severity))
+                
+                # 添加Net2Net特定信息
+                signature.net2net_improvement_potential = improvement_potential
+                signature.net2net_risk = risk_assessment.get('overall_risk', 0.0)
+                signature.net2net_recommended_strategy = net2net_analysis.get('recommendation', {}).get('recommended_strategy')
+                
+                logger.debug(f"层{layer_name}: 原始严重程度={original_severity:.3f} -> "
+                           f"调整后严重程度={signature.severity:.3f} "
+                           f"(Net2Net潜力={improvement_potential:.3f})")
+        
+        return enhanced_signatures
 
     def update_performance_history(self, performance: float):
         """更新性能历史"""

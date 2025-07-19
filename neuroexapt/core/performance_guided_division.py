@@ -261,7 +261,8 @@ class PerformanceGuidedDivision:
         # 处理偏置
         if layer.bias is not None:
             new_layer.bias.data[:out_channels] = layer.bias.data
-            new_layer.bias.data[out_channels] = layer.bias.data[neuron_idx] + (torch.randn(1) * self.noise_scale).item()
+            noise_value = (torch.randn(1, device=layer.bias.device) * self.noise_scale)
+                        new_layer.bias.data[out_channels] = layer.bias.data[neuron_idx] + noise_value
         
         # 替换层
         self._replace_layer_in_model(layer, new_layer)
