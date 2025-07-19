@@ -1,7 +1,7 @@
 """
 """
-\defgroup group_fast_operations Fast Operations
-\ingroup core
+defgroup group_fast_operations Fast Operations
+ingroup core
 Fast Operations module for NeuroExapt framework.
 """
 

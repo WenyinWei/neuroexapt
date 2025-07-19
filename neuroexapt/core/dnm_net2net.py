@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
 """
-\defgroup group_dnm_net2net Dnm Net2Net
-\ingroup core
+defgroup group_dnm_net2net Dnm Net2Net
+ingroup core
 Dnm Net2Net module for NeuroExapt framework.
 """
 

@@ -1,6 +1,6 @@
 """
-\defgroup group_minimal_monitor Minimal Monitor
-\ingroup core
+defgroup group_minimal_monitor Minimal Monitor
+ingroup core
 Minimal Monitor module for NeuroExapt framework.
 """
 

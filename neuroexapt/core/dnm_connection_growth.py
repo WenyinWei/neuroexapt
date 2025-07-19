@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
 """
-\defgroup group_dnm_connection_growth Dnm Connection Growth
-\ingroup core
+defgroup group_dnm_connection_growth Dnm Connection Growth
+ingroup core
 Dnm Connection Growth module for NeuroExapt framework.
 """
 

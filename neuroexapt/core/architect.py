@@ -1,7 +1,7 @@
 
 """
-\defgroup group_architect Architect
-\ingroup core
+defgroup group_architect Architect
+ingroup core
 Architect module for NeuroExapt framework.
 """
 

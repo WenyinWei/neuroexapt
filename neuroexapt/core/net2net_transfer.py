@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
 """
-\defgroup group_net2net_transfer Net2Net Transfer
-\ingroup core
+defgroup group_net2net_transfer Net2Net Transfer
+ingroup core
 Net2Net Transfer module for NeuroExapt framework.
 """
 

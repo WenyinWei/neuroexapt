@@ -1,6 +1,6 @@
 """
-\defgroup group_performance_monitor Performance Monitor
-\ingroup core
+defgroup group_performance_monitor Performance Monitor
+ingroup core
 Performance Monitor module for NeuroExapt framework.
 """
 

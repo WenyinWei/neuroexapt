@@ -1,7 +1,7 @@
 """
 """
-\defgroup group_trainer_v3 Trainer V3
-\ingroup core
+defgroup group_trainer_v3 Trainer V3
+ingroup core
 Trainer V3 module for NeuroExapt framework.
 """
 

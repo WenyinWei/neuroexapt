@@ -1,6 +1,6 @@
 """
-\defgroup group_optimized_architect Optimized Architect
-\ingroup core
+defgroup group_optimized_architect Optimized Architect
+ingroup core
 Optimized Architect module for NeuroExapt framework.
 """
 

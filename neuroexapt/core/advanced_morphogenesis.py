@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
 """
-\defgroup group_advanced_morphogenesis Advanced Morphogenesis
-\ingroup core
+defgroup group_advanced_morphogenesis Advanced Morphogenesis
+ingroup core
 Advanced Morphogenesis module for NeuroExapt framework.
 """
 

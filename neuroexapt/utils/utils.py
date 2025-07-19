@@ -1,7 +1,7 @@
 
 """
-\defgroup group_utils Utils
-\ingroup core
+defgroup group_utils Utils
+ingroup core
 Utils module for NeuroExapt framework.
 """
 

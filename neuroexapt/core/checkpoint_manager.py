@@ -1,7 +1,7 @@
 """
 """
-\defgroup group_checkpoint_manager Checkpoint Manager
-\ingroup core
+defgroup group_checkpoint_manager Checkpoint Manager
+ingroup core
 Checkpoint Manager module for NeuroExapt framework.
 """
 
