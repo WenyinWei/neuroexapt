@@ -201,8 +201,16 @@ class DebugPrinter:
             logger.log_model_info(model, name)
 
 
+# Logger实例缓存，避免重复创建
+_logger_cache = {}
+
 def get_logger(name: str = None) -> ConfigurableLogger:
-    """获取logger实例"""
-    if name:
-        return ConfigurableLogger(name, _log_level, _enable_console)
-    return logger
+    """获取logger实例，支持缓存以保持状态一致性"""
+    if name is None:
+        return logger
+    
+    # 使用缓存避免重复创建logger实例
+    if name not in _logger_cache:
+        _logger_cache[name] = ConfigurableLogger(name, _log_level, _enable_console)
+    
+    return _logger_cache[name]

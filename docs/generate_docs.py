@@ -57,8 +57,8 @@ class DocumentationGenerator:
         root_md_files = list(self.project_root.glob("*.md"))
         md_files.extend(root_md_files)
         
-        # docs目录中的markdown文件
-        docs_md_files = list(self.docs_dir.glob("*.md"))
+        # docs目录中的markdown文件（包括子目录）
+        docs_md_files = list(self.docs_dir.glob("**/*.md"))
         md_files.extend(docs_md_files)
         
         # examples目录中的markdown文件

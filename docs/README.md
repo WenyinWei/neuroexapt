@@ -214,4 +214,8 @@ python docs/generate_docs.py --verbose
 
 **构建状态**: 查看[GitHub Actions](../../actions)页面获取最新构建状态
 
+**项目变更**: 查看[变更日志](../CHANGELOG.md)了解最新更新
+
+**详细变更**: 查看[changelogs目录](changelogs/)了解技术细节
+
 **在线文档**: 访问[GitHub Pages](https://[username].github.io/[repository-name]/)查看最新文档
