@@ -1,16 +1,23 @@
 #!/usr/bin/env python3
 """
-高级DNM形态发生演示
-Advanced DNM Morphogenesis Demo
+高级DNM形态发生演示 - 激进模式版本
+Advanced DNM Morphogenesis Demo - Aggressive Mode Edition
 
 🧬 演示内容：
 1. 串行分裂 (Serial Division) - 增加网络深度，提升表达能力
 2. 并行分裂 (Parallel Division) - 创建多分支结构，增强特征多样性  
 3. 混合分裂 (Hybrid Division) - 组合不同层类型，探索复杂架构
 4. 智能瓶颈识别和决策制定
+
+🚀 新增激进模式功能：
+- ✅ 修复了EnhancedDNMFramework接口参数问题
+- 🧪 集成Net2Net子网络分析器（实现"输出反向投影"思想）
+- 🎯 激进多点形态发生系统（专门突破高准确率瓶颈）
+- 📊 实时显示停滞检测、瓶颈分析和变异策略选择
+- 🔧 包含所有Sourcery代码审查建议的修复
 5. 性能对比分析
 
-🎯 目标：在CIFAR-10上实现90%+准确率
+🎯 目标：在CIFAR-10上实现95%+准确率（激进模式突破瓶颈）
 """
 
 import torch
@@ -154,14 +161,21 @@ class AdvancedDNMTrainer:
         self.train_loader = train_loader
         self.test_loader = test_loader
         
-        # 🚀 增强的DNM框架配置 - 冲刺95%准确率
+        # 🚀 增强的DNM框架配置 - 激进模式冲刺95%准确率
         self.dnm_config = {
             'trigger_interval': 8,  # 每8个epoch检查一次，更稳定
             'complexity_threshold': 0.5,  # 降低阈值，更容易触发
             'enable_serial_division': True,
             'enable_parallel_division': True,
             'enable_hybrid_division': True,
-            'max_parameter_growth_ratio': 3.0  # 允许更多参数增长
+            'max_parameter_growth_ratio': 3.0,  # 允许更多参数增长
+            # 🚨 激进模式配置
+            'enable_aggressive_mode': True,  # 启用激进形态发生
+            'accuracy_plateau_threshold': 0.001,  # 0.1%改进阈值
+            'plateau_detection_window': 5,  # 5个epoch停滞检测窗口
+            'aggressive_trigger_accuracy': 0.92,  # 92%时激活激进模式
+            'max_concurrent_mutations': 3,  # 最多3个同时变异点
+            'morphogenesis_budget': 20000  # 激进模式参数预算
         }
         
         self.dnm_framework = EnhancedDNMFramework(self.dnm_config)
@@ -177,6 +191,7 @@ class AdvancedDNMTrainer:
         print("      🔍 开始详细的网络状态捕获...")
         activations = {}
         gradients = {}
+        captured_targets = None  # 保存真实的targets
         
         # 注册钩子函数
         def forward_hook(name):
@@ -222,6 +237,7 @@ class AdvancedDNMTrainer:
             self.model.train()
             data, target = next(iter(self.train_loader))
             data, target = data.to(self.device), target.to(self.device)
+            captured_targets = target.detach().cpu()  # 保存targets用于分析
             print(f"        📊 输入数据形状: {data.shape}")
             
             output = self.model(data)
@@ -254,7 +270,7 @@ class AdvancedDNMTrainer:
         print(f"      📊 捕获的激活: {len(activations)} 个")
         print(f"      📊 捕获的梯度: {len(gradients)} 个")
         
-        return activations, gradients
+        return activations, gradients, captured_targets
     
     def train_epoch(self, optimizer, epoch):
         """训练一个epoch"""
@@ -379,30 +395,68 @@ class AdvancedDNMTrainer:
                 
                 print("  📈 开始捕获网络状态...")
                 try:
-                    activations, gradients = self.capture_network_state()
+                    activations, gradients, real_targets = self.capture_network_state()
                     print(f"    ✅ 激活统计完成: {len(activations)} 个模块")
                     print(f"    ✅ 梯度统计完成: {len(gradients)} 个模块")
                 except Exception as e:
                     print(f"    ❌ 网络状态捕获失败: {e}")
-                    activations, gradients = {}, {}
+                    activations, gradients, real_targets = {}, {}, None
                 
                 print("  🧠 构建分析上下文...")
                 context = {
                     'epoch': epoch,
                     'activations': activations,
                     'gradients': gradients,
-                    'performance_history': self.dnm_framework.performance_history
+                    'performance_history': self.dnm_framework.performance_history,
+                    'targets': real_targets  # 添加真实targets
                 }
                 print(f"    ✅ 性能历史长度: {len(self.dnm_framework.performance_history)}")
                 print(f"    ✅ 上下文构建完成")
                 
                 print("  🚀 开始执行形态发生分析...")
                 try:
-                    # 执行形态发生
-                    results = self.dnm_framework.execute_morphogenesis(self.model, context)
+                    # 执行形态发生 - 使用新的增强接口
+                    results = self.dnm_framework.execute_morphogenesis(
+                        model=self.model,
+                        activations_or_context=context,  # 使用兼容接口
+                        gradients=None,  # context中已包含
+                        performance_history=None,  # context中已包含
+                        epoch=None,  # context中已包含
+                        targets=context.get('targets')  # 传递真实targets
+                    )
                     print(f"    ✅ 形态发生分析完成")
                     print(f"    📋 返回结果键: {list(results.keys())}")
                     print(f"    🔧 模型是否修改: {results.get('model_modified', False)}")
+                    
+                    # 检查是否触发了激进模式
+                    if results.get('morphogenesis_type') == 'aggressive_multi_point':
+                        print(f"    🚨 激进模式已激活！")
+                        details = results.get('aggressive_details', {})
+                        print(f"      🎯 变异策略: {details.get('mutation_strategy', 'unknown')}")
+                        print(f"      📍 目标位置数: {len(details.get('target_locations', []))}")
+                        print(f"      ⚖️ 停滞严重程度: {details.get('stagnation_severity', 0):.3f}")
+                        print(f"      🧠 瓶颈检测数: {details.get('bottleneck_count', 0)}")
+                        
+                        if 'net2net_analyses' in details:
+                            net2net_results = details['net2net_analyses']
+                            print(f"      🧪 Net2Net分析层数: {len(net2net_results)}")
+                            
+                            # 显示每层的分析结果
+                            for layer_name, analysis in net2net_results.items():
+                                rec = analysis.get('recommendation', {})
+                                potential = analysis.get('mutation_prediction', {}).get('improvement_potential', 0)
+                                print(f"        📊 {layer_name}: {rec.get('action', 'unknown')} "
+                                      f"(潜力={potential:.3f})")
+                        
+                        exec_result = details.get('execution_result', {})
+                        if exec_result:
+                            success_rate = f"{exec_result.get('successful_mutations', 0)}/{exec_result.get('total_mutations', 0)}"
+                            print(f"      ✅ 执行成功率: {success_rate}")
+                    
+                    elif results.get('morphogenesis_type') in ['serial_division', 'parallel_division', 'hybrid_division']:
+                        print(f"    🔄 传统形态发生: {results.get('morphogenesis_type')}")
+                        print(f"      📈 新增参数: {results.get('parameters_added', 0):,}")
+                    
                 except Exception as e:
                     print(f"    ❌ 形态发生执行失败: {e}")
                     import traceback
