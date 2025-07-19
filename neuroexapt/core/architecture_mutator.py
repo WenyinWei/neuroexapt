@@ -1,10 +1,8 @@
 """
-"""
 defgroup group_architecture_mutator Architecture Mutator
 ingroup core
 Architecture Mutator module for NeuroExapt framework.
 """
-
 
 架构突变器 (Architecture Mutator)
 

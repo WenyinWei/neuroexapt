@@ -1,10 +1,8 @@
 """
-"""
 defgroup group_trainer Trainer
 ingroup core
 Trainer module for NeuroExapt framework.
 """
-
 
 NeuroExapt Trainer - Simplified Interface
 

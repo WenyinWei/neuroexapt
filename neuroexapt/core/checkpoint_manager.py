@@ -1,10 +1,8 @@
 """
-"""
 defgroup group_checkpoint_manager Checkpoint Manager
 ingroup core
 Checkpoint Manager module for NeuroExapt framework.
 """
-
 
 断点续练管理器 (Checkpoint Manager)
 

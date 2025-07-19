@@ -1,10 +1,8 @@
 """
-"""
 defgroup group_neuroexapt Neuroexapt
 ingroup core
 Neuroexapt module for NeuroExapt framework.
 """
-
 
 NeuroExapt: A Framework for Information-Theoretic and Bayesian-Guided
 Dynamic Neural Network Architecture Optimization.

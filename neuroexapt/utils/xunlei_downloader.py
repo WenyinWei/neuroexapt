@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
 """
-"""
 defgroup group_xunlei_downloader Xunlei Downloader
 ingroup core
 Xunlei Downloader module for NeuroExapt framework.
 """
-
 
 迅雷 (Xunlei/Thunder) Download Manager Integration for Chinese Users
 Provides seamless integration with 迅雷 to accelerate dataset downloads.

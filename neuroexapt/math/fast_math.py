@@ -1,10 +1,8 @@
 """
-"""
 defgroup group_fast_math Fast Math
 ingroup core
 Fast Math module for NeuroExapt framework.
 """
-
 
 高性能数学计算模块
 

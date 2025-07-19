@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
 """
-"""
 defgroup group_advanced_morphogenesis Advanced Morphogenesis
 ingroup core
 Advanced Morphogenesis module for NeuroExapt framework.
 """
-
 
 Advanced Morphogenesis Module - 高级形态发生模块
 

@@ -1,10 +1,8 @@
 """
-"""
 defgroup group_neuroexapt_v3 Neuroexapt V3
 ingroup core
 Neuroexapt V3 module for NeuroExapt framework.
 """
-
 
 NeuroExapt V3: Advanced Information-Theoretic Neural Network Optimization
 

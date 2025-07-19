@@ -1,10 +1,8 @@
 """
-"""
 defgroup group_gumbel_softmax_explorer Gumbel Softmax Explorer
 ingroup core
 Gumbel Softmax Explorer module for NeuroExapt framework.
 """
-
 
 Gumbel-Softmax引导式探索 (Gumbel-Softmax Guided Exploration)
 
