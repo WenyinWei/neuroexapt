@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 """
-defgroup group_dnm_layer_analyzer Dnm Layer Analyzer
-ingroup core
+@defgroup group_dnm_layer_analyzer Dnm Layer Analyzer
+@ingroup core
 Dnm Layer Analyzer module for NeuroExapt framework.
-"""
 
 DNM Layer Performance Analyzer - 层级性能分析器
 

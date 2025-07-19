@@ -1,8 +1,7 @@
 """
-defgroup group_function_preserving_init Function Preserving Init
-ingroup core
+@defgroup group_function_preserving_init Function Preserving Init
+@ingroup core
 Function Preserving Init module for NeuroExapt framework.
-"""
 
 函数保持初始化 (Function-Preserving Initialization)
 

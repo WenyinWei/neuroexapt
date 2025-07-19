@@ -1,8 +1,7 @@
 """
-defgroup group_evolution_checkpoint Evolution Checkpoint
-ingroup core
+@defgroup group_evolution_checkpoint Evolution Checkpoint
+@ingroup core
 Evolution Checkpoint module for NeuroExapt framework.
-"""
 
 架构进化检查点管理器
 

@@ -1,6 +1,6 @@
 """
-defgroup group_simple_architect Simple Architect
-ingroup core
+@defgroup group_simple_architect Simple Architect
+@ingroup core
 Simple Architect module for NeuroExapt framework.
 """
 
