@@ -262,7 +262,7 @@ class PerformanceGuidedDivision:
         if layer.bias is not None:
             new_layer.bias.data[:out_channels] = layer.bias.data
             noise_value = (torch.randn(1, device=layer.bias.device) * self.noise_scale)
-                        new_layer.bias.data[out_channels] = layer.bias.data[neuron_idx] + noise_value
+            new_layer.bias.data[out_channels] = layer.bias.data[neuron_idx] + noise_value
         
         # 替换层
         self._replace_layer_in_model(layer, new_layer)
