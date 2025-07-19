@@ -4,6 +4,9 @@ from .operations import OPS
 from .genotypes import Genotype, PRIMITIVES
 from .evolvable_model import EvolvableNetwork, EvolvableCell
 
+# Logging utilities
+from .logging_utils import logger, ConfigurableLogger, DebugPrinter, get_logger
+
 # High-Performance Components
 from .fast_operations import (
     FastMixedOp, BatchedArchitectureUpdate, MemoryEfficientCell,

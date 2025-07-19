@@ -18,7 +18,7 @@ from collections import OrderedDict, defaultdict
 import copy
 import logging
 
-from .enhanced_dnm_framework import logger
+from .logging_utils import logger
 
 class SubnetworkExtractor:
     """子网络提取器"""

@@ -18,7 +18,7 @@ from collections import defaultdict
 import logging
 import copy
 
-from .enhanced_dnm_framework import logger
+from .logging_utils import logger
 from .advanced_morphogenesis import MorphogenesisType, MorphogenesisDecision
 
 @dataclass

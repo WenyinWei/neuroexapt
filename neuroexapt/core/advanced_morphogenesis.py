@@ -68,7 +68,7 @@ class DebugPrinter:
         self.print_debug(f"✅ 完成 {section_name}", "DEBUG")
 
 # 使用统一的logger系统
-from .enhanced_dnm_framework import logger
+from .logging_utils import logger
 
 class MorphogenesisType(Enum):
     """形态发生类型枚举"""

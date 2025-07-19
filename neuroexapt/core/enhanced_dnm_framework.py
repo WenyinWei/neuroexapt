@@ -35,111 +35,34 @@ from .advanced_morphogenesis import (
     MorphogenesisDecision
 )
 
-class ConfigurableLogger:
-    """可配置的高性能日志系统，替代ANSI彩色打印"""
+# 导入统一的日志系统
+from .logging_utils import ConfigurableLogger, logger
+
+
+# 保持向后兼容性的DebugPrinter类
+class DebugPrinter:
+    """向后兼容的调试打印器（已废弃，建议使用logger）"""
     
-    def __init__(self, name: str = "neuroexapt", level: str = "INFO", enable_console: bool = True):
-        self.logger = logging.getLogger(name)
-        self.logger.setLevel(getattr(logging, level.upper()))
-        
-        # 避免重复添加处理器
-        if not self.logger.handlers:
-            # 控制台处理器
-            if enable_console:
-                console_handler = logging.StreamHandler()
-                console_formatter = logging.Formatter(
-                    '%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-                    datefmt='%H:%M:%S'
-                )
-                console_handler.setFormatter(console_formatter)
-                self.logger.addHandler(console_handler)
-            
-            # 文件处理器（可选）
-            log_file = os.environ.get('NEUROEXAPT_LOG_FILE')
-            if log_file:
-                file_handler = logging.FileHandler(log_file)
-                file_formatter = logging.Formatter(
-                    '%(asctime)s - %(name)s - %(levelname)s - %(funcName)s:%(lineno)d - %(message)s'
-                )
-                file_handler.setFormatter(file_formatter)
-                self.logger.addHandler(file_handler)
-        
-        self.section_stack = []
-        
-    def debug(self, message: str, *args, **kwargs):
-        """记录调试信息"""
-        if self.logger.isEnabledFor(logging.DEBUG):
-            indent = "  " * len(self.section_stack)
-            self.logger.debug(f"{indent}{message}", *args, **kwargs)
+    def __init__(self, enabled: bool = True):
+        self.enabled = enabled
+        self._logger = logger
+        import warnings
+        warnings.warn("DebugPrinter is deprecated, use logger instead", DeprecationWarning)
     
-    def info(self, message: str, *args, **kwargs):
-        """记录信息"""
-        if self.logger.isEnabledFor(logging.INFO):
-            indent = "  " * len(self.section_stack)
-            self.logger.info(f"{indent}{message}", *args, **kwargs)
-    
-    def warning(self, message: str, *args, **kwargs):
-        """记录警告"""
-        if self.logger.isEnabledFor(logging.WARNING):
-            indent = "  " * len(self.section_stack)
-            self.logger.warning(f"{indent}{message}", *args, **kwargs)
-    
-    def error(self, message: str, *args, **kwargs):
-        """记录错误"""
-        if self.logger.isEnabledFor(logging.ERROR):
-            indent = "  " * len(self.section_stack)
-            self.logger.error(f"{indent}{message}", *args, **kwargs)
-    
-    def success(self, message: str, *args, **kwargs):
-        """记录成功信息（使用INFO级别）"""
-        if self.logger.isEnabledFor(logging.INFO):
-            indent = "  " * len(self.section_stack)
-            self.logger.info(f"{indent}✅ {message}", *args, **kwargs)
+    def print_debug(self, message: str, level: str = "INFO"):
+        """打印调试信息（兼容接口）"""
+        if not self.enabled:
+            return
+        getattr(self._logger, level.lower(), self._logger.info)(message)
     
     def enter_section(self, section_name: str):
-        """进入新的日志区域"""
-        if self.logger.isEnabledFor(logging.DEBUG):
-            indent = "  " * len(self.section_stack)
-            self.logger.debug(f"{indent}🔍 进入 {section_name}")
-        self.section_stack.append(section_name)
+        """进入调试区域"""
+        self._logger.enter_section(section_name)
     
-    def exit_section(self, section_name: str):
-        """退出日志区域"""
-        if self.section_stack and self.section_stack[-1] == section_name:
-            self.section_stack.pop()
-        if self.logger.isEnabledFor(logging.DEBUG):
-            indent = "  " * len(self.section_stack)
-            self.logger.debug(f"{indent}✅ 完成 {section_name}")
-    
-    def log_tensor_info(self, tensor: torch.Tensor, name: str):
-        """记录张量信息"""
-        if not self.logger.isEnabledFor(logging.DEBUG):
-            return
-            
-        if tensor is None:
-            self.warning(f"❌ {name}: None")
-            return
-        
-        device_info = f"({tensor.device})" if hasattr(tensor, 'device') else ""
-        self.debug(f"📊 {name}: shape={list(tensor.shape)}, dtype={tensor.dtype}, device={device_info}")
-    
-    def log_model_info(self, model: nn.Module, name: str = "Model"):
-        """记录模型信息"""
-        if not self.logger.isEnabledFor(logging.INFO):
-            return
-            
-        total_params = sum(p.numel() for p in model.parameters())
-        trainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
-        device = next(model.parameters()).device if list(model.parameters()) else "Unknown"
-        
-        self.info(f"🧠 {name}: 总参数={total_params:,}, 可训练={trainable_params:,}, 设备={device}")
+        """退出调试区域"""
+        self._logger.exit_section(section_name)
 
-# 全局日志器配置
-_log_level = os.environ.get('NEUROEXAPT_LOG_LEVEL', 'INFO')
-_enable_console = os.environ.get('NEUROEXAPT_CONSOLE_LOG', 'true').lower() == 'true'
 
-# 创建全局日志器实例
-logger = ConfigurableLogger("neuroexapt.dnm", _log_level, _enable_console)
 
 # 保持向后兼容性的DebugPrinter类
 class DebugPrinter:
