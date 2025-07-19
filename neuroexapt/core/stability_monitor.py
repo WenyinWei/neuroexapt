@@ -1,10 +1,7 @@
 """
-"""
-defgroup group_stability_monitor Stability Monitor
-ingroup core
+@defgroup group_stability_monitor Stability Monitor
+@ingroup core
 Stability Monitor module for NeuroExapt framework.
-"""
-
 
 稳定性监控器 (Stability Monitor)
 

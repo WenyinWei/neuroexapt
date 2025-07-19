@@ -1,10 +1,7 @@
 """
-"""
-defgroup group_visualization Visualization
-ingroup core
+@defgroup group_visualization Visualization
+@ingroup core
 Visualization module for NeuroExapt framework.
-"""
-
 
 Advanced visualization utilities for Neuro Exapt with automatic layout system.
 

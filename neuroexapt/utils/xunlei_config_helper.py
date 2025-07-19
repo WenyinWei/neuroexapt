@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
 """
-"""
 defgroup group_xunlei_config_helper Xunlei Config Helper
 ingroup core
 Xunlei Config Helper module for NeuroExapt framework.
 """
-
 
 迅雷配置助手 - 帮助用户配置迅雷的默认下载路径
 """

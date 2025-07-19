@@ -1,11 +1,8 @@
 #!/usr/bin/env python3
 """
-"""
-defgroup group_separated_training Separated Training
-ingroup core
+@defgroup group_separated_training Separated Training
+@ingroup core
 Separated Training module for NeuroExapt framework.
-"""
-
 
 分离训练策略
 

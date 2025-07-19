@@ -1,10 +1,7 @@
 """
-"""
-defgroup group_dataset_loader Dataset Loader
-ingroup core
+@defgroup group_dataset_loader Dataset Loader
+@ingroup core
 Dataset Loader module for NeuroExapt framework.
-"""
-
 
 Advanced Dataset Loader with P2P Acceleration and Caching.
 

@@ -1,11 +1,8 @@
 #!/usr/bin/env python3
 """
-"""
-defgroup group_enhanced_bottleneck_detector Enhanced Bottleneck Detector
-ingroup core
+@defgroup group_enhanced_bottleneck_detector Enhanced Bottleneck Detector
+@ingroup core
 Enhanced Bottleneck Detector module for NeuroExapt framework.
-"""
-
 
 Enhanced Bottleneck Detector for DNM Framework
 

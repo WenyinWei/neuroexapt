@@ -1,11 +1,8 @@
 #!/usr/bin/env python3
 """
-"""
-defgroup group_enhanced_dnm_framework Enhanced Dnm Framework
-ingroup core
+@defgroup group_enhanced_dnm_framework Enhanced Dnm Framework
+@ingroup core
 Enhanced Dnm Framework module for NeuroExapt framework.
-"""
-
 
 Enhanced Dynamic Neural Morphogenesis (DNM) Framework - 增强版
 

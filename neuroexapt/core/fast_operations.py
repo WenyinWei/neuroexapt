@@ -1,10 +1,7 @@
 """
-"""
-defgroup group_fast_operations Fast Operations
-ingroup core
+@defgroup group_fast_operations Fast Operations
+@ingroup core
 Fast Operations module for NeuroExapt framework.
-"""
-
 
 高性能操作模块 - 针对ASO-SE架构搜索优化
 
