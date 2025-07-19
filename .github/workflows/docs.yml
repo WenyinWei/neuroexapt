@@ -35,7 +35,7 @@ jobs:
         fetch-depth: 0  # 获取完整历史记录以便生成更好的文档
     
     - name: 🐍 Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: '3.9'
         cache: 'pip'
@@ -186,7 +186,7 @@ jobs:
         find docs/generated/html -name "*.js" -exec node -c {} \; 2>/dev/null || echo "⚠️ JavaScript validation skipped (Node.js not available)"
     
     - name: 📤 Upload Documentation Artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: neuroexapt-docs-${{ github.sha }}
         path: docs/generated/html/
@@ -194,7 +194,7 @@ jobs:
     
     - name: 📄 Upload Pages Artifact
       if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
-      uses: actions/upload-pages-artifact@v2
+      uses: actions/upload-pages-artifact@v3
       with:
         path: docs/generated/html/
 
@@ -212,7 +212,7 @@ jobs:
     steps:
     - name: 🌐 Deploy to GitHub Pages
       id: deployment
-      uses: actions/deploy-pages@v2
+      uses: actions/deploy-pages@v4
     
     - name: 📢 Post Deployment Info
       run: |
