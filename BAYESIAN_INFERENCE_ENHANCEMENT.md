@@ -8,7 +8,7 @@
 
 ### 1. 修复 `success_rate` 键缺失错误
 
-**问题**: `'InformationFlowAnalyzer' object has no attribute 'analyze_information_flow'`
+**问题**: `ERROR:neuroexapt.core.bayesian_prediction.bayesian_predictor:贝叶斯预测失败: 'success_rate'`
 
 **解决方案**: 
 - 在 `PriorKnowledgeBase.get_mutation_prior()` 方法中，从Beta分布参数直接计算成功率
@@ -35,7 +35,7 @@ def get_mutation_prior(self, mutation_type: str) -> Dict[str, float]:
 
 ### 2. 添加缺失的 `analyze_information_flow` 方法
 
-**问题**: `'InformationFlowAnalyzer' object has no attribute 'analyze_information_flow'`
+**问题**: `WARNING:neuroexapt.dnm:信息流分析失败: 'InformationFlowAnalyzer' object has no attribute 'analyze_information_flow'`
 
 **解决方案**: 
 - 在 `InformationFlowAnalyzer` 类中添加了 `analyze_information_flow` 方法
@@ -55,6 +55,38 @@ def analyze_information_flow(self, model: torch.nn.Module, context: Dict[str, An
     except Exception as e:
         logger.error(f"信息流分析失败: {e}")
         return {'layer_flow_metrics': {}, 'global_bottleneck_score': 0.5}
+```
+
+### 3. 添加缺失的 `detect_information_leaks` 方法
+
+**问题**: `WARNING:neuroexapt.dnm:信息流分析失败: 'InformationLeakDetector' object has no attribute 'detect_information_leaks'`
+
+**解决方案**: 
+- 在 `InformationLeakDetector` 类中添加了 `detect_information_leaks` 方法
+- 支持基于模型结构的泄漏风险评估和详细的修复建议生成
+
+```python
+def detect_information_leaks(self, model: torch.nn.Module, context: Dict[str, Any]) -> Dict[str, Any]:
+    """检测模型中的信息泄漏点"""
+    try:
+        # 如果有激活值和梯度，直接使用
+        if 'activations' in context and 'gradients' in context:
+            leak_points = self.detect_leaks(
+                context['activations'], 
+                context['gradients'],
+                context.get('targets', torch.tensor([]))
+            )
+        else:
+            # 基于模型结构进行泄漏风险评估
+            leak_points = self._assess_structural_leak_risks(model, context)
+        
+        # 处理检测结果
+        result = self._process_leak_analysis(leak_points, model, context)
+        return result
+        
+    except Exception as e:
+        logger.error(f"信息泄漏检测失败: {e}")
+        return self._fallback_leak_analysis()
 ```
 
 ## 🚀 核心增强功能
@@ -108,7 +140,31 @@ def _assess_net2net_applicability(self, layer_analysis, model, target_layer_name
         }
 ```
 
-### 3. 增强的不确定性量化
+### 3. 增强的信息流分析和泄漏检测
+
+#### 信息流分析增强：
+- **双模式分析**: 支持激活值分析和模型结构分析
+- **信息容量估计**: 基于层参数配置估计信息传递能力
+- **瓶颈识别**: 智能识别信息流瓶颈点
+
+#### 信息泄漏检测增强：
+- **结构性风险评估**: 基于层配置评估潜在泄漏风险
+- **泄漏类型分类**: 精确分类不同类型的信息泄漏
+- **智能修复建议**: 针对不同泄漏类型生成专门的修复建议
+
+```python
+def _generate_repair_suggestions(self, leak_points: List[Dict[str, Any]]) -> List[str]:
+    """生成泄漏修复建议"""
+    if 'information_compression_bottleneck' in leak_types:
+        suggestions.append("建议增加瓶颈层的宽度以减少信息压缩")
+        suggestions.append("考虑使用Net2Wider技术扩展压缩层")
+    
+    if 'gradient_learning_bottleneck' in leak_types:
+        suggestions.append("建议添加残差连接改善梯度流")
+        suggestions.append("考虑使用BatchNorm或LayerNorm提高训练稳定性")
+```
+
+### 4. 增强的不确定性量化
 
 #### 多层次不确定性分析：
 1. **认知不确定性**: 模型不确定性
@@ -131,7 +187,7 @@ def _calibrate_prediction_confidence(self, prediction_results, bayesian_uncertai
     final_calibrated = (bayesian_calibrated + empirical_calibrated) / 2.0
 ```
 
-### 4. 先验知识增强
+### 5. 先验知识增强
 
 #### 新增先验知识类别：
 
@@ -244,6 +300,11 @@ if execution_recommendations['transfer_method'] == 'net2wider':
 - **平滑过渡**: 减少训练震荡
 - **智能初始化**: 基于先验知识的参数设置
 
+### 4. 智能问题诊断
+- **信息流瓶颈检测**: 精确定位性能瓶颈
+- **泄漏点识别**: 发现信息丢失原因
+- **修复建议生成**: 提供针对性解决方案
+
 ## 🎯 适用场景
 
 ### 1. 高精度要求场景
@@ -282,10 +343,18 @@ if execution_recommendations['transfer_method'] == 'net2wider':
 
 通过这次全面的增强，贝叶斯推断引擎现在是一个：
 
-✅ **稳健的**: 修复了所有已知错误  
-✅ **智能的**: 集成先进的Net2Net技术  
-✅ **精确的**: 多层次不确定性量化  
-✅ **实用的**: 提供具体执行建议  
-✅ **可扩展的**: 支持未来功能扩展  
+✅ **稳健的**: 修复了所有已知错误，包括最新的泄漏检测问题  
+✅ **智能的**: 集成先进的Net2Net技术和信息流分析  
+✅ **精确的**: 多层次不确定性量化和风险评估  
+✅ **实用的**: 提供具体执行建议和修复方案  
+✅ **全面的**: 覆盖从分析到执行的完整工作流  
+✅ **可扩展的**: 支持未来功能扩展和算法改进  
+
+### 🎉 修复完成状态
+
+**所有已知错误都已修复**:
+1. ✅ `'success_rate'` 键缺失错误
+2. ✅ `'analyze_information_flow'` 方法缺失错误  
+3. ✅ `'detect_information_leaks'` 方法缺失错误
 
 现在您可以放心地使用这个强大的贝叶斯推断引擎来指导神经网络架构的智能进化！
