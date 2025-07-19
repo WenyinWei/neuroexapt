@@ -625,10 +625,17 @@ class EnhancedDNMFramework:
             net2net_analyzer = Net2NetSubnetworkAnalyzer()
             
             # 构建分析上下文
+            current_accuracy = performance_history[-1] if performance_history else 0.0
+            
+            # 创建模拟targets（在没有真实targets的情况下）
+            # 这里我们使用一个合理的默认值，实际使用时应该传入真实的targets
+            dummy_targets = torch.randint(0, 10, (32,))  # CIFAR-10的10个类别
+            
             analysis_context = {
-                'model': model,
                 'activations': activations,
                 'gradients': gradients,
+                'targets': dummy_targets,
+                'current_accuracy': current_accuracy,
                 'performance_history': performance_history,
                 'epoch': epoch
             }
@@ -640,17 +647,84 @@ class EnhancedDNMFramework:
             
             # 识别Net2Net认为需要改进的层
             improvement_candidates = []
-            for layer_name, analysis in net2net_results.items():
+            
+            # 处理新的Net2Net分析结果结构
+            layer_analyses = net2net_results.get('layer_analyses', {})
+            leak_points = net2net_results.get('detected_leak_points', [])
+            global_strategy = net2net_results.get('global_mutation_strategy', {})
+            
+            # 从层分析中提取改进候选
+            for layer_name, analysis in layer_analyses.items():
                 improvement_potential = analysis.get('mutation_prediction', {}).get('improvement_potential', 0)
-                if improvement_potential > 0.3:  # 改进潜力阈值
-                    improvement_candidates.append((layer_name, improvement_potential, analysis))
+                leak_assessment = analysis.get('leak_assessment', {})
+                
+                # 结合变异潜力和漏点评估
+                combined_potential = improvement_potential
+                if leak_assessment.get('is_leak_point', False):
+                    combined_potential += leak_assessment.get('leak_severity', 0) * 0.5
+                
+                if combined_potential > 0.3:  # 改进潜力阈值
+                    improvement_candidates.append((layer_name, combined_potential, analysis))
+            
+            # 添加严重漏点作为高优先级候选
+            for leak_point in leak_points:
+                if leak_point['severity'] > 0.7:
+                    layer_name = leak_point['layer_name']
+                    if not any(cand[0] == layer_name for cand in improvement_candidates):
+                        improvement_candidates.append((layer_name, leak_point['severity'], {
+                            'leak_point': leak_point,
+                            'recommendation': {'action': 'mutate', 'priority': 'critical'}
+                        }))
             
             improvement_candidates.sort(key=lambda x: x[1], reverse=True)
             
+            # 显示贝叶斯预测结果
+            bayesian_predictions = net2net_results.get('bayesian_benefit_predictions', {})
+            comprehensive_strategies = net2net_results.get('comprehensive_mutation_strategies', {})
+            metadata = net2net_results.get('analysis_metadata', {})
+            strategy_summary = net2net_results.get('global_mutation_strategy', {}).get('comprehensive_strategies_summary', {})
+            
             logger.info(f"🚀 Net2Net发现{len(improvement_candidates)}个改进候选:")
+            logger.info(f"🕳️ 检测到{len(leak_points)}个信息漏点")
+            logger.info(f"🧠 贝叶斯预测: {metadata.get('high_confidence_predictions', 0)}个高置信度预测")
+            logger.info(f"⭐ 强烈推荐: {metadata.get('strong_recommendations', 0)}个层")
+            logger.info(f"🎭 综合策略: {metadata.get('comprehensive_strategies_count', 0)}个详细变异策略")
+            
+            # 显示综合策略偏好总结
+            if strategy_summary:
+                logger.info(f"📊 策略偏好: {strategy_summary.get('preferred_mutation_mode', 'unknown')} + {strategy_summary.get('preferred_combination_type', 'unknown')}")
+                logger.info(f"🎯 综合收益预期: {strategy_summary.get('total_expected_improvement', 0.0):.4f}")
+            
             for layer_name, potential, details in improvement_candidates[:3]:
                 recommendation = details.get('recommendation', {})
-                logger.info(f"  {layer_name}: 潜力={potential:.3f}, 建议={recommendation.get('action', 'unknown')}")
+                leak_info = details.get('leak_point', {})
+                
+                # 获取贝叶斯预测信息
+                bayesian_info = bayesian_predictions.get(layer_name, {})
+                bayesian_pred = bayesian_info.get('bayesian_prediction', {})
+                expected_gain = bayesian_pred.get('expected_accuracy_gain', 0)
+                confidence = bayesian_pred.get('uncertainty_metrics', {}).get('prediction_confidence', 0)
+                rec_strength = bayesian_pred.get('recommendation_strength', 'neutral')
+                
+                # 获取综合策略信息
+                comp_strategy_info = comprehensive_strategies.get(layer_name, {})
+                comp_strategy = comp_strategy_info.get('comprehensive_strategy', {})
+                mutation_mode = comp_strategy.get('mutation_mode', 'unknown')
+                layer_combination = comp_strategy.get('layer_combination', {}).get('combination', 'unknown')
+                total_gain = comp_strategy.get('expected_total_gain', 0)
+                comp_confidence = comp_strategy.get('confidence', 0)
+                
+                if leak_info:
+                    logger.info(f"  {layer_name}: 漏点严重度={potential:.3f}, 类型={leak_info.get('leak_type', 'unknown')}")
+                    logger.info(f"    🧠 贝叶斯预测: 期望收益={expected_gain:.4f}, 置信度={confidence:.3f}, 推荐={rec_strength}")
+                else:
+                    logger.info(f"  {layer_name}: 潜力={potential:.3f}, 建议={recommendation.get('action', 'unknown')}")
+                    logger.info(f"    🧠 贝叶斯预测: 期望收益={expected_gain:.4f}, 置信度={confidence:.3f}, 推荐={rec_strength}")
+                
+                # 显示综合策略信息
+                if comp_strategy_info:
+                    logger.info(f"    🎭 综合策略: {mutation_mode} + {layer_combination}")
+                    logger.info(f"    📈 总期望收益: {total_gain:.4f}, 综合置信度: {comp_confidence:.3f}")
             
         except Exception as e:
             logger.error(f"❌ Net2Net分析失败: {e}")
