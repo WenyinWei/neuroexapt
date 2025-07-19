@@ -536,162 +536,353 @@ class EnhancedCognitiveScienceTrigger:
         return False
 
 class EnhancedDNMFramework:
-    """增强的DNM框架"""
+    """增强的动态神经形态发生框架
     
-    def __init__(self, config: Optional[Dict] = None):
-        self.config = config or self._get_default_config()
+    🧬 支持传统形态发生和激进多点变异
+    """
+    
+    def __init__(self, config: Dict[str, Any] = None):
+        # 现有初始化代码
+        default_config = {
+            'trigger_interval': 8,
+            'performance_monitoring_window': 10,
+            'morphogenesis_budget': 5000,
+            'enable_aggressive_mode': True,  # 新增：激进模式开关
+            'accuracy_plateau_threshold': 0.1,  # 新增：准确率停滞阈值
+            'plateau_detection_window': 5,  # 新增：停滞检测窗口
+            'aggressive_trigger_accuracy': 0.92,  # 新增：激进模式触发准确率
+            'max_concurrent_mutations': 3,  # 新增：最大并发变异数
+        }
         
-        # 初始化组件
-        self.bottleneck_analyzer = AdvancedBottleneckAnalyzer()
-        self.morphogenesis_executor = AdvancedMorphogenesisExecutor()
-        self.decision_maker = IntelligentMorphogenesisDecisionMaker()
+        self.config = {**default_config, **(config or {})}
         
-        # 初始化触发器
+        # 原有组件
         self.triggers = {
             'information_theory': EnhancedInformationTheoryTrigger(),
-            'biological_principles': EnhancedBiologicalPrinciplesTrigger(),
+            'biological_principle': EnhancedBiologicalPrinciplesTrigger(),
             'cognitive_science': EnhancedCognitiveScienceTrigger()
         }
         
-        # 跟踪数据
+        self.bottleneck_analyzer = AdvancedBottleneckAnalyzer()
+        self.decision_maker = IntelligentMorphogenesisDecisionMaker()
+        self.executor = AdvancedMorphogenesisExecutor()
+        
+        # 新增激进形态发生组件
+        if self.config['enable_aggressive_mode']:
+            from .aggressive_morphogenesis import (
+                AggressiveMorphogenesisAnalyzer,
+                MultiPointMutationPlanner,
+                AggressiveMorphogenesisExecutor
+            )
+            self.aggressive_analyzer = AggressiveMorphogenesisAnalyzer(
+                accuracy_plateau_threshold=self.config['accuracy_plateau_threshold'],
+                plateau_window=self.config['plateau_detection_window']
+            )
+            self.mutation_planner = MultiPointMutationPlanner(
+                max_concurrent_mutations=self.config['max_concurrent_mutations'],
+                parameter_budget=self.config['morphogenesis_budget']
+            )
+            self.aggressive_executor = AggressiveMorphogenesisExecutor()
+        
+        # 记录和监控
         self.morphogenesis_events = []
         self.performance_history = []
-        self.activation_cache = {}
-        self.gradient_cache = {}
+        self.aggressive_mode_active = False
+
+    def should_trigger_morphogenesis(self, 
+                                   model: nn.Module,
+                                   epoch: int,
+                                   activations: Dict[str, torch.Tensor],
+                                   gradients: Dict[str, torch.Tensor],
+                                   performance_history: List[float]) -> Tuple[bool, List[str]]:
+        """增强的形态发生触发检查 - 支持激进模式"""
+        logger.enter_section("增强形态发生触发检查")
         
-    def _get_default_config(self) -> Dict:
-        """获取默认配置"""
-        return {
-            'trigger_interval': 3,  # 每3个epoch检查一次
-            'max_morphogenesis_per_epoch': 1,
-            'performance_patience': 8,
-            'min_improvement_threshold': 0.001,
-            'max_parameter_growth_ratio': 0.5,  # 最大参数增长50%
-            'enable_serial_division': True,
-            'enable_parallel_division': True,
-            'enable_hybrid_division': True,
-            'complexity_threshold': 0.6
-        }
-    
-    def should_trigger_morphogenesis(self, context: Dict[str, Any]) -> Tuple[bool, List[str]]:
-        """检查是否应该触发形态发生"""
-        logger.enter_section("形态发生触发检查")
-        epoch = context.get('epoch', 0)
+        # 检查当前准确率是否达到激进模式阈值
+        current_accuracy = performance_history[-1] if performance_history else 0.0
         
-        debug_printer.print_debug(f"当前epoch: {epoch}, 触发间隔: {self.config['trigger_interval']}", "INFO")
+        # 激进模式激活条件
+        aggressive_mode_triggered = False
+        if (self.config['enable_aggressive_mode'] and 
+            current_accuracy >= self.config['aggressive_trigger_accuracy']):
+            
+            # 检测准确率停滞
+            is_plateau, stagnation_severity = self.aggressive_analyzer.detect_accuracy_plateau(performance_history)
+            
+            if is_plateau and stagnation_severity > 0.5:
+                logger.warning(f"🚨 检测到准确率停滞，激活激进模式！停滞严重程度: {stagnation_severity:.3f}")
+                aggressive_mode_triggered = True
+                self.aggressive_mode_active = True
         
-        # 检查触发间隔
+        # 如果激进模式被触发，使用不同的判断逻辑
+        if aggressive_mode_triggered:
+            logger.info("🚀 使用激进形态发生策略")
+            # 激进模式下更频繁地触发，不受传统触发间隔限制
+            trigger_reasons = [f"激进模式: 准确率停滞(严重程度={stagnation_severity:.3f})"]
+            logger.exit_section("增强形态发生触发检查")
+            return True, trigger_reasons
+        
+        # 传统触发逻辑
+        logger.info(f"当前epoch: {epoch}, 触发间隔: {self.config['trigger_interval']}")
+        
         if epoch % self.config['trigger_interval'] != 0:
             logger.info(f"❌ 不在触发间隔内 ({epoch} % {self.config['trigger_interval']} != 0)")
-            logger.exit_section("形态发生触发检查")
+            logger.exit_section("增强形态发生触发检查")
             return False, []
         
         logger.info("✅ 在触发间隔内，检查各触发器")
+        
+        # 构建分析上下文
+        context = {
+            'epoch': epoch,
+            'activations': activations,
+            'gradients': gradients,
+            'performance_history': performance_history,
+            'model': model
+        }
         
         # 检查各个触发器
         trigger_results = []
         trigger_reasons = []
         
         for name, trigger in self.triggers.items():
-            logger.debug(f"检查触发器: {name}")
             try:
+                logger.debug(f"检查触发器: {name}")
                 should_trigger, reason = trigger.should_trigger(context)
-                debug_printer.print_debug(f"触发器[{name}]: {'✅激活' if should_trigger else '❌未激活'} - {reason}", 
-                                       "SUCCESS" if should_trigger else "INFO")
+                trigger_results.append(should_trigger)
+                
+                logger.info(f"触发器[{name}]: {'✅激活' if should_trigger else '❌未激活'} - {reason}")
+                
                 if should_trigger:
-                    trigger_results.append(True)
                     trigger_reasons.append(f"{name}: {reason}")
-                else:
-                    trigger_results.append(False)
+                    
             except Exception as e:
                 logger.error(f"❌ 触发器 {name} 执行失败: {e}")
                 logger.error(f"错误详情: {traceback.format_exc()}")
                 trigger_results.append(False)
         
-        # 至少有一个触发器激活
         should_trigger = any(trigger_results)
         
         logger.info(f"触发器汇总: {len([r for r in trigger_results if r])}/{len(trigger_results)} 激活")
-        debug_printer.print_debug(f"最终决定: {'✅触发形态发生' if should_trigger else '❌不触发'}", 
-                               "SUCCESS" if should_trigger else "INFO")
-        logger.exit_section("形态发生触发检查")
+        logger.info(f"最终决定: {'✅触发形态发生' if should_trigger else '❌不触发'}")
         
+        logger.exit_section("增强形态发生触发检查")
         return should_trigger, trigger_reasons
-    
-    def execute_morphogenesis(self, model: nn.Module, context: Dict[str, Any]) -> Dict[str, Any]:
-        """执行形态发生"""
-        logger.enter_section("形态发生执行")
+
+    def execute_morphogenesis(self,
+                            model: nn.Module,
+                            activations: Dict[str, torch.Tensor],
+                            gradients: Dict[str, torch.Tensor],
+                            performance_history: List[float],
+                            epoch: int) -> Dict[str, Any]:
+        """执行形态发生 - 支持传统和激进模式"""
+        logger.enter_section("增强形态发生执行")
         logger.log_model_info(model, "输入模型")
         
-        results = {
-            'model_modified': False,
-            'new_model': model,
-            'parameters_added': 0,
-            'morphogenesis_events': 0,
-            'morphogenesis_type': 'none',
-            'trigger_reasons': []
-        }
-        
         try:
-            # 检查是否应该触发
-            should_trigger, trigger_reasons = self.should_trigger_morphogenesis(context)
+            # 检查是否满足触发条件
+            should_trigger, trigger_reasons = self.should_trigger_morphogenesis(
+                model, epoch, activations, gradients, performance_history
+            )
             
             if not should_trigger:
                 logger.info("❌ 未满足触发条件，跳过形态发生")
-                logger.exit_section("形态发生执行")
-                return results
+                logger.exit_section("增强形态发生执行")
+                return {
+                    'model_modified': False,
+                    'new_model': model,
+                    'parameters_added': 0,
+                    'morphogenesis_events': [],
+                    'morphogenesis_type': 'none',
+                    'trigger_reasons': []
+                }
             
-            logger.success(f"✅ 满足触发条件，原因: {trigger_reasons}")
+            logger.success(f"满足触发条件，原因: {trigger_reasons}")
             
-            # 输出触发原因
-            logger.enter_section("触发原因分析")
-            for i, reason in enumerate(trigger_reasons, 1):
-                logger.info(f"{i}. {reason}")
-            logger.exit_section("触发原因分析")
+            # 激进模式路径
+            if self.aggressive_mode_active and self.config['enable_aggressive_mode']:
+                return self._execute_aggressive_morphogenesis(
+                    model, activations, gradients, performance_history, epoch, trigger_reasons
+                )
             
-            results['trigger_reasons'] = trigger_reasons
+            # 传统形态发生路径
+            return self._execute_traditional_morphogenesis(
+                model, activations, gradients, performance_history, epoch, trigger_reasons
+            )
             
-            # 执行瓶颈分析
+        except Exception as e:
+            logger.error(f"❌ 形态发生执行失败: {e}")
+            logger.error(f"错误详情: {traceback.format_exc()}")
+            return {
+                'model_modified': False,
+                'new_model': model,
+                'parameters_added': 0,
+                'morphogenesis_events': [],
+                'morphogenesis_type': 'error',
+                'trigger_reasons': trigger_reasons,
+                'error': str(e)
+            }
+        finally:
+            logger.exit_section("增强形态发生执行")
+
+    def _execute_aggressive_morphogenesis(self,
+                                        model: nn.Module,
+                                        activations: Dict[str, torch.Tensor],
+                                        gradients: Dict[str, torch.Tensor],
+                                        performance_history: List[float],
+                                        epoch: int,
+                                        trigger_reasons: List[str]) -> Dict[str, Any]:
+        """执行激进多点形态发生"""
+        logger.enter_section("激进多点形态发生")
+        
+        try:
+            # 反向梯度投影分析
+            output_targets = torch.randint(0, 10, (128,))  # 模拟目标，实际使用时应传入真实targets
+            bottleneck_signatures = self.aggressive_analyzer.analyze_reverse_gradient_projection(
+                activations, gradients, output_targets
+            )
+            
+            if not bottleneck_signatures:
+                logger.warning("❌ 未检测到瓶颈签名，回退到传统形态发生")
+                return self._execute_traditional_morphogenesis(
+                    model, activations, gradients, performance_history, epoch, trigger_reasons
+                )
+            
+            # 检测停滞严重程度
+            _, stagnation_severity = self.aggressive_analyzer.detect_accuracy_plateau(performance_history)
+            
+            # 规划多点变异
+            mutations = self.mutation_planner.plan_aggressive_mutations(
+                bottleneck_signatures, performance_history, stagnation_severity
+            )
+            
+            if not mutations:
+                logger.warning("❌ 未生成有效的变异计划，回退到传统形态发生")
+                return self._execute_traditional_morphogenesis(
+                    model, activations, gradients, performance_history, epoch, trigger_reasons
+                )
+            
+            # 执行最佳变异策略
+            best_mutation = max(mutations, key=lambda m: m.expected_improvement - m.risk_assessment * 0.5)
+            logger.info(f"选择最佳变异策略: {best_mutation.coordination_strategy}, "
+                       f"目标位置数: {len(best_mutation.target_locations)}, "
+                       f"期望改进: {best_mutation.expected_improvement:.3f}")
+            
+            new_model, params_added, execution_result = self.aggressive_executor.execute_multi_point_mutation(
+                model, best_mutation
+            )
+            
+            # 记录激进形态发生事件
+            morphogenesis_event = EnhancedMorphogenesisEvent(
+                epoch=epoch,
+                event_type='aggressive_multi_point',
+                location=f"多点({len(best_mutation.target_locations)}位置)",
+                trigger_reason='; '.join(trigger_reasons),
+                performance_before=performance_history[-1] if performance_history else 0.0,
+                parameters_added=params_added,
+                morphogenesis_type=MorphogenesisType.HYBRID_DIVISION,  # 代表多点变异
+                confidence=1.0 - best_mutation.risk_assessment,
+                expected_improvement=best_mutation.expected_improvement
+            )
+            
+            self.morphogenesis_events.append(morphogenesis_event)
+            
+            logger.success(f"激进多点形态发生完成: 策略={best_mutation.coordination_strategy}, "
+                         f"成功变异={execution_result.get('successful_mutations', 0)}/"
+                         f"{execution_result.get('total_mutations', 0)}, "
+                         f"新增参数: {params_added:,}")
+            
+            # 重置激进模式状态（给模型几个epoch适应）
+            self.aggressive_mode_active = False
+            
+            return {
+                'model_modified': params_added > 0,
+                'new_model': new_model,
+                'parameters_added': params_added,
+                'morphogenesis_events': [morphogenesis_event],
+                'morphogenesis_type': 'aggressive_multi_point',
+                'trigger_reasons': trigger_reasons,
+                'aggressive_details': {
+                    'mutation_strategy': best_mutation.coordination_strategy,
+                    'target_locations': best_mutation.target_locations,
+                    'bottleneck_count': len(bottleneck_signatures),
+                    'stagnation_severity': stagnation_severity,
+                    'execution_result': execution_result
+                }
+            }
+            
+        except Exception as e:
+            logger.error(f"❌ 激进形态发生失败: {e}")
+            logger.warning("回退到传统形态发生")
+            return self._execute_traditional_morphogenesis(
+                model, activations, gradients, performance_history, epoch, trigger_reasons
+            )
+        finally:
+            logger.exit_section("激进多点形态发生")
+
+    def _execute_traditional_morphogenesis(self,
+                                         model: nn.Module,
+                                         activations: Dict[str, torch.Tensor],
+                                         gradients: Dict[str, torch.Tensor],
+                                         performance_history: List[float],
+                                         epoch: int,
+                                         trigger_reasons: List[str]) -> Dict[str, Any]:
+        """执行传统单点形态发生"""
+        logger.enter_section("传统形态发生")
+        
+        try:
+            # 原有的传统形态发生逻辑
+            logger.info("执行传统单点形态发生策略")
+            
+            # 瓶颈分析
             logger.enter_section("瓶颈分析")
-            activations = context.get('activations', {})
-            gradients = context.get('gradients', {})
-            
-            debug_printer.print_debug(f"分析数据: 激活值{len(activations)}层, 梯度{len(gradients)}层", "INFO")
             
             if not activations or not gradients:
                 logger.error("❌ 缺少激活值或梯度信息，跳过形态发生")
                 logger.exit_section("瓶颈分析")
-                logger.exit_section("形态发生执行")
-                return results
+                logger.exit_section("传统形态发生")
+                return {
+                    'model_modified': False,
+                    'new_model': model,
+                    'parameters_added': 0,
+                    'morphogenesis_events': [],
+                    'morphogenesis_type': 'failed',
+                    'trigger_reasons': trigger_reasons,
+                    'error': 'missing_analysis_data'
+                }
             
-            bottleneck_analysis = self.bottleneck_analyzer.analyze_network_bottlenecks(
-                model, activations, gradients
-            )
+            logger.info(f"分析数据: 激活值{len(activations)}层, 梯度{len(gradients)}层")
+            bottleneck_analysis = self.bottleneck_analyzer.analyze_network_bottlenecks(activations, gradients)
+            
             logger.success(f"瓶颈分析完成: {len(bottleneck_analysis) if bottleneck_analysis else 0}个瓶颈")
             logger.exit_section("瓶颈分析")
             
-            # 制定决策
+            # 形态发生决策
             logger.enter_section("形态发生决策")
-            performance_history = context.get('performance_history', [])
             logger.info(f"性能历史: {len(performance_history)}个数据点")
-            decision = self.decision_maker.make_decision(bottleneck_analysis, performance_history)
             
-            if decision is None:
+            decision = self.decision_maker.make_morphogenesis_decision(bottleneck_analysis, performance_history)
+            if not decision:
                 logger.warning("❌ 未发现需要形态发生的瓶颈")
                 logger.exit_section("形态发生决策")
-                logger.exit_section("形态发生执行")
-                return results
+                logger.exit_section("传统形态发生")
+                return {
+                    'model_modified': False,
+                    'new_model': model,
+                    'parameters_added': 0,
+                    'morphogenesis_events': [],
+                    'morphogenesis_type': 'none',
+                    'trigger_reasons': trigger_reasons
+                }
             
-            logger.success(f"✅ 决策制定完成: {decision.morphogenesis_type.value} (置信度: {decision.confidence:.3f})")
+            logger.success(f"决策制定完成: {decision.morphogenesis_type.value} (置信度: {decision.confidence:.3f})")
             logger.exit_section("形态发生决策")
             
-            # 执行形态发生
+            # 形态发生执行
             logger.enter_section("形态发生执行")
             logger.info(f"执行策略: {decision.morphogenesis_type.value} 在 {decision.target_location}")
             
-            new_model, parameters_added = self.morphogenesis_executor.execute_morphogenesis(
-                model, decision
-            )
+            new_model, parameters_added = self.executor.execute_morphogenesis(model, decision)
             
             logger.info(f"形态发生结果: 新增参数={parameters_added}")
             logger.log_model_info(new_model, "新模型")
@@ -700,12 +891,12 @@ class EnhancedDNMFramework:
             if parameters_added > 0:
                 logger.success("✅ 形态发生成功，记录事件")
                 
-                # 记录事件
-                event = EnhancedMorphogenesisEvent(
-                    epoch=context.get('epoch', 0),
+                # 记录形态发生事件
+                morphogenesis_event = EnhancedMorphogenesisEvent(
+                    epoch=epoch,
                     event_type=decision.morphogenesis_type.value,
                     location=decision.target_location,
-                    trigger_reason=decision.reasoning,
+                    trigger_reason='; '.join(trigger_reasons),
                     performance_before=performance_history[-1] if performance_history else 0.0,
                     parameters_added=parameters_added,
                     morphogenesis_type=decision.morphogenesis_type,
@@ -713,30 +904,44 @@ class EnhancedDNMFramework:
                     expected_improvement=decision.expected_improvement
                 )
                 
-                self.morphogenesis_events.append(event)
+                self.morphogenesis_events.append(morphogenesis_event)
                 
-                # 更新结果
-                results.update({
+                logger.success(f"传统形态发生完成: {decision.morphogenesis_type.value}, 新增参数: {parameters_added:,}")
+                
+                return {
                     'model_modified': True,
                     'new_model': new_model,
                     'parameters_added': parameters_added,
-                    'morphogenesis_events': 1,
+                    'morphogenesis_events': [morphogenesis_event],
                     'morphogenesis_type': decision.morphogenesis_type.value,
-                    'decision_confidence': decision.confidence,
-                    'expected_improvement': decision.expected_improvement
-                })
-                
-                debug_printer.print_debug(f"✅ 高级形态发生完成: {decision.morphogenesis_type.value}, 新增参数: {parameters_added:,}", "SUCCESS")
+                    'trigger_reasons': trigger_reasons
+                }
             else:
                 logger.warning("❌ 形态发生未添加任何参数")
+                return {
+                    'model_modified': False,
+                    'new_model': model,
+                    'parameters_added': 0,
+                    'morphogenesis_events': [],
+                    'morphogenesis_type': 'failed',
+                    'trigger_reasons': trigger_reasons
+                }
                 
         except Exception as e:
-            logger.error(f"❌ 形态发生执行失败: {e}")
+            logger.error(f"❌ 传统形态发生失败: {e}")
             logger.error(f"错误详情: {traceback.format_exc()}")
-            
-        logger.exit_section("形态发生执行")
-        return results
-    
+            return {
+                'model_modified': False,
+                'new_model': model,
+                'parameters_added': 0,
+                'morphogenesis_events': [],
+                'morphogenesis_type': 'error',
+                'trigger_reasons': trigger_reasons,
+                'error': str(e)
+            }
+        finally:
+            logger.exit_section("传统形态发生")
+
     def update_performance_history(self, performance: float):
         """更新性能历史"""
         self.performance_history.append(performance)
