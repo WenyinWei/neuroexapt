@@ -1,7 +1,7 @@
 
 """
-\defgroup group_evolvable_model Evolvable Model
-\ingroup core
+defgroup group_evolvable_model Evolvable Model
+ingroup core
 Evolvable Model module for NeuroExapt framework.
 """
 

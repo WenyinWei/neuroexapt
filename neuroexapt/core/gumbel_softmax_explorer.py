@@ -1,7 +1,7 @@
 """
 """
-\defgroup group_gumbel_softmax_explorer Gumbel Softmax Explorer
-\ingroup core
+defgroup group_gumbel_softmax_explorer Gumbel Softmax Explorer
+ingroup core
 Gumbel Softmax Explorer module for NeuroExapt framework.
 """
 

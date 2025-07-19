@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
 """
-\defgroup group_dnm_framework Dnm Framework
-\ingroup core
+defgroup group_dnm_framework Dnm Framework
+ingroup core
 Dnm Framework module for NeuroExapt framework.
 """
 

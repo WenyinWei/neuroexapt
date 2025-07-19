@@ -1,7 +1,7 @@
 """
 """
-\defgroup group_device_manager Device Manager
-\ingroup core
+defgroup group_device_manager Device Manager
+ingroup core
 Device Manager module for NeuroExapt framework.
 """
 

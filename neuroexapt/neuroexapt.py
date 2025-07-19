@@ -1,7 +1,7 @@
 """
 """
-\defgroup group_neuroexapt Neuroexapt
-\ingroup core
+defgroup group_neuroexapt Neuroexapt
+ingroup core
 Neuroexapt module for NeuroExapt framework.
 """
 

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
 """
-\defgroup group_net2net_subnetwork_analyzer Net2Net Subnetwork Analyzer
-\ingroup core
+defgroup group_net2net_subnetwork_analyzer Net2Net Subnetwork Analyzer
+ingroup core
 Net2Net Subnetwork Analyzer module for NeuroExapt framework.
 """
 

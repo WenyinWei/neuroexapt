@@ -1,7 +1,7 @@
 
 """
-\defgroup group_operations Operations
-\ingroup core
+defgroup group_operations Operations
+ingroup core
 Operations module for NeuroExapt framework.
 """
 

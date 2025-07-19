@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
 """
-\defgroup group_aggressive_morphogenesis Aggressive Morphogenesis
-\ingroup core
+defgroup group_aggressive_morphogenesis Aggressive Morphogenesis
+ingroup core
 Aggressive Morphogenesis module for NeuroExapt framework.
 """
 

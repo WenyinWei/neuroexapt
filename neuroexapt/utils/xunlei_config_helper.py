@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
 """
-\defgroup group_xunlei_config_helper Xunlei Config Helper
-\ingroup core
+defgroup group_xunlei_config_helper Xunlei Config Helper
+ingroup core
 Xunlei Config Helper module for NeuroExapt framework.
 """
 

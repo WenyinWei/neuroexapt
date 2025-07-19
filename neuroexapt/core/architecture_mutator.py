@@ -1,7 +1,7 @@
 """
 """
-\defgroup group_architecture_mutator Architecture Mutator
-\ingroup core
+defgroup group_architecture_mutator Architecture Mutator
+ingroup core
 Architecture Mutator module for NeuroExapt framework.
 """
 

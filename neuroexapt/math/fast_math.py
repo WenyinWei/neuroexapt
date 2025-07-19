@@ -1,7 +1,7 @@
 """
 """
-\defgroup group_fast_math Fast Math
-\ingroup core
+defgroup group_fast_math Fast Math
+ingroup core
 Fast Math module for NeuroExapt framework.
 """
 

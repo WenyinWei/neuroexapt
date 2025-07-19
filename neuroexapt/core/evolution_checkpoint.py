@@ -1,7 +1,7 @@
 """
 """
-\defgroup group_evolution_checkpoint Evolution Checkpoint
-\ingroup core
+defgroup group_evolution_checkpoint Evolution Checkpoint
+ingroup core
 Evolution Checkpoint module for NeuroExapt framework.
 """
 

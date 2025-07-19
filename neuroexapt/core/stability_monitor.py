@@ -1,7 +1,7 @@
 """
 """
-\defgroup group_stability_monitor Stability Monitor
-\ingroup core
+defgroup group_stability_monitor Stability Monitor
+ingroup core
 Stability Monitor module for NeuroExapt framework.
 """
 

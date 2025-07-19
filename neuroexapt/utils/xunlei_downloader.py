@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
 """
-\defgroup group_xunlei_downloader Xunlei Downloader
-\ingroup core
+defgroup group_xunlei_downloader Xunlei Downloader
+ingroup core
 Xunlei Downloader module for NeuroExapt framework.
 """
 
