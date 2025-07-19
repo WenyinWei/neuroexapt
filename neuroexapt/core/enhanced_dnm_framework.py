@@ -917,7 +917,7 @@ class EnhancedDNMFramework:
                 }
             
             logger.info(f"分析数据: 激活值{len(activations)}层, 梯度{len(gradients)}层")
-            bottleneck_analysis = self.bottleneck_analyzer.analyze_network_bottlenecks(activations, gradients)
+            bottleneck_analysis = self.bottleneck_analyzer.analyze_network_bottlenecks(model, activations, gradients)
             
             logger.success(f"瓶颈分析完成: {len(bottleneck_analysis) if bottleneck_analysis else 0}个瓶颈")
             logger.exit_section("瓶颈分析")
@@ -926,7 +926,7 @@ class EnhancedDNMFramework:
             logger.enter_section("形态发生决策")
             logger.info(f"性能历史: {len(performance_history)}个数据点")
             
-            decision = self.decision_maker.make_morphogenesis_decision(bottleneck_analysis, performance_history)
+            decision = self.decision_maker.make_decision(bottleneck_analysis, performance_history)
             if not decision:
                 logger.warning("❌ 未发现需要形态发生的瓶颈")
                 logger.exit_section("形态发生决策")

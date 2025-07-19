@@ -67,8 +67,8 @@ class DebugPrinter:
         self.indent_level = max(0, self.indent_level - 1)
         self.print_debug(f"✅ 完成 {section_name}", "DEBUG")
 
-# 全局调试器
-morpho_debug = DebugPrinter(enabled=True)
+# 使用统一的logger系统
+from .enhanced_dnm_framework import logger
 
 class MorphogenesisType(Enum):
     """形态发生类型枚举"""
@@ -99,36 +99,36 @@ class AdvancedBottleneckAnalyzer:
     def analyze_network_bottlenecks(self, model: nn.Module, activations: Dict[str, torch.Tensor], 
                                   gradients: Dict[str, torch.Tensor]) -> Dict[str, Any]:
         """深度分析网络瓶颈"""
-        morpho_debug.enter_section("网络瓶颈分析")
-        morpho_debug.print_debug(f"分析输入: 模型层数={len(list(model.named_modules()))}, 激活值层数={len(activations)}, 梯度层数={len(gradients)}", "INFO")
+        logger.enter_section("网络瓶颈分析")
+        logger.info(f"分析输入: 模型层数={len(list(model.named_modules()))}, 激活值层数={len(activations)}, 梯度层数={len(gradients)}")
         
         analysis = {}
         
         # 分别分析各类瓶颈
-        morpho_debug.print_debug("1/5 分析深度瓶颈", "DEBUG")
+        logger.debug("1/5 分析深度瓶颈")
         analysis['depth_bottlenecks'] = self._analyze_depth_bottlenecks(activations, gradients)
         
-        morpho_debug.print_debug("2/5 分析宽度瓶颈", "DEBUG")
+        logger.debug("2/5 分析宽度瓶颈")
         analysis['width_bottlenecks'] = self._analyze_width_bottlenecks(activations, gradients)
         
-        morpho_debug.print_debug("3/5 分析信息流瓶颈", "DEBUG")
+        logger.debug("3/5 分析信息流瓶颈")
         analysis['information_flow_bottlenecks'] = self._analyze_information_flow(activations)
         
-        morpho_debug.print_debug("4/5 分析梯度流瓶颈", "DEBUG")
+        logger.debug("4/5 分析梯度流瓶颈")
         analysis['gradient_flow_bottlenecks'] = self._analyze_gradient_flow(gradients)
         
-        morpho_debug.print_debug("5/5 分析容量瓶颈", "DEBUG")
+        logger.debug("5/5 分析容量瓶颈")
         analysis['capacity_bottlenecks'] = self._analyze_capacity_bottlenecks(model, activations)
         
         # 输出瓶颈汇总
-        morpho_debug.print_debug("瓶颈分析汇总:", "INFO")
+        logger.info("瓶颈分析汇总:")
         for bottleneck_type, results in analysis.items():
             if isinstance(results, dict):
                 count = len([k for k, v in results.items() if v > 0.5])  # 假设0.5为高瓶颈阈值
-                morpho_debug.print_debug(f"  {bottleneck_type}: {count}个高瓶颈位置", "DEBUG")
+                logger.debug(f"  {bottleneck_type}: {count}个高瓶颈位置")
         
         self.analysis_history.append(analysis)
-        morpho_debug.exit_section("网络瓶颈分析")
+        logger.exit_section("网络瓶颈分析")
         return analysis
     
     def _analyze_depth_bottlenecks(self, 
@@ -244,31 +244,31 @@ class AdvancedBottleneckAnalyzer:
     
     def _analyze_information_flow(self, activations: Dict[str, torch.Tensor]) -> Dict[str, float]:
         """分析信息流瓶颈 - 需要并行分支的位置"""
-        morpho_debug.enter_section("信息流瓶颈分析")
+        logger.enter_section("信息流瓶颈分析")
         flow_scores = {}
         layer_names = list(activations.keys())
         
-        morpho_debug.print_debug(f"分析{len(layer_names)}层的信息流", "INFO")
+        logger.info(f"分析{len(layer_names)}层的信息流")
         
         for i, layer_name in enumerate(layer_names):
-            morpho_debug.print_debug(f"分析层 {i+1}/{len(layer_names)}: {layer_name}", "DEBUG")
+            logger.debug(f"分析层 {i+1}/{len(layer_names)}: {layer_name}")
             activation = activations[layer_name]
             
             # 内存检查
             if activation.numel() > 10**7:  # 超过1000万元素
-                morpho_debug.print_debug(f"⚠️ 大张量检测: {activation.shape}, 元素数={activation.numel():,}", "WARNING")
+                logger.warning(f"⚠️ 大张量检测: {activation.shape}, 元素数={activation.numel():,}")
             
             try:
                 # 1. 信息瓶颈分析
-                morpho_debug.print_debug(f"计算熵值...", "DEBUG")
+                logger.debug(f"计算熵值...")
                 entropy = self._compute_entropy(activation)
                 
                 # 2. 特征相关性分析
-                morpho_debug.print_debug(f"计算特征相关性...", "DEBUG")
+                logger.debug(f"计算特征相关性...")
                 feature_correlation = self._compute_feature_correlation(activation)
                 
                 # 3. 信息冗余分析
-                morpho_debug.print_debug(f"计算信息冗余度...", "DEBUG")
+                logger.debug(f"计算信息冗余度...")
                 redundancy = self._compute_information_redundancy(activation)
                 
                 # 4. 计算信息流瓶颈分数
@@ -279,10 +279,10 @@ class AdvancedBottleneckAnalyzer:
                 )
                 
                 flow_scores[layer_name] = flow_score
-                morpho_debug.print_debug(f"层{layer_name}: 熵={entropy:.3f}, 相关性={feature_correlation:.3f}, 冗余={redundancy:.3f}, 分数={flow_score:.3f}", "DEBUG")
+                logger.debug(f"层{layer_name}: 熵={entropy:.3f}, 相关性={feature_correlation:.3f}, 冗余={redundancy:.3f}, 分数={flow_score:.3f}")
                 
             except Exception as e:
-                morpho_debug.print_debug(f"❌ 层{layer_name}分析失败: {e}", "ERROR")
+                logger.error(f"❌ 层{layer_name}分析失败: {e}")
                 flow_scores[layer_name] = 0.0
                 
             # 可配置的垃圾回收，仅在需要时执行以避免性能损失
@@ -310,8 +310,8 @@ class AdvancedBottleneckAnalyzer:
                     if torch.cuda.is_available():
                         torch.cuda.empty_cache()
                     
-        morpho_debug.print_debug(f"信息流分析完成，共{len(flow_scores)}层", "SUCCESS")
-        morpho_debug.exit_section("信息流瓶颈分析")
+        logger.success(f"信息流分析完成，共{len(flow_scores)}层")
+        logger.exit_section("信息流瓶颈分析")
         return flow_scores
     
     def _compute_activation_saturation(self, activation: torch.Tensor) -> float:
@@ -498,7 +498,7 @@ class AdvancedBottleneckAnalyzer:
                 else:
                     return 0.0
         except Exception as e:
-            morpho_debug.print_debug(f"特征相关性计算失败: {e}", "WARNING")
+            logger.warning(f"特征相关性计算失败: {e}")
             return 0.0
     
     def _compute_information_redundancy(self, activation: torch.Tensor) -> float:
@@ -523,7 +523,7 @@ class AdvancedBottleneckAnalyzer:
             
             return redundancy
         except Exception as e:
-            morpho_debug.print_debug(f"信息冗余度计算失败: {e}", "WARNING")
+            logger.warning(f"信息冗余度计算失败: {e}")
             return 0.0
     
     def _analyze_gradient_flow(self, gradients: Dict[str, torch.Tensor]) -> Dict[str, float]:
