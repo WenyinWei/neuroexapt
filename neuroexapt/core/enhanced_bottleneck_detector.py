@@ -133,7 +133,8 @@ class EnhancedBottleneckDetector:
         
         grad = gradients[layer_name]
         if grad is None or grad.numel() == 0:
-            return 0.0
+            # Assign a high score to indicate a potential bottleneck due to a dead/disconnected layer
+            return 1.0
         
         # 计算梯度方差
         grad_var = torch.var(grad).item()
@@ -183,15 +184,33 @@ class EnhancedBottleneckDetector:
             return 0.0
         
         # 计算神经元间的相关性
-        if activation_flat.shape[1] > 1:
-            correlation_matrix = torch.corrcoef(activation_flat.T)
-            # 去除对角线元素
-            mask = ~torch.eye(correlation_matrix.shape[0], dtype=torch.bool)
-            correlations = correlation_matrix[mask]
-            
-            # 高相关性 = 低多样性 = 高瓶颈分数
-            mean_correlation = torch.abs(correlations).mean().item()
-            diversity_score = mean_correlation  # 高相关性 = 高瓶颈分数
+        if activation_flat.shape[1] > 1 and activation_flat.shape[0] >= 2:  # 至少需要2个样本
+            try:
+                # 检查批次大小，torch.corrcoef 在小批次时可能不稳定
+                if activation_flat.shape[0] < 10:
+                    # 对于小批次，使用更稳定的方法计算相关性
+                    correlations = []
+                    for i in range(activation_flat.shape[1]):
+                        for j in range(i+1, activation_flat.shape[1]):
+                            corr = torch.corrcoef(torch.stack([activation_flat[:, i], activation_flat[:, j]]))[0, 1]
+                            if not torch.isnan(corr):
+                                correlations.append(abs(corr.item()))
+                    
+                    mean_correlation = np.mean(correlations) if correlations else 0.0
+                else:
+                    correlation_matrix = torch.corrcoef(activation_flat.T)
+                    # 去除对角线元素
+                    mask = ~torch.eye(correlation_matrix.shape[0], dtype=torch.bool)
+                    correlations = correlation_matrix[mask]
+                    
+                    # 过滤掉NaN值
+                    valid_correlations = correlations[~torch.isnan(correlations)]
+                    mean_correlation = torch.abs(valid_correlations).mean().item() if len(valid_correlations) > 0 else 0.0
+                
+                diversity_score = mean_correlation  # 高相关性 = 高瓶颈分数
+            except Exception as e:
+                # 如果相关系数计算失败，返回默认值
+                diversity_score = 0.0
         else:
             diversity_score = 0.0
         

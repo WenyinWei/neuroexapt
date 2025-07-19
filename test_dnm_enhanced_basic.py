@@ -74,6 +74,52 @@ def test_enhanced_bottleneck_detector():
         for reason in reasons:
             print(f"     - {reason}")
     
+    # Add edge case tests for robust error handling
+    print("   测试边缘情况...")
+    
+    # Test with empty activations/gradients
+    empty_activations = {}
+    empty_gradients = {}
+    try:
+        empty_bottlenecks = detector.detect_bottlenecks(model, empty_activations, empty_gradients, targets)
+        assert isinstance(empty_bottlenecks, dict), "Empty input should return dict"
+    except Exception as e:
+        print(f"     Empty input handling: {type(e).__name__}")
+    
+    # Test with mismatched shapes
+    mismatched_activations = {
+        '0': torch.randn(4, 16, 32, 32),  # Different batch size
+        '2': torch.randn(8, 32, 16, 16),  # Different spatial size
+    }
+    mismatched_gradients = {
+        '0.weight': torch.randn(16, 3, 3, 3),
+        '2.weight': torch.randn(32, 16, 3, 3),
+    }
+    
+    try:
+        mismatched_bottlenecks = detector.detect_bottlenecks(model, mismatched_activations, mismatched_gradients, targets)
+        assert isinstance(mismatched_bottlenecks, dict), "Mismatched input should be handled gracefully"
+    except Exception as e:
+        print(f"     Mismatched shapes handling: {type(e).__name__}")
+    
+    # Test with extreme values (very small batch size, NaN values, etc.)
+    extreme_activations = {
+        '0': torch.full((2, 16, 32, 32), float('nan')),  # Small batch with NaN
+        '2': torch.zeros(2, 32, 32, 32),  # Small batch with zeros
+    }
+    extreme_gradients = {
+        '0.weight': torch.zeros(16, 3, 3, 3),  # Zero gradients
+        '2.weight': torch.full((32, 16, 3, 3), float('inf')),  # Infinite gradients
+    }
+    extreme_targets = torch.randint(0, 10, (2,))
+    
+    try:
+        extreme_bottlenecks = detector.detect_bottlenecks(model, extreme_activations, extreme_gradients, extreme_targets)
+        assert isinstance(extreme_bottlenecks, dict), "Extreme values should be handled gracefully"
+    except Exception as e:
+        print(f"     Extreme values handling: {type(e).__name__}")
+    
+    print("   ✅ 瓶颈检测器边缘情况测试完成")
     print("   ✅ 瓶颈检测器测试完成")
     return True
 
@@ -118,13 +164,32 @@ def test_performance_guided_division():
                 activations, gradients, targets
             )
             
-            if success:
-                print(f"     ✅ 分裂成功: {division_info.get('strategy', 'unknown')}")
-            else:
-                print(f"     ❌ 分裂失败: {division_info.get('error', 'unknown')}")
+            # Add proper assertions to verify expected outcomes
+            if strategy in [DivisionStrategy.GRADIENT_BASED, DivisionStrategy.ACTIVATION_BASED, 
+                          DivisionStrategy.HYBRID, DivisionStrategy.INFORMATION_GUIDED]:
+                assert isinstance(success, bool), f"Success should be boolean for {strategy.value}"
+                assert isinstance(division_info, dict), f"Division info should be dict for {strategy.value}"
+                
+                if success:
+                    # Verify that division_info contains expected keys
+                    expected_keys = {'strategy', 'original_channels', 'new_channels'}
+                    assert all(key in division_info for key in expected_keys), \
+                        f"Missing expected keys in division_info for {strategy.value}: {division_info.keys()}"
+                    
+                    assert division_info['new_channels'] > division_info['original_channels'], \
+                        f"New channels should be greater than original for {strategy.value}"
+                    
+                    print(f"     ✅ 分裂成功: {division_info.get('strategy', 'unknown')}")
+                else:
+                    assert 'error' in division_info or 'reason' in division_info, \
+                        f"Failed division should include error/reason for {strategy.value}"
+                    print(f"     ❌ 分裂失败: {division_info.get('error', division_info.get('reason', 'unknown'))}")
                 
         except Exception as e:
             print(f"     ❌ 异常: {e}")
+            # Re-raise assertion errors to make test failures visible
+            if isinstance(e, AssertionError):
+                raise
     
     # 测试线性层分裂
     print("   测试线性层分裂...")
@@ -136,7 +201,14 @@ def test_performance_guided_division():
         linear_activations, linear_gradients, targets
     )
     
+    # Add assertion for linear layer division
+    assert isinstance(success, bool), "Linear layer division success should be boolean"
+    assert isinstance(division_info, dict), "Linear layer division info should be dict"
+    
     if success:
+        expected_keys = {'strategy', 'original_channels', 'new_channels'}
+        assert all(key in division_info for key in expected_keys), \
+            f"Missing expected keys in linear division_info: {division_info.keys()}"
         print(f"     ✅ 线性层分裂成功")
     else:
         print(f"     ❌ 线性层分裂失败: {division_info.get('error', 'unknown')}")

@@ -334,6 +334,17 @@ def compare_morphogenesis_types():
             with torch.no_grad():
                 output = new_model(test_input)
             
+            # Add assertions to verify output correctness after morphogenesis
+            assert output is not None, f"Output should not be None for {morph_type.value}"
+            assert len(output.shape) == 2, f"Output should be 2D tensor for {morph_type.value}, got {output.shape}"
+            assert output.shape[0] == 2, f"Batch dimension should be 2 for {morph_type.value}, got {output.shape[0]}"
+            assert output.shape[1] > 0, f"Output features should be > 0 for {morph_type.value}, got {output.shape[1]}"
+            assert torch.isfinite(output).all(), f"Output should be finite for {morph_type.value}"
+            
+            # Verify parameter growth
+            assert new_params > original_params, f"New model should have more parameters for {morph_type.value}"
+            assert params_added > 0, f"Should have added parameters for {morph_type.value}"
+            
             results[morph_type.value] = {
                 'success': True,
                 'original_params': original_params,
