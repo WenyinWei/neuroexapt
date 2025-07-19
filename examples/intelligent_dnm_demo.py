@@ -122,13 +122,13 @@ class IntelligentDNMTrainer:
             'stagnation_threshold': 0.005,  # 0.5% 停滞阈值
             'net2net_improvement_threshold': 0.3,  # Net2Net改进潜力阈值
             
-            # 激进模式配置 (作为备用)
-            'enable_aggressive_mode': True,
-            'accuracy_plateau_threshold': 0.001,
-            'plateau_detection_window': 3,
-            'aggressive_trigger_accuracy': 0.88,
-            'max_concurrent_mutations': 2,
-            'morphogenesis_budget': 15000
+                         # 激进模式配置 (作为备用) - 暂时关闭避免导入问题
+             'enable_aggressive_mode': False,
+             'accuracy_plateau_threshold': 0.001,
+             'plateau_detection_window': 3,
+             'aggressive_trigger_accuracy': 0.88,
+             'max_concurrent_mutations': 2,
+             'morphogenesis_budget': 15000
         }
         
         self.dnm_framework = EnhancedDNMFramework(self.dnm_config)

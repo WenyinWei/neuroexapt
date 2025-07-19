@@ -1,7 +1,7 @@
 
 """
-\defgroup group_model Model
-\ingroup core
+defgroup group_model Model
+ingroup core
 Model module for NeuroExapt framework.
 """
 

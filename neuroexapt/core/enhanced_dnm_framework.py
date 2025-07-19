@@ -506,7 +506,7 @@ class EnhancedDNMFramework:
         
         # 新增激进形态发生组件
         if self.config['enable_aggressive_mode']:
-            from .advanced_morphogenesis import (
+            from .aggressive_morphogenesis import (
                 AggressiveMorphogenesisAnalyzer,
                 MultiPointMutationPlanner,
                 AggressiveMorphogenesisExecutor
@@ -624,7 +624,7 @@ class EnhancedDNMFramework:
         # 3. Net2Net输出反向投影分析
         logger.info("🧪 执行Net2Net输出反向投影分析...")
         try:
-            from .dnm_net2net import Net2NetSubnetworkAnalyzer
+            from .net2net_subnetwork_analyzer import Net2NetSubnetworkAnalyzer
             net2net_analyzer = Net2NetSubnetworkAnalyzer()
             
             # 构建分析上下文
