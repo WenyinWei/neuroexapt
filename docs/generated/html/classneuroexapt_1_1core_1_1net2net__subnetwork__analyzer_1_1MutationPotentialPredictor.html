@@ -1,0 +1,870 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="description" content="NeuroExapt - Advanced Neural Architecture Search and Dynamic Morphogenesis Framework">
+    <meta name="keywords" content="neural architecture search, dynamic morphogenesis, deep learning, AI, PyTorch">
+    <meta name="author" content="NeuroExapt Team">
+    <meta property="og:title" content="NeuroExapt Documentation">
+    <meta property="og:description" content="Advanced Neural Architecture Search Framework">
+    <meta property="og:type" content="website">
+
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>NeuroExapt: neuroexapt.core.net2net_subnetwork_analyzer.MutationPotentialPredictor Class Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="custom.css" rel="stylesheet" type="text/css"/>
+<!-- NeuroExapt Custom Styles -->
+<style>
+/* Enhanced header styling */
+.header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+.header h1 {
+    margin: 0;
+    font-size: 2.5em;
+    font-weight: 300;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+.header .subtitle {
+    font-size: 1.2em;
+    opacity: 0.9;
+    margin-top: 10px;
+}
+/* Enhanced navigation */
+.tablist {
+    background: #f8f9fa;
+    border-bottom: 2px solid #e9ecef;
+}
+.tablist li.current a {
+    background: #667eea;
+    color: white;
+}
+/* Improved content layout */
+.contents {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+/* Code highlighting */
+.fragment {
+    background: #f8f9fa;
+    border-left: 4px solid #667eea;
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 0 8px 8px 0;
+}
+/* Enhanced tables */
+table.memberdecls {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 20px 0;
+}
+table.memberdecls td {
+    border: 1px solid #e9ecef;
+    padding: 12px;
+}
+/* Better typography */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #343a40;
+}
+h1, h2, h3, h4, h5, h6 {
+    color: #495057;
+    font-weight: 500;
+}
+/* Responsive design */
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 2em;
+    }
+    .contents {
+        padding: 15px;
+    }
+}
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #1a1a1a;
+        color: #e9ecef;
+    }
+    .header {
+        background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+    }
+    .fragment {
+        background: #2d3748;
+        color: #e9ecef;
+    }
+}
+</style>
+<!-- Analytics (if needed) -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<!--
+<script async src="https://www.googletagmanager.com/gtag/js?id=GA_TRACKING_ID"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'GA_TRACKING_ID');
+</script>
+-->
+</head>
+<body>
+<!-- Custom Header -->
+<div class="header">
+    <h1>🧠 NeuroExapt</h1>
+    <div class="subtitle">Advanced Neural Architecture Search and Dynamic Morphogenesis Framework</div>
+    <div style="margin-top: 15px; font-size: 0.9em;">
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🚀 Dynamic Neural Morphogenesis
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🔬 Advanced Architecture Search
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            ⚡ High-Performance Computing
+        </span>
+    </div>
+</div>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! --><!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('classneuroexapt_1_1core_1_1net2net__subnetwork__analyzer_1_1MutationPotentialPredictor.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#pro-methods">Protected Member Functions</a> &#124;
+<a href="classneuroexapt_1_1core_1_1net2net__subnetwork__analyzer_1_1MutationPotentialPredictor-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">neuroexapt.core.net2net_subnetwork_analyzer.MutationPotentialPredictor Class Reference</div></div>
+</div><!--header-->
+<div class="contents">
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a94854428ab571b6b4de0709c2d687800" id="r_a94854428ab571b6b4de0709c2d687800"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1net2net__subnetwork__analyzer_1_1MutationPotentialPredictor.html#a94854428ab571b6b4de0709c2d687800">__init__</a> (self)</td></tr>
+<tr class="separator:a94854428ab571b6b4de0709c2d687800"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa100f6d2c3838fddd20a1bd888353a2f" id="r_aa100f6d2c3838fddd20a1bd888353a2f"><td class="memItemLeft" align="right" valign="top">Dict[str, Any]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1net2net__subnetwork__analyzer_1_1MutationPotentialPredictor.html#aa100f6d2c3838fddd20a1bd888353a2f">predict_mutation_potential</a> (self, nn.Module subnetwork, Dict[str, Any] subnetwork_info, Dict[str, float] parameter_space_analysis, float current_accuracy)</td></tr>
+<tr class="separator:aa100f6d2c3838fddd20a1bd888353a2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a9d678c4bef4a4f2d2afe51d622d283cd" id="r_a9d678c4bef4a4f2d2afe51d622d283cd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1net2net__subnetwork__analyzer_1_1MutationPotentialPredictor.html#a9d678c4bef4a4f2d2afe51d622d283cd">predictor_cache</a></td></tr>
+<tr class="separator:a9d678c4bef4a4f2d2afe51d622d283cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr class="memitem:a245cc11d472c5bed9bb2dd7080d14447" id="r_a245cc11d472c5bed9bb2dd7080d14447"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1net2net__subnetwork__analyzer_1_1MutationPotentialPredictor.html#a245cc11d472c5bed9bb2dd7080d14447">_compute_improvement_potential</a> (self, float efficiency, float current_accuracy)</td></tr>
+<tr class="separator:a245cc11d472c5bed9bb2dd7080d14447"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3966b723485c6aed3bf348e824d2fa3b" id="r_a3966b723485c6aed3bf348e824d2fa3b"><td class="memItemLeft" align="right" valign="top">Dict[str, Dict[str, float]]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1net2net__subnetwork__analyzer_1_1MutationPotentialPredictor.html#a3966b723485c6aed3bf348e824d2fa3b">_predict_strategy_effects</a> (self, Dict[str, Any] subnetwork_info, Dict[str, float] parameter_space_analysis, float current_accuracy)</td></tr>
+<tr class="separator:a3966b723485c6aed3bf348e824d2fa3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae4e872189d76fb98ccf757fba5690735" id="r_ae4e872189d76fb98ccf757fba5690735"><td class="memItemLeft" align="right" valign="top">Dict[str, float]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1net2net__subnetwork__analyzer_1_1MutationPotentialPredictor.html#ae4e872189d76fb98ccf757fba5690735">_predict_width_expansion_effect</a> (self, Dict[str, Any] subnetwork_info, Dict[str, float] parameter_space_analysis)</td></tr>
+<tr class="separator:ae4e872189d76fb98ccf757fba5690735"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4118018910a447711be968fcee4a47ca" id="r_a4118018910a447711be968fcee4a47ca"><td class="memItemLeft" align="right" valign="top">Dict[str, float]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1net2net__subnetwork__analyzer_1_1MutationPotentialPredictor.html#a4118018910a447711be968fcee4a47ca">_predict_depth_increase_effect</a> (self, Dict[str, Any] subnetwork_info, Dict[str, float] parameter_space_analysis)</td></tr>
+<tr class="separator:a4118018910a447711be968fcee4a47ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a77038a1c896013f3d28773b7a204579d" id="r_a77038a1c896013f3d28773b7a204579d"><td class="memItemLeft" align="right" valign="top">Dict[str, float]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1net2net__subnetwork__analyzer_1_1MutationPotentialPredictor.html#a77038a1c896013f3d28773b7a204579d">_predict_parallel_division_effect</a> (self, Dict[str, Any] subnetwork_info, Dict[str, float] parameter_space_analysis)</td></tr>
+<tr class="separator:a77038a1c896013f3d28773b7a204579d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a84ad4579ff82cf00ed57e50d07163aa6" id="r_a84ad4579ff82cf00ed57e50d07163aa6"><td class="memItemLeft" align="right" valign="top">Dict[str, float]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1net2net__subnetwork__analyzer_1_1MutationPotentialPredictor.html#a84ad4579ff82cf00ed57e50d07163aa6">_predict_hybrid_mutation_effect</a> (self, Dict[str, Any] subnetwork_info, Dict[str, float] parameter_space_analysis)</td></tr>
+<tr class="separator:a84ad4579ff82cf00ed57e50d07163aa6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7d92613ba6f7b914cd640653ba846782" id="r_a7d92613ba6f7b914cd640653ba846782"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1net2net__subnetwork__analyzer_1_1MutationPotentialPredictor.html#a7d92613ba6f7b914cd640653ba846782">_estimate_optimal_mutation_strength</a> (self, Dict[str, float] parameter_space_analysis, float improvement_potential)</td></tr>
+<tr class="separator:a7d92613ba6f7b914cd640653ba846782"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aadea454ca5398ea2531aaf83c0d40d17" id="r_aadea454ca5398ea2531aaf83c0d40d17"><td class="memItemLeft" align="right" valign="top">Dict[str, float]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1net2net__subnetwork__analyzer_1_1MutationPotentialPredictor.html#aadea454ca5398ea2531aaf83c0d40d17">_assess_mutation_risks</a> (self, Dict[str, Any] subnetwork_info, Dict[str, float] parameter_space_analysis)</td></tr>
+<tr class="separator:aadea454ca5398ea2531aaf83c0d40d17"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa5a0fa061a73b651dfdefd99811a8669" id="r_aa5a0fa061a73b651dfdefd99811a8669"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1net2net__subnetwork__analyzer_1_1MutationPotentialPredictor.html#aa5a0fa061a73b651dfdefd99811a8669">_compute_prediction_confidence</a> (self, Dict[str, float] parameter_space_analysis)</td></tr>
+<tr class="separator:aa5a0fa061a73b651dfdefd99811a8669"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><pre class="fragment">变异潜力预测器</pre> 
+<p class="definition">Definition at line <a class="el" href="net2net__subnetwork__analyzer_8py_source.html#l00491">491</a> of file <a class="el" href="net2net__subnetwork__analyzer_8py_source.html">net2net_subnetwork_analyzer.py</a>.</p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a94854428ab571b6b4de0709c2d687800" name="a94854428ab571b6b4de0709c2d687800"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a94854428ab571b6b4de0709c2d687800">&#9670;&#160;</a></span>__init__()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.net2net_subnetwork_analyzer.MutationPotentialPredictor.__init__ </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="net2net__subnetwork__analyzer_8py_source.html#l00494">494</a> of file <a class="el" href="net2net__subnetwork__analyzer_8py_source.html">net2net_subnetwork_analyzer.py</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="aadea454ca5398ea2531aaf83c0d40d17" name="aadea454ca5398ea2531aaf83c0d40d17"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aadea454ca5398ea2531aaf83c0d40d17">&#9670;&#160;</a></span>_assess_mutation_risks()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Dict[str, float] neuroexapt.core.net2net_subnetwork_analyzer.MutationPotentialPredictor._assess_mutation_risks </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Dict[str, Any]&#160;</td>
+          <td class="paramname"><em>subnetwork_info</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Dict[str, float]&#160;</td>
+          <td class="paramname"><em>parameter_space_analysis</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">评估变异风险</pre> 
+<p class="definition">Definition at line <a class="el" href="net2net__subnetwork__analyzer_8py_source.html#l00694">694</a> of file <a class="el" href="net2net__subnetwork__analyzer_8py_source.html">net2net_subnetwork_analyzer.py</a>.</p>
+
+</div>
+</div>
+<a id="a245cc11d472c5bed9bb2dd7080d14447" name="a245cc11d472c5bed9bb2dd7080d14447"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a245cc11d472c5bed9bb2dd7080d14447">&#9670;&#160;</a></span>_compute_improvement_potential()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> float neuroexapt.core.net2net_subnetwork_analyzer.MutationPotentialPredictor._compute_improvement_potential </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>efficiency</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>current_accuracy</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">基于效率和当前准确率计算改进潜力</pre> 
+<p class="definition">Definition at line <a class="el" href="net2net__subnetwork__analyzer_8py_source.html#l00560">560</a> of file <a class="el" href="net2net__subnetwork__analyzer_8py_source.html">net2net_subnetwork_analyzer.py</a>.</p>
+
+</div>
+</div>
+<a id="aa5a0fa061a73b651dfdefd99811a8669" name="aa5a0fa061a73b651dfdefd99811a8669"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa5a0fa061a73b651dfdefd99811a8669">&#9670;&#160;</a></span>_compute_prediction_confidence()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> float neuroexapt.core.net2net_subnetwork_analyzer.MutationPotentialPredictor._compute_prediction_confidence </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Dict[str, float]&#160;</td>
+          <td class="paramname"><em>parameter_space_analysis</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">计算预测置信度</pre> 
+<p class="definition">Definition at line <a class="el" href="net2net__subnetwork__analyzer_8py_source.html#l00721">721</a> of file <a class="el" href="net2net__subnetwork__analyzer_8py_source.html">net2net_subnetwork_analyzer.py</a>.</p>
+
+</div>
+</div>
+<a id="a7d92613ba6f7b914cd640653ba846782" name="a7d92613ba6f7b914cd640653ba846782"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7d92613ba6f7b914cd640653ba846782">&#9670;&#160;</a></span>_estimate_optimal_mutation_strength()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> float neuroexapt.core.net2net_subnetwork_analyzer.MutationPotentialPredictor._estimate_optimal_mutation_strength </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Dict[str, float]&#160;</td>
+          <td class="paramname"><em>parameter_space_analysis</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>improvement_potential</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">估计最优变异强度</pre> 
+<p class="definition">Definition at line <a class="el" href="net2net__subnetwork__analyzer_8py_source.html#l00673">673</a> of file <a class="el" href="net2net__subnetwork__analyzer_8py_source.html">net2net_subnetwork_analyzer.py</a>.</p>
+
+</div>
+</div>
+<a id="a4118018910a447711be968fcee4a47ca" name="a4118018910a447711be968fcee4a47ca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4118018910a447711be968fcee4a47ca">&#9670;&#160;</a></span>_predict_depth_increase_effect()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Dict[str, float] neuroexapt.core.net2net_subnetwork_analyzer.MutationPotentialPredictor._predict_depth_increase_effect </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Dict[str, Any]&#160;</td>
+          <td class="paramname"><em>subnetwork_info</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Dict[str, float]&#160;</td>
+          <td class="paramname"><em>parameter_space_analysis</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">预测深度增加效果</pre> 
+<p class="definition">Definition at line <a class="el" href="net2net__subnetwork__analyzer_8py_source.html#l00622">622</a> of file <a class="el" href="net2net__subnetwork__analyzer_8py_source.html">net2net_subnetwork_analyzer.py</a>.</p>
+
+</div>
+</div>
+<a id="a84ad4579ff82cf00ed57e50d07163aa6" name="a84ad4579ff82cf00ed57e50d07163aa6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a84ad4579ff82cf00ed57e50d07163aa6">&#9670;&#160;</a></span>_predict_hybrid_mutation_effect()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Dict[str, float] neuroexapt.core.net2net_subnetwork_analyzer.MutationPotentialPredictor._predict_hybrid_mutation_effect </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Dict[str, Any]&#160;</td>
+          <td class="paramname"><em>subnetwork_info</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Dict[str, float]&#160;</td>
+          <td class="paramname"><em>parameter_space_analysis</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">预测混合变异效果</pre> 
+<p class="definition">Definition at line <a class="el" href="net2net__subnetwork__analyzer_8py_source.html#l00656">656</a> of file <a class="el" href="net2net__subnetwork__analyzer_8py_source.html">net2net_subnetwork_analyzer.py</a>.</p>
+
+</div>
+</div>
+<a id="a77038a1c896013f3d28773b7a204579d" name="a77038a1c896013f3d28773b7a204579d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a77038a1c896013f3d28773b7a204579d">&#9670;&#160;</a></span>_predict_parallel_division_effect()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Dict[str, float] neuroexapt.core.net2net_subnetwork_analyzer.MutationPotentialPredictor._predict_parallel_division_effect </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Dict[str, Any]&#160;</td>
+          <td class="paramname"><em>subnetwork_info</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Dict[str, float]&#160;</td>
+          <td class="paramname"><em>parameter_space_analysis</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">预测并行分裂效果</pre> 
+<p class="definition">Definition at line <a class="el" href="net2net__subnetwork__analyzer_8py_source.html#l00639">639</a> of file <a class="el" href="net2net__subnetwork__analyzer_8py_source.html">net2net_subnetwork_analyzer.py</a>.</p>
+
+</div>
+</div>
+<a id="a3966b723485c6aed3bf348e824d2fa3b" name="a3966b723485c6aed3bf348e824d2fa3b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3966b723485c6aed3bf348e824d2fa3b">&#9670;&#160;</a></span>_predict_strategy_effects()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Dict[str, Dict[str, float]] neuroexapt.core.net2net_subnetwork_analyzer.MutationPotentialPredictor._predict_strategy_effects </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Dict[str, Any]&#160;</td>
+          <td class="paramname"><em>subnetwork_info</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Dict[str, float]&#160;</td>
+          <td class="paramname"><em>parameter_space_analysis</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>current_accuracy</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">预测不同变异策略的效果</pre> 
+<p class="definition">Definition at line <a class="el" href="net2net__subnetwork__analyzer_8py_source.html#l00581">581</a> of file <a class="el" href="net2net__subnetwork__analyzer_8py_source.html">net2net_subnetwork_analyzer.py</a>.</p>
+
+</div>
+</div>
+<a id="ae4e872189d76fb98ccf757fba5690735" name="ae4e872189d76fb98ccf757fba5690735"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae4e872189d76fb98ccf757fba5690735">&#9670;&#160;</a></span>_predict_width_expansion_effect()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Dict[str, float] neuroexapt.core.net2net_subnetwork_analyzer.MutationPotentialPredictor._predict_width_expansion_effect </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Dict[str, Any]&#160;</td>
+          <td class="paramname"><em>subnetwork_info</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Dict[str, float]&#160;</td>
+          <td class="paramname"><em>parameter_space_analysis</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">预测宽度扩展效果</pre> 
+<p class="definition">Definition at line <a class="el" href="net2net__subnetwork__analyzer_8py_source.html#l00604">604</a> of file <a class="el" href="net2net__subnetwork__analyzer_8py_source.html">net2net_subnetwork_analyzer.py</a>.</p>
+
+</div>
+</div>
+<a id="aa100f6d2c3838fddd20a1bd888353a2f" name="aa100f6d2c3838fddd20a1bd888353a2f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa100f6d2c3838fddd20a1bd888353a2f">&#9670;&#160;</a></span>predict_mutation_potential()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Dict[str, Any] neuroexapt.core.net2net_subnetwork_analyzer.MutationPotentialPredictor.predict_mutation_potential </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">nn.Module&#160;</td>
+          <td class="paramname"><em>subnetwork</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Dict[str, Any]&#160;</td>
+          <td class="paramname"><em>subnetwork_info</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Dict[str, float]&#160;</td>
+          <td class="paramname"><em>parameter_space_analysis</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>current_accuracy</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">预测变异潜力和可能的准确率提升
+
+Args:
+    subnetwork: 提取的子网络
+    subnetwork_info: 子网络分析信息
+    parameter_space_analysis: 参数空间分析结果
+    current_accuracy: 当前准确率
+    
+Returns:
+    变异潜力预测结果
+</pre> 
+<p class="definition">Definition at line <a class="el" href="net2net__subnetwork__analyzer_8py_source.html#l00497">497</a> of file <a class="el" href="net2net__subnetwork__analyzer_8py_source.html">net2net_subnetwork_analyzer.py</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a9d678c4bef4a4f2d2afe51d622d283cd" name="a9d678c4bef4a4f2d2afe51d622d283cd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9d678c4bef4a4f2d2afe51d622d283cd">&#9670;&#160;</a></span>predictor_cache</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.net2net_subnetwork_analyzer.MutationPotentialPredictor.predictor_cache</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="net2net__subnetwork__analyzer_8py_source.html#l00495">495</a> of file <a class="el" href="net2net__subnetwork__analyzer_8py_source.html">net2net_subnetwork_analyzer.py</a>.</p>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following file:<ul>
+<li>neuroexapt/core/<a class="el" href="net2net__subnetwork__analyzer_8py_source.html">net2net_subnetwork_analyzer.py</a></li>
+</ul>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<!-- do not remove this div, it is closed by doxygen! -->
+</div>
+<!-- Custom Footer -->
+<div style="background: #f8f9fa; border-top: 1px solid #e9ecef; margin-top: 50px; padding: 30px 0; text-align: center;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-bottom: 20px;">
+            <!-- Project Info -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🧠 NeuroExapt</h4>
+                <p style="color: #6c757d; margin: 0; font-size: 0.9em;">
+                    Advanced Neural Architecture Search and Dynamic Morphogenesis Framework for next-generation AI research.
+                </p>
+            </div>
+            <!-- Quick Links -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">📚 Quick Links</h4>
+                <div style="text-align: left;">
+                    <a href="index.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🏠 Home</a>
+                    <a href="modules.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📦 Modules</a>
+                    <a href="examples.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💡 Examples</a>
+                    <a href="files.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📁 Files</a>
+                </div>
+            </div>
+            <!-- Resources -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🔗 Resources</h4>
+                <div style="text-align: left;">
+                    <a href="https://github.com/your-username/neuroexapt" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💻 GitHub Repository</a>
+                    <a href="https://github.com/your-username/neuroexapt/issues" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🐛 Issue Tracker</a>
+                    <a href="https://github.com/your-username/neuroexapt/wiki" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📖 Wiki</a>
+                    <a href="https://github.com/your-username/neuroexapt/releases" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🚀 Releases</a>
+                </div>
+            </div>
+        </div>
+        <hr style="border: 0; height: 1px; background: #e9ecef; margin: 20px 0;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+            <div style="color: #6c757d; font-size: 0.9em;">
+                © 2024 NeuroExapt Project. Generated with 
+                <a href="https://www.doxygen.nl/index.html" style="color: #667eea; text-decoration: none;">Doxygen 1.9.8</a>
+            </div>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <span style="font-size: 0.9em; color: #6c757d;">Built with ❤️ for AI Research</span>
+                <div style="display: flex; gap: 10px;">
+                    <span style="background: #28a745; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">🟢 Active</span>
+                    <span style="background: #17a2b8; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">v3.0</span>
+                </div>
+            </div>
+        </div>
+        <!-- Technology Stack -->
+        <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #e9ecef;">
+            <div style="font-size: 0.8em; color: #868e96; text-align: center;">
+                <strong>Built with:</strong>
+                <span style="margin: 0 5px;">🐍 Python</span>
+                <span style="margin: 0 5px;">🔥 PyTorch</span>
+                <span style="margin: 0 5px;">⚡ CUDA</span>
+                <span style="margin: 0 5px;">🧮 NumPy</span>
+                <span style="margin: 0 5px;">📊 Matplotlib</span>
+                <span style="margin: 0 5px;">🚀 Triton</span>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Back to top button -->
+<div id="back-to-top" style="position: fixed; bottom: 20px; right: 20px; display: none; z-index: 1000;">
+    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" 
+            style="background: #667eea; color: white; border: none; padding: 10px 15px; border-radius: 50%; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,0.2); font-size: 16px;">
+        ⬆️
+    </button>
+</div>
+<script>
+// Back to top button functionality
+window.addEventListener('scroll', function() {
+    const backToTop = document.getElementById('back-to-top');
+    if (window.pageYOffset > 300) {
+        backToTop.style.display = 'block';
+    } else {
+        backToTop.style.display = 'none';
+    }
+});
+// Enhanced search functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Add search enhancement if search box exists
+    const searchBox = document.getElementById('MSearchField');
+    if (searchBox) {
+        searchBox.placeholder = 'Search documentation... 🔍';
+        searchBox.style.borderRadius = '20px';
+        searchBox.style.padding = '8px 15px';
+    }
+    // Add copy code button to code blocks
+    const codeBlocks = document.querySelectorAll('.fragment');
+    codeBlocks.forEach(function(block) {
+        const copyBtn = document.createElement('button');
+        copyBtn.innerHTML = '📋';
+        copyBtn.title = 'Copy code';
+        copyBtn.style.cssText = 'position: absolute; top: 10px; right: 10px; background: #667eea; color: white; border: none; padding: 5px; border-radius: 3px; cursor: pointer; font-size: 12px;';
+        block.style.position = 'relative';
+        block.appendChild(copyBtn);
+        copyBtn.addEventListener('click', function() {
+            const text = block.textContent;
+            navigator.clipboard.writeText(text).then(function() {
+                copyBtn.innerHTML = '✅';
+                setTimeout(function() {
+                    copyBtn.innerHTML = '📋';
+                }, 2000);
+            });
+        });
+    });
+});
+// Dark mode toggle (optional)
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+}
+// Load saved dark mode preference
+if (localStorage.getItem('darkMode') === 'true') {
+    document.body.classList.add('dark-mode');
+}
+</script>
+</body>
+</html>

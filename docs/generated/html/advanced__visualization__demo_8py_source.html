@@ -1,0 +1,759 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="description" content="NeuroExapt - Advanced Neural Architecture Search and Dynamic Morphogenesis Framework">
+    <meta name="keywords" content="neural architecture search, dynamic morphogenesis, deep learning, AI, PyTorch">
+    <meta name="author" content="NeuroExapt Team">
+    <meta property="og:title" content="NeuroExapt Documentation">
+    <meta property="og:description" content="Advanced Neural Architecture Search Framework">
+    <meta property="og:type" content="website">
+
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>NeuroExapt: examples/advanced_visualization_demo.py Source File</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="custom.css" rel="stylesheet" type="text/css"/>
+<!-- NeuroExapt Custom Styles -->
+<style>
+/* Enhanced header styling */
+.header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+.header h1 {
+    margin: 0;
+    font-size: 2.5em;
+    font-weight: 300;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+.header .subtitle {
+    font-size: 1.2em;
+    opacity: 0.9;
+    margin-top: 10px;
+}
+/* Enhanced navigation */
+.tablist {
+    background: #f8f9fa;
+    border-bottom: 2px solid #e9ecef;
+}
+.tablist li.current a {
+    background: #667eea;
+    color: white;
+}
+/* Improved content layout */
+.contents {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+/* Code highlighting */
+.fragment {
+    background: #f8f9fa;
+    border-left: 4px solid #667eea;
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 0 8px 8px 0;
+}
+/* Enhanced tables */
+table.memberdecls {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 20px 0;
+}
+table.memberdecls td {
+    border: 1px solid #e9ecef;
+    padding: 12px;
+}
+/* Better typography */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #343a40;
+}
+h1, h2, h3, h4, h5, h6 {
+    color: #495057;
+    font-weight: 500;
+}
+/* Responsive design */
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 2em;
+    }
+    .contents {
+        padding: 15px;
+    }
+}
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #1a1a1a;
+        color: #e9ecef;
+    }
+    .header {
+        background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+    }
+    .fragment {
+        background: #2d3748;
+        color: #e9ecef;
+    }
+}
+</style>
+<!-- Analytics (if needed) -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<!--
+<script async src="https://www.googletagmanager.com/gtag/js?id=GA_TRACKING_ID"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'GA_TRACKING_ID');
+</script>
+-->
+</head>
+<body>
+<!-- Custom Header -->
+<div class="header">
+    <h1>🧠 NeuroExapt</h1>
+    <div class="subtitle">Advanced Neural Architecture Search and Dynamic Morphogenesis Framework</div>
+    <div style="margin-top: 15px; font-size: 0.9em;">
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🚀 Dynamic Neural Morphogenesis
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🔬 Advanced Architecture Search
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            ⚡ High-Performance Computing
+        </span>
+    </div>
+</div>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! --><!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function() { init_codefold(0); });
+/* @license-end */
+</script>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('advanced__visualization__demo_8py_source.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">advanced_visualization_demo.py</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="advanced__visualization__demo_8py.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno"><a class="line" href="namespaceexamples_1_1advanced__visualization__demo.html">    1</a></span><span class="stringliteral">&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="stringliteral">Advanced Architecture Visualization Demo for Neuro Exapt</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="stringliteral"></span> </div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="stringliteral">This example demonstrates the visualization capabilities for complex neural architectures</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="stringliteral">including multi-level branching, nested sub-networks, and dynamic structural changes.</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="stringliteral"></span> </div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="stringliteral">Author: Neuro Exapt Team</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="stringliteral">&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="keyword">import</span> torch</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="keyword">from</span> <a class="code hl_namespace" href="namespaceneuroexapt_1_1utils_1_1visualization.html">neuroexapt.utils.visualization</a> <span class="keyword">import</span> ascii_model_graph, ModelVisualizer</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
+<div class="foldopen" id="foldopen00015" data-start="" data-end="">
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno"><a class="line" href="classexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet.html">   15</a></span><span class="keyword">class </span><a class="code hl_class" href="classexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet.html">MultiLevelBranchNet</a>(nn.Module):</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>    <span class="stringliteral">&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="stringliteral">    Complex architecture with multiple levels of branching:</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="stringliteral">    - First level: 3 main branches</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="stringliteral">    - Second level: Each branch splits into sub-branches</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="stringliteral">    - Fusion at multiple points</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="stringliteral">    &quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    </div>
+<div class="foldopen" id="foldopen00023" data-start="" data-end="">
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno"><a class="line" href="classexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet.html#af0b65d8081b851d27fe5ff3ab8353477">   23</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet.html#af0b65d8081b851d27fe5ff3ab8353477">__init__</a>(self):</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>        super().<a class="code hl_function" href="classexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet.html#af0b65d8081b851d27fe5ff3ab8353477">__init__</a>()</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>        </div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>        <span class="comment"># Primary branches (Level 1)</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno"><a class="line" href="classexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet.html#a35588ba366056e1c605111a2f2c6df48">   27</a></span>        self.<a class="code hl_variable" href="classexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet.html#a35588ba366056e1c605111a2f2c6df48">main_branch</a> = nn.Sequential(</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>            nn.Conv2d(3, 64, 3, padding=1),</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>            nn.BatchNorm2d(64),</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>            nn.ReLU(),</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>            nn.Conv2d(64, 128, 3, padding=1),</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>            nn.BatchNorm2d(128),</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>            nn.ReLU()</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>        )</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>        </div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno"><a class="line" href="classexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet.html#aff59f1f930988f73b94359b8a47b0bcc">   36</a></span>        self.<a class="code hl_variable" href="classexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet.html#aff59f1f930988f73b94359b8a47b0bcc">secondary_branch</a> = nn.Sequential(</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>            nn.Conv2d(3, 32, 1),  <span class="comment"># 1x1 conv for efficiency</span></div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>            nn.BatchNorm2d(32),</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>            nn.ReLU(),</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>            nn.Conv2d(32, 64, 3, padding=1),</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>            nn.BatchNorm2d(64),</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>            nn.ReLU()</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>        )</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>        </div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno"><a class="line" href="classexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet.html#a62ebe91e471bed6d1580933254a50c94">   45</a></span>        self.<a class="code hl_variable" href="classexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet.html#a62ebe91e471bed6d1580933254a50c94">attention_branch</a> = nn.Sequential(</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>            nn.Conv2d(3, 16, 1),</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>            nn.BatchNorm2d(16),</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>            nn.ReLU(),</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>            nn.Conv2d(16, 32, 1),</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>            nn.BatchNorm2d(32),</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>            nn.Sigmoid()  <span class="comment"># Attention weights</span></div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>        )</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        </div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        <span class="comment"># Sub-branches from main_branch (Level 2)</span></div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno"><a class="line" href="classexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet.html#a6a386bd01739b316a4fa699dc48750ef">   55</a></span>        self.<a class="code hl_variable" href="classexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet.html#a6a386bd01739b316a4fa699dc48750ef">main_branch_deep</a> = nn.Sequential(</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>            nn.Conv2d(128, 256, 3, padding=1),</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>            nn.BatchNorm2d(256),</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>            nn.ReLU(),</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>            nn.Conv2d(256, 256, 3, padding=1),</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>            nn.BatchNorm2d(256),</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>            nn.ReLU()</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>        )</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>        </div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno"><a class="line" href="classexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet.html#a0c94207944f1f46c08c83c15ec7d2e66">   64</a></span>        self.<a class="code hl_variable" href="classexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet.html#a0c94207944f1f46c08c83c15ec7d2e66">main_branch_shallow</a> = nn.Sequential(</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>            nn.Conv2d(128, 128, 1),  <span class="comment"># Skip connection style</span></div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>            nn.BatchNorm2d(128),</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>            nn.ReLU()</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>        )</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>        </div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>        <span class="comment"># First fusion: combine main sub-branches</span></div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno"><a class="line" href="classexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet.html#a9ea3c0969609a038f5fc78766dfa40c7">   71</a></span>        self.<a class="code hl_variable" href="classexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet.html#a9ea3c0969609a038f5fc78766dfa40c7">main_fusion</a> = nn.Conv2d(256 + 128, 256, 1)</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>        </div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>        <span class="comment"># Second fusion: combine all branches</span></div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno"><a class="line" href="classexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet.html#a009fa4cdd50a435140e7b4a5b9f08411">   74</a></span>        self.<a class="code hl_variable" href="classexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet.html#a009fa4cdd50a435140e7b4a5b9f08411">fusion</a> = nn.Conv2d(256 + 64 + 32, 384, 1)</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>        </div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>        <span class="comment"># Final processing</span></div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno"><a class="line" href="classexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet.html#a2d08d555306cd648feb1fe0a6988ae65">   77</a></span>        self.<a class="code hl_variable" href="classexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet.html#a2d08d555306cd648feb1fe0a6988ae65">final_conv</a> = nn.Conv2d(384, 512, 3, padding=1)</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno"><a class="line" href="classexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet.html#a5cdab621382153fa2ef629c7dc025eed">   78</a></span>        self.<a class="code hl_variable" href="classexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet.html#a5cdab621382153fa2ef629c7dc025eed">global_pool</a> = nn.AdaptiveAvgPool2d(1)</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno"><a class="line" href="classexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet.html#abbfba073d5c11ea5b6165034ed671825">   79</a></span>        self.<a class="code hl_variable" href="classexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet.html#abbfba073d5c11ea5b6165034ed671825">classifier</a> = nn.Sequential(</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>            nn.Linear(512, 256),</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>            nn.ReLU(),</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>            nn.Dropout(0.5),</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>            nn.Linear(256, 10)</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>        )</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>        </div>
+</div>
+<div class="foldopen" id="foldopen00086" data-start="" data-end="">
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno"><a class="line" href="classexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet.html#a92c61338d9fe151d24d065ae42f68fbb">   86</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet.html#a92c61338d9fe151d24d065ae42f68fbb">forward</a>(self, x):</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>        <span class="comment"># Level 1 branches</span></div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>        main_out = self.<a class="code hl_variable" href="classexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet.html#a35588ba366056e1c605111a2f2c6df48">main_branch</a>(x)</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>        secondary_out = self.<a class="code hl_variable" href="classexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet.html#aff59f1f930988f73b94359b8a47b0bcc">secondary_branch</a>(x)</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>        attention_out = self.<a class="code hl_variable" href="classexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet.html#a62ebe91e471bed6d1580933254a50c94">attention_branch</a>(x)</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>        </div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>        <span class="comment"># Level 2 branches from main</span></div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>        main_deep = self.<a class="code hl_variable" href="classexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet.html#a6a386bd01739b316a4fa699dc48750ef">main_branch_deep</a>(main_out)</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>        main_shallow = self.<a class="code hl_variable" href="classexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet.html#a0c94207944f1f46c08c83c15ec7d2e66">main_branch_shallow</a>(main_out)</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>        </div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>        <span class="comment"># First fusion</span></div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>        main_fused = self.<a class="code hl_variable" href="classexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet.html#a9ea3c0969609a038f5fc78766dfa40c7">main_fusion</a>(torch.cat([main_deep, main_shallow], dim=1))</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>        </div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>        <span class="comment"># Apply attention</span></div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>        secondary_out = secondary_out * attention_out</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>        </div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>        <span class="comment"># Final fusion</span></div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>        fused = torch.cat([main_fused, secondary_out, attention_out], dim=1)</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>        fused = self.<a class="code hl_variable" href="classexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet.html#a009fa4cdd50a435140e7b4a5b9f08411">fusion</a>(fused)</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>        </div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>        <span class="comment"># Final layers</span></div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>        out = self.<a class="code hl_variable" href="classexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet.html#a2d08d555306cd648feb1fe0a6988ae65">final_conv</a>(fused)</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>        out = self.<a class="code hl_variable" href="classexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet.html#a5cdab621382153fa2ef629c7dc025eed">global_pool</a>(out)</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>        out = out.view(out.size(0), -1)</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>        out = self.<a class="code hl_variable" href="classexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet.html#abbfba073d5c11ea5b6165034ed671825">classifier</a>(out)</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>        </div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>        <span class="keywordflow">return</span> out</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span> </div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span> </div>
+</div>
+</div>
+<div class="foldopen" id="foldopen00115" data-start="" data-end="">
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno"><a class="line" href="classexamples_1_1advanced__visualization__demo_1_1DynamicMultiLevelNet.html">  115</a></span><span class="keyword">class </span><a class="code hl_class" href="classexamples_1_1advanced__visualization__demo_1_1DynamicMultiLevelNet.html">DynamicMultiLevelNet</a>(nn.Module):</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    <span class="stringliteral">&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span><span class="stringliteral">    Even more complex architecture with dynamic paths and conditional execution.</span></div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span><span class="stringliteral">    &quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>    </div>
+<div class="foldopen" id="foldopen00120" data-start="" data-end="">
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno"><a class="line" href="classexamples_1_1advanced__visualization__demo_1_1DynamicMultiLevelNet.html#a89a0408aa95bac5afd20e35ae21c05ab">  120</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classexamples_1_1advanced__visualization__demo_1_1DynamicMultiLevelNet.html#a89a0408aa95bac5afd20e35ae21c05ab">__init__</a>(self, num_classes=10):</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>        super().<a class="code hl_function" href="classexamples_1_1advanced__visualization__demo_1_1DynamicMultiLevelNet.html#a89a0408aa95bac5afd20e35ae21c05ab">__init__</a>()</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>        </div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>        <span class="comment"># Entry branches</span></div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno"><a class="line" href="classexamples_1_1advanced__visualization__demo_1_1DynamicMultiLevelNet.html#a13302aa09a22a2306ebe13e285af07b3">  124</a></span>        self.<a class="code hl_variable" href="classexamples_1_1advanced__visualization__demo_1_1DynamicMultiLevelNet.html#a13302aa09a22a2306ebe13e285af07b3">branch_visual</a> = nn.Sequential(</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>            nn.Conv2d(3, 48, 3, padding=1),</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>            nn.BatchNorm2d(48),</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>            nn.ReLU(),</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>            nn.MaxPool2d(2)</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>        )</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>        </div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno"><a class="line" href="classexamples_1_1advanced__visualization__demo_1_1DynamicMultiLevelNet.html#a8c0172aa633913d2d413d1112f049e48">  131</a></span>        self.<a class="code hl_variable" href="classexamples_1_1advanced__visualization__demo_1_1DynamicMultiLevelNet.html#a8c0172aa633913d2d413d1112f049e48">branch_texture</a> = nn.Sequential(</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>            nn.Conv2d(3, 32, 5, padding=2),</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>            nn.BatchNorm2d(32),</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>            nn.ReLU(),</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>            nn.MaxPool2d(2)</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>        )</div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>        </div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno"><a class="line" href="classexamples_1_1advanced__visualization__demo_1_1DynamicMultiLevelNet.html#a92cdf5688acdaa474407f0bd030e6e99">  138</a></span>        self.<a class="code hl_variable" href="classexamples_1_1advanced__visualization__demo_1_1DynamicMultiLevelNet.html#a92cdf5688acdaa474407f0bd030e6e99">branch_edge</a> = nn.Sequential(</div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>            nn.Conv2d(3, 16, 7, padding=3),</div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>            nn.BatchNorm2d(16),</div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>            nn.ReLU(),</div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>            nn.MaxPool2d(2)</div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>        )</div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>        </div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>        <span class="comment"># Mid-level branches (after first fusion)</span></div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno"><a class="line" href="classexamples_1_1advanced__visualization__demo_1_1DynamicMultiLevelNet.html#a817899215a3a5813f229f37a687fdfb6">  146</a></span>        self.<a class="code hl_variable" href="classexamples_1_1advanced__visualization__demo_1_1DynamicMultiLevelNet.html#a817899215a3a5813f229f37a687fdfb6">fusion_low</a> = nn.Conv2d(48 + 32 + 16, 96, 1)</div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>        </div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>        <span class="comment"># High-level branches</span></div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno"><a class="line" href="classexamples_1_1advanced__visualization__demo_1_1DynamicMultiLevelNet.html#a3c673db085e87b10024be460df307a1e">  149</a></span>        self.<a class="code hl_variable" href="classexamples_1_1advanced__visualization__demo_1_1DynamicMultiLevelNet.html#a3c673db085e87b10024be460df307a1e">branch_semantic</a> = nn.Sequential(</div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>            nn.Conv2d(96, 128, 3, padding=1),</div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>            nn.BatchNorm2d(128),</div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>            nn.ReLU(),</div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>            nn.Conv2d(128, 256, 3, padding=1),</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>            nn.BatchNorm2d(256),</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>            nn.ReLU()</div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>        )</div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>        </div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno"><a class="line" href="classexamples_1_1advanced__visualization__demo_1_1DynamicMultiLevelNet.html#af563b0ef6c82c21205aee792a043f2ed">  158</a></span>        self.<a class="code hl_variable" href="classexamples_1_1advanced__visualization__demo_1_1DynamicMultiLevelNet.html#af563b0ef6c82c21205aee792a043f2ed">branch_context</a> = nn.Sequential(</div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>            nn.Conv2d(96, 64, 5, padding=2),</div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>            nn.BatchNorm2d(64),</div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>            nn.ReLU(),</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>            nn.Conv2d(64, 128, 5, padding=2),</div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>            nn.BatchNorm2d(128),</div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>            nn.ReLU()</div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>        )</div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>        </div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>        <span class="comment"># Final fusion and classification</span></div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno"><a class="line" href="classexamples_1_1advanced__visualization__demo_1_1DynamicMultiLevelNet.html#a3e39d088e360697b9f903b0d1c9f9a6c">  168</a></span>        self.<a class="code hl_variable" href="classexamples_1_1advanced__visualization__demo_1_1DynamicMultiLevelNet.html#a3e39d088e360697b9f903b0d1c9f9a6c">fusion_high</a> = nn.Conv2d(256 + 128, 512, 1)</div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno"><a class="line" href="classexamples_1_1advanced__visualization__demo_1_1DynamicMultiLevelNet.html#a72d93d79551c9296cc8b33e158250791">  169</a></span>        self.<a class="code hl_variable" href="classexamples_1_1advanced__visualization__demo_1_1DynamicMultiLevelNet.html#a72d93d79551c9296cc8b33e158250791">final_pool</a> = nn.AdaptiveAvgPool2d(1)</div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno"><a class="line" href="classexamples_1_1advanced__visualization__demo_1_1DynamicMultiLevelNet.html#af5c9214e8005bf5edde91ca8057b8648">  170</a></span>        self.<a class="code hl_variable" href="classexamples_1_1advanced__visualization__demo_1_1DynamicMultiLevelNet.html#af5c9214e8005bf5edde91ca8057b8648">classifier</a> = nn.Linear(512, num_classes)</div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>        </div>
+</div>
+<div class="foldopen" id="foldopen00172" data-start="" data-end="">
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno"><a class="line" href="classexamples_1_1advanced__visualization__demo_1_1DynamicMultiLevelNet.html#a2c0309505724da44b7e0db9ddef01de9">  172</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classexamples_1_1advanced__visualization__demo_1_1DynamicMultiLevelNet.html#a2c0309505724da44b7e0db9ddef01de9">forward</a>(self, x):</div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>        <span class="comment"># Low-level feature extraction</span></div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>        visual = self.<a class="code hl_variable" href="classexamples_1_1advanced__visualization__demo_1_1DynamicMultiLevelNet.html#a13302aa09a22a2306ebe13e285af07b3">branch_visual</a>(x)</div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>        texture = self.<a class="code hl_variable" href="classexamples_1_1advanced__visualization__demo_1_1DynamicMultiLevelNet.html#a8c0172aa633913d2d413d1112f049e48">branch_texture</a>(x)</div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>        edge = self.<a class="code hl_variable" href="classexamples_1_1advanced__visualization__demo_1_1DynamicMultiLevelNet.html#a92cdf5688acdaa474407f0bd030e6e99">branch_edge</a>(x)</div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>        </div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>        <span class="comment"># First fusion</span></div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>        low_fused = torch.cat([visual, texture, edge], dim=1)</div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>        low_fused = self.<a class="code hl_variable" href="classexamples_1_1advanced__visualization__demo_1_1DynamicMultiLevelNet.html#a817899215a3a5813f229f37a687fdfb6">fusion_low</a>(low_fused)</div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>        </div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>        <span class="comment"># High-level feature extraction</span></div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>        semantic = self.<a class="code hl_variable" href="classexamples_1_1advanced__visualization__demo_1_1DynamicMultiLevelNet.html#a3c673db085e87b10024be460df307a1e">branch_semantic</a>(low_fused)</div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>        context = self.<a class="code hl_variable" href="classexamples_1_1advanced__visualization__demo_1_1DynamicMultiLevelNet.html#af563b0ef6c82c21205aee792a043f2ed">branch_context</a>(low_fused)</div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>        </div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>        <span class="comment"># Final fusion</span></div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>        high_fused = torch.cat([semantic, context], dim=1)</div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>        high_fused = self.<a class="code hl_variable" href="classexamples_1_1advanced__visualization__demo_1_1DynamicMultiLevelNet.html#a3e39d088e360697b9f903b0d1c9f9a6c">fusion_high</a>(high_fused)</div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>        </div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>        <span class="comment"># Classification</span></div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>        out = self.<a class="code hl_variable" href="classexamples_1_1advanced__visualization__demo_1_1DynamicMultiLevelNet.html#a72d93d79551c9296cc8b33e158250791">final_pool</a>(high_fused)</div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>        out = out.view(out.size(0), -1)</div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>        out = self.<a class="code hl_variable" href="classexamples_1_1advanced__visualization__demo_1_1DynamicMultiLevelNet.html#af5c9214e8005bf5edde91ca8057b8648">classifier</a>(out)</div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>        </div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>        <span class="keywordflow">return</span> out</div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span> </div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span> </div>
+</div>
+</div>
+<div class="foldopen" id="foldopen00198" data-start="" data-end="">
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno"><a class="line" href="namespaceexamples_1_1advanced__visualization__demo.html#a7c033981c082f46cabfa009d9f9ed973">  198</a></span><span class="keyword">def </span><a class="code hl_function" href="namespaceexamples_1_1advanced__visualization__demo.html#a7c033981c082f46cabfa009d9f9ed973">demo_basic_multi_branch</a>():</div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>    <span class="stringliteral">&quot;&quot;&quot;Demo basic multi-level branching architecture.&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>    print(<span class="stringliteral">&quot;\n&quot;</span> + <span class="stringliteral">&quot;=&quot;</span>*100)</div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>    print(<span class="stringliteral">&quot;DEMO 1: Multi-Level Branching Architecture&quot;</span>)</div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>    print(<span class="stringliteral">&quot;This shows a network with branches that further split into sub-branches&quot;</span>)</div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>    print(<span class="stringliteral">&quot;=&quot;</span>*100)</div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>    </div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>    model = <a class="code hl_class" href="classexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet.html">MultiLevelBranchNet</a>()</div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>    sample_input = torch.randn(1, 3, 32, 32)</div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>    </div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>    ascii_model_graph(model, sample_input=sample_input)</div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span> </div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span> </div>
+</div>
+<div class="foldopen" id="foldopen00211" data-start="" data-end="">
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno"><a class="line" href="namespaceexamples_1_1advanced__visualization__demo.html#a775c83e0bfe7c8fa7d4a3e3c58535afe">  211</a></span><span class="keyword">def </span><a class="code hl_function" href="namespaceexamples_1_1advanced__visualization__demo.html#a775c83e0bfe7c8fa7d4a3e3c58535afe">demo_dynamic_architecture</a>():</div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>    <span class="stringliteral">&quot;&quot;&quot;Demo dynamic multi-path architecture.&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>    print(<span class="stringliteral">&quot;\n&quot;</span> + <span class="stringliteral">&quot;=&quot;</span>*100)</div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>    print(<span class="stringliteral">&quot;DEMO 2: Dynamic Multi-Path Architecture&quot;</span>)</div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>    print(<span class="stringliteral">&quot;This shows a network with multiple fusion points and conditional paths&quot;</span>)</div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>    print(<span class="stringliteral">&quot;=&quot;</span>*100)</div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>    </div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>    model = <a class="code hl_class" href="classexamples_1_1advanced__visualization__demo_1_1DynamicMultiLevelNet.html">DynamicMultiLevelNet</a>(num_classes=100)</div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>    sample_input = torch.randn(1, 3, 64, 64)</div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>    </div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>    ascii_model_graph(model, sample_input=sample_input)</div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span> </div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span> </div>
+</div>
+<div class="foldopen" id="foldopen00224" data-start="" data-end="">
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno"><a class="line" href="namespaceexamples_1_1advanced__visualization__demo.html#a9c7dadc53f1cf31b374fa4b5084c12c9">  224</a></span><span class="keyword">def </span><a class="code hl_function" href="namespaceexamples_1_1advanced__visualization__demo.html#a9c7dadc53f1cf31b374fa4b5084c12c9">demo_architecture_evolution</a>():</div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>    <span class="stringliteral">&quot;&quot;&quot;Demo architecture evolution with structural changes.&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>    print(<span class="stringliteral">&quot;\n&quot;</span> + <span class="stringliteral">&quot;=&quot;</span>*100)</div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>    print(<span class="stringliteral">&quot;DEMO 3: Architecture Evolution Visualization&quot;</span>)</div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>    print(<span class="stringliteral">&quot;This shows how the visualization handles structural changes between models&quot;</span>)</div>
+<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>    print(<span class="stringliteral">&quot;=&quot;</span>*100)</div>
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>    </div>
+<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>    <span class="comment"># Original model</span></div>
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>    original = <a class="code hl_class" href="classexamples_1_1advanced__visualization__demo_1_1DynamicMultiLevelNet.html">DynamicMultiLevelNet</a>(num_classes=10)</div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>    </div>
+<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>    <span class="comment"># Modified model (simulate structural evolution)</span></div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>    evolved = <a class="code hl_class" href="classexamples_1_1advanced__visualization__demo_1_1DynamicMultiLevelNet.html">DynamicMultiLevelNet</a>(num_classes=10)</div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>    </div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>    <span class="comment"># Add extra layers to evolved model</span></div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>    evolved.branch_attention = nn.Sequential(</div>
+<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>        nn.Conv2d(96, 48, 1),</div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>        nn.BatchNorm2d(48),</div>
+<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>        nn.Sigmoid()</div>
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>    )</div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>    </div>
+<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>    <span class="comment"># Mark changed layers</span></div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>    changed_layers = [</div>
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>        <span class="stringliteral">&#39;fusion_low&#39;</span>,</div>
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>        <span class="stringliteral">&#39;branch_semantic.2&#39;</span>,</div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>        <span class="stringliteral">&#39;branch_semantic.3&#39;</span>,</div>
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>        <span class="stringliteral">&#39;branch_attention&#39;</span>  <span class="comment"># New layer</span></div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>    ]</div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>    </div>
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>    sample_input = torch.randn(1, 3, 64, 64)</div>
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>    </div>
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>    ascii_model_graph(</div>
+<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>        evolved, </div>
+<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>        previous_model=original,</div>
+<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>        changed_layers=changed_layers,</div>
+<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>        sample_input=sample_input</div>
+<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>    )</div>
+<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span> </div>
+<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span> </div>
+</div>
+<div class="foldopen" id="foldopen00262" data-start="" data-end="">
+<div class="line"><a id="l00262" name="l00262"></a><span class="lineno"><a class="line" href="namespaceexamples_1_1advanced__visualization__demo.html#a67433780d72e4f051b2bbd08b99b9037">  262</a></span><span class="keyword">def </span><a class="code hl_function" href="namespaceexamples_1_1advanced__visualization__demo.html#a67433780d72e4f051b2bbd08b99b9037">demo_custom_visualization</a>():</div>
+<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>    <span class="stringliteral">&quot;&quot;&quot;Demo custom visualization with different terminal widths.&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>    print(<span class="stringliteral">&quot;\n&quot;</span> + <span class="stringliteral">&quot;=&quot;</span>*100)</div>
+<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>    print(<span class="stringliteral">&quot;DEMO 4: Custom Visualization Settings&quot;</span>)</div>
+<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>    print(<span class="stringliteral">&quot;This shows how the visualization adapts to different terminal widths&quot;</span>)</div>
+<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>    print(<span class="stringliteral">&quot;=&quot;</span>*100)</div>
+<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>    </div>
+<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>    model = <a class="code hl_class" href="classexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet.html">MultiLevelBranchNet</a>()</div>
+<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>    sample_input = torch.randn(1, 3, 32, 32)</div>
+<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>    </div>
+<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>    <span class="comment"># Narrow terminal</span></div>
+<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>    print(<span class="stringliteral">&quot;\n--- Narrow Terminal (80 chars) ---&quot;</span>)</div>
+<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>    visualizer = <a class="code hl_class" href="classneuroexapt_1_1utils_1_1visualization_1_1ModelVisualizer.html">ModelVisualizer</a>(terminal_width=80)</div>
+<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>    visualizer.visualize_model(</div>
+<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>        model, </div>
+<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>        sample_input=sample_input,</div>
+<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>        title=<span class="stringliteral">&quot;Compact View&quot;</span></div>
+<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>    )</div>
+<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>    </div>
+<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>    <span class="comment"># Wide terminal</span></div>
+<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>    print(<span class="stringliteral">&quot;\n--- Wide Terminal (140 chars) ---&quot;</span>)</div>
+<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>    visualizer = <a class="code hl_class" href="classneuroexapt_1_1utils_1_1visualization_1_1ModelVisualizer.html">ModelVisualizer</a>(terminal_width=140)</div>
+<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>    visualizer.visualize_model(</div>
+<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span>        model,</div>
+<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>        sample_input=sample_input,</div>
+<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span>        title=<span class="stringliteral">&quot;Expanded View&quot;</span></div>
+<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span>    )</div>
+<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span> </div>
+<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span> </div>
+</div>
+<div class="foldopen" id="foldopen00291" data-start="" data-end="">
+<div class="line"><a id="l00291" name="l00291"></a><span class="lineno"><a class="line" href="namespaceexamples_1_1advanced__visualization__demo.html#a0f0dc308a43c088b8ea8ed9d18976364">  291</a></span><span class="keyword">def </span><a class="code hl_function" href="namespaceexamples_1_1advanced__visualization__demo.html#a0f0dc308a43c088b8ea8ed9d18976364">demo_extreme_complexity</a>():</div>
+<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span>    <span class="stringliteral">&quot;&quot;&quot;Demo visualization of extremely complex architecture.&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span>    print(<span class="stringliteral">&quot;\n&quot;</span> + <span class="stringliteral">&quot;=&quot;</span>*100)</div>
+<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span>    print(<span class="stringliteral">&quot;DEMO 5: Extreme Complexity Handling&quot;</span>)</div>
+<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span>    print(<span class="stringliteral">&quot;This shows how the visualization handles very complex architectures gracefully&quot;</span>)</div>
+<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span>    print(<span class="stringliteral">&quot;=&quot;</span>*100)</div>
+<div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span>    </div>
+<div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span>    <span class="keyword">class </span>ExtremeNet(nn.Module):</div>
+<div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span>        <span class="keyword">def </span>__init__(self):</div>
+<div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span>            super().__init__()</div>
+<div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span>            <span class="comment"># Create 5 primary branches</span></div>
+<div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span>            <span class="keywordflow">for</span> i <span class="keywordflow">in</span> range(5):</div>
+<div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span>                setattr(self, f<span class="stringliteral">&#39;branch_{i}&#39;</span>, nn.Sequential(</div>
+<div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span>                    nn.Conv2d(3, 16 * (i + 1), 3, padding=1),</div>
+<div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span>                    nn.BatchNorm2d(16 * (i + 1)),</div>
+<div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span>                    nn.ReLU()</div>
+<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span>                ))</div>
+<div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span>            </div>
+<div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span>            <span class="comment"># Multiple fusion layers</span></div>
+<div class="line"><a id="l00310" name="l00310"></a><span class="lineno"><a class="line" href="namespaceexamples_1_1advanced__visualization__demo.html#a5f289fffbdfa4f0c11e3dc0382ab42aa">  310</a></span>            self.fusion_1 = nn.Conv2d(16 + 32, 64, 1)</div>
+<div class="line"><a id="l00311" name="l00311"></a><span class="lineno"><a class="line" href="namespaceexamples_1_1advanced__visualization__demo.html#a16ef94612f74d3b186aa86df3e6f510b">  311</a></span>            self.fusion_2 = nn.Conv2d(48 + 64, 128, 1)</div>
+<div class="line"><a id="l00312" name="l00312"></a><span class="lineno"><a class="line" href="namespaceexamples_1_1advanced__visualization__demo.html#af58b4e70db65b429fe9be3e2b3a8143a">  312</a></span>            self.fusion_3 = nn.Conv2d(80 + 64, 256, 1)</div>
+<div class="line"><a id="l00313" name="l00313"></a><span class="lineno"><a class="line" href="namespaceexamples_1_1advanced__visualization__demo.html#ac972c5b0037ae94122151a815b719d9c">  313</a></span>            self.fusion_final = nn.Conv2d(128 + 256, 512, 1)</div>
+<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span>            </div>
+<div class="line"><a id="l00315" name="l00315"></a><span class="lineno"><a class="line" href="namespaceexamples_1_1advanced__visualization__demo.html#a63d4a756dead18439418e59b5cbdb552">  315</a></span>            self.classifier = nn.Linear(512, 1000)</div>
+<div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span>    </div>
+<div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span>    model = ExtremeNet()</div>
+<div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span>    ascii_model_graph(model)</div>
+<div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span> </div>
+<div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span> </div>
+</div>
+<div class="foldopen" id="foldopen00321" data-start="" data-end="">
+<div class="line"><a id="l00321" name="l00321"></a><span class="lineno"><a class="line" href="namespaceexamples_1_1advanced__visualization__demo.html#a0157b96f80d5bc1bf5164a15ca2c8ee3">  321</a></span><span class="keyword">def </span><a class="code hl_function" href="namespaceexamples_1_1advanced__visualization__demo.html#a0157b96f80d5bc1bf5164a15ca2c8ee3">main</a>():</div>
+<div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span>    <span class="stringliteral">&quot;&quot;&quot;Run all visualization demos.&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span>    print(<span class="stringliteral">&quot;\n&quot;</span> + <span class="stringliteral">&quot;🎨 &quot;</span> * 20)</div>
+<div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span>    print(<span class="stringliteral">&quot;ADVANCED NEURO EXAPT VISUALIZATION DEMONSTRATIONS&quot;</span>)</div>
+<div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span>    print(<span class="stringliteral">&quot;Showcasing Complex Neural Architecture Visualization&quot;</span>)</div>
+<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>    print(<span class="stringliteral">&quot;🎨 &quot;</span> * 20)</div>
+<div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span>    </div>
+<div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>    <span class="comment"># Run demos</span></div>
+<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>    <a class="code hl_function" href="namespaceexamples_1_1advanced__visualization__demo.html#a7c033981c082f46cabfa009d9f9ed973">demo_basic_multi_branch</a>()</div>
+<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span>    </div>
+<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>    print(<span class="stringliteral">&quot;\n\nPress Enter to continue to next demo...&quot;</span>)</div>
+<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span>    input()</div>
+<div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span>    </div>
+<div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span>    <a class="code hl_function" href="namespaceexamples_1_1advanced__visualization__demo.html#a775c83e0bfe7c8fa7d4a3e3c58535afe">demo_dynamic_architecture</a>()</div>
+<div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span>    </div>
+<div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span>    print(<span class="stringliteral">&quot;\n\nPress Enter to continue to next demo...&quot;</span>)</div>
+<div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span>    input()</div>
+<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>    </div>
+<div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>    <a class="code hl_function" href="namespaceexamples_1_1advanced__visualization__demo.html#a9c7dadc53f1cf31b374fa4b5084c12c9">demo_architecture_evolution</a>()</div>
+<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>    </div>
+<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>    print(<span class="stringliteral">&quot;\n\nPress Enter to continue to next demo...&quot;</span>)</div>
+<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span>    input()</div>
+<div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span>    </div>
+<div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span>    <a class="code hl_function" href="namespaceexamples_1_1advanced__visualization__demo.html#a67433780d72e4f051b2bbd08b99b9037">demo_custom_visualization</a>()</div>
+<div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span>    </div>
+<div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span>    print(<span class="stringliteral">&quot;\n\nPress Enter to continue to final demo...&quot;</span>)</div>
+<div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span>    input()</div>
+<div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span>    </div>
+<div class="line"><a id="l00349" name="l00349"></a><span class="lineno">  349</span>    <a class="code hl_function" href="namespaceexamples_1_1advanced__visualization__demo.html#a0f0dc308a43c088b8ea8ed9d18976364">demo_extreme_complexity</a>()</div>
+<div class="line"><a id="l00350" name="l00350"></a><span class="lineno">  350</span>    </div>
+<div class="line"><a id="l00351" name="l00351"></a><span class="lineno">  351</span>    print(<span class="stringliteral">&quot;\n&quot;</span> + <span class="stringliteral">&quot;=&quot;</span>*100)</div>
+<div class="line"><a id="l00352" name="l00352"></a><span class="lineno">  352</span>    print(<span class="stringliteral">&quot;✅ All demos completed!&quot;</span>)</div>
+<div class="line"><a id="l00353" name="l00353"></a><span class="lineno">  353</span>    print(<span class="stringliteral">&quot;\nKey Features Demonstrated:&quot;</span>)</div>
+<div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span>    print(<span class="stringliteral">&quot;1. Multi-level branching with perfect alignment&quot;</span>)</div>
+<div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span>    print(<span class="stringliteral">&quot;2. Multiple fusion points with clear data flow&quot;</span>)</div>
+<div class="line"><a id="l00356" name="l00356"></a><span class="lineno">  356</span>    print(<span class="stringliteral">&quot;3. Architecture evolution tracking&quot;</span>)</div>
+<div class="line"><a id="l00357" name="l00357"></a><span class="lineno">  357</span>    print(<span class="stringliteral">&quot;4. Adaptive layout for different terminal sizes&quot;</span>)</div>
+<div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span>    print(<span class="stringliteral">&quot;5. Graceful handling of extreme complexity&quot;</span>)</div>
+<div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span>    print(<span class="stringliteral">&quot;\nThe visualization module provides pixel-perfect alignment&quot;</span>)</div>
+<div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span>    print(<span class="stringliteral">&quot;for arbitrarily complex neural architectures!&quot;</span>)</div>
+<div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span>    print(<span class="stringliteral">&quot;=&quot;</span>*100)</div>
+<div class="line"><a id="l00362" name="l00362"></a><span class="lineno">  362</span> </div>
+<div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span> </div>
+</div>
+<div class="line"><a id="l00364" name="l00364"></a><span class="lineno">  364</span><span class="keywordflow">if</span> __name__ == <span class="stringliteral">&quot;__main__&quot;</span>:</div>
+<div class="line"><a id="l00365" name="l00365"></a><span class="lineno">  365</span>    <a class="code hl_function" href="namespaceexamples_1_1advanced__visualization__demo.html#a0157b96f80d5bc1bf5164a15ca2c8ee3">main</a>() </div>
+<div class="ttc" id="aclassexamples_1_1advanced__visualization__demo_1_1DynamicMultiLevelNet_html"><div class="ttname"><a href="classexamples_1_1advanced__visualization__demo_1_1DynamicMultiLevelNet.html">examples.advanced_visualization_demo.DynamicMultiLevelNet</a></div><div class="ttdef"><b>Definition</b> <a href="advanced__visualization__demo_8py_source.html#l00115">advanced_visualization_demo.py:115</a></div></div>
+<div class="ttc" id="aclassexamples_1_1advanced__visualization__demo_1_1DynamicMultiLevelNet_html_a13302aa09a22a2306ebe13e285af07b3"><div class="ttname"><a href="classexamples_1_1advanced__visualization__demo_1_1DynamicMultiLevelNet.html#a13302aa09a22a2306ebe13e285af07b3">examples.advanced_visualization_demo.DynamicMultiLevelNet.branch_visual</a></div><div class="ttdeci">branch_visual</div><div class="ttdef"><b>Definition</b> <a href="advanced__visualization__demo_8py_source.html#l00124">advanced_visualization_demo.py:124</a></div></div>
+<div class="ttc" id="aclassexamples_1_1advanced__visualization__demo_1_1DynamicMultiLevelNet_html_a2c0309505724da44b7e0db9ddef01de9"><div class="ttname"><a href="classexamples_1_1advanced__visualization__demo_1_1DynamicMultiLevelNet.html#a2c0309505724da44b7e0db9ddef01de9">examples.advanced_visualization_demo.DynamicMultiLevelNet.forward</a></div><div class="ttdeci">forward(self, x)</div><div class="ttdef"><b>Definition</b> <a href="advanced__visualization__demo_8py_source.html#l00172">advanced_visualization_demo.py:172</a></div></div>
+<div class="ttc" id="aclassexamples_1_1advanced__visualization__demo_1_1DynamicMultiLevelNet_html_a3c673db085e87b10024be460df307a1e"><div class="ttname"><a href="classexamples_1_1advanced__visualization__demo_1_1DynamicMultiLevelNet.html#a3c673db085e87b10024be460df307a1e">examples.advanced_visualization_demo.DynamicMultiLevelNet.branch_semantic</a></div><div class="ttdeci">branch_semantic</div><div class="ttdef"><b>Definition</b> <a href="advanced__visualization__demo_8py_source.html#l00149">advanced_visualization_demo.py:149</a></div></div>
+<div class="ttc" id="aclassexamples_1_1advanced__visualization__demo_1_1DynamicMultiLevelNet_html_a3e39d088e360697b9f903b0d1c9f9a6c"><div class="ttname"><a href="classexamples_1_1advanced__visualization__demo_1_1DynamicMultiLevelNet.html#a3e39d088e360697b9f903b0d1c9f9a6c">examples.advanced_visualization_demo.DynamicMultiLevelNet.fusion_high</a></div><div class="ttdeci">fusion_high</div><div class="ttdef"><b>Definition</b> <a href="advanced__visualization__demo_8py_source.html#l00168">advanced_visualization_demo.py:168</a></div></div>
+<div class="ttc" id="aclassexamples_1_1advanced__visualization__demo_1_1DynamicMultiLevelNet_html_a72d93d79551c9296cc8b33e158250791"><div class="ttname"><a href="classexamples_1_1advanced__visualization__demo_1_1DynamicMultiLevelNet.html#a72d93d79551c9296cc8b33e158250791">examples.advanced_visualization_demo.DynamicMultiLevelNet.final_pool</a></div><div class="ttdeci">final_pool</div><div class="ttdef"><b>Definition</b> <a href="advanced__visualization__demo_8py_source.html#l00169">advanced_visualization_demo.py:169</a></div></div>
+<div class="ttc" id="aclassexamples_1_1advanced__visualization__demo_1_1DynamicMultiLevelNet_html_a817899215a3a5813f229f37a687fdfb6"><div class="ttname"><a href="classexamples_1_1advanced__visualization__demo_1_1DynamicMultiLevelNet.html#a817899215a3a5813f229f37a687fdfb6">examples.advanced_visualization_demo.DynamicMultiLevelNet.fusion_low</a></div><div class="ttdeci">fusion_low</div><div class="ttdef"><b>Definition</b> <a href="advanced__visualization__demo_8py_source.html#l00146">advanced_visualization_demo.py:146</a></div></div>
+<div class="ttc" id="aclassexamples_1_1advanced__visualization__demo_1_1DynamicMultiLevelNet_html_a89a0408aa95bac5afd20e35ae21c05ab"><div class="ttname"><a href="classexamples_1_1advanced__visualization__demo_1_1DynamicMultiLevelNet.html#a89a0408aa95bac5afd20e35ae21c05ab">examples.advanced_visualization_demo.DynamicMultiLevelNet.__init__</a></div><div class="ttdeci">__init__(self, num_classes=10)</div><div class="ttdef"><b>Definition</b> <a href="advanced__visualization__demo_8py_source.html#l00120">advanced_visualization_demo.py:120</a></div></div>
+<div class="ttc" id="aclassexamples_1_1advanced__visualization__demo_1_1DynamicMultiLevelNet_html_a8c0172aa633913d2d413d1112f049e48"><div class="ttname"><a href="classexamples_1_1advanced__visualization__demo_1_1DynamicMultiLevelNet.html#a8c0172aa633913d2d413d1112f049e48">examples.advanced_visualization_demo.DynamicMultiLevelNet.branch_texture</a></div><div class="ttdeci">branch_texture</div><div class="ttdef"><b>Definition</b> <a href="advanced__visualization__demo_8py_source.html#l00131">advanced_visualization_demo.py:131</a></div></div>
+<div class="ttc" id="aclassexamples_1_1advanced__visualization__demo_1_1DynamicMultiLevelNet_html_a92cdf5688acdaa474407f0bd030e6e99"><div class="ttname"><a href="classexamples_1_1advanced__visualization__demo_1_1DynamicMultiLevelNet.html#a92cdf5688acdaa474407f0bd030e6e99">examples.advanced_visualization_demo.DynamicMultiLevelNet.branch_edge</a></div><div class="ttdeci">branch_edge</div><div class="ttdef"><b>Definition</b> <a href="advanced__visualization__demo_8py_source.html#l00138">advanced_visualization_demo.py:138</a></div></div>
+<div class="ttc" id="aclassexamples_1_1advanced__visualization__demo_1_1DynamicMultiLevelNet_html_af563b0ef6c82c21205aee792a043f2ed"><div class="ttname"><a href="classexamples_1_1advanced__visualization__demo_1_1DynamicMultiLevelNet.html#af563b0ef6c82c21205aee792a043f2ed">examples.advanced_visualization_demo.DynamicMultiLevelNet.branch_context</a></div><div class="ttdeci">branch_context</div><div class="ttdef"><b>Definition</b> <a href="advanced__visualization__demo_8py_source.html#l00158">advanced_visualization_demo.py:158</a></div></div>
+<div class="ttc" id="aclassexamples_1_1advanced__visualization__demo_1_1DynamicMultiLevelNet_html_af5c9214e8005bf5edde91ca8057b8648"><div class="ttname"><a href="classexamples_1_1advanced__visualization__demo_1_1DynamicMultiLevelNet.html#af5c9214e8005bf5edde91ca8057b8648">examples.advanced_visualization_demo.DynamicMultiLevelNet.classifier</a></div><div class="ttdeci">classifier</div><div class="ttdef"><b>Definition</b> <a href="advanced__visualization__demo_8py_source.html#l00170">advanced_visualization_demo.py:170</a></div></div>
+<div class="ttc" id="aclassexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet_html"><div class="ttname"><a href="classexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet.html">examples.advanced_visualization_demo.MultiLevelBranchNet</a></div><div class="ttdef"><b>Definition</b> <a href="advanced__visualization__demo_8py_source.html#l00015">advanced_visualization_demo.py:15</a></div></div>
+<div class="ttc" id="aclassexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet_html_a009fa4cdd50a435140e7b4a5b9f08411"><div class="ttname"><a href="classexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet.html#a009fa4cdd50a435140e7b4a5b9f08411">examples.advanced_visualization_demo.MultiLevelBranchNet.fusion</a></div><div class="ttdeci">fusion</div><div class="ttdef"><b>Definition</b> <a href="advanced__visualization__demo_8py_source.html#l00074">advanced_visualization_demo.py:74</a></div></div>
+<div class="ttc" id="aclassexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet_html_a0c94207944f1f46c08c83c15ec7d2e66"><div class="ttname"><a href="classexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet.html#a0c94207944f1f46c08c83c15ec7d2e66">examples.advanced_visualization_demo.MultiLevelBranchNet.main_branch_shallow</a></div><div class="ttdeci">main_branch_shallow</div><div class="ttdef"><b>Definition</b> <a href="advanced__visualization__demo_8py_source.html#l00064">advanced_visualization_demo.py:64</a></div></div>
+<div class="ttc" id="aclassexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet_html_a2d08d555306cd648feb1fe0a6988ae65"><div class="ttname"><a href="classexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet.html#a2d08d555306cd648feb1fe0a6988ae65">examples.advanced_visualization_demo.MultiLevelBranchNet.final_conv</a></div><div class="ttdeci">final_conv</div><div class="ttdef"><b>Definition</b> <a href="advanced__visualization__demo_8py_source.html#l00077">advanced_visualization_demo.py:77</a></div></div>
+<div class="ttc" id="aclassexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet_html_a35588ba366056e1c605111a2f2c6df48"><div class="ttname"><a href="classexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet.html#a35588ba366056e1c605111a2f2c6df48">examples.advanced_visualization_demo.MultiLevelBranchNet.main_branch</a></div><div class="ttdeci">main_branch</div><div class="ttdef"><b>Definition</b> <a href="advanced__visualization__demo_8py_source.html#l00027">advanced_visualization_demo.py:27</a></div></div>
+<div class="ttc" id="aclassexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet_html_a5cdab621382153fa2ef629c7dc025eed"><div class="ttname"><a href="classexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet.html#a5cdab621382153fa2ef629c7dc025eed">examples.advanced_visualization_demo.MultiLevelBranchNet.global_pool</a></div><div class="ttdeci">global_pool</div><div class="ttdef"><b>Definition</b> <a href="advanced__visualization__demo_8py_source.html#l00078">advanced_visualization_demo.py:78</a></div></div>
+<div class="ttc" id="aclassexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet_html_a62ebe91e471bed6d1580933254a50c94"><div class="ttname"><a href="classexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet.html#a62ebe91e471bed6d1580933254a50c94">examples.advanced_visualization_demo.MultiLevelBranchNet.attention_branch</a></div><div class="ttdeci">attention_branch</div><div class="ttdef"><b>Definition</b> <a href="advanced__visualization__demo_8py_source.html#l00045">advanced_visualization_demo.py:45</a></div></div>
+<div class="ttc" id="aclassexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet_html_a6a386bd01739b316a4fa699dc48750ef"><div class="ttname"><a href="classexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet.html#a6a386bd01739b316a4fa699dc48750ef">examples.advanced_visualization_demo.MultiLevelBranchNet.main_branch_deep</a></div><div class="ttdeci">main_branch_deep</div><div class="ttdef"><b>Definition</b> <a href="advanced__visualization__demo_8py_source.html#l00055">advanced_visualization_demo.py:55</a></div></div>
+<div class="ttc" id="aclassexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet_html_a92c61338d9fe151d24d065ae42f68fbb"><div class="ttname"><a href="classexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet.html#a92c61338d9fe151d24d065ae42f68fbb">examples.advanced_visualization_demo.MultiLevelBranchNet.forward</a></div><div class="ttdeci">forward(self, x)</div><div class="ttdef"><b>Definition</b> <a href="advanced__visualization__demo_8py_source.html#l00086">advanced_visualization_demo.py:86</a></div></div>
+<div class="ttc" id="aclassexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet_html_a9ea3c0969609a038f5fc78766dfa40c7"><div class="ttname"><a href="classexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet.html#a9ea3c0969609a038f5fc78766dfa40c7">examples.advanced_visualization_demo.MultiLevelBranchNet.main_fusion</a></div><div class="ttdeci">main_fusion</div><div class="ttdef"><b>Definition</b> <a href="advanced__visualization__demo_8py_source.html#l00071">advanced_visualization_demo.py:71</a></div></div>
+<div class="ttc" id="aclassexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet_html_abbfba073d5c11ea5b6165034ed671825"><div class="ttname"><a href="classexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet.html#abbfba073d5c11ea5b6165034ed671825">examples.advanced_visualization_demo.MultiLevelBranchNet.classifier</a></div><div class="ttdeci">classifier</div><div class="ttdef"><b>Definition</b> <a href="advanced__visualization__demo_8py_source.html#l00079">advanced_visualization_demo.py:79</a></div></div>
+<div class="ttc" id="aclassexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet_html_af0b65d8081b851d27fe5ff3ab8353477"><div class="ttname"><a href="classexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet.html#af0b65d8081b851d27fe5ff3ab8353477">examples.advanced_visualization_demo.MultiLevelBranchNet.__init__</a></div><div class="ttdeci">__init__(self)</div><div class="ttdef"><b>Definition</b> <a href="advanced__visualization__demo_8py_source.html#l00023">advanced_visualization_demo.py:23</a></div></div>
+<div class="ttc" id="aclassexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet_html_aff59f1f930988f73b94359b8a47b0bcc"><div class="ttname"><a href="classexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet.html#aff59f1f930988f73b94359b8a47b0bcc">examples.advanced_visualization_demo.MultiLevelBranchNet.secondary_branch</a></div><div class="ttdeci">secondary_branch</div><div class="ttdef"><b>Definition</b> <a href="advanced__visualization__demo_8py_source.html#l00036">advanced_visualization_demo.py:36</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1utils_1_1visualization_1_1ModelVisualizer_html"><div class="ttname"><a href="classneuroexapt_1_1utils_1_1visualization_1_1ModelVisualizer.html">neuroexapt.utils.visualization.ModelVisualizer</a></div><div class="ttdef"><b>Definition</b> <a href="visualization_8py_source.html#l00419">visualization.py:419</a></div></div>
+<div class="ttc" id="anamespaceexamples_1_1advanced__visualization__demo_html_a0157b96f80d5bc1bf5164a15ca2c8ee3"><div class="ttname"><a href="namespaceexamples_1_1advanced__visualization__demo.html#a0157b96f80d5bc1bf5164a15ca2c8ee3">examples.advanced_visualization_demo.main</a></div><div class="ttdeci">main()</div><div class="ttdef"><b>Definition</b> <a href="advanced__visualization__demo_8py_source.html#l00321">advanced_visualization_demo.py:321</a></div></div>
+<div class="ttc" id="anamespaceexamples_1_1advanced__visualization__demo_html_a0f0dc308a43c088b8ea8ed9d18976364"><div class="ttname"><a href="namespaceexamples_1_1advanced__visualization__demo.html#a0f0dc308a43c088b8ea8ed9d18976364">examples.advanced_visualization_demo.demo_extreme_complexity</a></div><div class="ttdeci">demo_extreme_complexity()</div><div class="ttdef"><b>Definition</b> <a href="advanced__visualization__demo_8py_source.html#l00291">advanced_visualization_demo.py:291</a></div></div>
+<div class="ttc" id="anamespaceexamples_1_1advanced__visualization__demo_html_a67433780d72e4f051b2bbd08b99b9037"><div class="ttname"><a href="namespaceexamples_1_1advanced__visualization__demo.html#a67433780d72e4f051b2bbd08b99b9037">examples.advanced_visualization_demo.demo_custom_visualization</a></div><div class="ttdeci">demo_custom_visualization()</div><div class="ttdef"><b>Definition</b> <a href="advanced__visualization__demo_8py_source.html#l00262">advanced_visualization_demo.py:262</a></div></div>
+<div class="ttc" id="anamespaceexamples_1_1advanced__visualization__demo_html_a775c83e0bfe7c8fa7d4a3e3c58535afe"><div class="ttname"><a href="namespaceexamples_1_1advanced__visualization__demo.html#a775c83e0bfe7c8fa7d4a3e3c58535afe">examples.advanced_visualization_demo.demo_dynamic_architecture</a></div><div class="ttdeci">demo_dynamic_architecture()</div><div class="ttdef"><b>Definition</b> <a href="advanced__visualization__demo_8py_source.html#l00211">advanced_visualization_demo.py:211</a></div></div>
+<div class="ttc" id="anamespaceexamples_1_1advanced__visualization__demo_html_a7c033981c082f46cabfa009d9f9ed973"><div class="ttname"><a href="namespaceexamples_1_1advanced__visualization__demo.html#a7c033981c082f46cabfa009d9f9ed973">examples.advanced_visualization_demo.demo_basic_multi_branch</a></div><div class="ttdeci">demo_basic_multi_branch()</div><div class="ttdef"><b>Definition</b> <a href="advanced__visualization__demo_8py_source.html#l00198">advanced_visualization_demo.py:198</a></div></div>
+<div class="ttc" id="anamespaceexamples_1_1advanced__visualization__demo_html_a9c7dadc53f1cf31b374fa4b5084c12c9"><div class="ttname"><a href="namespaceexamples_1_1advanced__visualization__demo.html#a9c7dadc53f1cf31b374fa4b5084c12c9">examples.advanced_visualization_demo.demo_architecture_evolution</a></div><div class="ttdeci">demo_architecture_evolution()</div><div class="ttdef"><b>Definition</b> <a href="advanced__visualization__demo_8py_source.html#l00224">advanced_visualization_demo.py:224</a></div></div>
+<div class="ttc" id="anamespaceneuroexapt_1_1utils_1_1visualization_html"><div class="ttname"><a href="namespaceneuroexapt_1_1utils_1_1visualization.html">neuroexapt.utils.visualization</a></div><div class="ttdef"><b>Definition</b> <a href="visualization_8py_source.html#l00001">visualization.py:1</a></div></div>
+</div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
+<!-- do not remove this div, it is closed by doxygen! -->
+</div>
+<!-- Custom Footer -->
+<div style="background: #f8f9fa; border-top: 1px solid #e9ecef; margin-top: 50px; padding: 30px 0; text-align: center;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-bottom: 20px;">
+            <!-- Project Info -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🧠 NeuroExapt</h4>
+                <p style="color: #6c757d; margin: 0; font-size: 0.9em;">
+                    Advanced Neural Architecture Search and Dynamic Morphogenesis Framework for next-generation AI research.
+                </p>
+            </div>
+            <!-- Quick Links -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">📚 Quick Links</h4>
+                <div style="text-align: left;">
+                    <a href="index.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🏠 Home</a>
+                    <a href="modules.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📦 Modules</a>
+                    <a href="examples.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💡 Examples</a>
+                    <a href="files.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📁 Files</a>
+                </div>
+            </div>
+            <!-- Resources -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🔗 Resources</h4>
+                <div style="text-align: left;">
+                    <a href="https://github.com/your-username/neuroexapt" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💻 GitHub Repository</a>
+                    <a href="https://github.com/your-username/neuroexapt/issues" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🐛 Issue Tracker</a>
+                    <a href="https://github.com/your-username/neuroexapt/wiki" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📖 Wiki</a>
+                    <a href="https://github.com/your-username/neuroexapt/releases" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🚀 Releases</a>
+                </div>
+            </div>
+        </div>
+        <hr style="border: 0; height: 1px; background: #e9ecef; margin: 20px 0;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+            <div style="color: #6c757d; font-size: 0.9em;">
+                © 2024 NeuroExapt Project. Generated with 
+                <a href="https://www.doxygen.nl/index.html" style="color: #667eea; text-decoration: none;">Doxygen 1.9.8</a>
+            </div>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <span style="font-size: 0.9em; color: #6c757d;">Built with ❤️ for AI Research</span>
+                <div style="display: flex; gap: 10px;">
+                    <span style="background: #28a745; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">🟢 Active</span>
+                    <span style="background: #17a2b8; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">v3.0</span>
+                </div>
+            </div>
+        </div>
+        <!-- Technology Stack -->
+        <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #e9ecef;">
+            <div style="font-size: 0.8em; color: #868e96; text-align: center;">
+                <strong>Built with:</strong>
+                <span style="margin: 0 5px;">🐍 Python</span>
+                <span style="margin: 0 5px;">🔥 PyTorch</span>
+                <span style="margin: 0 5px;">⚡ CUDA</span>
+                <span style="margin: 0 5px;">🧮 NumPy</span>
+                <span style="margin: 0 5px;">📊 Matplotlib</span>
+                <span style="margin: 0 5px;">🚀 Triton</span>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Back to top button -->
+<div id="back-to-top" style="position: fixed; bottom: 20px; right: 20px; display: none; z-index: 1000;">
+    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" 
+            style="background: #667eea; color: white; border: none; padding: 10px 15px; border-radius: 50%; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,0.2); font-size: 16px;">
+        ⬆️
+    </button>
+</div>
+<script>
+// Back to top button functionality
+window.addEventListener('scroll', function() {
+    const backToTop = document.getElementById('back-to-top');
+    if (window.pageYOffset > 300) {
+        backToTop.style.display = 'block';
+    } else {
+        backToTop.style.display = 'none';
+    }
+});
+// Enhanced search functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Add search enhancement if search box exists
+    const searchBox = document.getElementById('MSearchField');
+    if (searchBox) {
+        searchBox.placeholder = 'Search documentation... 🔍';
+        searchBox.style.borderRadius = '20px';
+        searchBox.style.padding = '8px 15px';
+    }
+    // Add copy code button to code blocks
+    const codeBlocks = document.querySelectorAll('.fragment');
+    codeBlocks.forEach(function(block) {
+        const copyBtn = document.createElement('button');
+        copyBtn.innerHTML = '📋';
+        copyBtn.title = 'Copy code';
+        copyBtn.style.cssText = 'position: absolute; top: 10px; right: 10px; background: #667eea; color: white; border: none; padding: 5px; border-radius: 3px; cursor: pointer; font-size: 12px;';
+        block.style.position = 'relative';
+        block.appendChild(copyBtn);
+        copyBtn.addEventListener('click', function() {
+            const text = block.textContent;
+            navigator.clipboard.writeText(text).then(function() {
+                copyBtn.innerHTML = '✅';
+                setTimeout(function() {
+                    copyBtn.innerHTML = '📋';
+                }, 2000);
+            });
+        });
+    });
+});
+// Dark mode toggle (optional)
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+}
+// Load saved dark mode preference
+if (localStorage.getItem('darkMode') === 'true') {
+    document.body.classList.add('dark-mode');
+}
+</script>
+</body>
+</html>

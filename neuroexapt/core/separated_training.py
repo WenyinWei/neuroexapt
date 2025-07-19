@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+"""
+\defgroup group_separated_training Separated Training
+\ingroup core
+Separated Training module for NeuroExapt framework.
+"""
+
+
 分离训练策略
 
 实现架构参数（alphas）和网络权重参数的分离训练：

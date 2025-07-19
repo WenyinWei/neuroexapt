@@ -1,0 +1,689 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="description" content="NeuroExapt - Advanced Neural Architecture Search and Dynamic Morphogenesis Framework">
+    <meta name="keywords" content="neural architecture search, dynamic morphogenesis, deep learning, AI, PyTorch">
+    <meta name="author" content="NeuroExapt Team">
+    <meta property="og:title" content="NeuroExapt Documentation">
+    <meta property="og:description" content="Advanced Neural Architecture Search Framework">
+    <meta property="og:type" content="website">
+
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>NeuroExapt: examples/demo_dynamic_architecture_fast.py Source File</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="custom.css" rel="stylesheet" type="text/css"/>
+<!-- NeuroExapt Custom Styles -->
+<style>
+/* Enhanced header styling */
+.header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+.header h1 {
+    margin: 0;
+    font-size: 2.5em;
+    font-weight: 300;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+.header .subtitle {
+    font-size: 1.2em;
+    opacity: 0.9;
+    margin-top: 10px;
+}
+/* Enhanced navigation */
+.tablist {
+    background: #f8f9fa;
+    border-bottom: 2px solid #e9ecef;
+}
+.tablist li.current a {
+    background: #667eea;
+    color: white;
+}
+/* Improved content layout */
+.contents {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+/* Code highlighting */
+.fragment {
+    background: #f8f9fa;
+    border-left: 4px solid #667eea;
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 0 8px 8px 0;
+}
+/* Enhanced tables */
+table.memberdecls {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 20px 0;
+}
+table.memberdecls td {
+    border: 1px solid #e9ecef;
+    padding: 12px;
+}
+/* Better typography */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #343a40;
+}
+h1, h2, h3, h4, h5, h6 {
+    color: #495057;
+    font-weight: 500;
+}
+/* Responsive design */
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 2em;
+    }
+    .contents {
+        padding: 15px;
+    }
+}
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #1a1a1a;
+        color: #e9ecef;
+    }
+    .header {
+        background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+    }
+    .fragment {
+        background: #2d3748;
+        color: #e9ecef;
+    }
+}
+</style>
+<!-- Analytics (if needed) -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<!--
+<script async src="https://www.googletagmanager.com/gtag/js?id=GA_TRACKING_ID"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'GA_TRACKING_ID');
+</script>
+-->
+</head>
+<body>
+<!-- Custom Header -->
+<div class="header">
+    <h1>🧠 NeuroExapt</h1>
+    <div class="subtitle">Advanced Neural Architecture Search and Dynamic Morphogenesis Framework</div>
+    <div style="margin-top: 15px; font-size: 0.9em;">
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🚀 Dynamic Neural Morphogenesis
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🔬 Advanced Architecture Search
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            ⚡ High-Performance Computing
+        </span>
+    </div>
+</div>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! --><!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function() { init_codefold(0); });
+/* @license-end */
+</script>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('demo__dynamic__architecture__fast_8py_source.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">demo_dynamic_architecture_fast.py</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="demo__dynamic__architecture__fast_8py.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno"><a class="line" href="namespaceexamples_1_1demo__dynamic__architecture__fast.html">    1</a></span><span class="keyword">import</span> os</div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="keyword">import</span> sys</div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="keyword">import</span> time</div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="keyword">import</span> glob</div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="keyword">import</span> torch</div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="keyword">import</span> logging</div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="keyword">import</span> argparse</div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="keyword">import</span> torch.utils</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="keyword">import</span> torchvision.datasets <span class="keyword">as</span> dset</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="keyword">import</span> torch.backends.cudnn <span class="keyword">as</span> cudnn</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="keyword">from</span> <a class="code hl_namespace" href="namespacetorch_1_1autograd.html">torch.autograd</a> <span class="keyword">import</span> Variable</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">from</span> <a class="code hl_namespace" href="namespaceneuroexapt_1_1core_1_1model.html">neuroexapt.core.model</a> <span class="keyword">import</span> Network</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="keyword">from</span> <a class="code hl_namespace" href="namespaceneuroexapt_1_1core_1_1architect.html">neuroexapt.core.architect</a> <span class="keyword">import</span> Architect</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="comment"># Use the new utils</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="keyword">from</span> <a class="code hl_namespace" href="namespaceneuroexapt_1_1utils_1_1utils.html">neuroexapt.utils.utils</a> <span class="keyword">import</span> AvgrageMeter, accuracy</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="comment"># Add progress bar support</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="keywordflow">try</span>:</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    <span class="keyword">from</span> tqdm <span class="keyword">import</span> tqdm</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno"><a class="line" href="namespaceexamples_1_1demo__dynamic__architecture__fast.html#a389639580780fcee1ef111572cd55db8">   23</a></span>    TQDM_AVAILABLE = <span class="keyword">True</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="keywordflow">except</span> ImportError:</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    TQDM_AVAILABLE = <span class="keyword">False</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
+<div class="foldopen" id="foldopen00027" data-start="" data-end="">
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno"><a class="line" href="namespaceexamples_1_1demo__dynamic__architecture__fast.html#aa57c4464ecad87544b535208174e4a87">   27</a></span><span class="keyword">def </span><a class="code hl_function" href="namespaceexamples_1_1demo__dynamic__architecture__fast.html#aa57c4464ecad87544b535208174e4a87">log_gpu_usage</a>(msg=&quot;&quot;):</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    <span class="stringliteral">&quot;&quot;&quot;Log current GPU usage and memory.&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    <span class="keywordflow">if</span> torch.cuda.is_available():</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>        gpu_memory = torch.cuda.memory_allocated() / 1024**3  <span class="comment"># GB</span></div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>        gpu_memory_cached = torch.cuda.memory_reserved() / 1024**3  <span class="comment"># GB</span></div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>        gpu_utilization = torch.cuda.utilization() <span class="keywordflow">if</span> hasattr(torch.cuda, <span class="stringliteral">&#39;utilization&#39;</span>) <span class="keywordflow">else</span> <span class="stringliteral">&#39;N/A&#39;</span></div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>        print(f<span class="stringliteral">&quot;{msg} GPU: {gpu_memory:.2f}GB used, {gpu_memory_cached:.2f}GB cached, Util: {gpu_utilization}&quot;</span>)</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    <span class="keywordflow">else</span>:</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>        print(f<span class="stringliteral">&quot;{msg} GPU not available&quot;</span>)</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
+</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno"><a class="line" href="namespaceexamples_1_1demo__dynamic__architecture__fast.html#a73e7daf6fff51393f15801c66ebb2604">   37</a></span>parser = argparse.ArgumentParser(<span class="stringliteral">&quot;fast_cifar&quot;</span>)</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno"><a class="line" href="namespaceexamples_1_1demo__dynamic__architecture__fast.html#ac75195d2cffe3bb8811f5bd753a94138">   38</a></span>parser.add_argument(<span class="stringliteral">&#39;--data&#39;</span>, type=str, default=<span class="stringliteral">&#39;./data&#39;</span>, help=<span class="stringliteral">&#39;location of the data corpus&#39;</span>)</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno"><a class="line" href="namespaceexamples_1_1demo__dynamic__architecture__fast.html#a3fe67195635c9fb494234040f45de958">   39</a></span>parser.add_argument(<span class="stringliteral">&#39;--batch_size&#39;</span>, type=int, default=64, help=<span class="stringliteral">&#39;batch size (larger for better GPU utilization)&#39;</span>)</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno"><a class="line" href="namespaceexamples_1_1demo__dynamic__architecture__fast.html#aeea4fa14f25ab47a5dc4cbbada64c858">   40</a></span>parser.add_argument(<span class="stringliteral">&#39;--learning_rate&#39;</span>, type=float, default=0.025, help=<span class="stringliteral">&#39;init learning rate&#39;</span>)</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>parser.add_argument(<span class="stringliteral">&#39;--learning_rate_min&#39;</span>, type=float, default=0.001, help=<span class="stringliteral">&#39;min learning rate&#39;</span>)</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>parser.add_argument(<span class="stringliteral">&#39;--momentum&#39;</span>, type=float, default=0.9, help=<span class="stringliteral">&#39;momentum&#39;</span>)</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>parser.add_argument(<span class="stringliteral">&#39;--weight_decay&#39;</span>, type=float, default=3e-4, help=<span class="stringliteral">&#39;weight decay&#39;</span>)</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>parser.add_argument(<span class="stringliteral">&#39;--report_freq&#39;</span>, type=float, default=50, help=<span class="stringliteral">&#39;report frequency&#39;</span>)</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>parser.add_argument(<span class="stringliteral">&#39;--gpu&#39;</span>, type=int, default=0, help=<span class="stringliteral">&#39;gpu device id&#39;</span>)</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>parser.add_argument(<span class="stringliteral">&#39;--epochs&#39;</span>, type=int, default=10, help=<span class="stringliteral">&#39;num of training epochs&#39;</span>)</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>parser.add_argument(<span class="stringliteral">&#39;--init_channels&#39;</span>, type=int, default=16, help=<span class="stringliteral">&#39;num of init channels&#39;</span>)</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>parser.add_argument(<span class="stringliteral">&#39;--layers&#39;</span>, type=int, default=6, help=<span class="stringliteral">&#39;total number of layers (reduced for speed)&#39;</span>)</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>parser.add_argument(<span class="stringliteral">&#39;--potential_layers&#39;</span>, type=int, default=2, help=<span class="stringliteral">&#39;number of potential layers (reduced for speed)&#39;</span>)</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>parser.add_argument(<span class="stringliteral">&#39;--model_path&#39;</span>, type=str, default=<span class="stringliteral">&#39;saved_models&#39;</span>, help=<span class="stringliteral">&#39;path to save the model&#39;</span>)</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>parser.add_argument(<span class="stringliteral">&#39;--drop_path_prob&#39;</span>, type=float, default=0.3, help=<span class="stringliteral">&#39;drop path probability&#39;</span>)</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>parser.add_argument(<span class="stringliteral">&#39;--save&#39;</span>, type=str, default=<span class="stringliteral">&#39;FAST_EXP&#39;</span>, help=<span class="stringliteral">&#39;experiment name&#39;</span>)</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>parser.add_argument(<span class="stringliteral">&#39;--seed&#39;</span>, type=int, default=2, help=<span class="stringliteral">&#39;random seed&#39;</span>)</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>parser.add_argument(<span class="stringliteral">&#39;--grad_clip&#39;</span>, type=float, default=5, help=<span class="stringliteral">&#39;gradient clipping&#39;</span>)</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>parser.add_argument(<span class="stringliteral">&#39;--train_portion&#39;</span>, type=float, default=0.8, help=<span class="stringliteral">&#39;portion of training data (increased for speed)&#39;</span>)</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno"><a class="line" href="namespaceexamples_1_1demo__dynamic__architecture__fast.html#a87fb82d17e7dcf016ce53f4f7add75cf">   56</a></span>parser.add_argument(<span class="stringliteral">&#39;--unrolled&#39;</span>, action=<span class="stringliteral">&#39;store_true&#39;</span>, default=<span class="keyword">False</span>, help=<span class="stringliteral">&#39;use one-step unrolled validation loss&#39;</span>)</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>parser.add_argument(<span class="stringliteral">&#39;--arch_learning_rate&#39;</span>, type=float, default=3e-4, help=<span class="stringliteral">&#39;learning rate for arch encoding&#39;</span>)</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>parser.add_argument(<span class="stringliteral">&#39;--arch_weight_decay&#39;</span>, type=float, default=1e-3, help=<span class="stringliteral">&#39;weight decay for arch encoding&#39;</span>)</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>parser.add_argument(<span class="stringliteral">&#39;--num_workers&#39;</span>, type=int, default=4, help=<span class="stringliteral">&#39;number of data loading workers (increased for speed)&#39;</span>)</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno"><a class="line" href="namespaceexamples_1_1demo__dynamic__architecture__fast.html#a58f966fd25d3504628da27bae868c479">   60</a></span>parser.add_argument(<span class="stringliteral">&#39;--pin_memory&#39;</span>, action=<span class="stringliteral">&#39;store_true&#39;</span>, default=<span class="keyword">True</span>, help=<span class="stringliteral">&#39;pin memory for faster data loading&#39;</span>)</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>parser.add_argument(<span class="stringliteral">&#39;--disable_visualization&#39;</span>, action=<span class="stringliteral">&#39;store_true&#39;</span>, default=<span class="keyword">False</span>, help=<span class="stringliteral">&#39;disable visualization for speed&#39;</span>)</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>parser.add_argument(<span class="stringliteral">&#39;--fast_mode&#39;</span>, action=<span class="stringliteral">&#39;store_true&#39;</span>, default=<span class="keyword">False</span>, help=<span class="stringliteral">&#39;enable fast mode optimizations&#39;</span>)</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span> </div>
+<div class="foldopen" id="foldopen00065" data-start="" data-end="">
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno"><a class="line" href="namespaceexamples_1_1demo__dynamic__architecture__fast.html#afbcb1d3d41649851d03799024ee4229b">   65</a></span><span class="keyword">def </span><a class="code hl_function" href="namespaceexamples_1_1demo__dynamic__architecture__fast.html#afbcb1d3d41649851d03799024ee4229b">main</a>():</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    args = parser.parse_args()</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    args.save = <span class="stringliteral">&#39;search-{}-{}&#39;</span>.format(args.save, time.strftime(<span class="stringliteral">&quot;%Y%m%d-%H%M%S&quot;</span>))</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    <span class="keywordflow">if</span> <span class="keywordflow">not</span> os.path.exists(args.save):</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>        os.makedirs(args.save)</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    </div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    log_format = <span class="stringliteral">&#39;%(asctime)s %(message)s&#39;</span></div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    logging.basicConfig(stream=sys.stdout, level=logging.INFO,</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>        format=log_format, datefmt=<span class="stringliteral">&#39;%m/%d %I:%M:%S %p&#39;</span>)</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    </div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    <span class="keywordflow">if</span> <span class="keywordflow">not</span> torch.cuda.is_available():</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>        logging.info(<span class="stringliteral">&#39;no gpu device available&#39;</span>)</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>        sys.exit(1)</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span> </div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    <span class="comment"># Performance optimizations</span></div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    np.random.seed(args.seed)</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    torch.cuda.set_device(args.gpu)</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    cudnn.benchmark = <span class="keyword">True</span>  <span class="comment"># Optimize for consistent input sizes</span></div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    cudnn.deterministic = <span class="keyword">False</span>  <span class="comment"># Allow non-deterministic algorithms for speed</span></div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    torch.manual_seed(args.seed)</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    cudnn.enabled = <span class="keyword">True</span></div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    torch.cuda.manual_seed(args.seed)</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    </div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    <span class="comment"># Set tensor core optimizations</span></div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    torch.backends.cudnn.allow_tf32 = <span class="keyword">True</span></div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    torch.backends.cuda.matmul.allow_tf32 = <span class="keyword">True</span></div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    </div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    logging.info(<span class="stringliteral">&#39;gpu device = %d&#39;</span> % args.gpu)</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    logging.info(<span class="stringliteral">&quot;args = %s&quot;</span>, args)</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    </div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    <a class="code hl_function" href="namespaceexamples_1_1demo__dynamic__architecture__fast.html#aa57c4464ecad87544b535208174e4a87">log_gpu_usage</a>(<span class="stringliteral">&quot;Initial&quot;</span>)</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span> </div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    criterion = nn.CrossEntropyLoss()</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>    criterion = criterion.cuda()</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span> </div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    model = <a class="code hl_class" href="classneuroexapt_1_1core_1_1model_1_1Network.html">Network</a>(args.init_channels, 10, args.layers, args.potential_layers)</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    model = model.cuda()</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>    </div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    <span class="comment"># Use mixed precision if available</span></div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    scaler = torch.cuda.amp.GradScaler()</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    </div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>    logging.info(<span class="stringliteral">&quot;param size = %fM&quot;</span>, sum(p.numel() <span class="keywordflow">for</span> p <span class="keywordflow">in</span> model.parameters())/1e6)</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    <a class="code hl_function" href="namespaceexamples_1_1demo__dynamic__architecture__fast.html#aa57c4464ecad87544b535208174e4a87">log_gpu_usage</a>(<span class="stringliteral">&quot;After model creation&quot;</span>)</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span> </div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    optimizer = torch.optim.SGD(</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>        model.parameters(),</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>        args.learning_rate,</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>        momentum=args.momentum,</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>        weight_decay=args.weight_decay)</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span> </div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    <span class="comment"># Optimized data transforms</span></div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    <span class="keyword">import</span> torchvision.transforms <span class="keyword">as</span> transforms</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>    train_transform = transforms.Compose([</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>        transforms.RandomCrop(32, padding=4),</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>        transforms.RandomHorizontalFlip(),</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>        transforms.ToTensor(),</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>        transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>    ])</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span> </div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>    train_data = dset.CIFAR10(root=args.data, train=<span class="keyword">True</span>, download=<span class="keyword">True</span>, transform=train_transform)</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span> </div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>    num_train = len(train_data)</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>    indices = list(range(num_train))</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>    split = <a class="code hl_variable" href="namespaceexamples_1_1demo__dynamic__architecture__fast.html#a3fe67195635c9fb494234040f45de958">int</a>(np.floor(args.train_portion * num_train))</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span> </div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>    <span class="comment"># Use larger batch size and more workers for better GPU utilization</span></div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>    train_queue = torch.utils.data.DataLoader(</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>        train_data, batch_size=args.batch_size,</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>        sampler=torch.utils.data.SubsetRandomSampler(indices[:split]),</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>        pin_memory=args.pin_memory, num_workers=args.num_workers,</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>        persistent_workers=<span class="keyword">True</span> <span class="keywordflow">if</span> args.num_workers &gt; 0 <span class="keywordflow">else</span> <span class="keyword">False</span>)</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span> </div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>    valid_queue = torch.utils.data.DataLoader(</div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>        train_data, batch_size=args.batch_size,</div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>        sampler=torch.utils.data.SubsetRandomSampler(indices[split:num_train]),</div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>        pin_memory=args.pin_memory, num_workers=args.num_workers,</div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>        persistent_workers=<span class="keyword">True</span> <span class="keywordflow">if</span> args.num_workers &gt; 0 <span class="keywordflow">else</span> <span class="keyword">False</span>)</div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span> </div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>    scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(</div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>        optimizer, args.epochs, eta_min=args.learning_rate_min)</div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span> </div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>    architect = <a class="code hl_class" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html">Architect</a>(model, args)</div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>    architect.criterion = criterion</div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>    </div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>    logging.info(<span class="stringliteral">&quot;Initial architecture: %d layers, %d potential layers&quot;</span>, args.layers, args.potential_layers)</div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>    logging.info(<span class="stringliteral">&quot;Model parameters: %.2fM&quot;</span>, sum(p.numel() <span class="keywordflow">for</span> p <span class="keywordflow">in</span> model.parameters())/1e6)</div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>    </div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>    <span class="comment"># Create epoch progress bar if available</span></div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>    <span class="keywordflow">if</span> TQDM_AVAILABLE:</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>        epoch_pbar = tqdm(range(args.epochs), desc=<span class="stringliteral">&quot;Epochs&quot;</span>)</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>        epoch_range = epoch_pbar</div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>    <span class="keywordflow">else</span>:</div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>        epoch_pbar = <span class="keywordtype">None</span></div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>        epoch_range = range(args.epochs)</div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span> </div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>    best_valid_acc = 0.0</div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>    </div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>    <span class="keywordflow">for</span> epoch <span class="keywordflow">in</span> epoch_range:</div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>        lr = scheduler.get_lr()[0]</div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>        logging.info(<span class="stringliteral">&#39;epoch %d lr %e&#39;</span>, epoch, lr)</div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>        </div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>        <span class="comment"># Show architecture parameters occasionally</span></div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>        <span class="keywordflow">if</span> epoch % 5 == 0:</div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>            logging.info(<span class="stringliteral">&#39;alphas_normal max = %.3f&#39;</span>, torch.softmax(model.alphas_normal, dim=-1).max().item())</div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>            logging.info(<span class="stringliteral">&#39;alphas_reduce max = %.3f&#39;</span>, torch.softmax(model.alphas_reduce, dim=-1).max().item())</div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>            <span class="keywordflow">if</span> hasattr(model, <span class="stringliteral">&#39;alphas_gates&#39;</span>) <span class="keywordflow">and</span> model.alphas_gates:</div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>                gate_activations = [torch.sigmoid(gate).item() <span class="keywordflow">for</span> gate <span class="keywordflow">in</span> model.alphas_gates]</div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>                logging.info(<span class="stringliteral">&#39;gate_activations = %s&#39;</span>, [f<span class="stringliteral">&quot;{g:.3f}&quot;</span> <span class="keywordflow">for</span> g <span class="keywordflow">in</span> gate_activations])</div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span> </div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>        <span class="comment"># Training</span></div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>        train_acc, train_obj = <a class="code hl_function" href="namespaceexamples_1_1demo__dynamic__architecture__fast.html#a1b724b0aa38ddfe0b0d510e4ee621f80">train</a>(train_queue, valid_queue, model, architect, criterion, optimizer, scaler, lr, args)</div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>        logging.info(<span class="stringliteral">&#39;train_acc %.2f&#39;</span>, train_acc)</div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span> </div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>        <span class="comment"># Validation</span></div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>        valid_acc, valid_obj = <a class="code hl_function" href="namespaceexamples_1_1demo__dynamic__architecture__fast.html#ae4dd5139036f4b87ece3565e6084a1fa">infer</a>(valid_queue, model, criterion)</div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>        logging.info(<span class="stringliteral">&#39;valid_acc %.2f&#39;</span>, valid_acc)</div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>        </div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>        <span class="keywordflow">if</span> valid_acc &gt; best_valid_acc:</div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>            best_valid_acc = valid_acc</div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>            logging.info(<span class="stringliteral">&#39;New best validation accuracy: %.2f&#39;</span>, best_valid_acc)</div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span> </div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>        <span class="comment"># Update epoch progress bar if available</span></div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>        <span class="keywordflow">if</span> epoch_pbar <span class="keywordflow">is</span> <span class="keywordflow">not</span> <span class="keywordtype">None</span>:</div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>            epoch_pbar.set_postfix({</div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>                <span class="stringliteral">&#39;Train_Acc&#39;</span>: f<span class="stringliteral">&#39;{train_acc:.1f}%&#39;</span>,</div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>                <span class="stringliteral">&#39;Valid_Acc&#39;</span>: f<span class="stringliteral">&#39;{valid_acc:.1f}%&#39;</span>,</div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>                <span class="stringliteral">&#39;Best&#39;</span>: f<span class="stringliteral">&#39;{best_valid_acc:.1f}%&#39;</span>,</div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>                <span class="stringliteral">&#39;LR&#39;</span>: f<span class="stringliteral">&#39;{lr:.4f}&#39;</span></div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>            })</div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>        </div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>        <span class="comment"># Update learning rate scheduler</span></div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>        scheduler.step()</div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span> </div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>        <span class="comment"># Memory management</span></div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>        <span class="keywordflow">if</span> hasattr(architect, <span class="stringliteral">&#39;cleanup_gradients&#39;</span>):</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>            architect.cleanup_gradients()</div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span> </div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>        <span class="comment"># Log GPU usage periodically</span></div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>        <span class="keywordflow">if</span> epoch % 5 == 0:</div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>            <a class="code hl_function" href="namespaceexamples_1_1demo__dynamic__architecture__fast.html#aa57c4464ecad87544b535208174e4a87">log_gpu_usage</a>(f<span class="stringliteral">&quot;Epoch {epoch}&quot;</span>)</div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span> </div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>        <span class="comment"># Save checkpoint occasionally</span></div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>        <span class="keywordflow">if</span> epoch % 10 == 0 <span class="keywordflow">or</span> epoch == args.epochs - 1:</div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>            save_path = os.path.join(args.save, f<span class="stringliteral">&#39;checkpoint_epoch_{epoch}.pth&#39;</span>)</div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>            torch.save({</div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>                <span class="stringliteral">&#39;epoch&#39;</span>: epoch,</div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>                <span class="stringliteral">&#39;model_state_dict&#39;</span>: model.state_dict(),</div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>                <span class="stringliteral">&#39;optimizer_state_dict&#39;</span>: optimizer.state_dict(),</div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>                <span class="stringliteral">&#39;best_valid_acc&#39;</span>: best_valid_acc,</div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>            }, save_path)</div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>            logging.info(<span class="stringliteral">&quot;Checkpoint saved to %s&quot;</span>, save_path)</div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span> </div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>    genotype = model.genotype()</div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>    logging.info(<span class="stringliteral">&#39;Final Genotype = %s&#39;</span>, genotype)</div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>    logging.info(<span class="stringliteral">&#39;Best validation accuracy: %.2f&#39;</span>, best_valid_acc)</div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>    <a class="code hl_function" href="namespaceexamples_1_1demo__dynamic__architecture__fast.html#aa57c4464ecad87544b535208174e4a87">log_gpu_usage</a>(<span class="stringliteral">&quot;Final&quot;</span>)</div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span> </div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span> </div>
+</div>
+<div class="foldopen" id="foldopen00223" data-start="" data-end="">
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno"><a class="line" href="namespaceexamples_1_1demo__dynamic__architecture__fast.html#a1b724b0aa38ddfe0b0d510e4ee621f80">  223</a></span><span class="keyword">def </span><a class="code hl_function" href="namespaceexamples_1_1demo__dynamic__architecture__fast.html#a1b724b0aa38ddfe0b0d510e4ee621f80">train</a>(train_queue, valid_queue, model, architect, criterion, optimizer, scaler, lr, args):</div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>    objs = <a class="code hl_class" href="classneuroexapt_1_1utils_1_1utils_1_1AvgrageMeter.html">AvgrageMeter</a>()</div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>    top1 = <a class="code hl_class" href="classneuroexapt_1_1utils_1_1utils_1_1AvgrageMeter.html">AvgrageMeter</a>()</div>
+<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>    top5 = <a class="code hl_class" href="classneuroexapt_1_1utils_1_1utils_1_1AvgrageMeter.html">AvgrageMeter</a>()</div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span> </div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>    <span class="comment"># Create progress bar if available</span></div>
+<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>    <span class="keywordflow">if</span> TQDM_AVAILABLE:</div>
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>        train_iter = tqdm(train_queue, desc=<span class="stringliteral">&quot;Training&quot;</span>, leave=<span class="keyword">False</span>)</div>
+<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>    <span class="keywordflow">else</span>:</div>
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>        train_iter = train_queue</div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span> </div>
+<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>    <span class="keywordflow">for</span> step, (input, target) <span class="keywordflow">in</span> enumerate(train_iter):</div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>        model.train()</div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>        n = input.size(0)</div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span> </div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>        input = input.cuda(non_blocking=<span class="keyword">True</span>)</div>
+<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>        target = target.cuda(non_blocking=<span class="keyword">True</span>)</div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span> </div>
+<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>        <span class="comment"># Get validation data for architecture update</span></div>
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>        <span class="keywordflow">try</span>:</div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>            input_search, target_search = next(iter(valid_queue))</div>
+<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>        <span class="keywordflow">except</span> StopIteration:</div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>            <span class="keywordflow">continue</span></div>
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>            </div>
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>        input_search = input_search.cuda(non_blocking=<span class="keyword">True</span>)</div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>        target_search = target_search.cuda(non_blocking=<span class="keyword">True</span>)</div>
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>        </div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>        <span class="comment"># Update architecture (less frequently for speed)</span></div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>        <span class="keywordflow">if</span> step % 2 == 0:  <span class="comment"># Update architecture every 2 steps</span></div>
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>            architect.step(input, target, input_search, target_search, lr, optimizer, unrolled=args.unrolled)</div>
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span> </div>
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>        <span class="comment"># Update weights with mixed precision</span></div>
+<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>        optimizer.zero_grad()</div>
+<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>        </div>
+<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>        <span class="keywordflow">if</span> args.fast_mode:</div>
+<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>            <span class="comment"># Use mixed precision for speed</span></div>
+<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>            <span class="keyword">with</span> torch.cuda.amp.autocast():</div>
+<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>                logits = model(input)</div>
+<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>                loss = criterion(logits, target)</div>
+<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>            </div>
+<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>            scaler.scale(loss).backward()</div>
+<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>            scaler.unscale_(optimizer)</div>
+<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>            nn.utils.clip_grad_norm_(model.parameters(), args.grad_clip)</div>
+<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>            scaler.step(optimizer)</div>
+<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>            scaler.update()</div>
+<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>        <span class="keywordflow">else</span>:</div>
+<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>            logits = model(input)</div>
+<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>            loss = criterion(logits, target)</div>
+<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>            loss.backward()</div>
+<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>            nn.utils.clip_grad_norm_(model.parameters(), args.grad_clip)</div>
+<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>            optimizer.step()</div>
+<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span> </div>
+<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>        prec1, prec5 = accuracy(logits, target, topk=(1, 5))</div>
+<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>        objs.update(loss.item(), n)</div>
+<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>        top1.update(prec1.item(), n)</div>
+<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>        top5.update(prec5.item(), n)</div>
+<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span> </div>
+<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>        <span class="comment"># Update progress bar if available</span></div>
+<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>        <span class="keywordflow">if</span> TQDM_AVAILABLE:</div>
+<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>            train_iter.set_postfix({</div>
+<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>                <span class="stringliteral">&#39;Loss&#39;</span>: f<span class="stringliteral">&#39;{objs.avg:.3f}&#39;</span>,</div>
+<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>                <span class="stringliteral">&#39;Top1&#39;</span>: f<span class="stringliteral">&#39;{top1.avg:.1f}%&#39;</span>,</div>
+<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span>                <span class="stringliteral">&#39;Top5&#39;</span>: f<span class="stringliteral">&#39;{top5.avg:.1f}%&#39;</span></div>
+<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>            })</div>
+<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span> </div>
+<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span>        <span class="keywordflow">if</span> step % args.report_freq == 0:</div>
+<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span>            logging.info(<span class="stringliteral">&#39;train %03d %e %f %f&#39;</span>, step, objs.avg, top1.avg, top5.avg)</div>
+<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span> </div>
+<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span>    <span class="keywordflow">return</span> top1.avg, objs.avg</div>
+<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span> </div>
+<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span> </div>
+</div>
+<div class="foldopen" id="foldopen00294" data-start="" data-end="">
+<div class="line"><a id="l00294" name="l00294"></a><span class="lineno"><a class="line" href="namespaceexamples_1_1demo__dynamic__architecture__fast.html#ae4dd5139036f4b87ece3565e6084a1fa">  294</a></span><span class="keyword">def </span><a class="code hl_function" href="namespaceexamples_1_1demo__dynamic__architecture__fast.html#ae4dd5139036f4b87ece3565e6084a1fa">infer</a>(valid_queue, model, criterion):</div>
+<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span>    objs = <a class="code hl_class" href="classneuroexapt_1_1utils_1_1utils_1_1AvgrageMeter.html">AvgrageMeter</a>()</div>
+<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span>    top1 = <a class="code hl_class" href="classneuroexapt_1_1utils_1_1utils_1_1AvgrageMeter.html">AvgrageMeter</a>()</div>
+<div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span>    top5 = <a class="code hl_class" href="classneuroexapt_1_1utils_1_1utils_1_1AvgrageMeter.html">AvgrageMeter</a>()</div>
+<div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span>    model.eval()</div>
+<div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span> </div>
+<div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span>    <span class="comment"># Create progress bar if available</span></div>
+<div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span>    <span class="keywordflow">if</span> TQDM_AVAILABLE:</div>
+<div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span>        valid_iter = tqdm(valid_queue, desc=<span class="stringliteral">&quot;Validation&quot;</span>, leave=<span class="keyword">False</span>)</div>
+<div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span>    <span class="keywordflow">else</span>:</div>
+<div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span>        valid_iter = valid_queue</div>
+<div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span> </div>
+<div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span>    <span class="keyword">with</span> torch.no_grad():</div>
+<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span>        <span class="keywordflow">for</span> step, (input, target) <span class="keywordflow">in</span> enumerate(valid_iter):</div>
+<div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span>            input = input.cuda(non_blocking=<span class="keyword">True</span>)</div>
+<div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span>            target = target.cuda(non_blocking=<span class="keyword">True</span>)</div>
+<div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span> </div>
+<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span>            logits = model(input)</div>
+<div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span>            loss = criterion(logits, target)</div>
+<div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span> </div>
+<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span>            prec1, prec5 = accuracy(logits, target, topk=(1, 5))</div>
+<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>            n = input.size(0)</div>
+<div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span>            objs.update(loss.item(), n)</div>
+<div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span>            top1.update(prec1.item(), n)</div>
+<div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span>            top5.update(prec5.item(), n)</div>
+<div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span> </div>
+<div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span>            <span class="comment"># Update progress bar if available</span></div>
+<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span>            <span class="keywordflow">if</span> TQDM_AVAILABLE:</div>
+<div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span>                valid_iter.set_postfix({</div>
+<div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span>                    <span class="stringliteral">&#39;Loss&#39;</span>: f<span class="stringliteral">&#39;{objs.avg:.3f}&#39;</span>,</div>
+<div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span>                    <span class="stringliteral">&#39;Top1&#39;</span>: f<span class="stringliteral">&#39;{top1.avg:.1f}%&#39;</span>,</div>
+<div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span>                    <span class="stringliteral">&#39;Top5&#39;</span>: f<span class="stringliteral">&#39;{top5.avg:.1f}%&#39;</span></div>
+<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>                })</div>
+<div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span> </div>
+<div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>    <span class="keywordflow">return</span> top1.avg, objs.avg</div>
+<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span> </div>
+<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span> </div>
+</div>
+<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span><span class="keywordflow">if</span> __name__ == <span class="stringliteral">&#39;__main__&#39;</span>:</div>
+<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span>    <a class="code hl_function" href="namespaceexamples_1_1demo__dynamic__architecture__fast.html#afbcb1d3d41649851d03799024ee4229b">main</a>() </div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1architect_1_1Architect_html"><div class="ttname"><a href="classneuroexapt_1_1core_1_1architect_1_1Architect.html">neuroexapt.core.architect.Architect</a></div><div class="ttdef"><b>Definition</b> <a href="architect_8py_source.html#l00018">architect.py:18</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1model_1_1Network_html"><div class="ttname"><a href="classneuroexapt_1_1core_1_1model_1_1Network.html">neuroexapt.core.model.Network</a></div><div class="ttdef"><b>Definition</b> <a href="model_8py_source.html#l00190">model.py:190</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1utils_1_1utils_1_1AvgrageMeter_html"><div class="ttname"><a href="classneuroexapt_1_1utils_1_1utils_1_1AvgrageMeter.html">neuroexapt.utils.utils.AvgrageMeter</a></div><div class="ttdef"><b>Definition</b> <a href="utils_8py_source.html#l00011">utils.py:11</a></div></div>
+<div class="ttc" id="anamespaceexamples_1_1demo__dynamic__architecture__fast_html_a1b724b0aa38ddfe0b0d510e4ee621f80"><div class="ttname"><a href="namespaceexamples_1_1demo__dynamic__architecture__fast.html#a1b724b0aa38ddfe0b0d510e4ee621f80">examples.demo_dynamic_architecture_fast.train</a></div><div class="ttdeci">train(train_queue, valid_queue, model, architect, criterion, optimizer, scaler, lr, args)</div><div class="ttdef"><b>Definition</b> <a href="demo__dynamic__architecture__fast_8py_source.html#l00223">demo_dynamic_architecture_fast.py:223</a></div></div>
+<div class="ttc" id="anamespaceexamples_1_1demo__dynamic__architecture__fast_html_a3fe67195635c9fb494234040f45de958"><div class="ttname"><a href="namespaceexamples_1_1demo__dynamic__architecture__fast.html#a3fe67195635c9fb494234040f45de958">examples.demo_dynamic_architecture_fast.int</a></div><div class="ttdeci">int</div><div class="ttdef"><b>Definition</b> <a href="demo__dynamic__architecture__fast_8py_source.html#l00039">demo_dynamic_architecture_fast.py:39</a></div></div>
+<div class="ttc" id="anamespaceexamples_1_1demo__dynamic__architecture__fast_html_aa57c4464ecad87544b535208174e4a87"><div class="ttname"><a href="namespaceexamples_1_1demo__dynamic__architecture__fast.html#aa57c4464ecad87544b535208174e4a87">examples.demo_dynamic_architecture_fast.log_gpu_usage</a></div><div class="ttdeci">log_gpu_usage(msg=&quot;&quot;)</div><div class="ttdef"><b>Definition</b> <a href="demo__dynamic__architecture__fast_8py_source.html#l00027">demo_dynamic_architecture_fast.py:27</a></div></div>
+<div class="ttc" id="anamespaceexamples_1_1demo__dynamic__architecture__fast_html_ae4dd5139036f4b87ece3565e6084a1fa"><div class="ttname"><a href="namespaceexamples_1_1demo__dynamic__architecture__fast.html#ae4dd5139036f4b87ece3565e6084a1fa">examples.demo_dynamic_architecture_fast.infer</a></div><div class="ttdeci">infer(valid_queue, model, criterion)</div><div class="ttdef"><b>Definition</b> <a href="demo__dynamic__architecture__fast_8py_source.html#l00294">demo_dynamic_architecture_fast.py:294</a></div></div>
+<div class="ttc" id="anamespaceexamples_1_1demo__dynamic__architecture__fast_html_afbcb1d3d41649851d03799024ee4229b"><div class="ttname"><a href="namespaceexamples_1_1demo__dynamic__architecture__fast.html#afbcb1d3d41649851d03799024ee4229b">examples.demo_dynamic_architecture_fast.main</a></div><div class="ttdeci">main()</div><div class="ttdef"><b>Definition</b> <a href="demo__dynamic__architecture__fast_8py_source.html#l00065">demo_dynamic_architecture_fast.py:65</a></div></div>
+<div class="ttc" id="anamespaceneuroexapt_1_1core_1_1architect_html"><div class="ttname"><a href="namespaceneuroexapt_1_1core_1_1architect.html">neuroexapt.core.architect</a></div><div class="ttdef"><b>Definition</b> <a href="architect_8py_source.html#l00001">architect.py:1</a></div></div>
+<div class="ttc" id="anamespaceneuroexapt_1_1core_1_1model_html"><div class="ttname"><a href="namespaceneuroexapt_1_1core_1_1model.html">neuroexapt.core.model</a></div><div class="ttdef"><b>Definition</b> <a href="model_8py_source.html#l00001">model.py:1</a></div></div>
+<div class="ttc" id="anamespaceneuroexapt_1_1utils_1_1utils_html"><div class="ttname"><a href="namespaceneuroexapt_1_1utils_1_1utils.html">neuroexapt.utils.utils</a></div><div class="ttdef"><b>Definition</b> <a href="utils_8py_source.html#l00001">utils.py:1</a></div></div>
+<div class="ttc" id="anamespacetorch_1_1autograd_html"><div class="ttname"><a href="namespacetorch_1_1autograd.html">torch.autograd</a></div></div>
+</div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
+<!-- do not remove this div, it is closed by doxygen! -->
+</div>
+<!-- Custom Footer -->
+<div style="background: #f8f9fa; border-top: 1px solid #e9ecef; margin-top: 50px; padding: 30px 0; text-align: center;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-bottom: 20px;">
+            <!-- Project Info -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🧠 NeuroExapt</h4>
+                <p style="color: #6c757d; margin: 0; font-size: 0.9em;">
+                    Advanced Neural Architecture Search and Dynamic Morphogenesis Framework for next-generation AI research.
+                </p>
+            </div>
+            <!-- Quick Links -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">📚 Quick Links</h4>
+                <div style="text-align: left;">
+                    <a href="index.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🏠 Home</a>
+                    <a href="modules.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📦 Modules</a>
+                    <a href="examples.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💡 Examples</a>
+                    <a href="files.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📁 Files</a>
+                </div>
+            </div>
+            <!-- Resources -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🔗 Resources</h4>
+                <div style="text-align: left;">
+                    <a href="https://github.com/your-username/neuroexapt" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💻 GitHub Repository</a>
+                    <a href="https://github.com/your-username/neuroexapt/issues" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🐛 Issue Tracker</a>
+                    <a href="https://github.com/your-username/neuroexapt/wiki" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📖 Wiki</a>
+                    <a href="https://github.com/your-username/neuroexapt/releases" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🚀 Releases</a>
+                </div>
+            </div>
+        </div>
+        <hr style="border: 0; height: 1px; background: #e9ecef; margin: 20px 0;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+            <div style="color: #6c757d; font-size: 0.9em;">
+                © 2024 NeuroExapt Project. Generated with 
+                <a href="https://www.doxygen.nl/index.html" style="color: #667eea; text-decoration: none;">Doxygen 1.9.8</a>
+            </div>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <span style="font-size: 0.9em; color: #6c757d;">Built with ❤️ for AI Research</span>
+                <div style="display: flex; gap: 10px;">
+                    <span style="background: #28a745; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">🟢 Active</span>
+                    <span style="background: #17a2b8; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">v3.0</span>
+                </div>
+            </div>
+        </div>
+        <!-- Technology Stack -->
+        <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #e9ecef;">
+            <div style="font-size: 0.8em; color: #868e96; text-align: center;">
+                <strong>Built with:</strong>
+                <span style="margin: 0 5px;">🐍 Python</span>
+                <span style="margin: 0 5px;">🔥 PyTorch</span>
+                <span style="margin: 0 5px;">⚡ CUDA</span>
+                <span style="margin: 0 5px;">🧮 NumPy</span>
+                <span style="margin: 0 5px;">📊 Matplotlib</span>
+                <span style="margin: 0 5px;">🚀 Triton</span>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Back to top button -->
+<div id="back-to-top" style="position: fixed; bottom: 20px; right: 20px; display: none; z-index: 1000;">
+    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" 
+            style="background: #667eea; color: white; border: none; padding: 10px 15px; border-radius: 50%; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,0.2); font-size: 16px;">
+        ⬆️
+    </button>
+</div>
+<script>
+// Back to top button functionality
+window.addEventListener('scroll', function() {
+    const backToTop = document.getElementById('back-to-top');
+    if (window.pageYOffset > 300) {
+        backToTop.style.display = 'block';
+    } else {
+        backToTop.style.display = 'none';
+    }
+});
+// Enhanced search functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Add search enhancement if search box exists
+    const searchBox = document.getElementById('MSearchField');
+    if (searchBox) {
+        searchBox.placeholder = 'Search documentation... 🔍';
+        searchBox.style.borderRadius = '20px';
+        searchBox.style.padding = '8px 15px';
+    }
+    // Add copy code button to code blocks
+    const codeBlocks = document.querySelectorAll('.fragment');
+    codeBlocks.forEach(function(block) {
+        const copyBtn = document.createElement('button');
+        copyBtn.innerHTML = '📋';
+        copyBtn.title = 'Copy code';
+        copyBtn.style.cssText = 'position: absolute; top: 10px; right: 10px; background: #667eea; color: white; border: none; padding: 5px; border-radius: 3px; cursor: pointer; font-size: 12px;';
+        block.style.position = 'relative';
+        block.appendChild(copyBtn);
+        copyBtn.addEventListener('click', function() {
+            const text = block.textContent;
+            navigator.clipboard.writeText(text).then(function() {
+                copyBtn.innerHTML = '✅';
+                setTimeout(function() {
+                    copyBtn.innerHTML = '📋';
+                }, 2000);
+            });
+        });
+    });
+});
+// Dark mode toggle (optional)
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+}
+// Load saved dark mode preference
+if (localStorage.getItem('darkMode') === 'true') {
+    document.body.classList.add('dark-mode');
+}
+</script>
+</body>
+</html>

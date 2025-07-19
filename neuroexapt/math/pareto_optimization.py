@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+"""
+\defgroup group_pareto_optimization Pareto Optimization
+\ingroup core
+Pareto Optimization module for NeuroExapt framework.
+"""
+
+
 Dynamic Neural Morphogenesis - 多目标进化优化模块
 
 基于帕累托最优的多目标架构演化：

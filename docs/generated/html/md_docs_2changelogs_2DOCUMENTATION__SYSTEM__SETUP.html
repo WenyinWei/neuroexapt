@@ -1,0 +1,596 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="description" content="NeuroExapt - Advanced Neural Architecture Search and Dynamic Morphogenesis Framework">
+    <meta name="keywords" content="neural architecture search, dynamic morphogenesis, deep learning, AI, PyTorch">
+    <meta name="author" content="NeuroExapt Team">
+    <meta property="og:title" content="NeuroExapt Documentation">
+    <meta property="og:description" content="Advanced Neural Architecture Search Framework">
+    <meta property="og:type" content="website">
+
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>NeuroExapt: 🧠 NeuroExapt 文档系统部署完成! 🎉</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="custom.css" rel="stylesheet" type="text/css"/>
+<!-- NeuroExapt Custom Styles -->
+<style>
+/* Enhanced header styling */
+.header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+.header h1 {
+    margin: 0;
+    font-size: 2.5em;
+    font-weight: 300;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+.header .subtitle {
+    font-size: 1.2em;
+    opacity: 0.9;
+    margin-top: 10px;
+}
+/* Enhanced navigation */
+.tablist {
+    background: #f8f9fa;
+    border-bottom: 2px solid #e9ecef;
+}
+.tablist li.current a {
+    background: #667eea;
+    color: white;
+}
+/* Improved content layout */
+.contents {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+/* Code highlighting */
+.fragment {
+    background: #f8f9fa;
+    border-left: 4px solid #667eea;
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 0 8px 8px 0;
+}
+/* Enhanced tables */
+table.memberdecls {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 20px 0;
+}
+table.memberdecls td {
+    border: 1px solid #e9ecef;
+    padding: 12px;
+}
+/* Better typography */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #343a40;
+}
+h1, h2, h3, h4, h5, h6 {
+    color: #495057;
+    font-weight: 500;
+}
+/* Responsive design */
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 2em;
+    }
+    .contents {
+        padding: 15px;
+    }
+}
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #1a1a1a;
+        color: #e9ecef;
+    }
+    .header {
+        background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+    }
+    .fragment {
+        background: #2d3748;
+        color: #e9ecef;
+    }
+}
+</style>
+<!-- Analytics (if needed) -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<!--
+<script async src="https://www.googletagmanager.com/gtag/js?id=GA_TRACKING_ID"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'GA_TRACKING_ID');
+</script>
+-->
+</head>
+<body>
+<!-- Custom Header -->
+<div class="header">
+    <h1>🧠 NeuroExapt</h1>
+    <div class="subtitle">Advanced Neural Architecture Search and Dynamic Morphogenesis Framework</div>
+    <div style="margin-top: 15px; font-size: 0.9em;">
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🚀 Dynamic Neural Morphogenesis
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🔬 Advanced Architecture Search
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            ⚡ High-Performance Computing
+        </span>
+    </div>
+</div>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! --><!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('md_docs_2changelogs_2DOCUMENTATION__SYSTEM__SETUP.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div><div class="header">
+  <div class="headertitle"><div class="title">🧠 NeuroExapt 文档系统部署完成! 🎉</div></div>
+</div><!--header-->
+<div class="contents">
+<div class="textblock"><p><a class="anchor" id="autotoc_md68"></a> </p>
+<h1><a class="anchor" id="autotoc_md69"></a>
+🚀 系统概览</h1>
+<p>我们已经成功为NeuroExapt项目建立了一个完整的**现代化文档生成和部署系统**，该系统将：</p>
+<p>✅ **自动整合**项目中的所有Markdown文档 <br  />
+ ✅ **智能分类**文档内容（架构、性能、修复、指南等） <br  />
+ ✅ **自动执行**examples中的代码示例 <br  />
+ ✅ **生成API文档**从Python代码注释 <br  />
+ ✅ **部署到GitHub Pages**通过GitHub Actions <br  />
+ ✅ **提供现代化界面**响应式设计和深色模式支持 <br  />
+</p>
+<h1><a class="anchor" id="autotoc_md70"></a>
+📁 创建的文件结构</h1>
+<div class="fragment"><div class="line">📂 NeuroExapt项目</div>
+<div class="line">├── 📄 .github/workflows/docs.yml    # GitHub Actions工作流</div>
+<div class="line">├── 📂 docs/                         # 文档系统目录</div>
+<div class="line">│   ├── 📄 Doxyfile                  # Doxygen配置文件</div>
+<div class="line">│   ├── 📄 DoxygenLayout.xml         # 布局配置</div>
+<div class="line">│   ├── 📄 header.html               # 自定义HTML头部</div>
+<div class="line">│   ├── 📄 footer.html               # 自定义HTML尾部</div>
+<div class="line">│   ├── 📄 custom.css                # 现有的自定义样式</div>
+<div class="line">│   ├── 🐍 generate_docs.py          # 主文档生成脚本</div>
+<div class="line">│   ├── 🔧 build.sh                  # 本地构建脚本</div>
+<div class="line">│   └── 📄 README.md                 # 文档系统说明</div>
+<div class="line">└── 📄 DOCUMENTATION_SYSTEM_SETUP.md # 本文件</div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md71"></a>
+🎯 核心功能特性</h1>
+<h2><a class="anchor" id="autotoc_md72"></a>
+1. 📚 智能文档整合</h2>
+<ul>
+<li><b>自动收集</b>: 扫描项目中所有&lt;tt&gt;.md文件</li>
+<li><b>智能分类</b>: 按内容自动分组<ul>
+<li>🔍 项目概览 (README, 项目介绍)</li>
+<li>🏗️ 架构与框架 (DNM, FRAMEWORK, MORPHOGENESIS)</li>
+<li>⚡ 性能与基准 (PERFORMANCE, OPTIMIZATION, ACCURACY)</li>
+<li>📋 指南与教程 (GUIDE, TUTORIAL, SETUP)</li>
+<li>🚀 优化与CUDA (CUDA, GPU, TRITON)</li>
+<li>🔧 修复与解决方案 (FIX, BUG, ERROR, SOLUTION)</li>
+<li>👨‍💻 开发与改进 (DEVELOPMENT, SOURCERY, IMPROVEMENTS)</li>
+</ul>
+</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md73"></a>
+2. 🎨 现代化用户界面</h2>
+<ul>
+<li><b>渐变色主题</b>: 🔵→🟣 专业科技感</li>
+<li><b>响应式设计</b>: 📱💻 支持所有设备</li>
+<li><b>深色模式</b>: 🌙 自适应用户偏好</li>
+<li><b>交互功能</b>:<ul>
+<li>📋 代码一键复制</li>
+<li>⬆️ 返回顶部按钮</li>
+<li>🔍 增强搜索体验</li>
+<li>🧭 智能导航菜单</li>
+</ul>
+</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md74"></a>
+3. 🤖 自动化工作流</h2>
+<ul>
+<li><b>触发条件</b>:<ul>
+<li>推送到main/master分支</li>
+<li>Pull Request到主分支</li>
+<li>每日凌晨2点定时更新</li>
+<li>手动触发支持</li>
+</ul>
+</li>
+<li><b>构建流程</b>:<ol type="1">
+<li>🔄 代码检出</li>
+<li>🐍 Python环境设置</li>
+<li>📦 依赖安装 (Doxygen, Python包)</li>
+<li>🏗️ 文档生成 (运行Python脚本)</li>
+<li>✅ 文档验证</li>
+<li>🚀 GitHub Pages部署</li>
+</ol>
+</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md75"></a>
+4. 🧪 代码示例执行</h2>
+<ul>
+<li><b>安全执行</b>: 自动识别可安全运行的示例</li>
+<li><b>超时控制</b>: 60秒执行限制</li>
+<li><b>结果收集</b>: 捕获输出和错误信息</li>
+<li><b>智能过滤</b>: 排除需要GPU/网络的示例</li>
+</ul>
+<h1><a class="anchor" id="autotoc_md76"></a>
+🚀 立即开始使用</h1>
+<h2><a class="anchor" id="autotoc_md77"></a>
+本地测试</h2>
+<div class="fragment"><div class="line"># 完整构建（首次推荐）</div>
+<div class="line">./docs/build.sh</div>
+<div class="line"> </div>
+<div class="line"># 快速构建（开发使用）</div>
+<div class="line">./docs/build.sh --quick</div>
+<div class="line"> </div>
+<div class="line"># 构建并打开浏览器</div>
+<div class="line">./docs/build.sh --open</div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md78"></a>
+GitHub Actions部署</h2>
+<ol type="1">
+<li>**推送代码**到GitHub仓库</li>
+<li>**启用GitHub Pages**在仓库设置中</li>
+<li>**查看Actions**标签页监控构建</li>
+<li>**访问文档**在 <code><a href="https://">https://</a>[username].github.io/[repo-name]/</code></li>
+</ol>
+<h1><a class="anchor" id="autotoc_md79"></a>
+📊 整合的文档内容</h1>
+<p>系统将自动整合以下现有文档：</p>
+<h2><a class="anchor" id="autotoc_md80"></a>
+🔍 项目概览 (3+ 文档)</h2>
+<ul>
+<li>README.md</li>
+<li><a class="el" href="PROJECT__STRUCTURE__REFACTOR_8md.html">PROJECT_STRUCTURE_REFACTOR.md</a></li>
+<li><a class="el" href="LOGGER__METHOD__FIXES__SUMMARY_8md.html">LOGGER_METHOD_FIXES_SUMMARY.md</a></li>
+</ul>
+<h2><a class="anchor" id="autotoc_md81"></a>
+🏗️ 架构文档 (10+ 文档)</h2>
+<ul>
+<li>DNM_Framework_*.md</li>
+<li>ARCHITECTURE_*.md <br  />
+</li>
+<li>MORPHOGENESIS_*.md</li>
+<li>FRAMEWORK_*.md</li>
+<li>EVOLUTION_*.md</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md82"></a>
+⚡ 性能文档 (8+ 文档)</h2>
+<ul>
+<li>PERFORMANCE_*.md</li>
+<li>OPTIMIZATION_*.md</li>
+<li>ACCURACY_*.md</li>
+<li>BENCHMARK_*.md</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md83"></a>
+🔧 修复文档 (15+ 文档)</h2>
+<ul>
+<li>*_FIX_*.md</li>
+<li>*_FIXES_*.md</li>
+<li>*_SOLUTION*.md</li>
+<li>Runtime_Bug_Fixes_Summary.md</li>
+<li>Critical_*_Fix_*.md</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md84"></a>
+🚀 优化文档 (5+ 文档)</h2>
+<ul>
+<li>CUDA_*.md</li>
+<li>GPU_*.md</li>
+<li>TRITON_*.md</li>
+<li>*_OPTIMIZATION_*.md</li>
+</ul>
+<h1><a class="anchor" id="autotoc_md85"></a>
+🎨 界面预览特性</h1>
+<h2><a class="anchor" id="autotoc_md86"></a>
+头部设计</h2>
+<div class="fragment"><div class="line">🧠 NeuroExapt</div>
+<div class="line">Advanced Neural Architecture Search and Dynamic Morphogenesis Framework</div>
+<div class="line"> </div>
+<div class="line">[🚀 Dynamic Neural Morphogenesis] [🔬 Advanced Architecture Search] [⚡ High-Performance Computing]</div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md87"></a>
+导航菜单</h2>
+<ul>
+<li>📚 主页 (Overview)</li>
+<li>📦 模块 (Modules) <br  />
+</li>
+<li>💡 示例 (Examples)</li>
+<li>📁 文件 (Files)</li>
+<li>🔍 搜索 (Search)</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md88"></a>
+尾部信息</h2>
+<ul>
+<li>🔗 快速链接 (GitHub, Issues, Wiki, Releases)</li>
+<li>📊 技术栈标签 (Python, PyTorch, CUDA, NumPy, Triton)</li>
+<li>📄 版权信息和构建状态</li>
+</ul>
+<h1><a class="anchor" id="autotoc_md89"></a>
+🔧 自定义和扩展</h1>
+<h2><a class="anchor" id="autotoc_md90"></a>
+添加新文档类型</h2>
+<p>在<code><a class="el" href="generate__docs_8py.html">docs/generate_docs.py</a></code>中修改<code>category_rules</code>: </p><div class="fragment"><div class="line">category_rules = {</div>
+<div class="line">    <span class="stringliteral">&quot;your_category&quot;</span>: [<span class="stringliteral">&quot;KEYWORD1&quot;</span>, <span class="stringliteral">&quot;KEYWORD2&quot;</span>],</div>
+<div class="line">    <span class="comment"># ...</span></div>
+<div class="line">}</div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md91"></a>
+自定义样式</h2>
+<p>编辑以下文件：</p><ul>
+<li><code>docs/custom.css</code> - 样式定制</li>
+<li><code>docs/header.html</code> - 头部模板</li>
+<li><code>docs/footer.html</code> - 尾部模板</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md92"></a>
+扩展功能</h2>
+<ul>
+<li>修改<code><a class="el" href="generate__docs_8py.html">docs/generate_docs.py</a></code>添加新功能</li>
+<li>更新&lt;tt&gt;.github/workflows/docs.yml调整工作流</li>
+<li>在<code>docs/Doxyfile</code>中配置Doxygen选项</li>
+</ul>
+<h1><a class="anchor" id="autotoc_md93"></a>
+📈 预期效果</h1>
+<h2><a class="anchor" id="autotoc_md94"></a>
+文档网站功能</h2>
+<p>✅ <b>首页概览</b> - 项目介绍和快速导航 <br  />
+ ✅ <b>API文档</b> - 完整的类和函数文档 <br  />
+ ✅ <b>模块浏览</b> - 按模块组织的代码结构 <br  />
+ ✅ <b>示例展示</b> - 可运行的代码示例和结果 <br  />
+ ✅ <b>文件浏览</b> - 源代码在线浏览 <br  />
+ ✅ <b>搜索功能</b> - 全文搜索支持 <br  />
+ ✅ <b>移动适配</b> - 响应式设计 <br  />
+</p>
+<h2><a class="anchor" id="autotoc_md95"></a>
+自动化收益</h2>
+<p>✅ <b>开发效率</b> - 文档随代码同步更新 <br  />
+ ✅ <b>质量保证</b> - 自动验证和测试 <br  />
+ ✅ <b>用户体验</b> - 专业美观的文档界面 <br  />
+ ✅ <b>维护简化</b> - 无需手动维护文档网站 <br  />
+</p>
+<h1><a class="anchor" id="autotoc_md96"></a>
+🎯 下一步操作</h1>
+<h2><a class="anchor" id="autotoc_md97"></a>
+立即可做</h2>
+<ol type="1">
+<li><b>测试本地构建</b>: <div class="fragment"><div class="line">./docs/build.sh --open</div>
+</div><!-- fragment --></li>
+<li><b>推送到GitHub</b>: <div class="fragment"><div class="line">git add .</div>
+<div class="line">git commit -m &quot;📚 Add comprehensive documentation system&quot;</div>
+<div class="line">git push origin main</div>
+</div><!-- fragment --></li>
+<li><b>启用GitHub Pages</b>:<ul>
+<li>进入仓库 Settings → Pages</li>
+<li>Source选择 "GitHub Actions"</li>
+<li>等待首次构建完成</li>
+</ul>
+</li>
+</ol>
+<h2><a class="anchor" id="autotoc_md98"></a>
+优化建议</h2>
+<ol type="1">
+<li><b>更新README</b>: 添加文档链接</li>
+<li><b>设置自定义域名</b>: 如有需要在Pages设置</li>
+<li><b>添加徽章</b>: 在README中添加文档构建状态徽章</li>
+<li><b>定期维护</b>: 检查和更新文档内容</li>
+</ol>
+<h1><a class="anchor" id="autotoc_md99"></a>
+🔗 相关链接</h1>
+<ul>
+<li>📖 <b>文档系统说明</b>: <a class="el" href="/workspace/docs/README.md#md_docs_2README">docs/README.md</a></li>
+<li>🔧 <b>构建脚本</b>: <a href="docs/build.sh">docs/build.sh</a></li>
+<li>🐍 <b>生成脚本</b>: <a href="docs/generate_docs.py">docs/generate_docs.py</a></li>
+<li>⚙️ <b>GitHub Actions</b>: <a href=".github/workflows/docs.yml">.github/workflows/docs.yml</a></li>
+<li>🎨 <b>样式配置</b>: <a href="docs/custom.css">docs/custom.css</a></li>
+</ul>
+<h1><a class="anchor" id="autotoc_md100"></a>
+🎉 完成状态</h1>
+<p>✅ <b>Doxygen配置</b> - 完成 <br  />
+ ✅ <b>Python生成脚本</b> - 完成 <br  />
+ ✅ <b>GitHub Actions工作流</b> - 完成 <br  />
+ ✅ <b>HTML模板和样式</b> - 完成 <br  />
+ ✅ <b>本地构建脚本</b> - 完成 <br  />
+ ✅ <b>文档整合逻辑</b> - 完成 <br  />
+ ✅ <b>自动化测试</b> - 完成 <br  />
+ ✅ <b>错误处理</b> - 完成 <br  />
+</p>
+<p>🎊 <b>NeuroExapt文档系统已完全就绪！</b></p>
+<p>现在您拥有了一个功能完整、美观现代、自动化的文档生成和部署系统。每次代码更新时，文档都会自动更新并部署，为用户提供始终最新的项目文档！ </p>
+</div></div><!-- contents -->
+</div><!-- PageDoc -->
+</div><!-- doc-content -->
+<!-- do not remove this div, it is closed by doxygen! -->
+</div>
+<!-- Custom Footer -->
+<div style="background: #f8f9fa; border-top: 1px solid #e9ecef; margin-top: 50px; padding: 30px 0; text-align: center;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-bottom: 20px;">
+            <!-- Project Info -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🧠 NeuroExapt</h4>
+                <p style="color: #6c757d; margin: 0; font-size: 0.9em;">
+                    Advanced Neural Architecture Search and Dynamic Morphogenesis Framework for next-generation AI research.
+                </p>
+            </div>
+            <!-- Quick Links -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">📚 Quick Links</h4>
+                <div style="text-align: left;">
+                    <a href="index.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🏠 Home</a>
+                    <a href="modules.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📦 Modules</a>
+                    <a href="examples.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💡 Examples</a>
+                    <a href="files.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📁 Files</a>
+                </div>
+            </div>
+            <!-- Resources -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🔗 Resources</h4>
+                <div style="text-align: left;">
+                    <a href="https://github.com/your-username/neuroexapt" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💻 GitHub Repository</a>
+                    <a href="https://github.com/your-username/neuroexapt/issues" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🐛 Issue Tracker</a>
+                    <a href="https://github.com/your-username/neuroexapt/wiki" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📖 Wiki</a>
+                    <a href="https://github.com/your-username/neuroexapt/releases" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🚀 Releases</a>
+                </div>
+            </div>
+        </div>
+        <hr style="border: 0; height: 1px; background: #e9ecef; margin: 20px 0;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+            <div style="color: #6c757d; font-size: 0.9em;">
+                © 2024 NeuroExapt Project. Generated with 
+                <a href="https://www.doxygen.nl/index.html" style="color: #667eea; text-decoration: none;">Doxygen 1.9.8</a>
+            </div>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <span style="font-size: 0.9em; color: #6c757d;">Built with ❤️ for AI Research</span>
+                <div style="display: flex; gap: 10px;">
+                    <span style="background: #28a745; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">🟢 Active</span>
+                    <span style="background: #17a2b8; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">v3.0</span>
+                </div>
+            </div>
+        </div>
+        <!-- Technology Stack -->
+        <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #e9ecef;">
+            <div style="font-size: 0.8em; color: #868e96; text-align: center;">
+                <strong>Built with:</strong>
+                <span style="margin: 0 5px;">🐍 Python</span>
+                <span style="margin: 0 5px;">🔥 PyTorch</span>
+                <span style="margin: 0 5px;">⚡ CUDA</span>
+                <span style="margin: 0 5px;">🧮 NumPy</span>
+                <span style="margin: 0 5px;">📊 Matplotlib</span>
+                <span style="margin: 0 5px;">🚀 Triton</span>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Back to top button -->
+<div id="back-to-top" style="position: fixed; bottom: 20px; right: 20px; display: none; z-index: 1000;">
+    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" 
+            style="background: #667eea; color: white; border: none; padding: 10px 15px; border-radius: 50%; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,0.2); font-size: 16px;">
+        ⬆️
+    </button>
+</div>
+<script>
+// Back to top button functionality
+window.addEventListener('scroll', function() {
+    const backToTop = document.getElementById('back-to-top');
+    if (window.pageYOffset > 300) {
+        backToTop.style.display = 'block';
+    } else {
+        backToTop.style.display = 'none';
+    }
+});
+// Enhanced search functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Add search enhancement if search box exists
+    const searchBox = document.getElementById('MSearchField');
+    if (searchBox) {
+        searchBox.placeholder = 'Search documentation... 🔍';
+        searchBox.style.borderRadius = '20px';
+        searchBox.style.padding = '8px 15px';
+    }
+    // Add copy code button to code blocks
+    const codeBlocks = document.querySelectorAll('.fragment');
+    codeBlocks.forEach(function(block) {
+        const copyBtn = document.createElement('button');
+        copyBtn.innerHTML = '📋';
+        copyBtn.title = 'Copy code';
+        copyBtn.style.cssText = 'position: absolute; top: 10px; right: 10px; background: #667eea; color: white; border: none; padding: 5px; border-radius: 3px; cursor: pointer; font-size: 12px;';
+        block.style.position = 'relative';
+        block.appendChild(copyBtn);
+        copyBtn.addEventListener('click', function() {
+            const text = block.textContent;
+            navigator.clipboard.writeText(text).then(function() {
+                copyBtn.innerHTML = '✅';
+                setTimeout(function() {
+                    copyBtn.innerHTML = '📋';
+                }, 2000);
+            });
+        });
+    });
+});
+// Dark mode toggle (optional)
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+}
+// Load saved dark mode preference
+if (localStorage.getItem('darkMode') === 'true') {
+    document.body.classList.add('dark-mode');
+}
+</script>
+</body>
+</html>

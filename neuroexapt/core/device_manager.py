@@ -1,4 +1,11 @@
 """
+"""
+\defgroup group_device_manager Device Manager
+\ingroup core
+Device Manager module for NeuroExapt framework.
+"""
+
+
 设备管理器 (Device Manager)
 
 统一管理ASO-SE框架中所有模型和数据的设备分配，确保：

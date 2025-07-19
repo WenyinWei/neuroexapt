@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+"""
+\defgroup group_clean_model Clean Model
+\ingroup core
+Clean Model module for NeuroExapt framework.
+"""
+
+
 🔧 完全重构的干净模型实现
 修复所有通道数计算问题，提供可靠的基础架构
 """

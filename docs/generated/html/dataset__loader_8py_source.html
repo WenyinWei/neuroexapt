@@ -1,0 +1,1215 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="description" content="NeuroExapt - Advanced Neural Architecture Search and Dynamic Morphogenesis Framework">
+    <meta name="keywords" content="neural architecture search, dynamic morphogenesis, deep learning, AI, PyTorch">
+    <meta name="author" content="NeuroExapt Team">
+    <meta property="og:title" content="NeuroExapt Documentation">
+    <meta property="og:description" content="Advanced Neural Architecture Search Framework">
+    <meta property="og:type" content="website">
+
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>NeuroExapt: neuroexapt/utils/dataset_loader.py Source File</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="custom.css" rel="stylesheet" type="text/css"/>
+<!-- NeuroExapt Custom Styles -->
+<style>
+/* Enhanced header styling */
+.header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+.header h1 {
+    margin: 0;
+    font-size: 2.5em;
+    font-weight: 300;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+.header .subtitle {
+    font-size: 1.2em;
+    opacity: 0.9;
+    margin-top: 10px;
+}
+/* Enhanced navigation */
+.tablist {
+    background: #f8f9fa;
+    border-bottom: 2px solid #e9ecef;
+}
+.tablist li.current a {
+    background: #667eea;
+    color: white;
+}
+/* Improved content layout */
+.contents {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+/* Code highlighting */
+.fragment {
+    background: #f8f9fa;
+    border-left: 4px solid #667eea;
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 0 8px 8px 0;
+}
+/* Enhanced tables */
+table.memberdecls {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 20px 0;
+}
+table.memberdecls td {
+    border: 1px solid #e9ecef;
+    padding: 12px;
+}
+/* Better typography */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #343a40;
+}
+h1, h2, h3, h4, h5, h6 {
+    color: #495057;
+    font-weight: 500;
+}
+/* Responsive design */
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 2em;
+    }
+    .contents {
+        padding: 15px;
+    }
+}
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #1a1a1a;
+        color: #e9ecef;
+    }
+    .header {
+        background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+    }
+    .fragment {
+        background: #2d3748;
+        color: #e9ecef;
+    }
+}
+</style>
+<!-- Analytics (if needed) -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<!--
+<script async src="https://www.googletagmanager.com/gtag/js?id=GA_TRACKING_ID"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'GA_TRACKING_ID');
+</script>
+-->
+</head>
+<body>
+<!-- Custom Header -->
+<div class="header">
+    <h1>🧠 NeuroExapt</h1>
+    <div class="subtitle">Advanced Neural Architecture Search and Dynamic Morphogenesis Framework</div>
+    <div style="margin-top: 15px; font-size: 0.9em;">
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🚀 Dynamic Neural Morphogenesis
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🔬 Advanced Architecture Search
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            ⚡ High-Performance Computing
+        </span>
+    </div>
+</div>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! --><!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function() { init_codefold(0); });
+/* @license-end */
+</script>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('dataset__loader_8py_source.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">dataset_loader.py</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="dataset__loader_8py.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno"><a class="line" href="namespaceneuroexapt_1_1utils_1_1dataset__loader.html">    1</a></span><span class="stringliteral">&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="stringliteral">&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span>\defgroup group_dataset_loader Dataset Loader</div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span>\ingroup core</div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span>Dataset Loader module <span class="keywordflow">for</span> NeuroExapt framework.</div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="stringliteral">&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="stringliteral"></span> </div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="stringliteral"></span> </div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="stringliteral">Advanced Dataset Loader with P2P Acceleration and Caching.</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="stringliteral"></span> </div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="stringliteral">This module provides robust dataset downloading capabilities optimized for Chinese users,</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="stringliteral">including P2P acceleration, intelligent caching, and multiple mirror support.</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="stringliteral">&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">import</span> os</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="keyword">import</span> hashlib</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="keyword">import</span> json</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="keyword">import</span> time</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="keyword">import</span> threading</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="keyword">import</span> requests</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="keyword">import</span> urllib.request</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="keyword">import</span> urllib.parse</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="keyword">from</span> typing <span class="keyword">import</span> Dict, List, Optional, Tuple, Union</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="keyword">import</span> torch</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="keyword">import</span> torchvision</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="keyword">from</span> torch.utils.data <span class="keyword">import</span> DataLoader, Dataset</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="keyword">import</span> torchvision.transforms <span class="keyword">as</span> transforms</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="keyword">from</span> tqdm <span class="keyword">import</span> tqdm</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="keyword">import</span> logging</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="comment"># Configure logging</span></div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="namespaceneuroexapt_1_1utils_1_1dataset__loader.html#acd432326b2e1d6aa3f2f2e6d0c930f9a">   33</a></span>logging.basicConfig(level=logging.INFO)</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno"><a class="line" href="namespaceneuroexapt_1_1utils_1_1dataset__loader.html#a58b78f1d9e7f21a16b73286589aba966">   34</a></span>logger = logging.getLogger(__name__)</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
+<div class="foldopen" id="foldopen00037" data-start="" data-end="">
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetMirror.html">   37</a></span><span class="keyword">class </span><a class="code hl_class" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetMirror.html">DatasetMirror</a>:</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    <span class="stringliteral">&quot;&quot;&quot;Represents a dataset mirror with metadata.&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    </div>
+<div class="foldopen" id="foldopen00040" data-start="" data-end="">
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetMirror.html#a50d9ad6fafd28bf8365d5fd082c813b2">   40</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetMirror.html#a50d9ad6fafd28bf8365d5fd082c813b2">__init__</a>(self, name: str, base_url: str, region: str, priority: int = 1):</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetMirror.html#a091fb62f3a5cbc22b2f0e4d59c127252">   41</a></span>        self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetMirror.html#a091fb62f3a5cbc22b2f0e4d59c127252">name</a> = name</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetMirror.html#a33942f31df7dca1b8655dcf85aee4592">   42</a></span>        self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetMirror.html#a33942f31df7dca1b8655dcf85aee4592">base_url</a> = base_url.rstrip(<span class="stringliteral">&#39;/&#39;</span>)</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetMirror.html#a7beeae87d5e961032162ad72c8bc799c">   43</a></span>        self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetMirror.html#a7beeae87d5e961032162ad72c8bc799c">region</a> = region</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetMirror.html#a13c95c2a347a38e078866d722d3835d6">   44</a></span>        self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetMirror.html#a13c95c2a347a38e078866d722d3835d6">priority</a> = priority</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetMirror.html#aa236fea06669ce17a54564a2192e0c4b">   45</a></span>        self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetMirror.html#aa236fea06669ce17a54564a2192e0c4b">last_check</a> = 0</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetMirror.html#a917a2902c384f9ee4ebb032879d917b4">   46</a></span>        self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetMirror.html#a917a2902c384f9ee4ebb032879d917b4">response_time</a> = float(<span class="stringliteral">&#39;inf&#39;</span>)</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetMirror.html#ad8e624a1a182ef15b2a3acbc1d7ab0f7">   47</a></span>        self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetMirror.html#ad8e624a1a182ef15b2a3acbc1d7ab0f7">is_available</a> = <span class="keyword">True</span></div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    </div>
+</div>
+<div class="foldopen" id="foldopen00049" data-start="" data-end="">
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetMirror.html#a17fd216e7d20f86c1c812e6f05259894">   49</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetMirror.html#a17fd216e7d20f86c1c812e6f05259894">get_download_url</a>(self, dataset_name: str, filename: str) -&gt; str:</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>        <span class="stringliteral">&quot;&quot;&quot;Generate download URL for a specific file.&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>        <span class="keywordflow">return</span> f<span class="stringliteral">&quot;{self.base_url}/{dataset_name}/{filename}&quot;</span></div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    </div>
+</div>
+<div class="foldopen" id="foldopen00053" data-start="" data-end="">
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetMirror.html#aa756f1dbd7f4782235adf45f4d8d0e90">   53</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetMirror.html#aa756f1dbd7f4782235adf45f4d8d0e90">test_connectivity</a>(self, timeout: int = 5) -&gt; bool:</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        <span class="stringliteral">&quot;&quot;&quot;Test mirror connectivity and update response time.&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        <span class="keywordflow">try</span>:</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>            start_time = time.time()</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>            response = requests.head(self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetMirror.html#a33942f31df7dca1b8655dcf85aee4592">base_url</a>, timeout=timeout)</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>            self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetMirror.html#a917a2902c384f9ee4ebb032879d917b4">response_time</a> = time.time() - start_time</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>            self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetMirror.html#ad8e624a1a182ef15b2a3acbc1d7ab0f7">is_available</a> = response.status_code == 200</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>            self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetMirror.html#aa236fea06669ce17a54564a2192e0c4b">last_check</a> = time.time()</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>            <span class="keywordflow">return</span> self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetMirror.html#ad8e624a1a182ef15b2a3acbc1d7ab0f7">is_available</a></div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>        <span class="keywordflow">except</span> Exception <span class="keyword">as</span> e:</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>            logger.warning(f<span class="stringliteral">&quot;Mirror {self.name} connectivity test failed: {e}&quot;</span>)</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>            self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetMirror.html#ad8e624a1a182ef15b2a3acbc1d7ab0f7">is_available</a> = <span class="keyword">False</span></div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>            self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetMirror.html#a917a2902c384f9ee4ebb032879d917b4">response_time</a> = float(<span class="stringliteral">&#39;inf&#39;</span>)</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>            <span class="keywordflow">return</span> <span class="keyword">False</span></div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span> </div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span> </div>
+</div>
+</div>
+<div class="foldopen" id="foldopen00069" data-start="" data-end="">
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1P2PDownloader.html">   69</a></span><span class="keyword">class </span><a class="code hl_class" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1P2PDownloader.html">P2PDownloader</a>:</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    <span class="stringliteral">&quot;&quot;&quot;P2P-accelerated downloader with chunked downloads and resume capability.&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    </div>
+<div class="foldopen" id="foldopen00072" data-start="" data-end="">
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1P2PDownloader.html#af1e24972858fab2fd185bb4f1581ea34">   72</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1P2PDownloader.html#af1e24972858fab2fd185bb4f1581ea34">__init__</a>(self, chunk_size: int = 1024 * 1024, max_workers: int = 4):</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1P2PDownloader.html#acaff297ce0af2242896e002975396b58">   73</a></span>        self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1P2PDownloader.html#acaff297ce0af2242896e002975396b58">chunk_size</a> = chunk_size</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1P2PDownloader.html#a6c964011ca1cf0a339e2a4c0e1b4e075">   74</a></span>        self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1P2PDownloader.html#a6c964011ca1cf0a339e2a4c0e1b4e075">max_workers</a> = max_workers</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1P2PDownloader.html#a4b27f0e4b8dbb8bcb64e97f55bca5707">   75</a></span>        self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1P2PDownloader.html#a4b27f0e4b8dbb8bcb64e97f55bca5707">session</a> = requests.Session()</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>        self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1P2PDownloader.html#a4b27f0e4b8dbb8bcb64e97f55bca5707">session</a>.headers.update({</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>            <span class="stringliteral">&#39;User-Agent&#39;</span>: <span class="stringliteral">&#39;NeuroExapt-Dataset-Loader/1.0&#39;</span></div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>        })</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    </div>
+</div>
+<div class="foldopen" id="foldopen00080" data-start="" data-end="">
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1P2PDownloader.html#a75d22a33e524b9d73bf031d0d103b01c">   80</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1P2PDownloader.html#a75d22a33e524b9d73bf031d0d103b01c">download_file</a>(self, url: str, filepath: Path, </div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>                     resume: bool = <span class="keyword">True</span>, progress_bar: bool = <span class="keyword">True</span>) -&gt; bool:</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>        <span class="stringliteral">&quot;&quot;&quot;Download file with resume capability and progress tracking.&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>        <span class="keywordflow">try</span>:</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>            <span class="comment"># Check if file exists and get its size</span></div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>            existing_size = filepath.stat().st_size <span class="keywordflow">if</span> filepath.exists() <span class="keywordflow">else</span> 0</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>            </div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>            <span class="comment"># Get file info from server</span></div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>            headers = {}</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>            <span class="keywordflow">if</span> resume <span class="keywordflow">and</span> existing_size &gt; 0:</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>                headers[<span class="stringliteral">&#39;Range&#39;</span>] = f<span class="stringliteral">&#39;bytes={existing_size}-&#39;</span></div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>            </div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>            response = self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1P2PDownloader.html#a4b27f0e4b8dbb8bcb64e97f55bca5707">session</a>.head(url, headers=headers, timeout=30)</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>            </div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>            <span class="keywordflow">if</span> response.status_code <span class="keywordflow">not</span> <span class="keywordflow">in</span> [200, 206]:</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>                logger.error(f<span class="stringliteral">&quot;Failed to access {url}: {response.status_code}&quot;</span>)</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>                <span class="keywordflow">return</span> <span class="keyword">False</span></div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>            </div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>            total_size = int(response.headers.get(<span class="stringliteral">&#39;content-length&#39;</span>, 0))</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>            <span class="keywordflow">if</span> resume <span class="keywordflow">and</span> existing_size &gt; 0:</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>                total_size += existing_size</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>            </div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>            <span class="comment"># Open file for writing</span></div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>            mode = <span class="stringliteral">&#39;ab&#39;</span> <span class="keywordflow">if</span> resume <span class="keywordflow">and</span> existing_size &gt; 0 <span class="keywordflow">else</span> <span class="stringliteral">&#39;wb&#39;</span></div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>            <span class="keyword">with</span> open(filepath, mode) <span class="keyword">as</span> f:</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>                <span class="keywordflow">if</span> progress_bar:</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>                    pbar = tqdm(</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>                        total=total_size,</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>                        initial=existing_size,</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>                        unit=<span class="stringliteral">&#39;B&#39;</span>,</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>                        unit_scale=<span class="keyword">True</span>,</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>                        desc=f<span class="stringliteral">&quot;Downloading {filepath.name}&quot;</span></div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>                    )</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>                </div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>                <span class="comment"># Download in chunks</span></div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>                headers = {}</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>                <span class="keywordflow">if</span> resume <span class="keywordflow">and</span> existing_size &gt; 0:</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>                    headers[<span class="stringliteral">&#39;Range&#39;</span>] = f<span class="stringliteral">&#39;bytes={existing_size}-&#39;</span></div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>                </div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>                response = self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1P2PDownloader.html#a4b27f0e4b8dbb8bcb64e97f55bca5707">session</a>.get(url, headers=headers, stream=<span class="keyword">True</span>, timeout=30)</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>                </div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>                <span class="keywordflow">for</span> chunk <span class="keywordflow">in</span> response.iter_content(chunk_size=self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1P2PDownloader.html#acaff297ce0af2242896e002975396b58">chunk_size</a>):</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>                    <span class="keywordflow">if</span> chunk:</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>                        f.write(chunk)</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>                        <span class="keywordflow">if</span> progress_bar:</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>                            pbar.update(len(chunk))</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>                </div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>                <span class="keywordflow">if</span> progress_bar:</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>                    pbar.close()</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>            </div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>            <span class="keywordflow">return</span> <span class="keyword">True</span></div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>            </div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>        <span class="keywordflow">except</span> Exception <span class="keyword">as</span> e:</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>            logger.error(f<span class="stringliteral">&quot;Download failed for {url}: {e}&quot;</span>)</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>            <span class="keywordflow">return</span> <span class="keyword">False</span></div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span> </div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span> </div>
+</div>
+</div>
+<div class="foldopen" id="foldopen00137" data-start="" data-end="">
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetCache.html">  137</a></span><span class="keyword">class </span><a class="code hl_class" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetCache.html">DatasetCache</a>:</div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>    <span class="stringliteral">&quot;&quot;&quot;Intelligent dataset caching system.&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>    </div>
+<div class="foldopen" id="foldopen00140" data-start="" data-end="">
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetCache.html#a91de3f649469c66bc089f76567911238">  140</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetCache.html#a91de3f649469c66bc089f76567911238">__init__</a>(self, cache_dir: Union[str, Path] = <span class="stringliteral">&quot;./data_cache&quot;</span>):</div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetCache.html#a17ef392e861369b77887f3e555108a8d">  141</a></span>        self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetCache.html#a17ef392e861369b77887f3e555108a8d">cache_dir</a> = Path(cache_dir)</div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>        self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetCache.html#a17ef392e861369b77887f3e555108a8d">cache_dir</a>.mkdir(parents=<span class="keyword">True</span>, exist_ok=<span class="keyword">True</span>)</div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetCache.html#a0fb16b72c636f423898cc9a5c198ef00">  143</a></span>        self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetCache.html#a0fb16b72c636f423898cc9a5c198ef00">metadata_file</a> = self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetCache.html#a17ef392e861369b77887f3e555108a8d">cache_dir</a> / <span class="stringliteral">&quot;cache_metadata.json&quot;</span></div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetCache.html#a24effcc8c34b047abdb12069fd2c25c2">  144</a></span>        self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetCache.html#a24effcc8c34b047abdb12069fd2c25c2">metadata</a> = self.<a class="code hl_function" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetCache.html#a181f1ad0fe9d68bad493430263c22d5a">_load_metadata</a>()</div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>    </div>
+</div>
+<div class="foldopen" id="foldopen00146" data-start="" data-end="">
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetCache.html#a181f1ad0fe9d68bad493430263c22d5a">  146</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetCache.html#a181f1ad0fe9d68bad493430263c22d5a">_load_metadata</a>(self) -&gt; Dict:</div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>        <span class="stringliteral">&quot;&quot;&quot;Load cache metadata.&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>        <span class="keywordflow">if</span> self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetCache.html#a0fb16b72c636f423898cc9a5c198ef00">metadata_file</a>.exists():</div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>            <span class="keywordflow">try</span>:</div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>                <span class="keyword">with</span> open(self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetCache.html#a0fb16b72c636f423898cc9a5c198ef00">metadata_file</a>, <span class="stringliteral">&#39;r&#39;</span>) <span class="keyword">as</span> f:</div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>                    <span class="keywordflow">return</span> json.load(f)</div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>            <span class="keywordflow">except</span> Exception <span class="keyword">as</span> e:</div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>                logger.warning(f<span class="stringliteral">&quot;Failed to load cache metadata: {e}&quot;</span>)</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>        <span class="keywordflow">return</span> {}</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>    </div>
+</div>
+<div class="foldopen" id="foldopen00156" data-start="" data-end="">
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetCache.html#a9bdec068e84bf2180cd7fcf2c86e1ca8">  156</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetCache.html#a9bdec068e84bf2180cd7fcf2c86e1ca8">_save_metadata</a>(self):</div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>        <span class="stringliteral">&quot;&quot;&quot;Save cache metadata.&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>        <span class="keywordflow">try</span>:</div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>            <span class="keyword">with</span> open(self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetCache.html#a0fb16b72c636f423898cc9a5c198ef00">metadata_file</a>, <span class="stringliteral">&#39;w&#39;</span>) <span class="keyword">as</span> f:</div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>                json.dump(self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetCache.html#a24effcc8c34b047abdb12069fd2c25c2">metadata</a>, f, indent=2)</div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>        <span class="keywordflow">except</span> Exception <span class="keyword">as</span> e:</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>            logger.warning(f<span class="stringliteral">&quot;Failed to save cache metadata: {e}&quot;</span>)</div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>    </div>
+</div>
+<div class="foldopen" id="foldopen00164" data-start="" data-end="">
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetCache.html#ac323ffd6786571ca88acea2c5967631c">  164</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetCache.html#ac323ffd6786571ca88acea2c5967631c">get_cache_path</a>(self, dataset_name: str, filename: str) -&gt; Path:</div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>        <span class="stringliteral">&quot;&quot;&quot;Get cache path for a dataset file.&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>        <span class="keywordflow">return</span> self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetCache.html#a17ef392e861369b77887f3e555108a8d">cache_dir</a> / dataset_name / filename</div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>    </div>
+</div>
+<div class="foldopen" id="foldopen00168" data-start="" data-end="">
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetCache.html#af4345c77bfda9a640a88c5f9002ac840">  168</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetCache.html#af4345c77bfda9a640a88c5f9002ac840">is_cached</a>(self, dataset_name: str, filename: str, </div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>                  expected_size: Optional[int] = <span class="keywordtype">None</span>) -&gt; bool:</div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>        <span class="stringliteral">&quot;&quot;&quot;Check if file is cached and valid.&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>        cache_path = self.<a class="code hl_function" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetCache.html#ac323ffd6786571ca88acea2c5967631c">get_cache_path</a>(dataset_name, filename)</div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>        </div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>        <span class="keywordflow">if</span> <span class="keywordflow">not</span> cache_path.exists():</div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>            <span class="keywordflow">return</span> <span class="keyword">False</span></div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>        </div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>        <span class="comment"># Check file size if expected size is provided</span></div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>        <span class="keywordflow">if</span> expected_size <span class="keywordflow">is</span> <span class="keywordflow">not</span> <span class="keywordtype">None</span>:</div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>            actual_size = cache_path.stat().st_size</div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>            <span class="keywordflow">if</span> actual_size != expected_size:</div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>                logger.warning(f<span class="stringliteral">&quot;Cache file size mismatch for {filename}&quot;</span>)</div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>                <span class="keywordflow">return</span> <span class="keyword">False</span></div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>        </div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>        <span class="comment"># Check metadata</span></div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>        cache_key = f<span class="stringliteral">&quot;{dataset_name}/{filename}&quot;</span></div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>        <span class="keywordflow">if</span> cache_key <span class="keywordflow">in</span> self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetCache.html#a24effcc8c34b047abdb12069fd2c25c2">metadata</a>:</div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>            cache_info = self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetCache.html#a24effcc8c34b047abdb12069fd2c25c2">metadata</a>[cache_key]</div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>            <span class="keywordflow">if</span> <span class="stringliteral">&#39;checksum&#39;</span> <span class="keywordflow">in</span> cache_info:</div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>                <span class="comment"># Verify checksum</span></div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>                actual_checksum = self.<a class="code hl_function" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetCache.html#a963014728571586b27ba36ddc4c13f6b">_calculate_checksum</a>(cache_path)</div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>                <span class="keywordflow">if</span> actual_checksum != cache_info[<span class="stringliteral">&#39;checksum&#39;</span>]:</div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>                    logger.warning(f<span class="stringliteral">&quot;Cache checksum mismatch for {filename}&quot;</span>)</div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>                    <span class="keywordflow">return</span> <span class="keyword">False</span></div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>        </div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>        <span class="keywordflow">return</span> <span class="keyword">True</span></div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>    </div>
+</div>
+<div class="foldopen" id="foldopen00196" data-start="" data-end="">
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetCache.html#a963014728571586b27ba36ddc4c13f6b">  196</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetCache.html#a963014728571586b27ba36ddc4c13f6b">_calculate_checksum</a>(self, filepath: Path) -&gt; str:</div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>        <span class="stringliteral">&quot;&quot;&quot;Calculate SHA256 checksum of file.&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>        sha256_hash = hashlib.sha256()</div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>        <span class="keyword">with</span> open(filepath, <span class="stringliteral">&quot;rb&quot;</span>) <span class="keyword">as</span> f:</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>            <span class="keywordflow">for</span> chunk <span class="keywordflow">in</span> iter(<span class="keyword">lambda</span>: f.read(4096), b<span class="stringliteral">&quot;&quot;</span>):</div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>                sha256_hash.update(chunk)</div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>        <span class="keywordflow">return</span> sha256_hash.hexdigest()</div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>    </div>
+</div>
+<div class="foldopen" id="foldopen00204" data-start="" data-end="">
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetCache.html#adaac9507c7a0215af4768384ae437540">  204</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetCache.html#adaac9507c7a0215af4768384ae437540">cache_file</a>(self, dataset_name: str, filename: str, </div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>                   source_path: Path, expected_size: Optional[int] = <span class="keywordtype">None</span>):</div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>        <span class="stringliteral">&quot;&quot;&quot;Cache a file with metadata.&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>        cache_path = self.<a class="code hl_function" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetCache.html#ac323ffd6786571ca88acea2c5967631c">get_cache_path</a>(dataset_name, filename)</div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>        cache_path.parent.mkdir(parents=<span class="keyword">True</span>, exist_ok=<span class="keyword">True</span>)</div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>        </div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>        <span class="comment"># Copy file to cache</span></div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>        <span class="keyword">import</span> shutil</div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>        shutil.copy2(source_path, cache_path)</div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>        </div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>        <span class="comment"># Update metadata</span></div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>        cache_key = f<span class="stringliteral">&quot;{dataset_name}/{filename}&quot;</span></div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>        self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetCache.html#a24effcc8c34b047abdb12069fd2c25c2">metadata</a>[cache_key] = {</div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>            <span class="stringliteral">&#39;cached_at&#39;</span>: time.time(),</div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>            <span class="stringliteral">&#39;size&#39;</span>: cache_path.stat().st_size,</div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>            <span class="stringliteral">&#39;checksum&#39;</span>: self.<a class="code hl_function" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetCache.html#a963014728571586b27ba36ddc4c13f6b">_calculate_checksum</a>(cache_path)</div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>        }</div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>        </div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>        <span class="keywordflow">if</span> expected_size <span class="keywordflow">is</span> <span class="keywordflow">not</span> <span class="keywordtype">None</span>:</div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>            self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetCache.html#a24effcc8c34b047abdb12069fd2c25c2">metadata</a>[cache_key][<span class="stringliteral">&#39;expected_size&#39;</span>] = expected_size</div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>        </div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>        self.<a class="code hl_function" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetCache.html#a9bdec068e84bf2180cd7fcf2c86e1ca8">_save_metadata</a>()</div>
+<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>        logger.info(f<span class="stringliteral">&quot;Cached {filename} successfully&quot;</span>)</div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span> </div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span> </div>
+</div>
+</div>
+<div class="foldopen" id="foldopen00229" data-start="" data-end="">
+<div class="line"><a id="l00229" name="l00229"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html">  229</a></span><span class="keyword">class </span><a class="code hl_class" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html">AdvancedDatasetLoader</a>:</div>
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>    <span class="stringliteral">&quot;&quot;&quot;Advanced dataset loader with P2P acceleration, intelligent caching, and 迅雷 integration.&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>    </div>
+<div class="foldopen" id="foldopen00232" data-start="" data-end="">
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#a700b9574f9468fc2c99f9a2c5b2b0db3">  232</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#a700b9574f9468fc2c99f9a2c5b2b0db3">__init__</a>(self, cache_dir: str = <span class="stringliteral">&quot;./data_cache&quot;</span>, </div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>                 download_dir: str = <span class="stringliteral">&quot;./data&quot;</span>,</div>
+<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>                 use_p2p: bool = <span class="keyword">True</span>,</div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>                 use_xunlei: bool = <span class="keyword">True</span>,</div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>                 max_retries: int = 3):</div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#ab55c063912c5f2150feeec0a3813bf1e">  237</a></span>        self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#ab55c063912c5f2150feeec0a3813bf1e">cache</a> = <a class="code hl_class" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetCache.html">DatasetCache</a>(cache_dir)</div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#aa3231b36c395eed368c8341ab5c10f09">  238</a></span>        self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#aa3231b36c395eed368c8341ab5c10f09">download_dir</a> = Path(download_dir)</div>
+<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>        self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#aa3231b36c395eed368c8341ab5c10f09">download_dir</a>.mkdir(parents=<span class="keyword">True</span>, exist_ok=<span class="keyword">True</span>)</div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#a682c7f94749fef8367d68e90694ef72a">  240</a></span>        self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#a682c7f94749fef8367d68e90694ef72a">p2p_downloader</a> = <a class="code hl_class" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1P2PDownloader.html">P2PDownloader</a>() <span class="keywordflow">if</span> use_p2p <span class="keywordflow">else</span> <span class="keywordtype">None</span></div>
+<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>        </div>
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>        <span class="comment"># Initialize 迅雷 downloader if requested</span></div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#a328f8d0ac3295fcd2cd20fa367d14ced">  243</a></span>        self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#a328f8d0ac3295fcd2cd20fa367d14ced">xunlei_downloader</a> = <span class="keywordtype">None</span></div>
+<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>        <span class="keywordflow">if</span> use_xunlei:</div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>            <span class="keywordflow">try</span>:</div>
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>                <span class="keyword">from</span> .xunlei_downloader <span class="keyword">import</span> XunleiDownloader</div>
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>                self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#a328f8d0ac3295fcd2cd20fa367d14ced">xunlei_downloader</a> = XunleiDownloader()</div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>                <span class="keywordflow">if</span> self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#a328f8d0ac3295fcd2cd20fa367d14ced">xunlei_downloader</a>.is_available:</div>
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>                    logger.info(<span class="stringliteral">&quot;✅ 迅雷 integration enabled&quot;</span>)</div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>                <span class="keywordflow">else</span>:</div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>                    logger.info(<span class="stringliteral">&quot;⚠️ 迅雷 not available, falling back to standard download&quot;</span>)</div>
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>                    self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#a328f8d0ac3295fcd2cd20fa367d14ced">xunlei_downloader</a> = <span class="keywordtype">None</span></div>
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>            <span class="keywordflow">except</span> ImportError:</div>
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>                logger.info(<span class="stringliteral">&quot;⚠️ 迅雷 module not available, using standard download&quot;</span>)</div>
+<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>        </div>
+<div class="line"><a id="l00256" name="l00256"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#aa65e83089f5d59e9d55586e73f802cf7">  256</a></span>        self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#aa65e83089f5d59e9d55586e73f802cf7">max_retries</a> = max_retries</div>
+<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>        </div>
+<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>        <span class="comment"># Initialize mirrors with priority for Chinese users</span></div>
+<div class="line"><a id="l00259" name="l00259"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#a79a2f0163ec7ac1c75748aa29ccbc199">  259</a></span>        self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#a79a2f0163ec7ac1c75748aa29ccbc199">mirrors</a> = self.<a class="code hl_function" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#aaf228bd0e54ff7ea2a00ca4cc716b6f3">_initialize_mirrors</a>()</div>
+<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>        </div>
+<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>        <span class="comment"># Dataset configurations</span></div>
+<div class="line"><a id="l00262" name="l00262"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#a975163c70b342a2fc5eb482fdb291174">  262</a></span>        self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#a975163c70b342a2fc5eb482fdb291174">dataset_configs</a> = {</div>
+<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>            <span class="stringliteral">&#39;cifar10&#39;</span>: {</div>
+<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>                <span class="stringliteral">&#39;files&#39;</span>: [</div>
+<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>                    <span class="stringliteral">&#39;cifar-10-python.tar.gz&#39;</span></div>
+<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>                ],</div>
+<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>                <span class="stringliteral">&#39;expected_size&#39;</span>: 170498071,</div>
+<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>                <span class="stringliteral">&#39;checksum&#39;</span>: <span class="stringliteral">&#39;6d958be074577803d12ecdefd02955f39262c83c16fe9348329d7fe0b5c001ce&#39;</span>,</div>
+<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>                <span class="stringliteral">&#39;direct_urls&#39;</span>: [</div>
+<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>                    <span class="stringliteral">&#39;https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz&#39;</span></div>
+<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>                ],</div>
+<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>                <span class="stringliteral">&#39;chinese_mirrors&#39;</span>: [],</div>
+<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>                <span class="stringliteral">&#39;alternative_mirrors&#39;</span>: [</div>
+<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>                    <span class="stringliteral">&#39;https://mirrors.tuna.tsinghua.edu.cn/pytorch-datasets/cifar-10-python.tar.gz&#39;</span>,</div>
+<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>                    <span class="stringliteral">&#39;https://mirrors.ustc.edu.cn/pytorch-datasets/cifar-10-python.tar.gz&#39;</span>,</div>
+<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>                    <span class="stringliteral">&#39;https://download.pytorch.org/datasets/cifar-10-python.tar.gz&#39;</span>,</div>
+<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>                    <span class="stringliteral">&#39;https://huggingface.co/datasets/cifar10/resolve/main/cifar-10-python.tar.gz&#39;</span>,</div>
+<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>                ]</div>
+<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>            },</div>
+<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>            <span class="stringliteral">&#39;cifar100&#39;</span>: {</div>
+<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>                <span class="stringliteral">&#39;files&#39;</span>: [</div>
+<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>                    <span class="stringliteral">&#39;cifar-100-python.tar.gz&#39;</span></div>
+<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>                ],</div>
+<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>                <span class="stringliteral">&#39;expected_size&#39;</span>: 169001437,</div>
+<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span>                <span class="stringliteral">&#39;checksum&#39;</span>: <span class="stringliteral">&#39;85cd44d02ba6437773c5bbd22e183051d648de2e7d6b014e1ef29b855ba677a7&#39;</span>,</div>
+<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>                <span class="stringliteral">&#39;direct_urls&#39;</span>: [</div>
+<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span>                    <span class="stringliteral">&#39;https://www.cs.toronto.edu/~kriz/cifar-100-python.tar.gz&#39;</span></div>
+<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span>                ],</div>
+<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span>                <span class="stringliteral">&#39;chinese_mirrors&#39;</span>: [],</div>
+<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span>                <span class="stringliteral">&#39;alternative_mirrors&#39;</span>: [</div>
+<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span>                    <span class="stringliteral">&#39;https://mirrors.tuna.tsinghua.edu.cn/pytorch-datasets/cifar-100-python.tar.gz&#39;</span>,</div>
+<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span>                    <span class="stringliteral">&#39;https://mirrors.ustc.edu.cn/pytorch-datasets/cifar-100-python.tar.gz&#39;</span>,</div>
+<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span>                    <span class="stringliteral">&#39;https://download.pytorch.org/datasets/cifar-100-python.tar.gz&#39;</span>,</div>
+<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span>                    <span class="stringliteral">&#39;https://huggingface.co/datasets/cifar100/resolve/main/cifar-100-python.tar.gz&#39;</span>,</div>
+<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span>                ]</div>
+<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span>            },</div>
+<div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span>            <span class="stringliteral">&#39;mnist&#39;</span>: {</div>
+<div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span>                <span class="stringliteral">&#39;files&#39;</span>: [</div>
+<div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span>                    <span class="stringliteral">&#39;train-images-idx3-ubyte.gz&#39;</span>,</div>
+<div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span>                    <span class="stringliteral">&#39;train-labels-idx1-ubyte.gz&#39;</span>,</div>
+<div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span>                    <span class="stringliteral">&#39;t10k-images-idx3-ubyte.gz&#39;</span>,</div>
+<div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span>                    <span class="stringliteral">&#39;t10k-labels-idx1-ubyte.gz&#39;</span></div>
+<div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span>                ],</div>
+<div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span>                <span class="stringliteral">&#39;expected_sizes&#39;</span>: [9912422, 28881, 1648877, 4542],</div>
+<div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span>                <span class="stringliteral">&#39;direct_urls&#39;</span>: [</div>
+<div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span>                    <span class="stringliteral">&#39;http://yann.lecun.com/exdb/mnist/train-images-idx3-ubyte.gz&#39;</span>,</div>
+<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span>                    <span class="stringliteral">&#39;http://yann.lecun.com/exdb/mnist/train-labels-idx1-ubyte.gz&#39;</span>,</div>
+<div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span>                    <span class="stringliteral">&#39;http://yann.lecun.com/exdb/mnist/t10k-images-idx3-ubyte.gz&#39;</span>,</div>
+<div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span>                    <span class="stringliteral">&#39;http://yann.lecun.com/exdb/mnist/t10k-labels-idx1-ubyte.gz&#39;</span></div>
+<div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span>                ],</div>
+<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span>                <span class="stringliteral">&#39;chinese_mirrors&#39;</span>: [</div>
+<div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span>                    <span class="stringliteral">&#39;https://download.pytorch.org/datasets/mnist/train-images-idx3-ubyte.gz&#39;</span>,</div>
+<div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span>                    <span class="stringliteral">&#39;https://download.pytorch.org/datasets/mnist/train-labels-idx1-ubyte.gz&#39;</span>,</div>
+<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span>                    <span class="stringliteral">&#39;https://download.pytorch.org/datasets/mnist/t10k-images-idx3-ubyte.gz&#39;</span>,</div>
+<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>                    <span class="stringliteral">&#39;https://download.pytorch.org/datasets/mnist/t10k-labels-idx1-ubyte.gz&#39;</span></div>
+<div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span>                ]</div>
+<div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span>            }</div>
+<div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span>        }</div>
+<div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span>    </div>
+</div>
+<div class="foldopen" id="foldopen00320" data-start="" data-end="">
+<div class="line"><a id="l00320" name="l00320"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#aaf228bd0e54ff7ea2a00ca4cc716b6f3">  320</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#aaf228bd0e54ff7ea2a00ca4cc716b6f3">_initialize_mirrors</a>(self) -&gt; List[DatasetMirror]:</div>
+<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span>        <span class="stringliteral">&quot;&quot;&quot;Initialize dataset mirrors with priority for Chinese users.&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span>        mirrors = [</div>
+<div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span>            <span class="comment"># Chinese mirrors (highest priority for Chinese users)</span></div>
+<div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span>            <a class="code hl_class" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetMirror.html">DatasetMirror</a>(<span class="stringliteral">&quot;Tsinghua&quot;</span>, <span class="stringliteral">&quot;https://mirrors.tuna.tsinghua.edu.cn/pytorch-datasets&quot;</span>, <span class="stringliteral">&quot;CN&quot;</span>, 1),</div>
+<div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span>            <a class="code hl_class" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetMirror.html">DatasetMirror</a>(<span class="stringliteral">&quot;USTC&quot;</span>, <span class="stringliteral">&quot;https://mirrors.ustc.edu.cn/pytorch-datasets&quot;</span>, <span class="stringliteral">&quot;CN&quot;</span>, 1),</div>
+<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>            <a class="code hl_class" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetMirror.html">DatasetMirror</a>(<span class="stringliteral">&quot;Huawei&quot;</span>, <span class="stringliteral">&quot;https://mirrors.huaweicloud.com/pytorch-datasets&quot;</span>, <span class="stringliteral">&quot;CN&quot;</span>, 1),</div>
+<div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span>            <a class="code hl_class" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetMirror.html">DatasetMirror</a>(<span class="stringliteral">&quot;Aliyun&quot;</span>, <span class="stringliteral">&quot;https://mirrors.aliyun.com/pytorch-datasets&quot;</span>, <span class="stringliteral">&quot;CN&quot;</span>, 2),</div>
+<div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>            <a class="code hl_class" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetMirror.html">DatasetMirror</a>(<span class="stringliteral">&quot;Tencent&quot;</span>, <span class="stringliteral">&quot;https://mirrors.cloud.tencent.com/pytorch-datasets&quot;</span>, <span class="stringliteral">&quot;CN&quot;</span>, 2),</div>
+<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>            </div>
+<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span>            <span class="comment"># International mirrors (fallback)</span></div>
+<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>            <a class="code hl_class" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetMirror.html">DatasetMirror</a>(<span class="stringliteral">&quot;PyTorch&quot;</span>, <span class="stringliteral">&quot;https://download.pytorch.org/datasets&quot;</span>, <span class="stringliteral">&quot;US&quot;</span>, 3),</div>
+<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span>            </div>
+<div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span>            <span class="comment"># Direct dataset sources (lowest priority - slow for Chinese users)</span></div>
+<div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span>            <a class="code hl_class" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetMirror.html">DatasetMirror</a>(<span class="stringliteral">&quot;CIFAR-Direct&quot;</span>, <span class="stringliteral">&quot;https://www.cs.toronto.edu/~kriz&quot;</span>, <span class="stringliteral">&quot;CA&quot;</span>, 4),</div>
+<div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span>            <a class="code hl_class" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetMirror.html">DatasetMirror</a>(<span class="stringliteral">&quot;MNIST-Direct&quot;</span>, <span class="stringliteral">&quot;http://yann.lecun.com/exdb/mnist&quot;</span>, <span class="stringliteral">&quot;US&quot;</span>, 4),</div>
+<div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span>        ]</div>
+<div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span>        </div>
+<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>        <span class="comment"># Test mirrors in parallel</span></div>
+<div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>        threads = []</div>
+<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>        <span class="keywordflow">for</span> mirror <span class="keywordflow">in</span> mirrors:</div>
+<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>            thread = threading.Thread(target=mirror.test_connectivity)</div>
+<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span>            thread.start()</div>
+<div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span>            threads.append(thread)</div>
+<div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span>        </div>
+<div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span>        <span class="keywordflow">for</span> thread <span class="keywordflow">in</span> threads:</div>
+<div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span>            thread.join()</div>
+<div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span>        </div>
+<div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span>        <span class="comment"># Sort by priority and availability</span></div>
+<div class="line"><a id="l00349" name="l00349"></a><span class="lineno">  349</span>        mirrors.sort(key=<span class="keyword">lambda</span> m: (m.priority, m.response_time))</div>
+<div class="line"><a id="l00350" name="l00350"></a><span class="lineno">  350</span>        <span class="keywordflow">return</span> mirrors</div>
+<div class="line"><a id="l00351" name="l00351"></a><span class="lineno">  351</span>    </div>
+</div>
+<div class="foldopen" id="foldopen00352" data-start="" data-end="">
+<div class="line"><a id="l00352" name="l00352"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#aea762c608fa0d49b5f8d81f09f991063">  352</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#aea762c608fa0d49b5f8d81f09f991063">_get_best_mirror</a>(self) -&gt; Optional[DatasetMirror]:</div>
+<div class="line"><a id="l00353" name="l00353"></a><span class="lineno">  353</span>        <span class="stringliteral">&quot;&quot;&quot;Get the best available mirror.&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span>        <span class="keywordflow">for</span> mirror <span class="keywordflow">in</span> self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#a79a2f0163ec7ac1c75748aa29ccbc199">mirrors</a>:</div>
+<div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span>            <span class="keywordflow">if</span> mirror.is_available:</div>
+<div class="line"><a id="l00356" name="l00356"></a><span class="lineno">  356</span>                <span class="keywordflow">return</span> mirror</div>
+<div class="line"><a id="l00357" name="l00357"></a><span class="lineno">  357</span>        <span class="keywordflow">return</span> <span class="keywordtype">None</span></div>
+<div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span>    </div>
+</div>
+<div class="foldopen" id="foldopen00359" data-start="" data-end="">
+<div class="line"><a id="l00359" name="l00359"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#aa25053bc1f628bc75a3decfb068f658d">  359</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#aa25053bc1f628bc75a3decfb068f658d">download_dataset</a>(self, dataset_name: str, force_download: bool = <span class="keyword">False</span>) -&gt; bool:</div>
+<div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span>        <span class="stringliteral">&quot;&quot;&quot;Download dataset with intelligent caching and P2P acceleration.&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span>        <span class="keywordflow">if</span> dataset_name <span class="keywordflow">not</span> <span class="keywordflow">in</span> self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#a975163c70b342a2fc5eb482fdb291174">dataset_configs</a>:</div>
+<div class="line"><a id="l00362" name="l00362"></a><span class="lineno">  362</span>            logger.error(f<span class="stringliteral">&quot;Unknown dataset: {dataset_name}&quot;</span>)</div>
+<div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span>            <span class="keywordflow">return</span> <span class="keyword">False</span></div>
+<div class="line"><a id="l00364" name="l00364"></a><span class="lineno">  364</span>        </div>
+<div class="line"><a id="l00365" name="l00365"></a><span class="lineno">  365</span>        config = self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#a975163c70b342a2fc5eb482fdb291174">dataset_configs</a>[dataset_name]</div>
+<div class="line"><a id="l00366" name="l00366"></a><span class="lineno">  366</span>        dataset_dir = self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#aa3231b36c395eed368c8341ab5c10f09">download_dir</a> / dataset_name</div>
+<div class="line"><a id="l00367" name="l00367"></a><span class="lineno">  367</span>        dataset_dir.mkdir(parents=<span class="keyword">True</span>, exist_ok=<span class="keyword">True</span>)</div>
+<div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span>        </div>
+<div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span>        <span class="comment"># Check if already downloaded</span></div>
+<div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span>        <span class="keywordflow">if</span> <span class="keywordflow">not</span> force_download <span class="keywordflow">and</span> self.<a class="code hl_function" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#a0e2d5012df030ac019ba2529fe8c7915">_is_dataset_complete</a>(dataset_name, dataset_dir):</div>
+<div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span>            logger.info(f<span class="stringliteral">&quot;Dataset {dataset_name} already exists and is complete&quot;</span>)</div>
+<div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span>            <span class="keywordflow">return</span> <span class="keyword">True</span></div>
+<div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span>        </div>
+<div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span>        <span class="comment"># Download files with mirror fallback</span></div>
+<div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span>        success = <span class="keyword">True</span></div>
+<div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span>        <span class="keywordflow">for</span> i, filename <span class="keywordflow">in</span> enumerate(config[<span class="stringliteral">&#39;files&#39;</span>]):</div>
+<div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span>            cache_path = self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#ab55c063912c5f2150feeec0a3813bf1e">cache</a>.get_cache_path(dataset_name, filename)</div>
+<div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span>            target_path = dataset_dir / filename</div>
+<div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span>            </div>
+<div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span>            <span class="comment"># Check cache first</span></div>
+<div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span>            expected_size = config.get(<span class="stringliteral">&#39;expected_sizes&#39;</span>, [config.get(<span class="stringliteral">&#39;expected_size&#39;</span>)])[i] <span class="keywordflow">if</span> <span class="stringliteral">&#39;expected_sizes&#39;</span> <span class="keywordflow">in</span> config <span class="keywordflow">else</span> config.get(<span class="stringliteral">&#39;expected_size&#39;</span>)</div>
+<div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span>            </div>
+<div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span>            <span class="keywordflow">if</span> self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#ab55c063912c5f2150feeec0a3813bf1e">cache</a>.is_cached(dataset_name, filename, expected_size):</div>
+<div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span>                logger.info(f<span class="stringliteral">&quot;Using cached file: {filename}&quot;</span>)</div>
+<div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span>                <span class="keywordflow">if</span> <span class="keywordflow">not</span> target_path.exists():</div>
+<div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span>                    <span class="keyword">import</span> shutil</div>
+<div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span>                    shutil.copy2(cache_path, target_path)</div>
+<div class="line"><a id="l00388" name="l00388"></a><span class="lineno">  388</span>                <span class="keywordflow">continue</span></div>
+<div class="line"><a id="l00389" name="l00389"></a><span class="lineno">  389</span>            </div>
+<div class="line"><a id="l00390" name="l00390"></a><span class="lineno">  390</span>            <span class="comment"># Try direct URLs first (Toronto University)</span></div>
+<div class="line"><a id="l00391" name="l00391"></a><span class="lineno">  391</span>            download_success = <span class="keyword">False</span></div>
+<div class="line"><a id="l00392" name="l00392"></a><span class="lineno">  392</span>            </div>
+<div class="line"><a id="l00393" name="l00393"></a><span class="lineno">  393</span>            <span class="keywordflow">if</span> <span class="stringliteral">&#39;direct_urls&#39;</span> <span class="keywordflow">in</span> config <span class="keywordflow">and</span> i &lt; len(config[<span class="stringliteral">&#39;direct_urls&#39;</span>]):</div>
+<div class="line"><a id="l00394" name="l00394"></a><span class="lineno">  394</span>                direct_url = config[<span class="stringliteral">&#39;direct_urls&#39;</span>][i]</div>
+<div class="line"><a id="l00395" name="l00395"></a><span class="lineno">  395</span>                logger.info(f<span class="stringliteral">&quot;Trying direct source: {direct_url}&quot;</span>)</div>
+<div class="line"><a id="l00396" name="l00396"></a><span class="lineno">  396</span>                </div>
+<div class="line"><a id="l00397" name="l00397"></a><span class="lineno">  397</span>                <span class="keywordflow">for</span> attempt <span class="keywordflow">in</span> range(self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#aa65e83089f5d59e9d55586e73f802cf7">max_retries</a>):</div>
+<div class="line"><a id="l00398" name="l00398"></a><span class="lineno">  398</span>                    <span class="keywordflow">if</span> self.<a class="code hl_function" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#a9b2229812a12f7836d970b89bcd865a9">_download_file_with_fallback</a>(direct_url, target_path, filename):</div>
+<div class="line"><a id="l00399" name="l00399"></a><span class="lineno">  399</span>                        <span class="comment"># Verify file size to ensure it&#39;s not an HTML page</span></div>
+<div class="line"><a id="l00400" name="l00400"></a><span class="lineno">  400</span>                        <span class="keywordflow">if</span> target_path.exists() <span class="keywordflow">and</span> target_path.stat().st_size &gt; 10000000:  <span class="comment"># &gt; 10MB</span></div>
+<div class="line"><a id="l00401" name="l00401"></a><span class="lineno">  401</span>                            download_success = <span class="keyword">True</span></div>
+<div class="line"><a id="l00402" name="l00402"></a><span class="lineno">  402</span>                            <span class="keywordflow">break</span></div>
+<div class="line"><a id="l00403" name="l00403"></a><span class="lineno">  403</span>                        <span class="keywordflow">else</span>:</div>
+<div class="line"><a id="l00404" name="l00404"></a><span class="lineno">  404</span>                            logger.warning(f<span class="stringliteral">&quot;Downloaded file too small, likely HTML page&quot;</span>)</div>
+<div class="line"><a id="l00405" name="l00405"></a><span class="lineno">  405</span>                            target_path.unlink()  <span class="comment"># Remove corrupted file</span></div>
+<div class="line"><a id="l00406" name="l00406"></a><span class="lineno">  406</span>                    <span class="keywordflow">else</span>:</div>
+<div class="line"><a id="l00407" name="l00407"></a><span class="lineno">  407</span>                        logger.warning(f<span class="stringliteral">&quot;Direct download attempt {attempt + 1} failed&quot;</span>)</div>
+<div class="line"><a id="l00408" name="l00408"></a><span class="lineno">  408</span>                        <span class="keywordflow">if</span> attempt &lt; self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#aa65e83089f5d59e9d55586e73f802cf7">max_retries</a> - 1:</div>
+<div class="line"><a id="l00409" name="l00409"></a><span class="lineno">  409</span>                            time.sleep(2 ** attempt)</div>
+<div class="line"><a id="l00410" name="l00410"></a><span class="lineno">  410</span>            </div>
+<div class="line"><a id="l00411" name="l00411"></a><span class="lineno">  411</span>            <span class="comment"># Fallback to alternative mirrors if direct URLs fail</span></div>
+<div class="line"><a id="l00412" name="l00412"></a><span class="lineno">  412</span>            <span class="keywordflow">if</span> <span class="keywordflow">not</span> download_success <span class="keywordflow">and</span> <span class="stringliteral">&#39;alternative_mirrors&#39;</span> <span class="keywordflow">in</span> config <span class="keywordflow">and</span> i &lt; len(config[<span class="stringliteral">&#39;alternative_mirrors&#39;</span>]):</div>
+<div class="line"><a id="l00413" name="l00413"></a><span class="lineno">  413</span>                <span class="keywordflow">for</span> mirror_url <span class="keywordflow">in</span> config[<span class="stringliteral">&#39;alternative_mirrors&#39;</span>]:</div>
+<div class="line"><a id="l00414" name="l00414"></a><span class="lineno">  414</span>                    logger.info(f<span class="stringliteral">&quot;Trying alternative mirror: {mirror_url}&quot;</span>)</div>
+<div class="line"><a id="l00415" name="l00415"></a><span class="lineno">  415</span>                    </div>
+<div class="line"><a id="l00416" name="l00416"></a><span class="lineno">  416</span>                    <span class="keywordflow">for</span> attempt <span class="keywordflow">in</span> range(self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#aa65e83089f5d59e9d55586e73f802cf7">max_retries</a>):</div>
+<div class="line"><a id="l00417" name="l00417"></a><span class="lineno">  417</span>                        <span class="keywordflow">if</span> self.<a class="code hl_function" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#a9b2229812a12f7836d970b89bcd865a9">_download_file_with_fallback</a>(mirror_url, target_path, filename):</div>
+<div class="line"><a id="l00418" name="l00418"></a><span class="lineno">  418</span>                            <span class="comment"># Verify file size to ensure it&#39;s not an HTML page</span></div>
+<div class="line"><a id="l00419" name="l00419"></a><span class="lineno">  419</span>                            <span class="keywordflow">if</span> target_path.exists() <span class="keywordflow">and</span> target_path.stat().st_size &gt; 10000000:  <span class="comment"># &gt; 10MB</span></div>
+<div class="line"><a id="l00420" name="l00420"></a><span class="lineno">  420</span>                                download_success = <span class="keyword">True</span></div>
+<div class="line"><a id="l00421" name="l00421"></a><span class="lineno">  421</span>                                <span class="keywordflow">break</span></div>
+<div class="line"><a id="l00422" name="l00422"></a><span class="lineno">  422</span>                            <span class="keywordflow">else</span>:</div>
+<div class="line"><a id="l00423" name="l00423"></a><span class="lineno">  423</span>                                logger.warning(f<span class="stringliteral">&quot;Downloaded file too small, likely HTML page&quot;</span>)</div>
+<div class="line"><a id="l00424" name="l00424"></a><span class="lineno">  424</span>                                target_path.unlink()  <span class="comment"># Remove corrupted file</span></div>
+<div class="line"><a id="l00425" name="l00425"></a><span class="lineno">  425</span>                        <span class="keywordflow">else</span>:</div>
+<div class="line"><a id="l00426" name="l00426"></a><span class="lineno">  426</span>                            logger.warning(f<span class="stringliteral">&quot;Alternative mirror download attempt {attempt + 1} failed&quot;</span>)</div>
+<div class="line"><a id="l00427" name="l00427"></a><span class="lineno">  427</span>                            <span class="keywordflow">if</span> attempt &lt; self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#aa65e83089f5d59e9d55586e73f802cf7">max_retries</a> - 1:</div>
+<div class="line"><a id="l00428" name="l00428"></a><span class="lineno">  428</span>                                time.sleep(2 ** attempt)</div>
+<div class="line"><a id="l00429" name="l00429"></a><span class="lineno">  429</span>                    </div>
+<div class="line"><a id="l00430" name="l00430"></a><span class="lineno">  430</span>                    <span class="keywordflow">if</span> download_success:</div>
+<div class="line"><a id="l00431" name="l00431"></a><span class="lineno">  431</span>                        <span class="keywordflow">break</span></div>
+<div class="line"><a id="l00432" name="l00432"></a><span class="lineno">  432</span>            </div>
+<div class="line"><a id="l00433" name="l00433"></a><span class="lineno">  433</span>            <span class="keywordflow">if</span> download_success:</div>
+<div class="line"><a id="l00434" name="l00434"></a><span class="lineno">  434</span>                <span class="comment"># Cache the downloaded file</span></div>
+<div class="line"><a id="l00435" name="l00435"></a><span class="lineno">  435</span>                self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#ab55c063912c5f2150feeec0a3813bf1e">cache</a>.cache_file(dataset_name, filename, target_path, expected_size)</div>
+<div class="line"><a id="l00436" name="l00436"></a><span class="lineno">  436</span>            <span class="keywordflow">else</span>:</div>
+<div class="line"><a id="l00437" name="l00437"></a><span class="lineno">  437</span>                logger.error(f<span class="stringliteral">&quot;Failed to download {filename} from all sources&quot;</span>)</div>
+<div class="line"><a id="l00438" name="l00438"></a><span class="lineno">  438</span>                success = <span class="keyword">False</span></div>
+<div class="line"><a id="l00439" name="l00439"></a><span class="lineno">  439</span>        </div>
+<div class="line"><a id="l00440" name="l00440"></a><span class="lineno">  440</span>        <span class="comment"># Extract dataset if download was successful</span></div>
+<div class="line"><a id="l00441" name="l00441"></a><span class="lineno">  441</span>        <span class="keywordflow">if</span> success:</div>
+<div class="line"><a id="l00442" name="l00442"></a><span class="lineno">  442</span>            logger.info(f<span class="stringliteral">&quot;Extracting {dataset_name} dataset...&quot;</span>)</div>
+<div class="line"><a id="l00443" name="l00443"></a><span class="lineno">  443</span>            <span class="keywordflow">if</span> <span class="keywordflow">not</span> self.<a class="code hl_function" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#a3db9112a32ab4ca6bf00f396b14b26dd">_extract_dataset</a>(dataset_name, dataset_dir):</div>
+<div class="line"><a id="l00444" name="l00444"></a><span class="lineno">  444</span>                logger.error(f<span class="stringliteral">&quot;Failed to extract {dataset_name} dataset&quot;</span>)</div>
+<div class="line"><a id="l00445" name="l00445"></a><span class="lineno">  445</span>                success = <span class="keyword">False</span></div>
+<div class="line"><a id="l00446" name="l00446"></a><span class="lineno">  446</span>        </div>
+<div class="line"><a id="l00447" name="l00447"></a><span class="lineno">  447</span>        <span class="keywordflow">return</span> success</div>
+<div class="line"><a id="l00448" name="l00448"></a><span class="lineno">  448</span>    </div>
+</div>
+<div class="foldopen" id="foldopen00449" data-start="" data-end="">
+<div class="line"><a id="l00449" name="l00449"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#a3db9112a32ab4ca6bf00f396b14b26dd">  449</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#a3db9112a32ab4ca6bf00f396b14b26dd">_extract_dataset</a>(self, dataset_name: str, dataset_dir: Path) -&gt; bool:</div>
+<div class="line"><a id="l00450" name="l00450"></a><span class="lineno">  450</span>        <span class="stringliteral">&quot;&quot;&quot;Extract downloaded dataset files.&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00451" name="l00451"></a><span class="lineno">  451</span>        <span class="keywordflow">try</span>:</div>
+<div class="line"><a id="l00452" name="l00452"></a><span class="lineno">  452</span>            config = self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#a975163c70b342a2fc5eb482fdb291174">dataset_configs</a>[dataset_name]</div>
+<div class="line"><a id="l00453" name="l00453"></a><span class="lineno">  453</span>            </div>
+<div class="line"><a id="l00454" name="l00454"></a><span class="lineno">  454</span>            <span class="keywordflow">for</span> filename <span class="keywordflow">in</span> config[<span class="stringliteral">&#39;files&#39;</span>]:</div>
+<div class="line"><a id="l00455" name="l00455"></a><span class="lineno">  455</span>                file_path = dataset_dir / filename</div>
+<div class="line"><a id="l00456" name="l00456"></a><span class="lineno">  456</span>                </div>
+<div class="line"><a id="l00457" name="l00457"></a><span class="lineno">  457</span>                <span class="keywordflow">if</span> <span class="keywordflow">not</span> file_path.exists():</div>
+<div class="line"><a id="l00458" name="l00458"></a><span class="lineno">  458</span>                    <span class="keywordflow">continue</span></div>
+<div class="line"><a id="l00459" name="l00459"></a><span class="lineno">  459</span>                </div>
+<div class="line"><a id="l00460" name="l00460"></a><span class="lineno">  460</span>                <span class="keywordflow">if</span> filename.endswith(<span class="stringliteral">&#39;.tar.gz&#39;</span>):</div>
+<div class="line"><a id="l00461" name="l00461"></a><span class="lineno">  461</span>                    <span class="keyword">import</span> tarfile</div>
+<div class="line"><a id="l00462" name="l00462"></a><span class="lineno">  462</span>                    logger.info(f<span class="stringliteral">&quot;Extracting {filename}...&quot;</span>)</div>
+<div class="line"><a id="l00463" name="l00463"></a><span class="lineno">  463</span>                    <span class="keyword">with</span> tarfile.open(file_path, <span class="stringliteral">&#39;r:gz&#39;</span>) <span class="keyword">as</span> tar:</div>
+<div class="line"><a id="l00464" name="l00464"></a><span class="lineno">  464</span>                        tar.extractall(dataset_dir)</div>
+<div class="line"><a id="l00465" name="l00465"></a><span class="lineno">  465</span>                    logger.info(f<span class="stringliteral">&quot;Extracted {filename} successfully&quot;</span>)</div>
+<div class="line"><a id="l00466" name="l00466"></a><span class="lineno">  466</span>                </div>
+<div class="line"><a id="l00467" name="l00467"></a><span class="lineno">  467</span>                <span class="keywordflow">elif</span> filename.endswith(<span class="stringliteral">&#39;.gz&#39;</span>):</div>
+<div class="line"><a id="l00468" name="l00468"></a><span class="lineno">  468</span>                    <span class="keyword">import</span> gzip</div>
+<div class="line"><a id="l00469" name="l00469"></a><span class="lineno">  469</span>                    logger.info(f<span class="stringliteral">&quot;Extracting {filename}...&quot;</span>)</div>
+<div class="line"><a id="l00470" name="l00470"></a><span class="lineno">  470</span>                    <span class="keyword">with</span> gzip.open(file_path, <span class="stringliteral">&#39;rb&#39;</span>) <span class="keyword">as</span> f_in:</div>
+<div class="line"><a id="l00471" name="l00471"></a><span class="lineno">  471</span>                        content = f_in.read()</div>
+<div class="line"><a id="l00472" name="l00472"></a><span class="lineno">  472</span>                        <span class="keyword">with</span> open(file_path.with_suffix(<span class="stringliteral">&#39;&#39;</span>), <span class="stringliteral">&#39;wb&#39;</span>) <span class="keyword">as</span> f_out:</div>
+<div class="line"><a id="l00473" name="l00473"></a><span class="lineno">  473</span>                            f_out.write(content)</div>
+<div class="line"><a id="l00474" name="l00474"></a><span class="lineno">  474</span>                    logger.info(f<span class="stringliteral">&quot;Extracted {filename} successfully&quot;</span>)</div>
+<div class="line"><a id="l00475" name="l00475"></a><span class="lineno">  475</span>            </div>
+<div class="line"><a id="l00476" name="l00476"></a><span class="lineno">  476</span>            <span class="keywordflow">return</span> <span class="keyword">True</span></div>
+<div class="line"><a id="l00477" name="l00477"></a><span class="lineno">  477</span>            </div>
+<div class="line"><a id="l00478" name="l00478"></a><span class="lineno">  478</span>        <span class="keywordflow">except</span> Exception <span class="keyword">as</span> e:</div>
+<div class="line"><a id="l00479" name="l00479"></a><span class="lineno">  479</span>            logger.error(f<span class="stringliteral">&quot;Extraction failed: {e}&quot;</span>)</div>
+<div class="line"><a id="l00480" name="l00480"></a><span class="lineno">  480</span>            <span class="keywordflow">return</span> <span class="keyword">False</span></div>
+<div class="line"><a id="l00481" name="l00481"></a><span class="lineno">  481</span>    </div>
+</div>
+<div class="foldopen" id="foldopen00482" data-start="" data-end="">
+<div class="line"><a id="l00482" name="l00482"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#a9b2229812a12f7836d970b89bcd865a9">  482</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#a9b2229812a12f7836d970b89bcd865a9">_download_file_with_fallback</a>(self, url: str, filepath: Path, filename: str) -&gt; bool:</div>
+<div class="line"><a id="l00483" name="l00483"></a><span class="lineno">  483</span>        <span class="stringliteral">&quot;&quot;&quot;Download file with robust fallback, 迅雷 integration, and chunked downloads.&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00484" name="l00484"></a><span class="lineno">  484</span>        <span class="comment"># Try 迅雷 first (for Chinese users)</span></div>
+<div class="line"><a id="l00485" name="l00485"></a><span class="lineno">  485</span>        <span class="keywordflow">if</span> self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#a328f8d0ac3295fcd2cd20fa367d14ced">xunlei_downloader</a> <span class="keywordflow">and</span> self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#a328f8d0ac3295fcd2cd20fa367d14ced">xunlei_downloader</a>.is_available:</div>
+<div class="line"><a id="l00486" name="l00486"></a><span class="lineno">  486</span>            logger.info(f<span class="stringliteral">&quot;🚀 Trying 迅雷 download: {filename}&quot;</span>)</div>
+<div class="line"><a id="l00487" name="l00487"></a><span class="lineno">  487</span>            <span class="keywordflow">if</span> self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#a328f8d0ac3295fcd2cd20fa367d14ced">xunlei_downloader</a>.download_with_xunlei(url, str(filepath.parent), filename):</div>
+<div class="line"><a id="l00488" name="l00488"></a><span class="lineno">  488</span>                logger.info(f<span class="stringliteral">&quot;✅ 迅雷 download started for {filename}&quot;</span>)</div>
+<div class="line"><a id="l00489" name="l00489"></a><span class="lineno">  489</span>                <span class="comment"># Wait for download to complete</span></div>
+<div class="line"><a id="l00490" name="l00490"></a><span class="lineno">  490</span>                logger.info(f<span class="stringliteral">&quot;⏳ Waiting for 迅雷 download to complete...&quot;</span>)</div>
+<div class="line"><a id="l00491" name="l00491"></a><span class="lineno">  491</span>                max_wait_time = 300  <span class="comment"># 5 minutes</span></div>
+<div class="line"><a id="l00492" name="l00492"></a><span class="lineno">  492</span>                wait_interval = 5    <span class="comment"># Check every 5 seconds</span></div>
+<div class="line"><a id="l00493" name="l00493"></a><span class="lineno">  493</span>                waited_time = 0</div>
+<div class="line"><a id="l00494" name="l00494"></a><span class="lineno">  494</span>                </div>
+<div class="line"><a id="l00495" name="l00495"></a><span class="lineno">  495</span>                <span class="keywordflow">while</span> waited_time &lt; max_wait_time:</div>
+<div class="line"><a id="l00496" name="l00496"></a><span class="lineno">  496</span>                    <span class="keywordflow">if</span> filepath.exists() <span class="keywordflow">and</span> filepath.stat().st_size &gt; 10000000:  <span class="comment"># &gt; 10MB</span></div>
+<div class="line"><a id="l00497" name="l00497"></a><span class="lineno">  497</span>                        logger.info(f<span class="stringliteral">&quot;✅ 迅雷 download completed: {filename}&quot;</span>)</div>
+<div class="line"><a id="l00498" name="l00498"></a><span class="lineno">  498</span>                        <span class="keywordflow">return</span> <span class="keyword">True</span></div>
+<div class="line"><a id="l00499" name="l00499"></a><span class="lineno">  499</span>                    time.sleep(wait_interval)</div>
+<div class="line"><a id="l00500" name="l00500"></a><span class="lineno">  500</span>                    waited_time += wait_interval</div>
+<div class="line"><a id="l00501" name="l00501"></a><span class="lineno">  501</span>                    logger.info(f<span class="stringliteral">&quot;⏳ Still waiting... ({waited_time}s/{max_wait_time}s)&quot;</span>)</div>
+<div class="line"><a id="l00502" name="l00502"></a><span class="lineno">  502</span>                </div>
+<div class="line"><a id="l00503" name="l00503"></a><span class="lineno">  503</span>                logger.warning(f<span class="stringliteral">&quot;⚠️ 迅雷 download timeout for {filename}, trying alternatives&quot;</span>)</div>
+<div class="line"><a id="l00504" name="l00504"></a><span class="lineno">  504</span>            <span class="keywordflow">else</span>:</div>
+<div class="line"><a id="l00505" name="l00505"></a><span class="lineno">  505</span>                logger.warning(f<span class="stringliteral">&quot;⚠️ 迅雷 download failed for {filename}, trying alternatives&quot;</span>)</div>
+<div class="line"><a id="l00506" name="l00506"></a><span class="lineno">  506</span>        </div>
+<div class="line"><a id="l00507" name="l00507"></a><span class="lineno">  507</span>        <span class="comment"># Try P2P downloader</span></div>
+<div class="line"><a id="l00508" name="l00508"></a><span class="lineno">  508</span>        <span class="keywordflow">if</span> self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#a682c7f94749fef8367d68e90694ef72a">p2p_downloader</a>:</div>
+<div class="line"><a id="l00509" name="l00509"></a><span class="lineno">  509</span>            <span class="keywordflow">if</span> self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#a682c7f94749fef8367d68e90694ef72a">p2p_downloader</a>.download_file(url, filepath):</div>
+<div class="line"><a id="l00510" name="l00510"></a><span class="lineno">  510</span>                <span class="keywordflow">return</span> <span class="keyword">True</span></div>
+<div class="line"><a id="l00511" name="l00511"></a><span class="lineno">  511</span>        </div>
+<div class="line"><a id="l00512" name="l00512"></a><span class="lineno">  512</span>        <span class="comment"># Fallback to robust chunked download</span></div>
+<div class="line"><a id="l00513" name="l00513"></a><span class="lineno">  513</span>        <span class="keywordflow">return</span> self.<a class="code hl_function" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#af192d081d99b3c4f471534aca99721b3">_download_with_chunks</a>(url, filepath, filename)</div>
+<div class="line"><a id="l00514" name="l00514"></a><span class="lineno">  514</span>    </div>
+</div>
+<div class="foldopen" id="foldopen00515" data-start="" data-end="">
+<div class="line"><a id="l00515" name="l00515"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#af192d081d99b3c4f471534aca99721b3">  515</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#af192d081d99b3c4f471534aca99721b3">_download_with_chunks</a>(self, url: str, filepath: Path, filename: str) -&gt; bool:</div>
+<div class="line"><a id="l00516" name="l00516"></a><span class="lineno">  516</span>        <span class="stringliteral">&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00517" name="l00517"></a><span class="lineno">  517</span><span class="stringliteral">        Download file with chunked transfer and robust error handling.</span></div>
+<div class="line"><a id="l00518" name="l00518"></a><span class="lineno">  518</span><span class="stringliteral">        </span></div>
+<div class="line"><a id="l00519" name="l00519"></a><span class="lineno">  519</span><span class="stringliteral">        Args:</span></div>
+<div class="line"><a id="l00520" name="l00520"></a><span class="lineno">  520</span><span class="stringliteral">            url (str): Download URL</span></div>
+<div class="line"><a id="l00521" name="l00521"></a><span class="lineno">  521</span><span class="stringliteral">            filepath (Path): Local file path</span></div>
+<div class="line"><a id="l00522" name="l00522"></a><span class="lineno">  522</span><span class="stringliteral">            filename (str): Filename for logging</span></div>
+<div class="line"><a id="l00523" name="l00523"></a><span class="lineno">  523</span><span class="stringliteral">            </span></div>
+<div class="line"><a id="l00524" name="l00524"></a><span class="lineno">  524</span><span class="stringliteral">        Returns:</span></div>
+<div class="line"><a id="l00525" name="l00525"></a><span class="lineno">  525</span><span class="stringliteral">            bool: True if download successful</span></div>
+<div class="line"><a id="l00526" name="l00526"></a><span class="lineno">  526</span><span class="stringliteral">        &quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00527" name="l00527"></a><span class="lineno">  527</span>        <span class="keywordflow">try</span>:</div>
+<div class="line"><a id="l00528" name="l00528"></a><span class="lineno">  528</span>            <span class="comment"># Use session for connection pooling and retries</span></div>
+<div class="line"><a id="l00529" name="l00529"></a><span class="lineno">  529</span>            session = requests.Session()</div>
+<div class="line"><a id="l00530" name="l00530"></a><span class="lineno">  530</span>            <span class="keyword">from</span> requests.adapters <span class="keyword">import</span> HTTPAdapter</div>
+<div class="line"><a id="l00531" name="l00531"></a><span class="lineno">  531</span>            <span class="keyword">from</span> urllib3.util.retry <span class="keyword">import</span> Retry</div>
+<div class="line"><a id="l00532" name="l00532"></a><span class="lineno">  532</span>            </div>
+<div class="line"><a id="l00533" name="l00533"></a><span class="lineno">  533</span>            retry_strategy = Retry(</div>
+<div class="line"><a id="l00534" name="l00534"></a><span class="lineno">  534</span>                total=3,</div>
+<div class="line"><a id="l00535" name="l00535"></a><span class="lineno">  535</span>                backoff_factor=1,</div>
+<div class="line"><a id="l00536" name="l00536"></a><span class="lineno">  536</span>                status_forcelist=[429, 500, 502, 503, 504],</div>
+<div class="line"><a id="l00537" name="l00537"></a><span class="lineno">  537</span>            )</div>
+<div class="line"><a id="l00538" name="l00538"></a><span class="lineno">  538</span>            adapter = HTTPAdapter(max_retries=retry_strategy)</div>
+<div class="line"><a id="l00539" name="l00539"></a><span class="lineno">  539</span>            session.mount(<span class="stringliteral">&quot;http://&quot;</span>, adapter)</div>
+<div class="line"><a id="l00540" name="l00540"></a><span class="lineno">  540</span>            session.mount(<span class="stringliteral">&quot;https://&quot;</span>, adapter)</div>
+<div class="line"><a id="l00541" name="l00541"></a><span class="lineno">  541</span>            </div>
+<div class="line"><a id="l00542" name="l00542"></a><span class="lineno">  542</span>            <span class="comment"># Head request to get file size</span></div>
+<div class="line"><a id="l00543" name="l00543"></a><span class="lineno">  543</span>            <span class="keywordflow">try</span>:</div>
+<div class="line"><a id="l00544" name="l00544"></a><span class="lineno">  544</span>                head_response = session.head(url, timeout=10, allow_redirects=<span class="keyword">True</span>)</div>
+<div class="line"><a id="l00545" name="l00545"></a><span class="lineno">  545</span>                total_size = int(head_response.headers.get(<span class="stringliteral">&#39;content-length&#39;</span>, 0))</div>
+<div class="line"><a id="l00546" name="l00546"></a><span class="lineno">  546</span>            <span class="keywordflow">except</span>:</div>
+<div class="line"><a id="l00547" name="l00547"></a><span class="lineno">  547</span>                total_size = 0</div>
+<div class="line"><a id="l00548" name="l00548"></a><span class="lineno">  548</span>            </div>
+<div class="line"><a id="l00549" name="l00549"></a><span class="lineno">  549</span>            <span class="comment"># Download with progress tracking</span></div>
+<div class="line"><a id="l00550" name="l00550"></a><span class="lineno">  550</span>            response = session.get(url, stream=<span class="keyword">True</span>, timeout=30)</div>
+<div class="line"><a id="l00551" name="l00551"></a><span class="lineno">  551</span>            response.raise_for_status()</div>
+<div class="line"><a id="l00552" name="l00552"></a><span class="lineno">  552</span>            </div>
+<div class="line"><a id="l00553" name="l00553"></a><span class="lineno">  553</span>            downloaded_size = 0</div>
+<div class="line"><a id="l00554" name="l00554"></a><span class="lineno">  554</span>            chunk_size = 8192  <span class="comment"># 8KB chunks</span></div>
+<div class="line"><a id="l00555" name="l00555"></a><span class="lineno">  555</span>            last_progress_time = time.time()</div>
+<div class="line"><a id="l00556" name="l00556"></a><span class="lineno">  556</span>            </div>
+<div class="line"><a id="l00557" name="l00557"></a><span class="lineno">  557</span>            <span class="keyword">with</span> open(filepath, <span class="stringliteral">&#39;wb&#39;</span>) <span class="keyword">as</span> f:</div>
+<div class="line"><a id="l00558" name="l00558"></a><span class="lineno">  558</span>                <span class="keywordflow">for</span> chunk <span class="keywordflow">in</span> response.iter_content(chunk_size=chunk_size):</div>
+<div class="line"><a id="l00559" name="l00559"></a><span class="lineno">  559</span>                    <span class="keywordflow">if</span> chunk:  <span class="comment"># chunk should already be bytes from iter_content</span></div>
+<div class="line"><a id="l00560" name="l00560"></a><span class="lineno">  560</span>                        f.write(chunk)</div>
+<div class="line"><a id="l00561" name="l00561"></a><span class="lineno">  561</span>                        downloaded_size += len(chunk)</div>
+<div class="line"><a id="l00562" name="l00562"></a><span class="lineno">  562</span>                        </div>
+<div class="line"><a id="l00563" name="l00563"></a><span class="lineno">  563</span>                        <span class="comment"># Progress update every 5 seconds or 1MB</span></div>
+<div class="line"><a id="l00564" name="l00564"></a><span class="lineno">  564</span>                        current_time = time.time()</div>
+<div class="line"><a id="l00565" name="l00565"></a><span class="lineno">  565</span>                        <span class="keywordflow">if</span> (current_time - last_progress_time &gt; 5 <span class="keywordflow">or</span> </div>
+<div class="line"><a id="l00566" name="l00566"></a><span class="lineno">  566</span>                            downloaded_size % (1024 * 1024) == 0):</div>
+<div class="line"><a id="l00567" name="l00567"></a><span class="lineno">  567</span>                            </div>
+<div class="line"><a id="l00568" name="l00568"></a><span class="lineno">  568</span>                            <span class="keywordflow">if</span> total_size &gt; 0:</div>
+<div class="line"><a id="l00569" name="l00569"></a><span class="lineno">  569</span>                                progress = (downloaded_size / total_size) * 100</div>
+<div class="line"><a id="l00570" name="l00570"></a><span class="lineno">  570</span>                                speed = downloaded_size / (current_time - last_progress_time + 1) / (1024 * 1024)</div>
+<div class="line"><a id="l00571" name="l00571"></a><span class="lineno">  571</span>                                logger.info(f<span class="stringliteral">&quot;📥 {filename}: {progress:.1f}% ({downloaded_size / (1024*1024):.1f}MB) - {speed:.1f}MB/s&quot;</span>)</div>
+<div class="line"><a id="l00572" name="l00572"></a><span class="lineno">  572</span>                            <span class="keywordflow">else</span>:</div>
+<div class="line"><a id="l00573" name="l00573"></a><span class="lineno">  573</span>                                speed = downloaded_size / (current_time - last_progress_time + 1) / (1024 * 1024)</div>
+<div class="line"><a id="l00574" name="l00574"></a><span class="lineno">  574</span>                                logger.info(f<span class="stringliteral">&quot;📥 {filename}: {downloaded_size / (1024*1024):.1f}MB - {speed:.1f}MB/s&quot;</span>)</div>
+<div class="line"><a id="l00575" name="l00575"></a><span class="lineno">  575</span>                            </div>
+<div class="line"><a id="l00576" name="l00576"></a><span class="lineno">  576</span>                            last_progress_time = current_time</div>
+<div class="line"><a id="l00577" name="l00577"></a><span class="lineno">  577</span>            </div>
+<div class="line"><a id="l00578" name="l00578"></a><span class="lineno">  578</span>            <span class="comment"># Final progress</span></div>
+<div class="line"><a id="l00579" name="l00579"></a><span class="lineno">  579</span>            <span class="keywordflow">if</span> total_size &gt; 0:</div>
+<div class="line"><a id="l00580" name="l00580"></a><span class="lineno">  580</span>                progress = (downloaded_size / total_size) * 100</div>
+<div class="line"><a id="l00581" name="l00581"></a><span class="lineno">  581</span>                logger.info(f<span class="stringliteral">&quot;✅ {filename}: Download complete ({progress:.1f}%)&quot;</span>)</div>
+<div class="line"><a id="l00582" name="l00582"></a><span class="lineno">  582</span>            <span class="keywordflow">else</span>:</div>
+<div class="line"><a id="l00583" name="l00583"></a><span class="lineno">  583</span>                logger.info(f<span class="stringliteral">&quot;✅ {filename}: Download complete ({downloaded_size / (1024*1024):.1f}MB)&quot;</span>)</div>
+<div class="line"><a id="l00584" name="l00584"></a><span class="lineno">  584</span>            </div>
+<div class="line"><a id="l00585" name="l00585"></a><span class="lineno">  585</span>            <span class="keywordflow">return</span> <span class="keyword">True</span></div>
+<div class="line"><a id="l00586" name="l00586"></a><span class="lineno">  586</span>            </div>
+<div class="line"><a id="l00587" name="l00587"></a><span class="lineno">  587</span>        <span class="keywordflow">except</span> requests.exceptions.Timeout:</div>
+<div class="line"><a id="l00588" name="l00588"></a><span class="lineno">  588</span>            logger.error(f<span class="stringliteral">&quot;⏰ {filename}: Download timeout&quot;</span>)</div>
+<div class="line"><a id="l00589" name="l00589"></a><span class="lineno">  589</span>            <span class="keywordflow">if</span> filepath.exists():</div>
+<div class="line"><a id="l00590" name="l00590"></a><span class="lineno">  590</span>                filepath.unlink()  <span class="comment"># Remove partial file</span></div>
+<div class="line"><a id="l00591" name="l00591"></a><span class="lineno">  591</span>            <span class="keywordflow">return</span> <span class="keyword">False</span></div>
+<div class="line"><a id="l00592" name="l00592"></a><span class="lineno">  592</span>        <span class="keywordflow">except</span> requests.exceptions.ConnectionError:</div>
+<div class="line"><a id="l00593" name="l00593"></a><span class="lineno">  593</span>            logger.error(f<span class="stringliteral">&quot;🔌 {filename}: Connection error&quot;</span>)</div>
+<div class="line"><a id="l00594" name="l00594"></a><span class="lineno">  594</span>            <span class="keywordflow">if</span> filepath.exists():</div>
+<div class="line"><a id="l00595" name="l00595"></a><span class="lineno">  595</span>                filepath.unlink()  <span class="comment"># Remove partial file</span></div>
+<div class="line"><a id="l00596" name="l00596"></a><span class="lineno">  596</span>            <span class="keywordflow">return</span> <span class="keyword">False</span></div>
+<div class="line"><a id="l00597" name="l00597"></a><span class="lineno">  597</span>        <span class="keywordflow">except</span> requests.exceptions.HTTPError <span class="keyword">as</span> e:</div>
+<div class="line"><a id="l00598" name="l00598"></a><span class="lineno">  598</span>            logger.error(f<span class="stringliteral">&quot;🌐 {filename}: HTTP error {e.response.status_code}&quot;</span>)</div>
+<div class="line"><a id="l00599" name="l00599"></a><span class="lineno">  599</span>            <span class="keywordflow">if</span> filepath.exists():</div>
+<div class="line"><a id="l00600" name="l00600"></a><span class="lineno">  600</span>                filepath.unlink()  <span class="comment"># Remove partial file</span></div>
+<div class="line"><a id="l00601" name="l00601"></a><span class="lineno">  601</span>            <span class="keywordflow">return</span> <span class="keyword">False</span></div>
+<div class="line"><a id="l00602" name="l00602"></a><span class="lineno">  602</span>        <span class="keywordflow">except</span> Exception <span class="keyword">as</span> e:</div>
+<div class="line"><a id="l00603" name="l00603"></a><span class="lineno">  603</span>            logger.error(f<span class="stringliteral">&quot;❌ {filename}: Unexpected error: {str(e)}&quot;</span>)</div>
+<div class="line"><a id="l00604" name="l00604"></a><span class="lineno">  604</span>            <span class="keywordflow">if</span> filepath.exists():</div>
+<div class="line"><a id="l00605" name="l00605"></a><span class="lineno">  605</span>                filepath.unlink()  <span class="comment"># Remove partial file</span></div>
+<div class="line"><a id="l00606" name="l00606"></a><span class="lineno">  606</span>            <span class="keywordflow">return</span> <span class="keyword">False</span></div>
+<div class="line"><a id="l00607" name="l00607"></a><span class="lineno">  607</span>    </div>
+</div>
+<div class="foldopen" id="foldopen00608" data-start="" data-end="">
+<div class="line"><a id="l00608" name="l00608"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#a0e2d5012df030ac019ba2529fe8c7915">  608</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#a0e2d5012df030ac019ba2529fe8c7915">_is_dataset_complete</a>(self, dataset_name: str, dataset_dir: Path) -&gt; bool:</div>
+<div class="line"><a id="l00609" name="l00609"></a><span class="lineno">  609</span>        <span class="stringliteral">&quot;&quot;&quot;Check if dataset is complete.&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00610" name="l00610"></a><span class="lineno">  610</span>        config = self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#a975163c70b342a2fc5eb482fdb291174">dataset_configs</a>[dataset_name]</div>
+<div class="line"><a id="l00611" name="l00611"></a><span class="lineno">  611</span>        </div>
+<div class="line"><a id="l00612" name="l00612"></a><span class="lineno">  612</span>        <span class="keywordflow">for</span> filename <span class="keywordflow">in</span> config[<span class="stringliteral">&#39;files&#39;</span>]:</div>
+<div class="line"><a id="l00613" name="l00613"></a><span class="lineno">  613</span>            filepath = dataset_dir / filename</div>
+<div class="line"><a id="l00614" name="l00614"></a><span class="lineno">  614</span>            <span class="keywordflow">if</span> <span class="keywordflow">not</span> filepath.exists():</div>
+<div class="line"><a id="l00615" name="l00615"></a><span class="lineno">  615</span>                <span class="keywordflow">return</span> <span class="keyword">False</span></div>
+<div class="line"><a id="l00616" name="l00616"></a><span class="lineno">  616</span>            </div>
+<div class="line"><a id="l00617" name="l00617"></a><span class="lineno">  617</span>            <span class="comment"># Check file size</span></div>
+<div class="line"><a id="l00618" name="l00618"></a><span class="lineno">  618</span>            expected_size = config.get(<span class="stringliteral">&#39;expected_sizes&#39;</span>, [config.get(<span class="stringliteral">&#39;expected_size&#39;</span>)])[config[<span class="stringliteral">&#39;files&#39;</span>].index(filename)] <span class="keywordflow">if</span> <span class="stringliteral">&#39;expected_sizes&#39;</span> <span class="keywordflow">in</span> config <span class="keywordflow">else</span> config.get(<span class="stringliteral">&#39;expected_size&#39;</span>)</div>
+<div class="line"><a id="l00619" name="l00619"></a><span class="lineno">  619</span>            <span class="keywordflow">if</span> expected_size <span class="keywordflow">and</span> filepath.stat().st_size != expected_size:</div>
+<div class="line"><a id="l00620" name="l00620"></a><span class="lineno">  620</span>                <span class="keywordflow">return</span> <span class="keyword">False</span></div>
+<div class="line"><a id="l00621" name="l00621"></a><span class="lineno">  621</span>        </div>
+<div class="line"><a id="l00622" name="l00622"></a><span class="lineno">  622</span>        <span class="keywordflow">return</span> <span class="keyword">True</span></div>
+<div class="line"><a id="l00623" name="l00623"></a><span class="lineno">  623</span>    </div>
+</div>
+<div class="foldopen" id="foldopen00624" data-start="" data-end="">
+<div class="line"><a id="l00624" name="l00624"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#ac8b512c7f82ad5dd961152b080a02814">  624</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#ac8b512c7f82ad5dd961152b080a02814">get_cifar10_dataloaders</a>(self, batch_size: int = 128, </div>
+<div class="line"><a id="l00625" name="l00625"></a><span class="lineno">  625</span>                               num_workers: int = 2,</div>
+<div class="line"><a id="l00626" name="l00626"></a><span class="lineno">  626</span>                               download: bool = <span class="keyword">True</span>,</div>
+<div class="line"><a id="l00627" name="l00627"></a><span class="lineno">  627</span>                               force_download: bool = <span class="keyword">False</span>) -&gt; Tuple[DataLoader, DataLoader]:</div>
+<div class="line"><a id="l00628" name="l00628"></a><span class="lineno">  628</span>        <span class="stringliteral">&quot;&quot;&quot;Get CIFAR-10 data loaders with advanced downloading.&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00629" name="l00629"></a><span class="lineno">  629</span>        <span class="keywordflow">if</span> download:</div>
+<div class="line"><a id="l00630" name="l00630"></a><span class="lineno">  630</span>            <span class="keywordflow">if</span> <span class="keywordflow">not</span> self.<a class="code hl_function" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#aa25053bc1f628bc75a3decfb068f658d">download_dataset</a>(<span class="stringliteral">&#39;cifar10&#39;</span>, force_download):</div>
+<div class="line"><a id="l00631" name="l00631"></a><span class="lineno">  631</span>                <span class="keywordflow">raise</span> RuntimeError(<span class="stringliteral">&quot;Failed to download CIFAR-10 dataset&quot;</span>)</div>
+<div class="line"><a id="l00632" name="l00632"></a><span class="lineno">  632</span>        </div>
+<div class="line"><a id="l00633" name="l00633"></a><span class="lineno">  633</span>        <span class="comment"># Data transformations</span></div>
+<div class="line"><a id="l00634" name="l00634"></a><span class="lineno">  634</span>        transform_train = transforms.Compose([</div>
+<div class="line"><a id="l00635" name="l00635"></a><span class="lineno">  635</span>            transforms.RandomCrop(32, padding=4),</div>
+<div class="line"><a id="l00636" name="l00636"></a><span class="lineno">  636</span>            transforms.RandomHorizontalFlip(),</div>
+<div class="line"><a id="l00637" name="l00637"></a><span class="lineno">  637</span>            transforms.ToTensor(),</div>
+<div class="line"><a id="l00638" name="l00638"></a><span class="lineno">  638</span>            transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),</div>
+<div class="line"><a id="l00639" name="l00639"></a><span class="lineno">  639</span>        ])</div>
+<div class="line"><a id="l00640" name="l00640"></a><span class="lineno">  640</span> </div>
+<div class="line"><a id="l00641" name="l00641"></a><span class="lineno">  641</span>        transform_test = transforms.Compose([</div>
+<div class="line"><a id="l00642" name="l00642"></a><span class="lineno">  642</span>            transforms.ToTensor(),</div>
+<div class="line"><a id="l00643" name="l00643"></a><span class="lineno">  643</span>            transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),</div>
+<div class="line"><a id="l00644" name="l00644"></a><span class="lineno">  644</span>        ])</div>
+<div class="line"><a id="l00645" name="l00645"></a><span class="lineno">  645</span> </div>
+<div class="line"><a id="l00646" name="l00646"></a><span class="lineno">  646</span>        <span class="comment"># Datasets</span></div>
+<div class="line"><a id="l00647" name="l00647"></a><span class="lineno">  647</span>        train_dataset = torchvision.datasets.CIFAR10(</div>
+<div class="line"><a id="l00648" name="l00648"></a><span class="lineno">  648</span>            root=str(self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#aa3231b36c395eed368c8341ab5c10f09">download_dir</a>), train=<span class="keyword">True</span>, download=<span class="keyword">False</span>, transform=transform_train</div>
+<div class="line"><a id="l00649" name="l00649"></a><span class="lineno">  649</span>        )</div>
+<div class="line"><a id="l00650" name="l00650"></a><span class="lineno">  650</span>        test_dataset = torchvision.datasets.CIFAR10(</div>
+<div class="line"><a id="l00651" name="l00651"></a><span class="lineno">  651</span>            root=str(self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#aa3231b36c395eed368c8341ab5c10f09">download_dir</a>), train=<span class="keyword">False</span>, download=<span class="keyword">False</span>, transform=transform_test</div>
+<div class="line"><a id="l00652" name="l00652"></a><span class="lineno">  652</span>        )</div>
+<div class="line"><a id="l00653" name="l00653"></a><span class="lineno">  653</span> </div>
+<div class="line"><a id="l00654" name="l00654"></a><span class="lineno">  654</span>        <span class="comment"># Create data loaders</span></div>
+<div class="line"><a id="l00655" name="l00655"></a><span class="lineno">  655</span>        train_loader = DataLoader(</div>
+<div class="line"><a id="l00656" name="l00656"></a><span class="lineno">  656</span>            train_dataset,</div>
+<div class="line"><a id="l00657" name="l00657"></a><span class="lineno">  657</span>            batch_size=batch_size,</div>
+<div class="line"><a id="l00658" name="l00658"></a><span class="lineno">  658</span>            shuffle=<span class="keyword">True</span>,</div>
+<div class="line"><a id="l00659" name="l00659"></a><span class="lineno">  659</span>            num_workers=num_workers,</div>
+<div class="line"><a id="l00660" name="l00660"></a><span class="lineno">  660</span>            pin_memory=torch.cuda.is_available(),  <span class="comment"># Enable pin_memory for CUDA</span></div>
+<div class="line"><a id="l00661" name="l00661"></a><span class="lineno">  661</span>            drop_last=<span class="keyword">True</span>,</div>
+<div class="line"><a id="l00662" name="l00662"></a><span class="lineno">  662</span>            persistent_workers=num_workers &gt; 0  <span class="comment"># Keep workers alive between epochs</span></div>
+<div class="line"><a id="l00663" name="l00663"></a><span class="lineno">  663</span>        )</div>
+<div class="line"><a id="l00664" name="l00664"></a><span class="lineno">  664</span>        </div>
+<div class="line"><a id="l00665" name="l00665"></a><span class="lineno">  665</span>        test_loader = DataLoader(</div>
+<div class="line"><a id="l00666" name="l00666"></a><span class="lineno">  666</span>            test_dataset,</div>
+<div class="line"><a id="l00667" name="l00667"></a><span class="lineno">  667</span>            batch_size=batch_size,</div>
+<div class="line"><a id="l00668" name="l00668"></a><span class="lineno">  668</span>            shuffle=<span class="keyword">False</span>,</div>
+<div class="line"><a id="l00669" name="l00669"></a><span class="lineno">  669</span>            num_workers=num_workers,</div>
+<div class="line"><a id="l00670" name="l00670"></a><span class="lineno">  670</span>            pin_memory=torch.cuda.is_available(),  <span class="comment"># Enable pin_memory for CUDA</span></div>
+<div class="line"><a id="l00671" name="l00671"></a><span class="lineno">  671</span>            drop_last=<span class="keyword">False</span>,</div>
+<div class="line"><a id="l00672" name="l00672"></a><span class="lineno">  672</span>            persistent_workers=num_workers &gt; 0  <span class="comment"># Keep workers alive between epochs</span></div>
+<div class="line"><a id="l00673" name="l00673"></a><span class="lineno">  673</span>        )</div>
+<div class="line"><a id="l00674" name="l00674"></a><span class="lineno">  674</span> </div>
+<div class="line"><a id="l00675" name="l00675"></a><span class="lineno">  675</span>        <span class="keywordflow">return</span> train_loader, test_loader</div>
+<div class="line"><a id="l00676" name="l00676"></a><span class="lineno">  676</span>    </div>
+</div>
+<div class="foldopen" id="foldopen00677" data-start="" data-end="">
+<div class="line"><a id="l00677" name="l00677"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#a790b462aced6b612446a87de24778f8b">  677</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#a790b462aced6b612446a87de24778f8b">get_cifar100_dataloaders</a>(self, batch_size: int = 128,</div>
+<div class="line"><a id="l00678" name="l00678"></a><span class="lineno">  678</span>                                num_workers: int = 2,</div>
+<div class="line"><a id="l00679" name="l00679"></a><span class="lineno">  679</span>                                download: bool = <span class="keyword">True</span>,</div>
+<div class="line"><a id="l00680" name="l00680"></a><span class="lineno">  680</span>                                force_download: bool = <span class="keyword">False</span>) -&gt; Tuple[DataLoader, DataLoader]:</div>
+<div class="line"><a id="l00681" name="l00681"></a><span class="lineno">  681</span>        <span class="stringliteral">&quot;&quot;&quot;Get CIFAR-100 data loaders with advanced downloading.&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00682" name="l00682"></a><span class="lineno">  682</span>        <span class="keywordflow">if</span> download:</div>
+<div class="line"><a id="l00683" name="l00683"></a><span class="lineno">  683</span>            <span class="keywordflow">if</span> <span class="keywordflow">not</span> self.<a class="code hl_function" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#aa25053bc1f628bc75a3decfb068f658d">download_dataset</a>(<span class="stringliteral">&#39;cifar100&#39;</span>, force_download):</div>
+<div class="line"><a id="l00684" name="l00684"></a><span class="lineno">  684</span>                <span class="keywordflow">raise</span> RuntimeError(<span class="stringliteral">&quot;Failed to download CIFAR-100 dataset&quot;</span>)</div>
+<div class="line"><a id="l00685" name="l00685"></a><span class="lineno">  685</span>        </div>
+<div class="line"><a id="l00686" name="l00686"></a><span class="lineno">  686</span>        <span class="comment"># Data transformations</span></div>
+<div class="line"><a id="l00687" name="l00687"></a><span class="lineno">  687</span>        transform_train = transforms.Compose([</div>
+<div class="line"><a id="l00688" name="l00688"></a><span class="lineno">  688</span>            transforms.RandomCrop(32, padding=4),</div>
+<div class="line"><a id="l00689" name="l00689"></a><span class="lineno">  689</span>            transforms.RandomHorizontalFlip(),</div>
+<div class="line"><a id="l00690" name="l00690"></a><span class="lineno">  690</span>            transforms.ToTensor(),</div>
+<div class="line"><a id="l00691" name="l00691"></a><span class="lineno">  691</span>            transforms.Normalize((0.5071, 0.4867, 0.4408), (0.2675, 0.2565, 0.2761)),</div>
+<div class="line"><a id="l00692" name="l00692"></a><span class="lineno">  692</span>        ])</div>
+<div class="line"><a id="l00693" name="l00693"></a><span class="lineno">  693</span> </div>
+<div class="line"><a id="l00694" name="l00694"></a><span class="lineno">  694</span>        transform_test = transforms.Compose([</div>
+<div class="line"><a id="l00695" name="l00695"></a><span class="lineno">  695</span>            transforms.ToTensor(),</div>
+<div class="line"><a id="l00696" name="l00696"></a><span class="lineno">  696</span>            transforms.Normalize((0.5071, 0.4867, 0.4408), (0.2675, 0.2565, 0.2761)),</div>
+<div class="line"><a id="l00697" name="l00697"></a><span class="lineno">  697</span>        ])</div>
+<div class="line"><a id="l00698" name="l00698"></a><span class="lineno">  698</span> </div>
+<div class="line"><a id="l00699" name="l00699"></a><span class="lineno">  699</span>        <span class="comment"># Datasets</span></div>
+<div class="line"><a id="l00700" name="l00700"></a><span class="lineno">  700</span>        train_dataset = torchvision.datasets.CIFAR100(</div>
+<div class="line"><a id="l00701" name="l00701"></a><span class="lineno">  701</span>            root=str(self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#aa3231b36c395eed368c8341ab5c10f09">download_dir</a>), train=<span class="keyword">True</span>, download=<span class="keyword">False</span>, transform=transform_train</div>
+<div class="line"><a id="l00702" name="l00702"></a><span class="lineno">  702</span>        )</div>
+<div class="line"><a id="l00703" name="l00703"></a><span class="lineno">  703</span>        test_dataset = torchvision.datasets.CIFAR100(</div>
+<div class="line"><a id="l00704" name="l00704"></a><span class="lineno">  704</span>            root=str(self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#aa3231b36c395eed368c8341ab5c10f09">download_dir</a>), train=<span class="keyword">False</span>, download=<span class="keyword">False</span>, transform=transform_test</div>
+<div class="line"><a id="l00705" name="l00705"></a><span class="lineno">  705</span>        )</div>
+<div class="line"><a id="l00706" name="l00706"></a><span class="lineno">  706</span> </div>
+<div class="line"><a id="l00707" name="l00707"></a><span class="lineno">  707</span>        <span class="comment"># Create data loaders</span></div>
+<div class="line"><a id="l00708" name="l00708"></a><span class="lineno">  708</span>        train_loader = DataLoader(</div>
+<div class="line"><a id="l00709" name="l00709"></a><span class="lineno">  709</span>            train_dataset,</div>
+<div class="line"><a id="l00710" name="l00710"></a><span class="lineno">  710</span>            batch_size=batch_size,</div>
+<div class="line"><a id="l00711" name="l00711"></a><span class="lineno">  711</span>            shuffle=<span class="keyword">True</span>,</div>
+<div class="line"><a id="l00712" name="l00712"></a><span class="lineno">  712</span>            num_workers=num_workers,</div>
+<div class="line"><a id="l00713" name="l00713"></a><span class="lineno">  713</span>            pin_memory=torch.cuda.is_available(),  <span class="comment"># Enable pin_memory for CUDA</span></div>
+<div class="line"><a id="l00714" name="l00714"></a><span class="lineno">  714</span>            drop_last=<span class="keyword">True</span>,</div>
+<div class="line"><a id="l00715" name="l00715"></a><span class="lineno">  715</span>            persistent_workers=num_workers &gt; 0  <span class="comment"># Keep workers alive between epochs</span></div>
+<div class="line"><a id="l00716" name="l00716"></a><span class="lineno">  716</span>        )</div>
+<div class="line"><a id="l00717" name="l00717"></a><span class="lineno">  717</span>        </div>
+<div class="line"><a id="l00718" name="l00718"></a><span class="lineno">  718</span>        test_loader = DataLoader(</div>
+<div class="line"><a id="l00719" name="l00719"></a><span class="lineno">  719</span>            test_dataset,</div>
+<div class="line"><a id="l00720" name="l00720"></a><span class="lineno">  720</span>            batch_size=batch_size,</div>
+<div class="line"><a id="l00721" name="l00721"></a><span class="lineno">  721</span>            shuffle=<span class="keyword">False</span>,</div>
+<div class="line"><a id="l00722" name="l00722"></a><span class="lineno">  722</span>            num_workers=num_workers,</div>
+<div class="line"><a id="l00723" name="l00723"></a><span class="lineno">  723</span>            pin_memory=torch.cuda.is_available(),  <span class="comment"># Enable pin_memory for CUDA</span></div>
+<div class="line"><a id="l00724" name="l00724"></a><span class="lineno">  724</span>            drop_last=<span class="keyword">False</span>,</div>
+<div class="line"><a id="l00725" name="l00725"></a><span class="lineno">  725</span>            persistent_workers=num_workers &gt; 0  <span class="comment"># Keep workers alive between epochs</span></div>
+<div class="line"><a id="l00726" name="l00726"></a><span class="lineno">  726</span>        )</div>
+<div class="line"><a id="l00727" name="l00727"></a><span class="lineno">  727</span> </div>
+<div class="line"><a id="l00728" name="l00728"></a><span class="lineno">  728</span>        <span class="keywordflow">return</span> train_loader, test_loader</div>
+<div class="line"><a id="l00729" name="l00729"></a><span class="lineno">  729</span>    </div>
+</div>
+<div class="foldopen" id="foldopen00730" data-start="" data-end="">
+<div class="line"><a id="l00730" name="l00730"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#a83e1e7b2d0088df8019bef8858599004">  730</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#a83e1e7b2d0088df8019bef8858599004">clear_cache</a>(self, dataset_name: Optional[str] = <span class="keywordtype">None</span>):</div>
+<div class="line"><a id="l00731" name="l00731"></a><span class="lineno">  731</span>        <span class="stringliteral">&quot;&quot;&quot;Clear cache for specific dataset or all datasets.&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00732" name="l00732"></a><span class="lineno">  732</span>        <span class="keywordflow">if</span> dataset_name:</div>
+<div class="line"><a id="l00733" name="l00733"></a><span class="lineno">  733</span>            cache_path = self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#ab55c063912c5f2150feeec0a3813bf1e">cache</a>.cache_dir / dataset_name</div>
+<div class="line"><a id="l00734" name="l00734"></a><span class="lineno">  734</span>            <span class="keywordflow">if</span> cache_path.exists():</div>
+<div class="line"><a id="l00735" name="l00735"></a><span class="lineno">  735</span>                <span class="keyword">import</span> shutil</div>
+<div class="line"><a id="l00736" name="l00736"></a><span class="lineno">  736</span>                shutil.rmtree(cache_path)</div>
+<div class="line"><a id="l00737" name="l00737"></a><span class="lineno">  737</span>                logger.info(f<span class="stringliteral">&quot;Cleared cache for {dataset_name}&quot;</span>)</div>
+<div class="line"><a id="l00738" name="l00738"></a><span class="lineno">  738</span>        <span class="keywordflow">else</span>:</div>
+<div class="line"><a id="l00739" name="l00739"></a><span class="lineno">  739</span>            <span class="keyword">import</span> shutil</div>
+<div class="line"><a id="l00740" name="l00740"></a><span class="lineno">  740</span>            shutil.rmtree(self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#ab55c063912c5f2150feeec0a3813bf1e">cache</a>.cache_dir)</div>
+<div class="line"><a id="l00741" name="l00741"></a><span class="lineno">  741</span>            self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#ab55c063912c5f2150feeec0a3813bf1e">cache</a>.cache_dir.mkdir(parents=<span class="keyword">True</span>, exist_ok=<span class="keyword">True</span>)</div>
+<div class="line"><a id="l00742" name="l00742"></a><span class="lineno">  742</span>            logger.info(<span class="stringliteral">&quot;Cleared all cache&quot;</span>)</div>
+<div class="line"><a id="l00743" name="l00743"></a><span class="lineno">  743</span>    </div>
+</div>
+<div class="foldopen" id="foldopen00744" data-start="" data-end="">
+<div class="line"><a id="l00744" name="l00744"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#ac2239398a2cc2fb4611099c935e1f05b">  744</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#ac2239398a2cc2fb4611099c935e1f05b">get_cache_info</a>(self) -&gt; Dict:</div>
+<div class="line"><a id="l00745" name="l00745"></a><span class="lineno">  745</span>        <span class="stringliteral">&quot;&quot;&quot;Get cache information.&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00746" name="l00746"></a><span class="lineno">  746</span>        info = {</div>
+<div class="line"><a id="l00747" name="l00747"></a><span class="lineno">  747</span>            <span class="stringliteral">&#39;cache_dir&#39;</span>: str(self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#ab55c063912c5f2150feeec0a3813bf1e">cache</a>.cache_dir),</div>
+<div class="line"><a id="l00748" name="l00748"></a><span class="lineno">  748</span>            <span class="stringliteral">&#39;total_size&#39;</span>: 0,</div>
+<div class="line"><a id="l00749" name="l00749"></a><span class="lineno">  749</span>            <span class="stringliteral">&#39;datasets&#39;</span>: {}</div>
+<div class="line"><a id="l00750" name="l00750"></a><span class="lineno">  750</span>        }</div>
+<div class="line"><a id="l00751" name="l00751"></a><span class="lineno">  751</span>        </div>
+<div class="line"><a id="l00752" name="l00752"></a><span class="lineno">  752</span>        <span class="keywordflow">for</span> dataset_dir <span class="keywordflow">in</span> self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#ab55c063912c5f2150feeec0a3813bf1e">cache</a>.cache_dir.iterdir():</div>
+<div class="line"><a id="l00753" name="l00753"></a><span class="lineno">  753</span>            <span class="keywordflow">if</span> dataset_dir.is_dir():</div>
+<div class="line"><a id="l00754" name="l00754"></a><span class="lineno">  754</span>                dataset_size = sum(f.stat().st_size <span class="keywordflow">for</span> f <span class="keywordflow">in</span> dataset_dir.rglob(<span class="stringliteral">&#39;*&#39;</span>) <span class="keywordflow">if</span> f.is_file())</div>
+<div class="line"><a id="l00755" name="l00755"></a><span class="lineno">  755</span>                info[<span class="stringliteral">&#39;datasets&#39;</span>][dataset_dir.name] = {</div>
+<div class="line"><a id="l00756" name="l00756"></a><span class="lineno">  756</span>                    <span class="stringliteral">&#39;size&#39;</span>: dataset_size,</div>
+<div class="line"><a id="l00757" name="l00757"></a><span class="lineno">  757</span>                    <span class="stringliteral">&#39;files&#39;</span>: len(list(dataset_dir.rglob(<span class="stringliteral">&#39;*&#39;</span>)))</div>
+<div class="line"><a id="l00758" name="l00758"></a><span class="lineno">  758</span>                }</div>
+<div class="line"><a id="l00759" name="l00759"></a><span class="lineno">  759</span>                info[<span class="stringliteral">&#39;total_size&#39;</span>] += dataset_size</div>
+<div class="line"><a id="l00760" name="l00760"></a><span class="lineno">  760</span>        </div>
+<div class="line"><a id="l00761" name="l00761"></a><span class="lineno">  761</span>        <span class="keywordflow">return</span> info</div>
+<div class="line"><a id="l00762" name="l00762"></a><span class="lineno">  762</span> </div>
+<div class="line"><a id="l00763" name="l00763"></a><span class="lineno">  763</span> </div>
+<div class="line"><a id="l00764" name="l00764"></a><span class="lineno">  764</span><span class="comment"># Convenience function for backward compatibility</span></div>
+</div>
+</div>
+<div class="foldopen" id="foldopen00765" data-start="" data-end="">
+<div class="line"><a id="l00765" name="l00765"></a><span class="lineno"><a class="line" href="namespaceneuroexapt_1_1utils_1_1dataset__loader.html#a4ba5fa5715400e20acc3baacbaa9fa80">  765</a></span><span class="keyword">def </span><a class="code hl_function" href="namespaceneuroexapt_1_1utils_1_1dataset__loader.html#a4ba5fa5715400e20acc3baacbaa9fa80">get_cifar10_dataloaders</a>(batch_size: int = 128, num_workers: int = 2,</div>
+<div class="line"><a id="l00766" name="l00766"></a><span class="lineno">  766</span>                           cache_dir: str = <span class="stringliteral">&quot;./data_cache&quot;</span>,</div>
+<div class="line"><a id="l00767" name="l00767"></a><span class="lineno">  767</span>                           download_dir: str = <span class="stringliteral">&quot;./data&quot;</span>,</div>
+<div class="line"><a id="l00768" name="l00768"></a><span class="lineno">  768</span>                           use_p2p: bool = <span class="keyword">True</span>) -&gt; Tuple[DataLoader, DataLoader]:</div>
+<div class="line"><a id="l00769" name="l00769"></a><span class="lineno">  769</span>    <span class="stringliteral">&quot;&quot;&quot;Get CIFAR-10 data loaders with advanced downloading capabilities.&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00770" name="l00770"></a><span class="lineno">  770</span>    loader = <a class="code hl_class" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html">AdvancedDatasetLoader</a>(cache_dir=cache_dir, download_dir=download_dir, use_p2p=use_p2p)</div>
+<div class="line"><a id="l00771" name="l00771"></a><span class="lineno">  771</span>    <span class="keywordflow">return</span> loader.get_cifar10_dataloaders(batch_size, num_workers) </div>
+</div>
+<div class="ttc" id="aclassneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader_html"><div class="ttname"><a href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html">neuroexapt.utils.dataset_loader.AdvancedDatasetLoader</a></div><div class="ttdef"><b>Definition</b> <a href="dataset__loader_8py_source.html#l00229">dataset_loader.py:229</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader_html_a0e2d5012df030ac019ba2529fe8c7915"><div class="ttname"><a href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#a0e2d5012df030ac019ba2529fe8c7915">neuroexapt.utils.dataset_loader.AdvancedDatasetLoader._is_dataset_complete</a></div><div class="ttdeci">bool _is_dataset_complete(self, str dataset_name, Path dataset_dir)</div><div class="ttdef"><b>Definition</b> <a href="dataset__loader_8py_source.html#l00608">dataset_loader.py:608</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader_html_a328f8d0ac3295fcd2cd20fa367d14ced"><div class="ttname"><a href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#a328f8d0ac3295fcd2cd20fa367d14ced">neuroexapt.utils.dataset_loader.AdvancedDatasetLoader.xunlei_downloader</a></div><div class="ttdeci">xunlei_downloader</div><div class="ttdef"><b>Definition</b> <a href="dataset__loader_8py_source.html#l00243">dataset_loader.py:243</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader_html_a3db9112a32ab4ca6bf00f396b14b26dd"><div class="ttname"><a href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#a3db9112a32ab4ca6bf00f396b14b26dd">neuroexapt.utils.dataset_loader.AdvancedDatasetLoader._extract_dataset</a></div><div class="ttdeci">bool _extract_dataset(self, str dataset_name, Path dataset_dir)</div><div class="ttdef"><b>Definition</b> <a href="dataset__loader_8py_source.html#l00449">dataset_loader.py:449</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader_html_a682c7f94749fef8367d68e90694ef72a"><div class="ttname"><a href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#a682c7f94749fef8367d68e90694ef72a">neuroexapt.utils.dataset_loader.AdvancedDatasetLoader.p2p_downloader</a></div><div class="ttdeci">p2p_downloader</div><div class="ttdef"><b>Definition</b> <a href="dataset__loader_8py_source.html#l00240">dataset_loader.py:240</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader_html_a700b9574f9468fc2c99f9a2c5b2b0db3"><div class="ttname"><a href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#a700b9574f9468fc2c99f9a2c5b2b0db3">neuroexapt.utils.dataset_loader.AdvancedDatasetLoader.__init__</a></div><div class="ttdeci">__init__(self, str cache_dir=&quot;./data_cache&quot;, str download_dir=&quot;./data&quot;, bool use_p2p=True, bool use_xunlei=True, int max_retries=3)</div><div class="ttdef"><b>Definition</b> <a href="dataset__loader_8py_source.html#l00232">dataset_loader.py:236</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader_html_a790b462aced6b612446a87de24778f8b"><div class="ttname"><a href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#a790b462aced6b612446a87de24778f8b">neuroexapt.utils.dataset_loader.AdvancedDatasetLoader.get_cifar100_dataloaders</a></div><div class="ttdeci">Tuple[DataLoader, DataLoader] get_cifar100_dataloaders(self, int batch_size=128, int num_workers=2, bool download=True, bool force_download=False)</div><div class="ttdef"><b>Definition</b> <a href="dataset__loader_8py_source.html#l00677">dataset_loader.py:680</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader_html_a79a2f0163ec7ac1c75748aa29ccbc199"><div class="ttname"><a href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#a79a2f0163ec7ac1c75748aa29ccbc199">neuroexapt.utils.dataset_loader.AdvancedDatasetLoader.mirrors</a></div><div class="ttdeci">mirrors</div><div class="ttdef"><b>Definition</b> <a href="dataset__loader_8py_source.html#l00259">dataset_loader.py:259</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader_html_a83e1e7b2d0088df8019bef8858599004"><div class="ttname"><a href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#a83e1e7b2d0088df8019bef8858599004">neuroexapt.utils.dataset_loader.AdvancedDatasetLoader.clear_cache</a></div><div class="ttdeci">clear_cache(self, Optional[str] dataset_name=None)</div><div class="ttdef"><b>Definition</b> <a href="dataset__loader_8py_source.html#l00730">dataset_loader.py:730</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader_html_a975163c70b342a2fc5eb482fdb291174"><div class="ttname"><a href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#a975163c70b342a2fc5eb482fdb291174">neuroexapt.utils.dataset_loader.AdvancedDatasetLoader.dataset_configs</a></div><div class="ttdeci">dataset_configs</div><div class="ttdef"><b>Definition</b> <a href="dataset__loader_8py_source.html#l00262">dataset_loader.py:262</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader_html_a9b2229812a12f7836d970b89bcd865a9"><div class="ttname"><a href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#a9b2229812a12f7836d970b89bcd865a9">neuroexapt.utils.dataset_loader.AdvancedDatasetLoader._download_file_with_fallback</a></div><div class="ttdeci">bool _download_file_with_fallback(self, str url, Path filepath, str filename)</div><div class="ttdef"><b>Definition</b> <a href="dataset__loader_8py_source.html#l00482">dataset_loader.py:482</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader_html_aa25053bc1f628bc75a3decfb068f658d"><div class="ttname"><a href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#aa25053bc1f628bc75a3decfb068f658d">neuroexapt.utils.dataset_loader.AdvancedDatasetLoader.download_dataset</a></div><div class="ttdeci">bool download_dataset(self, str dataset_name, bool force_download=False)</div><div class="ttdef"><b>Definition</b> <a href="dataset__loader_8py_source.html#l00359">dataset_loader.py:359</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader_html_aa3231b36c395eed368c8341ab5c10f09"><div class="ttname"><a href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#aa3231b36c395eed368c8341ab5c10f09">neuroexapt.utils.dataset_loader.AdvancedDatasetLoader.download_dir</a></div><div class="ttdeci">download_dir</div><div class="ttdef"><b>Definition</b> <a href="dataset__loader_8py_source.html#l00238">dataset_loader.py:238</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader_html_aa65e83089f5d59e9d55586e73f802cf7"><div class="ttname"><a href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#aa65e83089f5d59e9d55586e73f802cf7">neuroexapt.utils.dataset_loader.AdvancedDatasetLoader.max_retries</a></div><div class="ttdeci">max_retries</div><div class="ttdef"><b>Definition</b> <a href="dataset__loader_8py_source.html#l00256">dataset_loader.py:256</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader_html_aaf228bd0e54ff7ea2a00ca4cc716b6f3"><div class="ttname"><a href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#aaf228bd0e54ff7ea2a00ca4cc716b6f3">neuroexapt.utils.dataset_loader.AdvancedDatasetLoader._initialize_mirrors</a></div><div class="ttdeci">List[DatasetMirror] _initialize_mirrors(self)</div><div class="ttdef"><b>Definition</b> <a href="dataset__loader_8py_source.html#l00320">dataset_loader.py:320</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader_html_ab55c063912c5f2150feeec0a3813bf1e"><div class="ttname"><a href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#ab55c063912c5f2150feeec0a3813bf1e">neuroexapt.utils.dataset_loader.AdvancedDatasetLoader.cache</a></div><div class="ttdeci">cache</div><div class="ttdef"><b>Definition</b> <a href="dataset__loader_8py_source.html#l00237">dataset_loader.py:237</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader_html_ac2239398a2cc2fb4611099c935e1f05b"><div class="ttname"><a href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#ac2239398a2cc2fb4611099c935e1f05b">neuroexapt.utils.dataset_loader.AdvancedDatasetLoader.get_cache_info</a></div><div class="ttdeci">Dict get_cache_info(self)</div><div class="ttdef"><b>Definition</b> <a href="dataset__loader_8py_source.html#l00744">dataset_loader.py:744</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader_html_ac8b512c7f82ad5dd961152b080a02814"><div class="ttname"><a href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#ac8b512c7f82ad5dd961152b080a02814">neuroexapt.utils.dataset_loader.AdvancedDatasetLoader.get_cifar10_dataloaders</a></div><div class="ttdeci">Tuple[DataLoader, DataLoader] get_cifar10_dataloaders(self, int batch_size=128, int num_workers=2, bool download=True, bool force_download=False)</div><div class="ttdef"><b>Definition</b> <a href="dataset__loader_8py_source.html#l00624">dataset_loader.py:627</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader_html_aea762c608fa0d49b5f8d81f09f991063"><div class="ttname"><a href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#aea762c608fa0d49b5f8d81f09f991063">neuroexapt.utils.dataset_loader.AdvancedDatasetLoader._get_best_mirror</a></div><div class="ttdeci">Optional[DatasetMirror] _get_best_mirror(self)</div><div class="ttdef"><b>Definition</b> <a href="dataset__loader_8py_source.html#l00352">dataset_loader.py:352</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader_html_af192d081d99b3c4f471534aca99721b3"><div class="ttname"><a href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#af192d081d99b3c4f471534aca99721b3">neuroexapt.utils.dataset_loader.AdvancedDatasetLoader._download_with_chunks</a></div><div class="ttdeci">bool _download_with_chunks(self, str url, Path filepath, str filename)</div><div class="ttdef"><b>Definition</b> <a href="dataset__loader_8py_source.html#l00515">dataset_loader.py:515</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetCache_html"><div class="ttname"><a href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetCache.html">neuroexapt.utils.dataset_loader.DatasetCache</a></div><div class="ttdef"><b>Definition</b> <a href="dataset__loader_8py_source.html#l00137">dataset_loader.py:137</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetCache_html_a0fb16b72c636f423898cc9a5c198ef00"><div class="ttname"><a href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetCache.html#a0fb16b72c636f423898cc9a5c198ef00">neuroexapt.utils.dataset_loader.DatasetCache.metadata_file</a></div><div class="ttdeci">metadata_file</div><div class="ttdef"><b>Definition</b> <a href="dataset__loader_8py_source.html#l00143">dataset_loader.py:143</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetCache_html_a17ef392e861369b77887f3e555108a8d"><div class="ttname"><a href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetCache.html#a17ef392e861369b77887f3e555108a8d">neuroexapt.utils.dataset_loader.DatasetCache.cache_dir</a></div><div class="ttdeci">cache_dir</div><div class="ttdef"><b>Definition</b> <a href="dataset__loader_8py_source.html#l00141">dataset_loader.py:141</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetCache_html_a181f1ad0fe9d68bad493430263c22d5a"><div class="ttname"><a href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetCache.html#a181f1ad0fe9d68bad493430263c22d5a">neuroexapt.utils.dataset_loader.DatasetCache._load_metadata</a></div><div class="ttdeci">Dict _load_metadata(self)</div><div class="ttdef"><b>Definition</b> <a href="dataset__loader_8py_source.html#l00146">dataset_loader.py:146</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetCache_html_a24effcc8c34b047abdb12069fd2c25c2"><div class="ttname"><a href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetCache.html#a24effcc8c34b047abdb12069fd2c25c2">neuroexapt.utils.dataset_loader.DatasetCache.metadata</a></div><div class="ttdeci">metadata</div><div class="ttdef"><b>Definition</b> <a href="dataset__loader_8py_source.html#l00144">dataset_loader.py:144</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetCache_html_a91de3f649469c66bc089f76567911238"><div class="ttname"><a href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetCache.html#a91de3f649469c66bc089f76567911238">neuroexapt.utils.dataset_loader.DatasetCache.__init__</a></div><div class="ttdeci">__init__(self, Union[str, Path] cache_dir=&quot;./data_cache&quot;)</div><div class="ttdef"><b>Definition</b> <a href="dataset__loader_8py_source.html#l00140">dataset_loader.py:140</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetCache_html_a963014728571586b27ba36ddc4c13f6b"><div class="ttname"><a href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetCache.html#a963014728571586b27ba36ddc4c13f6b">neuroexapt.utils.dataset_loader.DatasetCache._calculate_checksum</a></div><div class="ttdeci">str _calculate_checksum(self, Path filepath)</div><div class="ttdef"><b>Definition</b> <a href="dataset__loader_8py_source.html#l00196">dataset_loader.py:196</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetCache_html_a9bdec068e84bf2180cd7fcf2c86e1ca8"><div class="ttname"><a href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetCache.html#a9bdec068e84bf2180cd7fcf2c86e1ca8">neuroexapt.utils.dataset_loader.DatasetCache._save_metadata</a></div><div class="ttdeci">_save_metadata(self)</div><div class="ttdef"><b>Definition</b> <a href="dataset__loader_8py_source.html#l00156">dataset_loader.py:156</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetCache_html_ac323ffd6786571ca88acea2c5967631c"><div class="ttname"><a href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetCache.html#ac323ffd6786571ca88acea2c5967631c">neuroexapt.utils.dataset_loader.DatasetCache.get_cache_path</a></div><div class="ttdeci">Path get_cache_path(self, str dataset_name, str filename)</div><div class="ttdef"><b>Definition</b> <a href="dataset__loader_8py_source.html#l00164">dataset_loader.py:164</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetCache_html_adaac9507c7a0215af4768384ae437540"><div class="ttname"><a href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetCache.html#adaac9507c7a0215af4768384ae437540">neuroexapt.utils.dataset_loader.DatasetCache.cache_file</a></div><div class="ttdeci">cache_file(self, str dataset_name, str filename, Path source_path, Optional[int] expected_size=None)</div><div class="ttdef"><b>Definition</b> <a href="dataset__loader_8py_source.html#l00204">dataset_loader.py:205</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetCache_html_af4345c77bfda9a640a88c5f9002ac840"><div class="ttname"><a href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetCache.html#af4345c77bfda9a640a88c5f9002ac840">neuroexapt.utils.dataset_loader.DatasetCache.is_cached</a></div><div class="ttdeci">bool is_cached(self, str dataset_name, str filename, Optional[int] expected_size=None)</div><div class="ttdef"><b>Definition</b> <a href="dataset__loader_8py_source.html#l00168">dataset_loader.py:169</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetMirror_html"><div class="ttname"><a href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetMirror.html">neuroexapt.utils.dataset_loader.DatasetMirror</a></div><div class="ttdef"><b>Definition</b> <a href="dataset__loader_8py_source.html#l00037">dataset_loader.py:37</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetMirror_html_a091fb62f3a5cbc22b2f0e4d59c127252"><div class="ttname"><a href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetMirror.html#a091fb62f3a5cbc22b2f0e4d59c127252">neuroexapt.utils.dataset_loader.DatasetMirror.name</a></div><div class="ttdeci">name</div><div class="ttdef"><b>Definition</b> <a href="dataset__loader_8py_source.html#l00041">dataset_loader.py:41</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetMirror_html_a13c95c2a347a38e078866d722d3835d6"><div class="ttname"><a href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetMirror.html#a13c95c2a347a38e078866d722d3835d6">neuroexapt.utils.dataset_loader.DatasetMirror.priority</a></div><div class="ttdeci">priority</div><div class="ttdef"><b>Definition</b> <a href="dataset__loader_8py_source.html#l00044">dataset_loader.py:44</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetMirror_html_a17fd216e7d20f86c1c812e6f05259894"><div class="ttname"><a href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetMirror.html#a17fd216e7d20f86c1c812e6f05259894">neuroexapt.utils.dataset_loader.DatasetMirror.get_download_url</a></div><div class="ttdeci">str get_download_url(self, str dataset_name, str filename)</div><div class="ttdef"><b>Definition</b> <a href="dataset__loader_8py_source.html#l00049">dataset_loader.py:49</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetMirror_html_a33942f31df7dca1b8655dcf85aee4592"><div class="ttname"><a href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetMirror.html#a33942f31df7dca1b8655dcf85aee4592">neuroexapt.utils.dataset_loader.DatasetMirror.base_url</a></div><div class="ttdeci">base_url</div><div class="ttdef"><b>Definition</b> <a href="dataset__loader_8py_source.html#l00042">dataset_loader.py:42</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetMirror_html_a50d9ad6fafd28bf8365d5fd082c813b2"><div class="ttname"><a href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetMirror.html#a50d9ad6fafd28bf8365d5fd082c813b2">neuroexapt.utils.dataset_loader.DatasetMirror.__init__</a></div><div class="ttdeci">__init__(self, str name, str base_url, str region, int priority=1)</div><div class="ttdef"><b>Definition</b> <a href="dataset__loader_8py_source.html#l00040">dataset_loader.py:40</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetMirror_html_a7beeae87d5e961032162ad72c8bc799c"><div class="ttname"><a href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetMirror.html#a7beeae87d5e961032162ad72c8bc799c">neuroexapt.utils.dataset_loader.DatasetMirror.region</a></div><div class="ttdeci">region</div><div class="ttdef"><b>Definition</b> <a href="dataset__loader_8py_source.html#l00043">dataset_loader.py:43</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetMirror_html_a917a2902c384f9ee4ebb032879d917b4"><div class="ttname"><a href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetMirror.html#a917a2902c384f9ee4ebb032879d917b4">neuroexapt.utils.dataset_loader.DatasetMirror.response_time</a></div><div class="ttdeci">response_time</div><div class="ttdef"><b>Definition</b> <a href="dataset__loader_8py_source.html#l00046">dataset_loader.py:46</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetMirror_html_aa236fea06669ce17a54564a2192e0c4b"><div class="ttname"><a href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetMirror.html#aa236fea06669ce17a54564a2192e0c4b">neuroexapt.utils.dataset_loader.DatasetMirror.last_check</a></div><div class="ttdeci">last_check</div><div class="ttdef"><b>Definition</b> <a href="dataset__loader_8py_source.html#l00045">dataset_loader.py:45</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetMirror_html_aa756f1dbd7f4782235adf45f4d8d0e90"><div class="ttname"><a href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetMirror.html#aa756f1dbd7f4782235adf45f4d8d0e90">neuroexapt.utils.dataset_loader.DatasetMirror.test_connectivity</a></div><div class="ttdeci">bool test_connectivity(self, int timeout=5)</div><div class="ttdef"><b>Definition</b> <a href="dataset__loader_8py_source.html#l00053">dataset_loader.py:53</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetMirror_html_ad8e624a1a182ef15b2a3acbc1d7ab0f7"><div class="ttname"><a href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetMirror.html#ad8e624a1a182ef15b2a3acbc1d7ab0f7">neuroexapt.utils.dataset_loader.DatasetMirror.is_available</a></div><div class="ttdeci">is_available</div><div class="ttdef"><b>Definition</b> <a href="dataset__loader_8py_source.html#l00047">dataset_loader.py:47</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1utils_1_1dataset__loader_1_1P2PDownloader_html"><div class="ttname"><a href="classneuroexapt_1_1utils_1_1dataset__loader_1_1P2PDownloader.html">neuroexapt.utils.dataset_loader.P2PDownloader</a></div><div class="ttdef"><b>Definition</b> <a href="dataset__loader_8py_source.html#l00069">dataset_loader.py:69</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1utils_1_1dataset__loader_1_1P2PDownloader_html_a4b27f0e4b8dbb8bcb64e97f55bca5707"><div class="ttname"><a href="classneuroexapt_1_1utils_1_1dataset__loader_1_1P2PDownloader.html#a4b27f0e4b8dbb8bcb64e97f55bca5707">neuroexapt.utils.dataset_loader.P2PDownloader.session</a></div><div class="ttdeci">session</div><div class="ttdef"><b>Definition</b> <a href="dataset__loader_8py_source.html#l00075">dataset_loader.py:75</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1utils_1_1dataset__loader_1_1P2PDownloader_html_a6c964011ca1cf0a339e2a4c0e1b4e075"><div class="ttname"><a href="classneuroexapt_1_1utils_1_1dataset__loader_1_1P2PDownloader.html#a6c964011ca1cf0a339e2a4c0e1b4e075">neuroexapt.utils.dataset_loader.P2PDownloader.max_workers</a></div><div class="ttdeci">max_workers</div><div class="ttdef"><b>Definition</b> <a href="dataset__loader_8py_source.html#l00074">dataset_loader.py:74</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1utils_1_1dataset__loader_1_1P2PDownloader_html_a75d22a33e524b9d73bf031d0d103b01c"><div class="ttname"><a href="classneuroexapt_1_1utils_1_1dataset__loader_1_1P2PDownloader.html#a75d22a33e524b9d73bf031d0d103b01c">neuroexapt.utils.dataset_loader.P2PDownloader.download_file</a></div><div class="ttdeci">bool download_file(self, str url, Path filepath, bool resume=True, bool progress_bar=True)</div><div class="ttdef"><b>Definition</b> <a href="dataset__loader_8py_source.html#l00080">dataset_loader.py:81</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1utils_1_1dataset__loader_1_1P2PDownloader_html_acaff297ce0af2242896e002975396b58"><div class="ttname"><a href="classneuroexapt_1_1utils_1_1dataset__loader_1_1P2PDownloader.html#acaff297ce0af2242896e002975396b58">neuroexapt.utils.dataset_loader.P2PDownloader.chunk_size</a></div><div class="ttdeci">chunk_size</div><div class="ttdef"><b>Definition</b> <a href="dataset__loader_8py_source.html#l00073">dataset_loader.py:73</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1utils_1_1dataset__loader_1_1P2PDownloader_html_af1e24972858fab2fd185bb4f1581ea34"><div class="ttname"><a href="classneuroexapt_1_1utils_1_1dataset__loader_1_1P2PDownloader.html#af1e24972858fab2fd185bb4f1581ea34">neuroexapt.utils.dataset_loader.P2PDownloader.__init__</a></div><div class="ttdeci">__init__(self, int chunk_size=1024 *1024, int max_workers=4)</div><div class="ttdef"><b>Definition</b> <a href="dataset__loader_8py_source.html#l00072">dataset_loader.py:72</a></div></div>
+<div class="ttc" id="anamespaceneuroexapt_1_1utils_1_1dataset__loader_html_a4ba5fa5715400e20acc3baacbaa9fa80"><div class="ttname"><a href="namespaceneuroexapt_1_1utils_1_1dataset__loader.html#a4ba5fa5715400e20acc3baacbaa9fa80">neuroexapt.utils.dataset_loader.get_cifar10_dataloaders</a></div><div class="ttdeci">Tuple[DataLoader, DataLoader] get_cifar10_dataloaders(int batch_size=128, int num_workers=2, str cache_dir=&quot;./data_cache&quot;, str download_dir=&quot;./data&quot;, bool use_p2p=True)</div><div class="ttdef"><b>Definition</b> <a href="dataset__loader_8py_source.html#l00765">dataset_loader.py:768</a></div></div>
+</div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
+<!-- do not remove this div, it is closed by doxygen! -->
+</div>
+<!-- Custom Footer -->
+<div style="background: #f8f9fa; border-top: 1px solid #e9ecef; margin-top: 50px; padding: 30px 0; text-align: center;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-bottom: 20px;">
+            <!-- Project Info -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🧠 NeuroExapt</h4>
+                <p style="color: #6c757d; margin: 0; font-size: 0.9em;">
+                    Advanced Neural Architecture Search and Dynamic Morphogenesis Framework for next-generation AI research.
+                </p>
+            </div>
+            <!-- Quick Links -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">📚 Quick Links</h4>
+                <div style="text-align: left;">
+                    <a href="index.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🏠 Home</a>
+                    <a href="modules.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📦 Modules</a>
+                    <a href="examples.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💡 Examples</a>
+                    <a href="files.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📁 Files</a>
+                </div>
+            </div>
+            <!-- Resources -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🔗 Resources</h4>
+                <div style="text-align: left;">
+                    <a href="https://github.com/your-username/neuroexapt" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💻 GitHub Repository</a>
+                    <a href="https://github.com/your-username/neuroexapt/issues" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🐛 Issue Tracker</a>
+                    <a href="https://github.com/your-username/neuroexapt/wiki" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📖 Wiki</a>
+                    <a href="https://github.com/your-username/neuroexapt/releases" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🚀 Releases</a>
+                </div>
+            </div>
+        </div>
+        <hr style="border: 0; height: 1px; background: #e9ecef; margin: 20px 0;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+            <div style="color: #6c757d; font-size: 0.9em;">
+                © 2024 NeuroExapt Project. Generated with 
+                <a href="https://www.doxygen.nl/index.html" style="color: #667eea; text-decoration: none;">Doxygen 1.9.8</a>
+            </div>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <span style="font-size: 0.9em; color: #6c757d;">Built with ❤️ for AI Research</span>
+                <div style="display: flex; gap: 10px;">
+                    <span style="background: #28a745; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">🟢 Active</span>
+                    <span style="background: #17a2b8; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">v3.0</span>
+                </div>
+            </div>
+        </div>
+        <!-- Technology Stack -->
+        <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #e9ecef;">
+            <div style="font-size: 0.8em; color: #868e96; text-align: center;">
+                <strong>Built with:</strong>
+                <span style="margin: 0 5px;">🐍 Python</span>
+                <span style="margin: 0 5px;">🔥 PyTorch</span>
+                <span style="margin: 0 5px;">⚡ CUDA</span>
+                <span style="margin: 0 5px;">🧮 NumPy</span>
+                <span style="margin: 0 5px;">📊 Matplotlib</span>
+                <span style="margin: 0 5px;">🚀 Triton</span>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Back to top button -->
+<div id="back-to-top" style="position: fixed; bottom: 20px; right: 20px; display: none; z-index: 1000;">
+    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" 
+            style="background: #667eea; color: white; border: none; padding: 10px 15px; border-radius: 50%; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,0.2); font-size: 16px;">
+        ⬆️
+    </button>
+</div>
+<script>
+// Back to top button functionality
+window.addEventListener('scroll', function() {
+    const backToTop = document.getElementById('back-to-top');
+    if (window.pageYOffset > 300) {
+        backToTop.style.display = 'block';
+    } else {
+        backToTop.style.display = 'none';
+    }
+});
+// Enhanced search functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Add search enhancement if search box exists
+    const searchBox = document.getElementById('MSearchField');
+    if (searchBox) {
+        searchBox.placeholder = 'Search documentation... 🔍';
+        searchBox.style.borderRadius = '20px';
+        searchBox.style.padding = '8px 15px';
+    }
+    // Add copy code button to code blocks
+    const codeBlocks = document.querySelectorAll('.fragment');
+    codeBlocks.forEach(function(block) {
+        const copyBtn = document.createElement('button');
+        copyBtn.innerHTML = '📋';
+        copyBtn.title = 'Copy code';
+        copyBtn.style.cssText = 'position: absolute; top: 10px; right: 10px; background: #667eea; color: white; border: none; padding: 5px; border-radius: 3px; cursor: pointer; font-size: 12px;';
+        block.style.position = 'relative';
+        block.appendChild(copyBtn);
+        copyBtn.addEventListener('click', function() {
+            const text = block.textContent;
+            navigator.clipboard.writeText(text).then(function() {
+                copyBtn.innerHTML = '✅';
+                setTimeout(function() {
+                    copyBtn.innerHTML = '📋';
+                }, 2000);
+            });
+        });
+    });
+});
+// Dark mode toggle (optional)
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+}
+// Load saved dark mode preference
+if (localStorage.getItem('darkMode') === 'true') {
+    document.body.classList.add('dark-mode');
+}
+</script>
+</body>
+</html>

@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+"""
+\defgroup group_net2net_subnetwork_analyzer Net2Net Subnetwork Analyzer
+\ingroup core
+Net2Net Subnetwork Analyzer module for NeuroExapt framework.
+"""
+
+
 Net2Net子网络分析器 - Net2Net Subnetwork Analyzer
 
 🎯 核心功能：
@@ -18,7 +25,7 @@ from collections import OrderedDict, defaultdict
 import copy
 import logging
 
-from .enhanced_dnm_framework import logger
+from .logging_utils import logger
 
 class SubnetworkExtractor:
     """子网络提取器"""

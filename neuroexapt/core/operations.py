@@ -1,4 +1,11 @@
 
+"""
+\defgroup group_operations Operations
+\ingroup core
+Operations module for NeuroExapt framework.
+"""
+
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F

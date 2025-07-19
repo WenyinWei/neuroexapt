@@ -1,0 +1,697 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="description" content="NeuroExapt - Advanced Neural Architecture Search and Dynamic Morphogenesis Framework">
+    <meta name="keywords" content="neural architecture search, dynamic morphogenesis, deep learning, AI, PyTorch">
+    <meta name="author" content="NeuroExapt Team">
+    <meta property="og:title" content="NeuroExapt Documentation">
+    <meta property="og:description" content="Advanced Neural Architecture Search Framework">
+    <meta property="og:type" content="website">
+
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>NeuroExapt: examples.demo_dynamic_architecture_fast Namespace Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="custom.css" rel="stylesheet" type="text/css"/>
+<!-- NeuroExapt Custom Styles -->
+<style>
+/* Enhanced header styling */
+.header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+.header h1 {
+    margin: 0;
+    font-size: 2.5em;
+    font-weight: 300;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+.header .subtitle {
+    font-size: 1.2em;
+    opacity: 0.9;
+    margin-top: 10px;
+}
+/* Enhanced navigation */
+.tablist {
+    background: #f8f9fa;
+    border-bottom: 2px solid #e9ecef;
+}
+.tablist li.current a {
+    background: #667eea;
+    color: white;
+}
+/* Improved content layout */
+.contents {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+/* Code highlighting */
+.fragment {
+    background: #f8f9fa;
+    border-left: 4px solid #667eea;
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 0 8px 8px 0;
+}
+/* Enhanced tables */
+table.memberdecls {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 20px 0;
+}
+table.memberdecls td {
+    border: 1px solid #e9ecef;
+    padding: 12px;
+}
+/* Better typography */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #343a40;
+}
+h1, h2, h3, h4, h5, h6 {
+    color: #495057;
+    font-weight: 500;
+}
+/* Responsive design */
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 2em;
+    }
+    .contents {
+        padding: 15px;
+    }
+}
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #1a1a1a;
+        color: #e9ecef;
+    }
+    .header {
+        background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+    }
+    .fragment {
+        background: #2d3748;
+        color: #e9ecef;
+    }
+}
+</style>
+<!-- Analytics (if needed) -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<!--
+<script async src="https://www.googletagmanager.com/gtag/js?id=GA_TRACKING_ID"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'GA_TRACKING_ID');
+</script>
+-->
+</head>
+<body>
+<!-- Custom Header -->
+<div class="header">
+    <h1>🧠 NeuroExapt</h1>
+    <div class="subtitle">Advanced Neural Architecture Search and Dynamic Morphogenesis Framework</div>
+    <div style="margin-top: 15px; font-size: 0.9em;">
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🚀 Dynamic Neural Morphogenesis
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🔬 Advanced Architecture Search
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            ⚡ High-Performance Computing
+        </span>
+    </div>
+</div>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! --><!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('namespaceexamples_1_1demo__dynamic__architecture__fast.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
+  <div class="headertitle"><div class="title">examples.demo_dynamic_architecture_fast Namespace Reference</div></div>
+</div><!--header-->
+<div class="contents">
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:aa57c4464ecad87544b535208174e4a87" id="r_aa57c4464ecad87544b535208174e4a87"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceexamples_1_1demo__dynamic__architecture__fast.html#aa57c4464ecad87544b535208174e4a87">log_gpu_usage</a> (msg=&quot;&quot;)</td></tr>
+<tr class="separator:aa57c4464ecad87544b535208174e4a87"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afbcb1d3d41649851d03799024ee4229b" id="r_afbcb1d3d41649851d03799024ee4229b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceexamples_1_1demo__dynamic__architecture__fast.html#afbcb1d3d41649851d03799024ee4229b">main</a> ()</td></tr>
+<tr class="separator:afbcb1d3d41649851d03799024ee4229b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1b724b0aa38ddfe0b0d510e4ee621f80" id="r_a1b724b0aa38ddfe0b0d510e4ee621f80"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceexamples_1_1demo__dynamic__architecture__fast.html#a1b724b0aa38ddfe0b0d510e4ee621f80">train</a> (train_queue, valid_queue, model, architect, criterion, optimizer, scaler, lr, args)</td></tr>
+<tr class="separator:a1b724b0aa38ddfe0b0d510e4ee621f80"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae4dd5139036f4b87ece3565e6084a1fa" id="r_ae4dd5139036f4b87ece3565e6084a1fa"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceexamples_1_1demo__dynamic__architecture__fast.html#ae4dd5139036f4b87ece3565e6084a1fa">infer</a> (valid_queue, model, criterion)</td></tr>
+<tr class="separator:ae4dd5139036f4b87ece3565e6084a1fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:a389639580780fcee1ef111572cd55db8" id="r_a389639580780fcee1ef111572cd55db8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceexamples_1_1demo__dynamic__architecture__fast.html#a389639580780fcee1ef111572cd55db8">TQDM_AVAILABLE</a> = <a class="el" href="namespaceexamples_1_1demo__dynamic__architecture__fast.html#a58f966fd25d3504628da27bae868c479">True</a></td></tr>
+<tr class="separator:a389639580780fcee1ef111572cd55db8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a73e7daf6fff51393f15801c66ebb2604" id="r_a73e7daf6fff51393f15801c66ebb2604"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceexamples_1_1demo__dynamic__architecture__fast.html#a73e7daf6fff51393f15801c66ebb2604">parser</a> = argparse.ArgumentParser(&quot;fast_cifar&quot;)</td></tr>
+<tr class="separator:a73e7daf6fff51393f15801c66ebb2604"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4756f14028ce4ff818ccee14b700d1ed" id="r_a4756f14028ce4ff818ccee14b700d1ed"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceexamples_1_1demo__dynamic__architecture__fast.html#a4756f14028ce4ff818ccee14b700d1ed">type</a></td></tr>
+<tr class="separator:a4756f14028ce4ff818ccee14b700d1ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6a9515ce9a1918191aa09569a6ff5172" id="r_a6a9515ce9a1918191aa09569a6ff5172"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceexamples_1_1demo__dynamic__architecture__fast.html#a6a9515ce9a1918191aa09569a6ff5172">str</a></td></tr>
+<tr class="separator:a6a9515ce9a1918191aa09569a6ff5172"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac75195d2cffe3bb8811f5bd753a94138" id="r_ac75195d2cffe3bb8811f5bd753a94138"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceexamples_1_1demo__dynamic__architecture__fast.html#ac75195d2cffe3bb8811f5bd753a94138">default</a></td></tr>
+<tr class="separator:ac75195d2cffe3bb8811f5bd753a94138"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa964ce2a5d1de606f67e2846b49a3ece" id="r_aa964ce2a5d1de606f67e2846b49a3ece"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceexamples_1_1demo__dynamic__architecture__fast.html#aa964ce2a5d1de606f67e2846b49a3ece">help</a></td></tr>
+<tr class="separator:aa964ce2a5d1de606f67e2846b49a3ece"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3fe67195635c9fb494234040f45de958" id="r_a3fe67195635c9fb494234040f45de958"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceexamples_1_1demo__dynamic__architecture__fast.html#a3fe67195635c9fb494234040f45de958">int</a></td></tr>
+<tr class="separator:a3fe67195635c9fb494234040f45de958"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeea4fa14f25ab47a5dc4cbbada64c858" id="r_aeea4fa14f25ab47a5dc4cbbada64c858"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceexamples_1_1demo__dynamic__architecture__fast.html#aeea4fa14f25ab47a5dc4cbbada64c858">float</a></td></tr>
+<tr class="separator:aeea4fa14f25ab47a5dc4cbbada64c858"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a87fb82d17e7dcf016ce53f4f7add75cf" id="r_a87fb82d17e7dcf016ce53f4f7add75cf"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceexamples_1_1demo__dynamic__architecture__fast.html#a87fb82d17e7dcf016ce53f4f7add75cf">action</a></td></tr>
+<tr class="separator:a87fb82d17e7dcf016ce53f4f7add75cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af8da6914b78d8e3a4d2d6832fdfb4343" id="r_af8da6914b78d8e3a4d2d6832fdfb4343"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceexamples_1_1demo__dynamic__architecture__fast.html#af8da6914b78d8e3a4d2d6832fdfb4343">False</a></td></tr>
+<tr class="separator:af8da6914b78d8e3a4d2d6832fdfb4343"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a58f966fd25d3504628da27bae868c479" id="r_a58f966fd25d3504628da27bae868c479"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceexamples_1_1demo__dynamic__architecture__fast.html#a58f966fd25d3504628da27bae868c479">True</a></td></tr>
+<tr class="separator:a58f966fd25d3504628da27bae868c479"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="ae4dd5139036f4b87ece3565e6084a1fa" name="ae4dd5139036f4b87ece3565e6084a1fa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae4dd5139036f4b87ece3565e6084a1fa">&#9670;&#160;</a></span>infer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">examples.demo_dynamic_architecture_fast.infer </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>valid_queue</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>model</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>criterion</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="demo__dynamic__architecture__fast_8py_source.html#l00294">294</a> of file <a class="el" href="demo__dynamic__architecture__fast_8py_source.html">demo_dynamic_architecture_fast.py</a>.</p>
+
+</div>
+</div>
+<a id="aa57c4464ecad87544b535208174e4a87" name="aa57c4464ecad87544b535208174e4a87"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa57c4464ecad87544b535208174e4a87">&#9670;&#160;</a></span>log_gpu_usage()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">examples.demo_dynamic_architecture_fast.log_gpu_usage </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>msg</em> = <code>&quot;&quot;</code></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">Log current GPU usage and memory.</pre> 
+<p class="definition">Definition at line <a class="el" href="demo__dynamic__architecture__fast_8py_source.html#l00027">27</a> of file <a class="el" href="demo__dynamic__architecture__fast_8py_source.html">demo_dynamic_architecture_fast.py</a>.</p>
+
+</div>
+</div>
+<a id="afbcb1d3d41649851d03799024ee4229b" name="afbcb1d3d41649851d03799024ee4229b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afbcb1d3d41649851d03799024ee4229b">&#9670;&#160;</a></span>main()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">examples.demo_dynamic_architecture_fast.main </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="demo__dynamic__architecture__fast_8py_source.html#l00065">65</a> of file <a class="el" href="demo__dynamic__architecture__fast_8py_source.html">demo_dynamic_architecture_fast.py</a>.</p>
+
+</div>
+</div>
+<a id="a1b724b0aa38ddfe0b0d510e4ee621f80" name="a1b724b0aa38ddfe0b0d510e4ee621f80"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1b724b0aa38ddfe0b0d510e4ee621f80">&#9670;&#160;</a></span>train()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">examples.demo_dynamic_architecture_fast.train </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>train_queue</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>valid_queue</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>model</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>architect</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>criterion</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>optimizer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>scaler</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>lr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>args</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="demo__dynamic__architecture__fast_8py_source.html#l00223">223</a> of file <a class="el" href="demo__dynamic__architecture__fast_8py_source.html">demo_dynamic_architecture_fast.py</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Variable Documentation</h2>
+<a id="a87fb82d17e7dcf016ce53f4f7add75cf" name="a87fb82d17e7dcf016ce53f4f7add75cf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a87fb82d17e7dcf016ce53f4f7add75cf">&#9670;&#160;</a></span>action</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">examples.demo_dynamic_architecture_fast.action</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="demo__dynamic__architecture__fast_8py_source.html#l00056">56</a> of file <a class="el" href="demo__dynamic__architecture__fast_8py_source.html">demo_dynamic_architecture_fast.py</a>.</p>
+
+</div>
+</div>
+<a id="ac75195d2cffe3bb8811f5bd753a94138" name="ac75195d2cffe3bb8811f5bd753a94138"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac75195d2cffe3bb8811f5bd753a94138">&#9670;&#160;</a></span>default</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">examples.demo_dynamic_architecture_fast.default</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="demo__dynamic__architecture__fast_8py_source.html#l00038">38</a> of file <a class="el" href="demo__dynamic__architecture__fast_8py_source.html">demo_dynamic_architecture_fast.py</a>.</p>
+
+</div>
+</div>
+<a id="af8da6914b78d8e3a4d2d6832fdfb4343" name="af8da6914b78d8e3a4d2d6832fdfb4343"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af8da6914b78d8e3a4d2d6832fdfb4343">&#9670;&#160;</a></span>False</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">examples.demo_dynamic_architecture_fast.False</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="demo__dynamic__architecture__fast_8py_source.html#l00056">56</a> of file <a class="el" href="demo__dynamic__architecture__fast_8py_source.html">demo_dynamic_architecture_fast.py</a>.</p>
+
+</div>
+</div>
+<a id="aeea4fa14f25ab47a5dc4cbbada64c858" name="aeea4fa14f25ab47a5dc4cbbada64c858"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeea4fa14f25ab47a5dc4cbbada64c858">&#9670;&#160;</a></span>float</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">examples.demo_dynamic_architecture_fast.float</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="demo__dynamic__architecture__fast_8py_source.html#l00040">40</a> of file <a class="el" href="demo__dynamic__architecture__fast_8py_source.html">demo_dynamic_architecture_fast.py</a>.</p>
+
+</div>
+</div>
+<a id="aa964ce2a5d1de606f67e2846b49a3ece" name="aa964ce2a5d1de606f67e2846b49a3ece"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa964ce2a5d1de606f67e2846b49a3ece">&#9670;&#160;</a></span>help</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">examples.demo_dynamic_architecture_fast.help</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="demo__dynamic__architecture__fast_8py_source.html#l00038">38</a> of file <a class="el" href="demo__dynamic__architecture__fast_8py_source.html">demo_dynamic_architecture_fast.py</a>.</p>
+
+</div>
+</div>
+<a id="a3fe67195635c9fb494234040f45de958" name="a3fe67195635c9fb494234040f45de958"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3fe67195635c9fb494234040f45de958">&#9670;&#160;</a></span>int</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">examples.demo_dynamic_architecture_fast.int</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="demo__dynamic__architecture__fast_8py_source.html#l00039">39</a> of file <a class="el" href="demo__dynamic__architecture__fast_8py_source.html">demo_dynamic_architecture_fast.py</a>.</p>
+
+</div>
+</div>
+<a id="a73e7daf6fff51393f15801c66ebb2604" name="a73e7daf6fff51393f15801c66ebb2604"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a73e7daf6fff51393f15801c66ebb2604">&#9670;&#160;</a></span>parser</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">examples.demo_dynamic_architecture_fast.parser = argparse.ArgumentParser(&quot;fast_cifar&quot;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="demo__dynamic__architecture__fast_8py_source.html#l00037">37</a> of file <a class="el" href="demo__dynamic__architecture__fast_8py_source.html">demo_dynamic_architecture_fast.py</a>.</p>
+
+</div>
+</div>
+<a id="a6a9515ce9a1918191aa09569a6ff5172" name="a6a9515ce9a1918191aa09569a6ff5172"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6a9515ce9a1918191aa09569a6ff5172">&#9670;&#160;</a></span>str</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">examples.demo_dynamic_architecture_fast.str</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="demo__dynamic__architecture__fast_8py_source.html#l00038">38</a> of file <a class="el" href="demo__dynamic__architecture__fast_8py_source.html">demo_dynamic_architecture_fast.py</a>.</p>
+
+</div>
+</div>
+<a id="a389639580780fcee1ef111572cd55db8" name="a389639580780fcee1ef111572cd55db8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a389639580780fcee1ef111572cd55db8">&#9670;&#160;</a></span>TQDM_AVAILABLE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool examples.demo_dynamic_architecture_fast.TQDM_AVAILABLE = <a class="el" href="namespaceexamples_1_1demo__dynamic__architecture__fast.html#a58f966fd25d3504628da27bae868c479">True</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="demo__dynamic__architecture__fast_8py_source.html#l00023">23</a> of file <a class="el" href="demo__dynamic__architecture__fast_8py_source.html">demo_dynamic_architecture_fast.py</a>.</p>
+
+</div>
+</div>
+<a id="a58f966fd25d3504628da27bae868c479" name="a58f966fd25d3504628da27bae868c479"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a58f966fd25d3504628da27bae868c479">&#9670;&#160;</a></span>True</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">examples.demo_dynamic_architecture_fast.True</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="demo__dynamic__architecture__fast_8py_source.html#l00060">60</a> of file <a class="el" href="demo__dynamic__architecture__fast_8py_source.html">demo_dynamic_architecture_fast.py</a>.</p>
+
+</div>
+</div>
+<a id="a4756f14028ce4ff818ccee14b700d1ed" name="a4756f14028ce4ff818ccee14b700d1ed"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4756f14028ce4ff818ccee14b700d1ed">&#9670;&#160;</a></span>type</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">examples.demo_dynamic_architecture_fast.type</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="demo__dynamic__architecture__fast_8py_source.html#l00038">38</a> of file <a class="el" href="demo__dynamic__architecture__fast_8py_source.html">demo_dynamic_architecture_fast.py</a>.</p>
+
+</div>
+</div>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<!-- do not remove this div, it is closed by doxygen! -->
+</div>
+<!-- Custom Footer -->
+<div style="background: #f8f9fa; border-top: 1px solid #e9ecef; margin-top: 50px; padding: 30px 0; text-align: center;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-bottom: 20px;">
+            <!-- Project Info -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🧠 NeuroExapt</h4>
+                <p style="color: #6c757d; margin: 0; font-size: 0.9em;">
+                    Advanced Neural Architecture Search and Dynamic Morphogenesis Framework for next-generation AI research.
+                </p>
+            </div>
+            <!-- Quick Links -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">📚 Quick Links</h4>
+                <div style="text-align: left;">
+                    <a href="index.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🏠 Home</a>
+                    <a href="modules.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📦 Modules</a>
+                    <a href="examples.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💡 Examples</a>
+                    <a href="files.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📁 Files</a>
+                </div>
+            </div>
+            <!-- Resources -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🔗 Resources</h4>
+                <div style="text-align: left;">
+                    <a href="https://github.com/your-username/neuroexapt" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💻 GitHub Repository</a>
+                    <a href="https://github.com/your-username/neuroexapt/issues" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🐛 Issue Tracker</a>
+                    <a href="https://github.com/your-username/neuroexapt/wiki" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📖 Wiki</a>
+                    <a href="https://github.com/your-username/neuroexapt/releases" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🚀 Releases</a>
+                </div>
+            </div>
+        </div>
+        <hr style="border: 0; height: 1px; background: #e9ecef; margin: 20px 0;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+            <div style="color: #6c757d; font-size: 0.9em;">
+                © 2024 NeuroExapt Project. Generated with 
+                <a href="https://www.doxygen.nl/index.html" style="color: #667eea; text-decoration: none;">Doxygen 1.9.8</a>
+            </div>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <span style="font-size: 0.9em; color: #6c757d;">Built with ❤️ for AI Research</span>
+                <div style="display: flex; gap: 10px;">
+                    <span style="background: #28a745; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">🟢 Active</span>
+                    <span style="background: #17a2b8; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">v3.0</span>
+                </div>
+            </div>
+        </div>
+        <!-- Technology Stack -->
+        <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #e9ecef;">
+            <div style="font-size: 0.8em; color: #868e96; text-align: center;">
+                <strong>Built with:</strong>
+                <span style="margin: 0 5px;">🐍 Python</span>
+                <span style="margin: 0 5px;">🔥 PyTorch</span>
+                <span style="margin: 0 5px;">⚡ CUDA</span>
+                <span style="margin: 0 5px;">🧮 NumPy</span>
+                <span style="margin: 0 5px;">📊 Matplotlib</span>
+                <span style="margin: 0 5px;">🚀 Triton</span>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Back to top button -->
+<div id="back-to-top" style="position: fixed; bottom: 20px; right: 20px; display: none; z-index: 1000;">
+    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" 
+            style="background: #667eea; color: white; border: none; padding: 10px 15px; border-radius: 50%; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,0.2); font-size: 16px;">
+        ⬆️
+    </button>
+</div>
+<script>
+// Back to top button functionality
+window.addEventListener('scroll', function() {
+    const backToTop = document.getElementById('back-to-top');
+    if (window.pageYOffset > 300) {
+        backToTop.style.display = 'block';
+    } else {
+        backToTop.style.display = 'none';
+    }
+});
+// Enhanced search functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Add search enhancement if search box exists
+    const searchBox = document.getElementById('MSearchField');
+    if (searchBox) {
+        searchBox.placeholder = 'Search documentation... 🔍';
+        searchBox.style.borderRadius = '20px';
+        searchBox.style.padding = '8px 15px';
+    }
+    // Add copy code button to code blocks
+    const codeBlocks = document.querySelectorAll('.fragment');
+    codeBlocks.forEach(function(block) {
+        const copyBtn = document.createElement('button');
+        copyBtn.innerHTML = '📋';
+        copyBtn.title = 'Copy code';
+        copyBtn.style.cssText = 'position: absolute; top: 10px; right: 10px; background: #667eea; color: white; border: none; padding: 5px; border-radius: 3px; cursor: pointer; font-size: 12px;';
+        block.style.position = 'relative';
+        block.appendChild(copyBtn);
+        copyBtn.addEventListener('click', function() {
+            const text = block.textContent;
+            navigator.clipboard.writeText(text).then(function() {
+                copyBtn.innerHTML = '✅';
+                setTimeout(function() {
+                    copyBtn.innerHTML = '📋';
+                }, 2000);
+            });
+        });
+    });
+});
+// Dark mode toggle (optional)
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+}
+// Load saved dark mode preference
+if (localStorage.getItem('darkMode') === 'true') {
+    document.body.classList.add('dark-mode');
+}
+</script>
+</body>
+</html>

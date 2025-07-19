@@ -1,4 +1,11 @@
 """
+"""
+\defgroup group_trainer_v3 Trainer V3
+\ingroup core
+Trainer V3 module for NeuroExapt framework.
+"""
+
+
 Trainer for the NeuroExapt V3 framework.
 
 This module provides a `Trainer` class that encapsulates the logic for

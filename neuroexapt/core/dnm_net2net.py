@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+"""
+\defgroup group_dnm_net2net Dnm Net2Net
+\ingroup core
+Dnm Net2Net module for NeuroExapt framework.
+"""
+
+
 DNM Net2Net 参数平滑迁移模块
 
 基于Net2Net论文思想，实现神经网络架构变异时的参数平滑迁移：

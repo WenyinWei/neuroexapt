@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+"""
+\defgroup group_aggressive_morphogenesis Aggressive Morphogenesis
+\ingroup core
+Aggressive Morphogenesis module for NeuroExapt framework.
+"""
+
+
 激进多点形态发生系统 - Aggressive Multi-Point Morphogenesis
 
 🎯 专门针对准确率饱和状态的激进架构变异策略
@@ -18,7 +25,7 @@ from collections import defaultdict
 import logging
 import copy
 
-from .enhanced_dnm_framework import logger
+from .logging_utils import logger
 from .advanced_morphogenesis import MorphogenesisType, MorphogenesisDecision
 
 @dataclass

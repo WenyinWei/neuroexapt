@@ -1,0 +1,584 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="description" content="NeuroExapt - Advanced Neural Architecture Search and Dynamic Morphogenesis Framework">
+    <meta name="keywords" content="neural architecture search, dynamic morphogenesis, deep learning, AI, PyTorch">
+    <meta name="author" content="NeuroExapt Team">
+    <meta property="og:title" content="NeuroExapt Documentation">
+    <meta property="og:description" content="Advanced Neural Architecture Search Framework">
+    <meta property="og:type" content="website">
+
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>NeuroExapt: neuroexapt/utils/xunlei_config_helper.py Source File</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="custom.css" rel="stylesheet" type="text/css"/>
+<!-- NeuroExapt Custom Styles -->
+<style>
+/* Enhanced header styling */
+.header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+.header h1 {
+    margin: 0;
+    font-size: 2.5em;
+    font-weight: 300;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+.header .subtitle {
+    font-size: 1.2em;
+    opacity: 0.9;
+    margin-top: 10px;
+}
+/* Enhanced navigation */
+.tablist {
+    background: #f8f9fa;
+    border-bottom: 2px solid #e9ecef;
+}
+.tablist li.current a {
+    background: #667eea;
+    color: white;
+}
+/* Improved content layout */
+.contents {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+/* Code highlighting */
+.fragment {
+    background: #f8f9fa;
+    border-left: 4px solid #667eea;
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 0 8px 8px 0;
+}
+/* Enhanced tables */
+table.memberdecls {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 20px 0;
+}
+table.memberdecls td {
+    border: 1px solid #e9ecef;
+    padding: 12px;
+}
+/* Better typography */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #343a40;
+}
+h1, h2, h3, h4, h5, h6 {
+    color: #495057;
+    font-weight: 500;
+}
+/* Responsive design */
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 2em;
+    }
+    .contents {
+        padding: 15px;
+    }
+}
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #1a1a1a;
+        color: #e9ecef;
+    }
+    .header {
+        background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+    }
+    .fragment {
+        background: #2d3748;
+        color: #e9ecef;
+    }
+}
+</style>
+<!-- Analytics (if needed) -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<!--
+<script async src="https://www.googletagmanager.com/gtag/js?id=GA_TRACKING_ID"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'GA_TRACKING_ID');
+</script>
+-->
+</head>
+<body>
+<!-- Custom Header -->
+<div class="header">
+    <h1>🧠 NeuroExapt</h1>
+    <div class="subtitle">Advanced Neural Architecture Search and Dynamic Morphogenesis Framework</div>
+    <div style="margin-top: 15px; font-size: 0.9em;">
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🚀 Dynamic Neural Morphogenesis
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🔬 Advanced Architecture Search
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            ⚡ High-Performance Computing
+        </span>
+    </div>
+</div>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! --><!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function() { init_codefold(0); });
+/* @license-end */
+</script>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('xunlei__config__helper_8py_source.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">xunlei_config_helper.py</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="xunlei__config__helper_8py.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno"><a class="line" href="namespaceneuroexapt_1_1utils_1_1xunlei__config__helper.html">    1</a></span><span class="comment">#!/usr/bin/env python3</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="stringliteral">&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="stringliteral">&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span>\defgroup group_xunlei_config_helper Xunlei Config Helper</div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span>\ingroup core</div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span>Xunlei Config Helper module <span class="keywordflow">for</span> NeuroExapt framework.</div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="stringliteral">&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="stringliteral"></span> </div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="stringliteral"></span> </div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="stringliteral">迅雷配置助手 - 帮助用户配置迅雷的默认下载路径</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="stringliteral">&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="keyword">import</span> os</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="keyword">import</span> json</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">import</span> winreg</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="keyword">import</span> platform</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="keyword">from</span> typing <span class="keyword">import</span> Optional, Dict, List</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
+<div class="foldopen" id="foldopen00020" data-start="" data-end="">
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1utils_1_1xunlei__config__helper_1_1XunleiConfigHelper.html">   20</a></span><span class="keyword">class </span><a class="code hl_class" href="classneuroexapt_1_1utils_1_1xunlei__config__helper_1_1XunleiConfigHelper.html">XunleiConfigHelper</a>:</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    <span class="stringliteral">&quot;&quot;&quot;迅雷配置助手，帮助用户设置默认下载路径&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    </div>
+<div class="foldopen" id="foldopen00023" data-start="" data-end="">
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1utils_1_1xunlei__config__helper_1_1XunleiConfigHelper.html#a3941b7278d048cc8eed83c9eb4ae5d00">   23</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1utils_1_1xunlei__config__helper_1_1XunleiConfigHelper.html#a3941b7278d048cc8eed83c9eb4ae5d00">__init__</a>(self):</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1utils_1_1xunlei__config__helper_1_1XunleiConfigHelper.html#ab52945994dc06f48a1a2b754e0e2d798">   24</a></span>        self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1xunlei__config__helper_1_1XunleiConfigHelper.html#ab52945994dc06f48a1a2b754e0e2d798">system</a> = platform.system().lower()</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1utils_1_1xunlei__config__helper_1_1XunleiConfigHelper.html#aeff9cefedc14150f96eb9406ced85abe">   25</a></span>        self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1xunlei__config__helper_1_1XunleiConfigHelper.html#aeff9cefedc14150f96eb9406ced85abe">config_paths</a> = self.<a class="code hl_function" href="classneuroexapt_1_1utils_1_1xunlei__config__helper_1_1XunleiConfigHelper.html#a9ca79eea46c00a17de13b014f53b6bec">_get_config_paths</a>()</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    </div>
+</div>
+<div class="foldopen" id="foldopen00027" data-start="" data-end="">
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1utils_1_1xunlei__config__helper_1_1XunleiConfigHelper.html#a9ca79eea46c00a17de13b014f53b6bec">   27</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1utils_1_1xunlei__config__helper_1_1XunleiConfigHelper.html#a9ca79eea46c00a17de13b014f53b6bec">_get_config_paths</a>(self) -&gt; Dict[str, str]:</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>        <span class="stringliteral">&quot;&quot;&quot;获取迅雷配置文件路径&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>        paths = {}</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>        </div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>        <span class="keywordflow">if</span> self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1xunlei__config__helper_1_1XunleiConfigHelper.html#ab52945994dc06f48a1a2b754e0e2d798">system</a> == <span class="stringliteral">&quot;windows&quot;</span>:</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>            <span class="comment"># 迅雷配置文件路径</span></div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>            username = os.getenv(<span class="stringliteral">&#39;USERNAME&#39;</span>, <span class="stringliteral">&#39;&#39;</span>)</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>            possible_paths = [</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>                f<span class="stringliteral">&quot;C:\\Users\\{username}\\AppData\\Roaming\\Thunder Network\\Thunder\\Profiles\\config.ini&quot;</span>,</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>                f<span class="stringliteral">&quot;C:\\Users\\{username}\\AppData\\Local\\Thunder Network\\Thunder\\Profiles\\config.ini&quot;</span>,</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>                <span class="stringliteral">&quot;C:\\Program Files (x86)\\Thunder Network\\Thunder\\Profiles\\config.ini&quot;</span>,</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>                <span class="stringliteral">&quot;C:\\Program Files\\Thunder Network\\Thunder\\Profiles\\config.ini&quot;</span>,</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>            ]</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>            </div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>            <span class="keywordflow">for</span> path <span class="keywordflow">in</span> possible_paths:</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>                <span class="keywordflow">if</span> os.path.exists(path):</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>                    paths[<span class="stringliteral">&#39;config_ini&#39;</span>] = path</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>                    <span class="keywordflow">break</span></div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>            </div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>            <span class="comment"># 注册表路径</span></div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>            paths[<span class="stringliteral">&#39;registry&#39;</span>] = <span class="stringliteral">r&quot;SOFTWARE\Thunder Network\Thunder&quot;</span></div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>            </div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        <span class="keywordflow">return</span> paths</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    </div>
+</div>
+<div class="foldopen" id="foldopen00051" data-start="" data-end="">
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1utils_1_1xunlei__config__helper_1_1XunleiConfigHelper.html#a471efc633ac2a3beec3af931e896788f">   51</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1utils_1_1xunlei__config__helper_1_1XunleiConfigHelper.html#a471efc633ac2a3beec3af931e896788f">get_current_download_path</a>(self) -&gt; Optional[str]:</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>        <span class="stringliteral">&quot;&quot;&quot;获取迅雷当前的默认下载路径&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        <span class="keywordflow">if</span> self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1xunlei__config__helper_1_1XunleiConfigHelper.html#ab52945994dc06f48a1a2b754e0e2d798">system</a> != <span class="stringliteral">&quot;windows&quot;</span>:</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>            <span class="keywordflow">return</span> <span class="keywordtype">None</span></div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>            </div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>        <span class="keywordflow">try</span>:</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>            <span class="comment"># 尝试从注册表读取</span></div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>            <span class="keyword">with</span> winreg.OpenKey(winreg.HKEY_CURRENT_USER, self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1xunlei__config__helper_1_1XunleiConfigHelper.html#aeff9cefedc14150f96eb9406ced85abe">config_paths</a>[<span class="stringliteral">&#39;registry&#39;</span>]) <span class="keyword">as</span> key:</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>                <span class="keywordflow">try</span>:</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>                    download_path = winreg.QueryValueEx(key, <span class="stringliteral">&quot;DefaultDownloadPath&quot;</span>)[0]</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>                    <span class="keywordflow">return</span> download_path</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>                <span class="keywordflow">except</span> FileNotFoundError:</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>                    <span class="keywordflow">pass</span></div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>        <span class="keywordflow">except</span> Exception:</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>            <span class="keywordflow">pass</span></div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>        </div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>        <span class="comment"># 尝试从配置文件读取</span></div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>        <span class="keywordflow">if</span> <span class="stringliteral">&#39;config_ini&#39;</span> <span class="keywordflow">in</span> self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1xunlei__config__helper_1_1XunleiConfigHelper.html#aeff9cefedc14150f96eb9406ced85abe">config_paths</a>:</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>            <span class="keywordflow">try</span>:</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>                <span class="keyword">with</span> open(self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1xunlei__config__helper_1_1XunleiConfigHelper.html#aeff9cefedc14150f96eb9406ced85abe">config_paths</a>[<span class="stringliteral">&#39;config_ini&#39;</span>], <span class="stringliteral">&#39;r&#39;</span>, encoding=<span class="stringliteral">&#39;utf-8&#39;</span>) <span class="keyword">as</span> f:</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>                    content = f.read()</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>                    <span class="comment"># 查找下载路径配置</span></div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>                    <span class="keywordflow">for</span> line <span class="keywordflow">in</span> content.split(<span class="stringliteral">&#39;\n&#39;</span>):</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>                        <span class="keywordflow">if</span> <span class="stringliteral">&#39;DefaultDownloadPath&#39;</span> <span class="keywordflow">in</span> line <span class="keywordflow">or</span> <span class="stringliteral">&#39;DownloadPath&#39;</span> <span class="keywordflow">in</span> line:</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>                            <span class="keywordflow">if</span> <span class="stringliteral">&#39;=&#39;</span> <span class="keywordflow">in</span> line:</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>                                path = line.split(<span class="stringliteral">&#39;=&#39;</span>)[1].strip()</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>                                <span class="keywordflow">if</span> path <span class="keywordflow">and</span> os.path.exists(path):</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>                                    <span class="keywordflow">return</span> path</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>            <span class="keywordflow">except</span> Exception:</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>                <span class="keywordflow">pass</span></div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>        </div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>        <span class="keywordflow">return</span> <span class="keywordtype">None</span></div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    </div>
+</div>
+<div class="foldopen" id="foldopen00084" data-start="" data-end="">
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1utils_1_1xunlei__config__helper_1_1XunleiConfigHelper.html#a08d2716c0c19e63712aea99a29e32cd0">   84</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1utils_1_1xunlei__config__helper_1_1XunleiConfigHelper.html#a08d2716c0c19e63712aea99a29e32cd0">set_download_path</a>(self, new_path: str) -&gt; bool:</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>        <span class="stringliteral">&quot;&quot;&quot;设置迅雷的默认下载路径&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>        <span class="keywordflow">if</span> self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1xunlei__config__helper_1_1XunleiConfigHelper.html#ab52945994dc06f48a1a2b754e0e2d798">system</a> != <span class="stringliteral">&quot;windows&quot;</span>:</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>            <span class="keywordflow">return</span> <span class="keyword">False</span></div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>            </div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>        <span class="keywordflow">try</span>:</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>            <span class="comment"># 确保路径存在</span></div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>            os.makedirs(new_path, exist_ok=<span class="keyword">True</span>)</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>            </div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>            <span class="comment"># 尝试通过注册表设置</span></div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>            <span class="keywordflow">try</span>:</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>                <span class="keyword">with</span> winreg.OpenKey(winreg.HKEY_CURRENT_USER, self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1xunlei__config__helper_1_1XunleiConfigHelper.html#aeff9cefedc14150f96eb9406ced85abe">config_paths</a>[<span class="stringliteral">&#39;registry&#39;</span>], 0, winreg.KEY_WRITE) <span class="keyword">as</span> key:</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>                    winreg.SetValueEx(key, <span class="stringliteral">&quot;DefaultDownloadPath&quot;</span>, 0, winreg.REG_SZ, new_path)</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>                    print(f<span class="stringliteral">&quot;✅ 已通过注册表设置下载路径: {new_path}&quot;</span>)</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>                    <span class="keywordflow">return</span> <span class="keyword">True</span></div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>            <span class="keywordflow">except</span> Exception <span class="keyword">as</span> e:</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>                print(f<span class="stringliteral">&quot;⚠️ 注册表设置失败: {e}&quot;</span>)</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>            </div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>            <span class="comment"># 尝试通过配置文件设置</span></div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>            <span class="keywordflow">if</span> <span class="stringliteral">&#39;config_ini&#39;</span> <span class="keywordflow">in</span> self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1xunlei__config__helper_1_1XunleiConfigHelper.html#aeff9cefedc14150f96eb9406ced85abe">config_paths</a>:</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>                <span class="keywordflow">try</span>:</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>                    <span class="keyword">with</span> open(self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1xunlei__config__helper_1_1XunleiConfigHelper.html#aeff9cefedc14150f96eb9406ced85abe">config_paths</a>[<span class="stringliteral">&#39;config_ini&#39;</span>], <span class="stringliteral">&#39;r&#39;</span>, encoding=<span class="stringliteral">&#39;utf-8&#39;</span>) <span class="keyword">as</span> f:</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>                        content = f.read()</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>                    </div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>                    <span class="comment"># 替换或添加下载路径配置</span></div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>                    lines = content.split(<span class="stringliteral">&#39;\n&#39;</span>)</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>                    updated = <span class="keyword">False</span></div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>                    </div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>                    <span class="keywordflow">for</span> i, line <span class="keywordflow">in</span> enumerate(lines):</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>                        <span class="keywordflow">if</span> <span class="stringliteral">&#39;DefaultDownloadPath&#39;</span> <span class="keywordflow">in</span> line <span class="keywordflow">or</span> <span class="stringliteral">&#39;DownloadPath&#39;</span> <span class="keywordflow">in</span> line:</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>                            lines[i] = f<span class="stringliteral">&quot;DefaultDownloadPath={new_path}&quot;</span></div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>                            updated = <span class="keyword">True</span></div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>                            <span class="keywordflow">break</span></div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>                    </div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>                    <span class="keywordflow">if</span> <span class="keywordflow">not</span> updated:</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>                        lines.append(f<span class="stringliteral">&quot;DefaultDownloadPath={new_path}&quot;</span>)</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>                    </div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>                    <span class="keyword">with</span> open(self.<a class="code hl_variable" href="classneuroexapt_1_1utils_1_1xunlei__config__helper_1_1XunleiConfigHelper.html#aeff9cefedc14150f96eb9406ced85abe">config_paths</a>[<span class="stringliteral">&#39;config_ini&#39;</span>], <span class="stringliteral">&#39;w&#39;</span>, encoding=<span class="stringliteral">&#39;utf-8&#39;</span>) <span class="keyword">as</span> f:</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>                        f.write(<span class="stringliteral">&#39;\n&#39;</span>.join(lines))</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>                    </div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>                    print(f<span class="stringliteral">&quot;✅ 已通过配置文件设置下载路径: {new_path}&quot;</span>)</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>                    <span class="keywordflow">return</span> <span class="keyword">True</span></div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>                    </div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>                <span class="keywordflow">except</span> Exception <span class="keyword">as</span> e:</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>                    print(f<span class="stringliteral">&quot;⚠️ 配置文件设置失败: {e}&quot;</span>)</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>            </div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>            <span class="keywordflow">return</span> <span class="keyword">False</span></div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>            </div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>        <span class="keywordflow">except</span> Exception <span class="keyword">as</span> e:</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>            print(f<span class="stringliteral">&quot;❌ 设置下载路径失败: {e}&quot;</span>)</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>            <span class="keywordflow">return</span> <span class="keyword">False</span></div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>    </div>
+</div>
+<div class="foldopen" id="foldopen00136" data-start="" data-end="">
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1utils_1_1xunlei__config__helper_1_1XunleiConfigHelper.html#a974b6576cc54d12baffa52eaa5415bd9">  136</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1utils_1_1xunlei__config__helper_1_1XunleiConfigHelper.html#a974b6576cc54d12baffa52eaa5415bd9">create_download_guide</a>(self, target_path: str) -&gt; str:</div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>        <span class="stringliteral">&quot;&quot;&quot;创建迅雷下载配置指南&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>        guide = f<span class="stringliteral">&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span><span class="stringliteral">🚀 迅雷下载路径配置指南</span></div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span><span class="stringliteral">{&#39;=&#39;*50}</span></div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span><span class="stringliteral"></span> </div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span><span class="stringliteral">📁 目标下载路径: {target_path}</span></div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span><span class="stringliteral"></span> </div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span><span class="stringliteral">🔧 配置方法 (选择其中一种):</span></div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span><span class="stringliteral"></span> </div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span><span class="stringliteral">方法1: 自动配置 (推荐)</span></div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span><span class="stringliteral">- 运行配置助手: python -m neuroexapt.utils.xunlei_config_helper</span></div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span><span class="stringliteral">- 选择自动设置下载路径</span></div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span><span class="stringliteral"></span> </div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span><span class="stringliteral">方法2: 手动配置</span></div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span><span class="stringliteral">1. 打开迅雷</span></div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span><span class="stringliteral">2. 点击右上角设置图标 ⚙️</span></div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span><span class="stringliteral">3. 选择&quot;下载设置&quot;</span></div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span><span class="stringliteral">4. 在&quot;默认下载目录&quot;中设置: {target_path}</span></div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span><span class="stringliteral">5. 点击&quot;确定&quot;保存</span></div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span><span class="stringliteral"></span> </div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span><span class="stringliteral">方法3: 注册表配置</span></div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span><span class="stringliteral">1. 按 Win+R，输入 regedit</span></div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span><span class="stringliteral">2. 导航到: HKEY_CURRENT_USER\\SOFTWARE\\Thunder Network\\Thunder</span></div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span><span class="stringliteral">3. 创建字符串值: DefaultDownloadPath</span></div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span><span class="stringliteral">4. 设置值为: {target_path}</span></div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span><span class="stringliteral"></span> </div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span><span class="stringliteral">💡 配置完成后，迅雷下载时会自动使用指定路径</span></div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span><span class="stringliteral">💡 如果仍有问题，请手动在迅雷下载窗口中设置保存路径</span></div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span><span class="stringliteral"></span> </div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span><span class="stringliteral">📋 当前配置状态:</span></div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span><span class="stringliteral">&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>        </div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>        current_path = self.<a class="code hl_function" href="classneuroexapt_1_1utils_1_1xunlei__config__helper_1_1XunleiConfigHelper.html#a471efc633ac2a3beec3af931e896788f">get_current_download_path</a>()</div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>        <span class="keywordflow">if</span> current_path:</div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>            guide += f<span class="stringliteral">&quot;✅ 当前下载路径: {current_path}\n&quot;</span></div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>            <span class="keywordflow">if</span> current_path == target_path:</div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>                guide += <span class="stringliteral">&quot;✅ 路径已正确配置！\n&quot;</span></div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>            <span class="keywordflow">else</span>:</div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>                guide += f<span class="stringliteral">&quot;⚠️ 路径不匹配，建议更新为: {target_path}\n&quot;</span></div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>        <span class="keywordflow">else</span>:</div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>            guide += <span class="stringliteral">&quot;❌ 未检测到下载路径配置\n&quot;</span></div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>        </div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>        <span class="keywordflow">return</span> guide</div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>    </div>
+</div>
+<div class="foldopen" id="foldopen00181" data-start="" data-end="">
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1utils_1_1xunlei__config__helper_1_1XunleiConfigHelper.html#a13caadf31099b5df9038ca8542415403">  181</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1utils_1_1xunlei__config__helper_1_1XunleiConfigHelper.html#a13caadf31099b5df9038ca8542415403">interactive_setup</a>(self):</div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>        <span class="stringliteral">&quot;&quot;&quot;交互式配置迅雷下载路径&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>        print(<span class="stringliteral">&quot;🚀 迅雷下载路径配置助手&quot;</span>)</div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>        print(<span class="stringliteral">&quot;=&quot;</span> * 50)</div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>        </div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>        <span class="comment"># 获取项目数据集路径</span></div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>        project_path = Path.cwd() / <span class="stringliteral">&quot;datasets&quot;</span></div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>        project_path.mkdir(exist_ok=<span class="keyword">True</span>)</div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>        </div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>        print(f<span class="stringliteral">&quot;📁 建议的下载路径: {project_path}&quot;</span>)</div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>        print()</div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>        </div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>        <span class="comment"># 显示当前配置</span></div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>        current_path = self.<a class="code hl_function" href="classneuroexapt_1_1utils_1_1xunlei__config__helper_1_1XunleiConfigHelper.html#a471efc633ac2a3beec3af931e896788f">get_current_download_path</a>()</div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>        <span class="keywordflow">if</span> current_path:</div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>            print(f<span class="stringliteral">&quot;📋 当前下载路径: {current_path}&quot;</span>)</div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>        <span class="keywordflow">else</span>:</div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>            print(<span class="stringliteral">&quot;📋 当前下载路径: 未配置&quot;</span>)</div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>        print()</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>        </div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>        <span class="comment"># 询问是否设置</span></div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>        choice = input(<span class="stringliteral">&quot;是否将迅雷默认下载路径设置为项目数据集目录? (y/n): &quot;</span>).lower().strip()</div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>        </div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>        <span class="keywordflow">if</span> choice <span class="keywordflow">in</span> [<span class="stringliteral">&#39;y&#39;</span>, <span class="stringliteral">&#39;yes&#39;</span>, <span class="stringliteral">&#39;是&#39;</span>]:</div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>            <span class="keywordflow">if</span> self.<a class="code hl_function" href="classneuroexapt_1_1utils_1_1xunlei__config__helper_1_1XunleiConfigHelper.html#a08d2716c0c19e63712aea99a29e32cd0">set_download_path</a>(str(project_path)):</div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>                print(<span class="stringliteral">&quot;✅ 配置成功！&quot;</span>)</div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>                print(<span class="stringliteral">&quot;💡 现在使用迅雷下载时，文件会自动保存到项目目录&quot;</span>)</div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>            <span class="keywordflow">else</span>:</div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>                print(<span class="stringliteral">&quot;❌ 自动配置失败，请手动配置&quot;</span>)</div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>                print(self.<a class="code hl_function" href="classneuroexapt_1_1utils_1_1xunlei__config__helper_1_1XunleiConfigHelper.html#a974b6576cc54d12baffa52eaa5415bd9">create_download_guide</a>(str(project_path)))</div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>        <span class="keywordflow">else</span>:</div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>            print(<span class="stringliteral">&quot;📋 配置指南:&quot;</span>)</div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>            print(self.<a class="code hl_function" href="classneuroexapt_1_1utils_1_1xunlei__config__helper_1_1XunleiConfigHelper.html#a974b6576cc54d12baffa52eaa5415bd9">create_download_guide</a>(str(project_path)))</div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span> </div>
+</div>
+</div>
+<div class="foldopen" id="foldopen00215" data-start="" data-end="">
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno"><a class="line" href="namespaceneuroexapt_1_1utils_1_1xunlei__config__helper.html#a00abebbfa2dd6eb45bae7ecd0cefda32">  215</a></span><span class="keyword">def </span><a class="code hl_function" href="namespaceneuroexapt_1_1utils_1_1xunlei__config__helper.html#a00abebbfa2dd6eb45bae7ecd0cefda32">main</a>():</div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>    <span class="stringliteral">&quot;&quot;&quot;主函数&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>    helper = <a class="code hl_class" href="classneuroexapt_1_1utils_1_1xunlei__config__helper_1_1XunleiConfigHelper.html">XunleiConfigHelper</a>()</div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>    helper.interactive_setup()</div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span> </div>
+</div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span><span class="keywordflow">if</span> __name__ == <span class="stringliteral">&quot;__main__&quot;</span>:</div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>    <a class="code hl_function" href="namespaceneuroexapt_1_1utils_1_1xunlei__config__helper.html#a00abebbfa2dd6eb45bae7ecd0cefda32">main</a>() </div>
+<div class="ttc" id="aclassneuroexapt_1_1utils_1_1xunlei__config__helper_1_1XunleiConfigHelper_html"><div class="ttname"><a href="classneuroexapt_1_1utils_1_1xunlei__config__helper_1_1XunleiConfigHelper.html">neuroexapt.utils.xunlei_config_helper.XunleiConfigHelper</a></div><div class="ttdef"><b>Definition</b> <a href="xunlei__config__helper_8py_source.html#l00020">xunlei_config_helper.py:20</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1utils_1_1xunlei__config__helper_1_1XunleiConfigHelper_html_a08d2716c0c19e63712aea99a29e32cd0"><div class="ttname"><a href="classneuroexapt_1_1utils_1_1xunlei__config__helper_1_1XunleiConfigHelper.html#a08d2716c0c19e63712aea99a29e32cd0">neuroexapt.utils.xunlei_config_helper.XunleiConfigHelper.set_download_path</a></div><div class="ttdeci">bool set_download_path(self, str new_path)</div><div class="ttdef"><b>Definition</b> <a href="xunlei__config__helper_8py_source.html#l00084">xunlei_config_helper.py:84</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1utils_1_1xunlei__config__helper_1_1XunleiConfigHelper_html_a13caadf31099b5df9038ca8542415403"><div class="ttname"><a href="classneuroexapt_1_1utils_1_1xunlei__config__helper_1_1XunleiConfigHelper.html#a13caadf31099b5df9038ca8542415403">neuroexapt.utils.xunlei_config_helper.XunleiConfigHelper.interactive_setup</a></div><div class="ttdeci">interactive_setup(self)</div><div class="ttdef"><b>Definition</b> <a href="xunlei__config__helper_8py_source.html#l00181">xunlei_config_helper.py:181</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1utils_1_1xunlei__config__helper_1_1XunleiConfigHelper_html_a3941b7278d048cc8eed83c9eb4ae5d00"><div class="ttname"><a href="classneuroexapt_1_1utils_1_1xunlei__config__helper_1_1XunleiConfigHelper.html#a3941b7278d048cc8eed83c9eb4ae5d00">neuroexapt.utils.xunlei_config_helper.XunleiConfigHelper.__init__</a></div><div class="ttdeci">__init__(self)</div><div class="ttdef"><b>Definition</b> <a href="xunlei__config__helper_8py_source.html#l00023">xunlei_config_helper.py:23</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1utils_1_1xunlei__config__helper_1_1XunleiConfigHelper_html_a471efc633ac2a3beec3af931e896788f"><div class="ttname"><a href="classneuroexapt_1_1utils_1_1xunlei__config__helper_1_1XunleiConfigHelper.html#a471efc633ac2a3beec3af931e896788f">neuroexapt.utils.xunlei_config_helper.XunleiConfigHelper.get_current_download_path</a></div><div class="ttdeci">Optional[str] get_current_download_path(self)</div><div class="ttdef"><b>Definition</b> <a href="xunlei__config__helper_8py_source.html#l00051">xunlei_config_helper.py:51</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1utils_1_1xunlei__config__helper_1_1XunleiConfigHelper_html_a974b6576cc54d12baffa52eaa5415bd9"><div class="ttname"><a href="classneuroexapt_1_1utils_1_1xunlei__config__helper_1_1XunleiConfigHelper.html#a974b6576cc54d12baffa52eaa5415bd9">neuroexapt.utils.xunlei_config_helper.XunleiConfigHelper.create_download_guide</a></div><div class="ttdeci">str create_download_guide(self, str target_path)</div><div class="ttdef"><b>Definition</b> <a href="xunlei__config__helper_8py_source.html#l00136">xunlei_config_helper.py:136</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1utils_1_1xunlei__config__helper_1_1XunleiConfigHelper_html_a9ca79eea46c00a17de13b014f53b6bec"><div class="ttname"><a href="classneuroexapt_1_1utils_1_1xunlei__config__helper_1_1XunleiConfigHelper.html#a9ca79eea46c00a17de13b014f53b6bec">neuroexapt.utils.xunlei_config_helper.XunleiConfigHelper._get_config_paths</a></div><div class="ttdeci">Dict[str, str] _get_config_paths(self)</div><div class="ttdef"><b>Definition</b> <a href="xunlei__config__helper_8py_source.html#l00027">xunlei_config_helper.py:27</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1utils_1_1xunlei__config__helper_1_1XunleiConfigHelper_html_ab52945994dc06f48a1a2b754e0e2d798"><div class="ttname"><a href="classneuroexapt_1_1utils_1_1xunlei__config__helper_1_1XunleiConfigHelper.html#ab52945994dc06f48a1a2b754e0e2d798">neuroexapt.utils.xunlei_config_helper.XunleiConfigHelper.system</a></div><div class="ttdeci">system</div><div class="ttdef"><b>Definition</b> <a href="xunlei__config__helper_8py_source.html#l00024">xunlei_config_helper.py:24</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1utils_1_1xunlei__config__helper_1_1XunleiConfigHelper_html_aeff9cefedc14150f96eb9406ced85abe"><div class="ttname"><a href="classneuroexapt_1_1utils_1_1xunlei__config__helper_1_1XunleiConfigHelper.html#aeff9cefedc14150f96eb9406ced85abe">neuroexapt.utils.xunlei_config_helper.XunleiConfigHelper.config_paths</a></div><div class="ttdeci">config_paths</div><div class="ttdef"><b>Definition</b> <a href="xunlei__config__helper_8py_source.html#l00025">xunlei_config_helper.py:25</a></div></div>
+<div class="ttc" id="anamespaceneuroexapt_1_1utils_1_1xunlei__config__helper_html_a00abebbfa2dd6eb45bae7ecd0cefda32"><div class="ttname"><a href="namespaceneuroexapt_1_1utils_1_1xunlei__config__helper.html#a00abebbfa2dd6eb45bae7ecd0cefda32">neuroexapt.utils.xunlei_config_helper.main</a></div><div class="ttdeci">main()</div><div class="ttdef"><b>Definition</b> <a href="xunlei__config__helper_8py_source.html#l00215">xunlei_config_helper.py:215</a></div></div>
+</div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
+<!-- do not remove this div, it is closed by doxygen! -->
+</div>
+<!-- Custom Footer -->
+<div style="background: #f8f9fa; border-top: 1px solid #e9ecef; margin-top: 50px; padding: 30px 0; text-align: center;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-bottom: 20px;">
+            <!-- Project Info -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🧠 NeuroExapt</h4>
+                <p style="color: #6c757d; margin: 0; font-size: 0.9em;">
+                    Advanced Neural Architecture Search and Dynamic Morphogenesis Framework for next-generation AI research.
+                </p>
+            </div>
+            <!-- Quick Links -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">📚 Quick Links</h4>
+                <div style="text-align: left;">
+                    <a href="index.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🏠 Home</a>
+                    <a href="modules.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📦 Modules</a>
+                    <a href="examples.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💡 Examples</a>
+                    <a href="files.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📁 Files</a>
+                </div>
+            </div>
+            <!-- Resources -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🔗 Resources</h4>
+                <div style="text-align: left;">
+                    <a href="https://github.com/your-username/neuroexapt" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💻 GitHub Repository</a>
+                    <a href="https://github.com/your-username/neuroexapt/issues" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🐛 Issue Tracker</a>
+                    <a href="https://github.com/your-username/neuroexapt/wiki" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📖 Wiki</a>
+                    <a href="https://github.com/your-username/neuroexapt/releases" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🚀 Releases</a>
+                </div>
+            </div>
+        </div>
+        <hr style="border: 0; height: 1px; background: #e9ecef; margin: 20px 0;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+            <div style="color: #6c757d; font-size: 0.9em;">
+                © 2024 NeuroExapt Project. Generated with 
+                <a href="https://www.doxygen.nl/index.html" style="color: #667eea; text-decoration: none;">Doxygen 1.9.8</a>
+            </div>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <span style="font-size: 0.9em; color: #6c757d;">Built with ❤️ for AI Research</span>
+                <div style="display: flex; gap: 10px;">
+                    <span style="background: #28a745; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">🟢 Active</span>
+                    <span style="background: #17a2b8; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">v3.0</span>
+                </div>
+            </div>
+        </div>
+        <!-- Technology Stack -->
+        <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #e9ecef;">
+            <div style="font-size: 0.8em; color: #868e96; text-align: center;">
+                <strong>Built with:</strong>
+                <span style="margin: 0 5px;">🐍 Python</span>
+                <span style="margin: 0 5px;">🔥 PyTorch</span>
+                <span style="margin: 0 5px;">⚡ CUDA</span>
+                <span style="margin: 0 5px;">🧮 NumPy</span>
+                <span style="margin: 0 5px;">📊 Matplotlib</span>
+                <span style="margin: 0 5px;">🚀 Triton</span>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Back to top button -->
+<div id="back-to-top" style="position: fixed; bottom: 20px; right: 20px; display: none; z-index: 1000;">
+    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" 
+            style="background: #667eea; color: white; border: none; padding: 10px 15px; border-radius: 50%; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,0.2); font-size: 16px;">
+        ⬆️
+    </button>
+</div>
+<script>
+// Back to top button functionality
+window.addEventListener('scroll', function() {
+    const backToTop = document.getElementById('back-to-top');
+    if (window.pageYOffset > 300) {
+        backToTop.style.display = 'block';
+    } else {
+        backToTop.style.display = 'none';
+    }
+});
+// Enhanced search functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Add search enhancement if search box exists
+    const searchBox = document.getElementById('MSearchField');
+    if (searchBox) {
+        searchBox.placeholder = 'Search documentation... 🔍';
+        searchBox.style.borderRadius = '20px';
+        searchBox.style.padding = '8px 15px';
+    }
+    // Add copy code button to code blocks
+    const codeBlocks = document.querySelectorAll('.fragment');
+    codeBlocks.forEach(function(block) {
+        const copyBtn = document.createElement('button');
+        copyBtn.innerHTML = '📋';
+        copyBtn.title = 'Copy code';
+        copyBtn.style.cssText = 'position: absolute; top: 10px; right: 10px; background: #667eea; color: white; border: none; padding: 5px; border-radius: 3px; cursor: pointer; font-size: 12px;';
+        block.style.position = 'relative';
+        block.appendChild(copyBtn);
+        copyBtn.addEventListener('click', function() {
+            const text = block.textContent;
+            navigator.clipboard.writeText(text).then(function() {
+                copyBtn.innerHTML = '✅';
+                setTimeout(function() {
+                    copyBtn.innerHTML = '📋';
+                }, 2000);
+            });
+        });
+    });
+});
+// Dark mode toggle (optional)
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+}
+// Load saved dark mode preference
+if (localStorage.getItem('darkMode') === 'true') {
+    document.body.classList.add('dark-mode');
+}
+</script>
+</body>
+</html>

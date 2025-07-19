@@ -1,3 +1,10 @@
+"""
+\defgroup group_softmax_sum Softmax Sum
+\ingroup core
+Softmax Sum module for NeuroExapt framework.
+"""
+
+
 import os
 from pathlib import Path
 

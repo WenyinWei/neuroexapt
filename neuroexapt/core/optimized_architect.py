@@ -1,3 +1,10 @@
+"""
+\defgroup group_optimized_architect Optimized Architect
+\ingroup core
+Optimized Architect module for NeuroExapt framework.
+"""
+
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F

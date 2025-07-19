@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+"""
+\defgroup group_performance_guided_division Performance Guided Division
+\ingroup core
+Performance Guided Division module for NeuroExapt framework.
+"""
+
+
 Performance-Guided Neuron Division for DNM Framework
 
 基于性能导向的神经元分裂策略，实现精准、高效的神经元分裂

@@ -1,0 +1,656 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="description" content="NeuroExapt - Advanced Neural Architecture Search and Dynamic Morphogenesis Framework">
+    <meta name="keywords" content="neural architecture search, dynamic morphogenesis, deep learning, AI, PyTorch">
+    <meta name="author" content="NeuroExapt Team">
+    <meta property="og:title" content="NeuroExapt Documentation">
+    <meta property="og:description" content="Advanced Neural Architecture Search Framework">
+    <meta property="og:type" content="website">
+
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>NeuroExapt: examples/demo_intelligent_evolution.py Source File</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="custom.css" rel="stylesheet" type="text/css"/>
+<!-- NeuroExapt Custom Styles -->
+<style>
+/* Enhanced header styling */
+.header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+.header h1 {
+    margin: 0;
+    font-size: 2.5em;
+    font-weight: 300;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+.header .subtitle {
+    font-size: 1.2em;
+    opacity: 0.9;
+    margin-top: 10px;
+}
+/* Enhanced navigation */
+.tablist {
+    background: #f8f9fa;
+    border-bottom: 2px solid #e9ecef;
+}
+.tablist li.current a {
+    background: #667eea;
+    color: white;
+}
+/* Improved content layout */
+.contents {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+/* Code highlighting */
+.fragment {
+    background: #f8f9fa;
+    border-left: 4px solid #667eea;
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 0 8px 8px 0;
+}
+/* Enhanced tables */
+table.memberdecls {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 20px 0;
+}
+table.memberdecls td {
+    border: 1px solid #e9ecef;
+    padding: 12px;
+}
+/* Better typography */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #343a40;
+}
+h1, h2, h3, h4, h5, h6 {
+    color: #495057;
+    font-weight: 500;
+}
+/* Responsive design */
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 2em;
+    }
+    .contents {
+        padding: 15px;
+    }
+}
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #1a1a1a;
+        color: #e9ecef;
+    }
+    .header {
+        background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+    }
+    .fragment {
+        background: #2d3748;
+        color: #e9ecef;
+    }
+}
+</style>
+<!-- Analytics (if needed) -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<!--
+<script async src="https://www.googletagmanager.com/gtag/js?id=GA_TRACKING_ID"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'GA_TRACKING_ID');
+</script>
+-->
+</head>
+<body>
+<!-- Custom Header -->
+<div class="header">
+    <h1>🧠 NeuroExapt</h1>
+    <div class="subtitle">Advanced Neural Architecture Search and Dynamic Morphogenesis Framework</div>
+    <div style="margin-top: 15px; font-size: 0.9em;">
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🚀 Dynamic Neural Morphogenesis
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🔬 Advanced Architecture Search
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            ⚡ High-Performance Computing
+        </span>
+    </div>
+</div>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! --><!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function() { init_codefold(0); });
+/* @license-end */
+</script>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('demo__intelligent__evolution_8py_source.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">demo_intelligent_evolution.py</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="demo__intelligent__evolution_8py.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno"><a class="line" href="namespaceexamples_1_1demo__intelligent__evolution.html">    1</a></span><span class="stringliteral">&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="stringliteral">Demonstration of Intelligent Architecture Evolution in NeuroExapt.</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="stringliteral"></span> </div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="stringliteral">This script shows how the enhanced system:</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="stringliteral">1. Intelligently selects layer types based on information metrics</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="stringliteral">2. Dynamically adjusts data flow sizes</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="stringliteral">3. Creates specialized branches for different features</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="stringliteral">&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="keyword">import</span> torch</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="keyword">import</span> torch.optim <span class="keyword">as</span> optim</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="keyword">from</span> torch.utils.data <span class="keyword">import</span> DataLoader</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="keyword">import</span> torchvision</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">import</span> torchvision.transforms <span class="keyword">as</span> transforms</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="keyword">from</span> neuroexapt <span class="keyword">import</span> NeuroExapt</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="keyword">from</span> <a class="code hl_namespace" href="namespaceneuroexapt_1_1trainer.html">neuroexapt.trainer</a> <span class="keyword">import</span> Trainer</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
+<div class="foldopen" id="foldopen00023" data-start="" data-end="">
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno"><a class="line" href="classexamples_1_1demo__intelligent__evolution_1_1AdaptiveCNN.html">   23</a></span><span class="keyword">class </span><a class="code hl_class" href="classexamples_1_1demo__intelligent__evolution_1_1AdaptiveCNN.html">AdaptiveCNN</a>(nn.Module):</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    <span class="stringliteral">&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="stringliteral">    A CNN designed to be evolved with intelligent operators.</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="stringliteral">    &quot;&quot;&quot;</span></div>
+<div class="foldopen" id="foldopen00027" data-start="" data-end="">
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno"><a class="line" href="classexamples_1_1demo__intelligent__evolution_1_1AdaptiveCNN.html#a4dbda3aeb010a2adb6f8e5b88c814a38">   27</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classexamples_1_1demo__intelligent__evolution_1_1AdaptiveCNN.html#a4dbda3aeb010a2adb6f8e5b88c814a38">__init__</a>(self, num_classes=10):</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>        super().<a class="code hl_function" href="classexamples_1_1demo__intelligent__evolution_1_1AdaptiveCNN.html#a4dbda3aeb010a2adb6f8e5b88c814a38">__init__</a>()</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>        </div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>        <span class="comment"># Initial simple architecture</span></div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="classexamples_1_1demo__intelligent__evolution_1_1AdaptiveCNN.html#ad8d59a479955c45bb1f30a80f991d723">   31</a></span>        self.<a class="code hl_variable" href="classexamples_1_1demo__intelligent__evolution_1_1AdaptiveCNN.html#ad8d59a479955c45bb1f30a80f991d723">features</a> = nn.Sequential(</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>            <span class="comment"># First block - will be analyzed for complexity</span></div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>            nn.Conv2d(3, 32, kernel_size=3, padding=1),</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>            nn.BatchNorm2d(32),</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>            nn.ReLU(inplace=<span class="keyword">True</span>),</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>            </div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>            <span class="comment"># Second block - candidate for intelligent expansion</span></div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>            nn.Conv2d(32, 64, kernel_size=3, padding=1),</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>            nn.BatchNorm2d(64),</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>            nn.ReLU(inplace=<span class="keyword">True</span>),</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>            </div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>            <span class="comment"># Third block - may be replaced with specialized layers</span></div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>            nn.Conv2d(64, 128, kernel_size=3, padding=1),</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>            nn.BatchNorm2d(128),</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>            nn.ReLU(inplace=<span class="keyword">True</span>),</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>        )</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>        </div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>        <span class="comment"># Global pooling to handle variable sizes</span></div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno"><a class="line" href="classexamples_1_1demo__intelligent__evolution_1_1AdaptiveCNN.html#aab862f2fae034c00b32caa83ad4b8303">   49</a></span>        self.<a class="code hl_variable" href="classexamples_1_1demo__intelligent__evolution_1_1AdaptiveCNN.html#aab862f2fae034c00b32caa83ad4b8303">avgpool</a> = nn.AdaptiveAvgPool2d((4, 4))</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>        </div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>        <span class="comment"># Classifier</span></div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno"><a class="line" href="classexamples_1_1demo__intelligent__evolution_1_1AdaptiveCNN.html#aa601c0606303ccb3ac92bf6e3444bac5">   52</a></span>        self.<a class="code hl_variable" href="classexamples_1_1demo__intelligent__evolution_1_1AdaptiveCNN.html#aa601c0606303ccb3ac92bf6e3444bac5">classifier</a> = nn.Sequential(</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>            nn.Linear(128 * 4 * 4, 256),</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>            nn.ReLU(inplace=<span class="keyword">True</span>),</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>            nn.Dropout(0.5),</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>            nn.Linear(256, num_classes)</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>        )</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    </div>
+</div>
+<div class="foldopen" id="foldopen00059" data-start="" data-end="">
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno"><a class="line" href="classexamples_1_1demo__intelligent__evolution_1_1AdaptiveCNN.html#a775235db251a0cf0328d711921803ea5">   59</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classexamples_1_1demo__intelligent__evolution_1_1AdaptiveCNN.html#a775235db251a0cf0328d711921803ea5">forward</a>(self, x):</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>        x = self.<a class="code hl_variable" href="classexamples_1_1demo__intelligent__evolution_1_1AdaptiveCNN.html#ad8d59a479955c45bb1f30a80f991d723">features</a>(x)</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>        x = self.<a class="code hl_variable" href="classexamples_1_1demo__intelligent__evolution_1_1AdaptiveCNN.html#aab862f2fae034c00b32caa83ad4b8303">avgpool</a>(x)</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>        x = torch.flatten(x, 1)</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>        x = self.<a class="code hl_variable" href="classexamples_1_1demo__intelligent__evolution_1_1AdaptiveCNN.html#aa601c0606303ccb3ac92bf6e3444bac5">classifier</a>(x)</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>        <span class="keywordflow">return</span> x</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
+</div>
+</div>
+<div class="foldopen" id="foldopen00067" data-start="" data-end="">
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno"><a class="line" href="namespaceexamples_1_1demo__intelligent__evolution.html#a771c5cc90b93b78c119266db6805450b">   67</a></span><span class="keyword">def </span><a class="code hl_function" href="namespaceexamples_1_1demo__intelligent__evolution.html#a771c5cc90b93b78c119266db6805450b">visualize_evolution_process</a>(neuroexapt, save_path=&quot;evolution_analysis.png&quot;):</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    <span class="stringliteral">&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span><span class="stringliteral">    Visualize the intelligent evolution process.</span></div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span><span class="stringliteral">    &quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    fig, axes = plt.subplots(2, 2, figsize=(15, 12))</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    </div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    <span class="comment"># 1. Layer type distribution over evolution</span></div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    ax = axes[0, 0]</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    <span class="keywordflow">if</span> hasattr(neuroexapt, <span class="stringliteral">&#39;layer_type_history&#39;</span>):</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>        layer_types = neuroexapt.layer_type_history</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>        type_counts = {}</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>        <span class="keywordflow">for</span> epoch_types <span class="keywordflow">in</span> layer_types:</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>            <span class="keywordflow">for</span> layer_type <span class="keywordflow">in</span> epoch_types:</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>                type_counts[layer_type] = type_counts.get(layer_type, 0) + 1</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>        </div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>        ax.bar(type_counts.keys(), type_counts.values())</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>        ax.set_title(<span class="stringliteral">&#39;Layer Types Added During Evolution&#39;</span>)</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>        ax.set_xlabel(<span class="stringliteral">&#39;Layer Type&#39;</span>)</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>        ax.set_ylabel(<span class="stringliteral">&#39;Count&#39;</span>)</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    </div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    <span class="comment"># 2. Information metrics evolution</span></div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    ax = axes[0, 1]</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    <span class="keywordflow">if</span> neuroexapt.metrics_history:</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>        epochs = list(range(len(neuroexapt.metrics_history)))</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>        entropies = [m[<span class="stringliteral">&#39;current_entropy&#39;</span>] <span class="keywordflow">for</span> m <span class="keywordflow">in</span> neuroexapt.metrics_history]</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>        redundancies = [m.get(<span class="stringliteral">&#39;redundancy&#39;</span>, 0) <span class="keywordflow">for</span> m <span class="keywordflow">in</span> neuroexapt.metrics_history]</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>        </div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>        ax.plot(epochs, entropies, label=<span class="stringliteral">&#39;Entropy&#39;</span>, marker=<span class="stringliteral">&#39;o&#39;</span>)</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>        ax.plot(epochs, redundancies, label=<span class="stringliteral">&#39;Redundancy&#39;</span>, marker=<span class="stringliteral">&#39;s&#39;</span>)</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>        ax.set_title(<span class="stringliteral">&#39;Information Metrics Evolution&#39;</span>)</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>        ax.set_xlabel(<span class="stringliteral">&#39;Evolution Step&#39;</span>)</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>        ax.set_ylabel(<span class="stringliteral">&#39;Metric Value&#39;</span>)</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>        ax.legend()</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    </div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    <span class="comment"># 3. Layer complexity analysis</span></div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>    ax = axes[1, 0]</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    <span class="keywordflow">if</span> hasattr(neuroexapt, <span class="stringliteral">&#39;layer_characteristics&#39;</span>):</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>        chars = neuroexapt.layer_characteristics</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>        <span class="keywordflow">if</span> chars:</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>            layers = list(chars.keys())[:10]  <span class="comment"># First 10 layers</span></div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>            complexities = [chars[l].get(<span class="stringliteral">&#39;spatial_complexity&#39;</span>, 0) <span class="keywordflow">for</span> l <span class="keywordflow">in</span> layers]</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>            redundancies = [chars[l].get(<span class="stringliteral">&#39;channel_redundancy&#39;</span>, 0) <span class="keywordflow">for</span> l <span class="keywordflow">in</span> layers]</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>            </div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>            x = np.arange(len(layers))</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>            width = 0.35</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>            ax.bar(x - width/2, complexities, width, label=<span class="stringliteral">&#39;Spatial Complexity&#39;</span>)</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>            ax.bar(x + width/2, redundancies, width, label=<span class="stringliteral">&#39;Channel Redundancy&#39;</span>)</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>            ax.set_xlabel(<span class="stringliteral">&#39;Layer&#39;</span>)</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>            ax.set_ylabel(<span class="stringliteral">&#39;Metric Value&#39;</span>)</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>            ax.set_title(<span class="stringliteral">&#39;Layer Characteristics&#39;</span>)</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>            ax.set_xticks(x)</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>            ax.set_xticklabels([l.split(<span class="stringliteral">&#39;.&#39;</span>)[-1] <span class="keywordflow">for</span> l <span class="keywordflow">in</span> layers], rotation=45)</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>            ax.legend()</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>    </div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    <span class="comment"># 4. Evolution actions timeline</span></div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>    ax = axes[1, 1]</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    <span class="keywordflow">if</span> neuroexapt.evolution_history:</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>        actions = [step.action <span class="keywordflow">for</span> step <span class="keywordflow">in</span> neuroexapt.evolution_history]</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>        action_types = list(set(actions))</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>        action_colors = plt.cm.tab10(np.linspace(0, 1, len(action_types)))</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>        </div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>        <span class="keywordflow">for</span> i, action <span class="keywordflow">in</span> enumerate(actions):</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>            color_idx = action_types.index(action)</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>            ax.scatter(i, action_types.index(action), </div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>                      color=action_colors[color_idx], s=100, alpha=0.7)</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>        </div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>        ax.set_yticks(range(len(action_types)))</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>        ax.set_yticklabels(action_types)</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>        ax.set_xlabel(<span class="stringliteral">&#39;Evolution Step&#39;</span>)</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>        ax.set_title(<span class="stringliteral">&#39;Evolution Actions Timeline&#39;</span>)</div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>        ax.grid(<span class="keyword">True</span>, alpha=0.3)</div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>    </div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>    plt.tight_layout()</div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>    plt.savefig(save_path, dpi=150, bbox_inches=<span class="stringliteral">&#39;tight&#39;</span>)</div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>    print(f<span class="stringliteral">&quot;Evolution analysis saved to {save_path}&quot;</span>)</div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span> </div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span> </div>
+</div>
+<div class="foldopen" id="foldopen00144" data-start="" data-end="">
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno"><a class="line" href="namespaceexamples_1_1demo__intelligent__evolution.html#a1ccb8d9905135a569771f108e5455d65">  144</a></span><span class="keyword">def </span><a class="code hl_function" href="namespaceexamples_1_1demo__intelligent__evolution.html#a1ccb8d9905135a569771f108e5455d65">analyze_evolved_architecture</a>(model, neuroexapt):</div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>    <span class="stringliteral">&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span><span class="stringliteral">    Analyze the evolved architecture.</span></div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span><span class="stringliteral">    &quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>    print(<span class="stringliteral">&quot;\n=== Evolved Architecture Analysis ===&quot;</span>)</div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>    </div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>    <span class="comment"># Count layer types</span></div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>    layer_types = {}</div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>    total_params = 0</div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>    </div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>    <span class="keywordflow">for</span> name, module <span class="keywordflow">in</span> model.named_modules():</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>        <span class="keywordflow">if</span> len(list(module.children())) == 0:  <span class="comment"># Leaf modules</span></div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>            module_type = type(module).__name__</div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>            layer_types[module_type] = layer_types.get(module_type, 0) + 1</div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>            </div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>            <span class="comment"># Count parameters</span></div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>            params = sum(p.numel() <span class="keywordflow">for</span> p <span class="keywordflow">in</span> module.parameters())</div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>            total_params += params</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>            </div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>            <span class="keywordflow">if</span> params &gt; 0:</div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>                print(f<span class="stringliteral">&quot;{name}: {module_type} ({params:,} parameters)&quot;</span>)</div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>    </div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>    print(f<span class="stringliteral">&quot;\nTotal parameters: {total_params:,}&quot;</span>)</div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>    print(<span class="stringliteral">&quot;\nLayer type distribution:&quot;</span>)</div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>    <span class="keywordflow">for</span> layer_type, count <span class="keywordflow">in</span> sorted(layer_types.items()):</div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>        print(f<span class="stringliteral">&quot;  {layer_type}: {count}&quot;</span>)</div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>    </div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>    <span class="comment"># Show evolution summary</span></div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>    <span class="keywordflow">if</span> neuroexapt.evolution_history:</div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>        print(f<span class="stringliteral">&quot;\nEvolution steps taken: {len(neuroexapt.evolution_history)}&quot;</span>)</div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>        action_counts = {}</div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>        <span class="keywordflow">for</span> step <span class="keywordflow">in</span> neuroexapt.evolution_history:</div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>            action_counts[step.action] = action_counts.get(step.action, 0) + 1</div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>        </div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>        print(<span class="stringliteral">&quot;Actions performed:&quot;</span>)</div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>        <span class="keywordflow">for</span> action, count <span class="keywordflow">in</span> sorted(action_counts.items()):</div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>            print(f<span class="stringliteral">&quot;  {action}: {count}&quot;</span>)</div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span> </div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span> </div>
+</div>
+<div class="foldopen" id="foldopen00183" data-start="" data-end="">
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno"><a class="line" href="namespaceexamples_1_1demo__intelligent__evolution.html#a64ed0bfd0c1af2ad525128c24b76f958">  183</a></span><span class="keyword">def </span><a class="code hl_function" href="namespaceexamples_1_1demo__intelligent__evolution.html#a64ed0bfd0c1af2ad525128c24b76f958">main</a>():</div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>    <span class="stringliteral">&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span><span class="stringliteral">    Main demonstration of intelligent evolution.</span></div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span><span class="stringliteral">    &quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>    print(<span class="stringliteral">&quot;=== NeuroExapt Intelligent Evolution Demo ===\n&quot;</span>)</div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>    </div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>    <span class="comment"># Setup</span></div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>    device = torch.device(<span class="stringliteral">&#39;cuda&#39;</span> <span class="keywordflow">if</span> torch.cuda.is_available() <span class="keywordflow">else</span> <span class="stringliteral">&#39;cpu&#39;</span>)</div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>    print(f<span class="stringliteral">&quot;Using device: {device}&quot;</span>)</div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>    </div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>    <span class="comment"># Create dataset</span></div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>    transform = transforms.Compose([</div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>        transforms.ToTensor(),</div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>        transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))</div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>    ])</div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>    </div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>    <span class="comment"># Use CIFAR-10 for demonstration</span></div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>    trainset = torchvision.datasets.CIFAR10(</div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>        root=<span class="stringliteral">&#39;./data&#39;</span>, train=<span class="keyword">True</span>, download=<span class="keyword">True</span>, transform=transform</div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>    )</div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>    trainloader = DataLoader(trainset, batch_size=64, shuffle=<span class="keyword">True</span>)</div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>    </div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>    testset = torchvision.datasets.CIFAR10(</div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>        root=<span class="stringliteral">&#39;./data&#39;</span>, train=<span class="keyword">False</span>, download=<span class="keyword">True</span>, transform=transform</div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>    )</div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>    testloader = DataLoader(testset, batch_size=64, shuffle=<span class="keyword">False</span>)</div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>    </div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>    <span class="comment"># Create model</span></div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>    model = <a class="code hl_class" href="classexamples_1_1demo__intelligent__evolution_1_1AdaptiveCNN.html">AdaptiveCNN</a>(num_classes=10).to(device)</div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>    print(f<span class="stringliteral">&quot;Initial model parameters: {sum(p.numel() for p in model.parameters()):,}&quot;</span>)</div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>    </div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>    <span class="comment"># Initialize NeuroExapt with intelligent operators</span></div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>    neuroexapt = NeuroExapt(</div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>        task_type=<span class="stringliteral">&quot;classification&quot;</span>,</div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>        depth=<span class="keywordtype">None</span>,  <span class="comment"># Let it determine optimal depth</span></div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>        entropy_weight=0.5,</div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>        info_weight=0.5,</div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>        device=device,</div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>        verbose=<span class="keyword">True</span></div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>    )</div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>    </div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>    <span class="comment"># Wrap model</span></div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>    model = neuroexapt.wrap_model(model)</div>
+<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>    </div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>    <span class="comment"># Analyze initial architecture</span></div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>    print(<span class="stringliteral">&quot;\nAnalyzing initial architecture...&quot;</span>)</div>
+<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>    <span class="keywordflow">if</span> hasattr(neuroexapt, <span class="stringliteral">&#39;analyze_layer_characteristics&#39;</span>):</div>
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>        neuroexapt.layer_characteristics = neuroexapt.analyze_layer_characteristics(</div>
+<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>            model, trainloader</div>
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>        )</div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>        </div>
+<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>        print(<span class="stringliteral">&quot;Layer characteristics:&quot;</span>)</div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>        <span class="keywordflow">for</span> layer, chars <span class="keywordflow">in</span> list(neuroexapt.layer_characteristics.items())[:5]:</div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>            print(f<span class="stringliteral">&quot;  {layer}:&quot;</span>)</div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>            print(f<span class="stringliteral">&quot;    Spatial complexity: {chars.get(&#39;spatial_complexity&#39;, 0):.3f}&quot;</span>)</div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>            print(f<span class="stringliteral">&quot;    Channel redundancy: {chars.get(&#39;channel_redundancy&#39;, 0):.3f}&quot;</span>)</div>
+<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>            print(f<span class="stringliteral">&quot;    Information density: {chars.get(&#39;information_density&#39;, 0):.3f}&quot;</span>)</div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>    </div>
+<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>    <span class="comment"># Setup optimizer</span></div>
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>    optimizer = optim.AdamW(model.parameters(), lr=0.001, weight_decay=0.01)</div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>    </div>
+<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>    <span class="comment"># Create trainer with evolution enabled</span></div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>    trainer = <a class="code hl_class" href="classneuroexapt_1_1trainer_1_1Trainer.html">Trainer</a>(</div>
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>        model=model,</div>
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>        neuroexapt=neuroexapt,</div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>        trainloader=trainloader,</div>
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>        valloader=testloader,</div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>        optimizer=optimizer,</div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>        device=device,</div>
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>        use_dynarch=<span class="keyword">True</span>,  <span class="comment"># Enable dynamic architecture</span></div>
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>        evolution_interval=5,  <span class="comment"># Evolve every 5 epochs</span></div>
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>        verbose=<span class="keyword">True</span></div>
+<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>    )</div>
+<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>    </div>
+<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>    <span class="comment"># Train with intelligent evolution</span></div>
+<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>    print(<span class="stringliteral">&quot;\nStarting training with intelligent evolution...&quot;</span>)</div>
+<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>    print(<span class="stringliteral">&quot;The system will:&quot;</span>)</div>
+<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>    print(<span class="stringliteral">&quot;1. Analyze layer characteristics during training&quot;</span>)</div>
+<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>    print(<span class="stringliteral">&quot;2. Intelligently select layer types for expansion&quot;</span>)</div>
+<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>    print(<span class="stringliteral">&quot;3. Adjust data flow based on feature complexity&quot;</span>)</div>
+<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>    print(<span class="stringliteral">&quot;4. Create specialized branches when needed\n&quot;</span>)</div>
+<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>    </div>
+<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>    <span class="comment"># Track layer types added</span></div>
+<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>    neuroexapt.layer_type_history = []</div>
+<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>    </div>
+<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>    <span class="comment"># Train for a few epochs to see evolution</span></div>
+<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>    history = trainer.train(epochs=20)</div>
+<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>    </div>
+<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>    <span class="comment"># Analyze evolved architecture</span></div>
+<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>    <a class="code hl_function" href="namespaceexamples_1_1demo__intelligent__evolution.html#a1ccb8d9905135a569771f108e5455d65">analyze_evolved_architecture</a>(model, neuroexapt)</div>
+<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>    </div>
+<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>    <span class="comment"># Visualize evolution process</span></div>
+<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>    <a class="code hl_function" href="namespaceexamples_1_1demo__intelligent__evolution.html#a771c5cc90b93b78c119266db6805450b">visualize_evolution_process</a>(neuroexapt)</div>
+<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>    </div>
+<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>    <span class="comment"># Final evaluation</span></div>
+<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>    print(<span class="stringliteral">&quot;\nFinal evaluation:&quot;</span>)</div>
+<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>    trainer.validate()</div>
+<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>    </div>
+<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>    <span class="comment"># Show example of layer type decisions</span></div>
+<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>    <span class="keywordflow">if</span> hasattr(neuroexapt, <span class="stringliteral">&#39;use_intelligent_operators&#39;</span>) <span class="keywordflow">and</span> neuroexapt.use_intelligent_operators:</div>
+<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>        print(<span class="stringliteral">&quot;\n=== Intelligent Layer Selection Examples ===&quot;</span>)</div>
+<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>        print(<span class="stringliteral">&quot;The system made the following intelligent decisions:&quot;</span>)</div>
+<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span>        print(<span class="stringliteral">&quot;- Added attention layers where long-range dependencies were detected&quot;</span>)</div>
+<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>        print(<span class="stringliteral">&quot;- Inserted pooling layers where spatial complexity was low&quot;</span>)</div>
+<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span>        print(<span class="stringliteral">&quot;- Used depthwise convolutions where channel redundancy was high&quot;</span>)</div>
+<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span>        print(<span class="stringliteral">&quot;- Created bottleneck blocks for efficient feature compression&quot;</span>)</div>
+<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span>    <span class="keywordflow">else</span>:</div>
+<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span>        print(<span class="stringliteral">&quot;\nNote: Intelligent operators not available, using standard evolution&quot;</span>)</div>
+<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span>    </div>
+<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span>    print(<span class="stringliteral">&quot;\nDemo completed!&quot;</span>)</div>
+<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span> </div>
+<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span> </div>
+</div>
+<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span><span class="keywordflow">if</span> __name__ == <span class="stringliteral">&quot;__main__&quot;</span>:</div>
+<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span>    <a class="code hl_function" href="namespaceexamples_1_1demo__intelligent__evolution.html#a64ed0bfd0c1af2ad525128c24b76f958">main</a>() </div>
+<div class="ttc" id="aclassexamples_1_1demo__intelligent__evolution_1_1AdaptiveCNN_html"><div class="ttname"><a href="classexamples_1_1demo__intelligent__evolution_1_1AdaptiveCNN.html">examples.demo_intelligent_evolution.AdaptiveCNN</a></div><div class="ttdef"><b>Definition</b> <a href="demo__intelligent__evolution_8py_source.html#l00023">demo_intelligent_evolution.py:23</a></div></div>
+<div class="ttc" id="aclassexamples_1_1demo__intelligent__evolution_1_1AdaptiveCNN_html_a4dbda3aeb010a2adb6f8e5b88c814a38"><div class="ttname"><a href="classexamples_1_1demo__intelligent__evolution_1_1AdaptiveCNN.html#a4dbda3aeb010a2adb6f8e5b88c814a38">examples.demo_intelligent_evolution.AdaptiveCNN.__init__</a></div><div class="ttdeci">__init__(self, num_classes=10)</div><div class="ttdef"><b>Definition</b> <a href="demo__intelligent__evolution_8py_source.html#l00027">demo_intelligent_evolution.py:27</a></div></div>
+<div class="ttc" id="aclassexamples_1_1demo__intelligent__evolution_1_1AdaptiveCNN_html_a775235db251a0cf0328d711921803ea5"><div class="ttname"><a href="classexamples_1_1demo__intelligent__evolution_1_1AdaptiveCNN.html#a775235db251a0cf0328d711921803ea5">examples.demo_intelligent_evolution.AdaptiveCNN.forward</a></div><div class="ttdeci">forward(self, x)</div><div class="ttdef"><b>Definition</b> <a href="demo__intelligent__evolution_8py_source.html#l00059">demo_intelligent_evolution.py:59</a></div></div>
+<div class="ttc" id="aclassexamples_1_1demo__intelligent__evolution_1_1AdaptiveCNN_html_aa601c0606303ccb3ac92bf6e3444bac5"><div class="ttname"><a href="classexamples_1_1demo__intelligent__evolution_1_1AdaptiveCNN.html#aa601c0606303ccb3ac92bf6e3444bac5">examples.demo_intelligent_evolution.AdaptiveCNN.classifier</a></div><div class="ttdeci">classifier</div><div class="ttdef"><b>Definition</b> <a href="demo__intelligent__evolution_8py_source.html#l00052">demo_intelligent_evolution.py:52</a></div></div>
+<div class="ttc" id="aclassexamples_1_1demo__intelligent__evolution_1_1AdaptiveCNN_html_aab862f2fae034c00b32caa83ad4b8303"><div class="ttname"><a href="classexamples_1_1demo__intelligent__evolution_1_1AdaptiveCNN.html#aab862f2fae034c00b32caa83ad4b8303">examples.demo_intelligent_evolution.AdaptiveCNN.avgpool</a></div><div class="ttdeci">avgpool</div><div class="ttdef"><b>Definition</b> <a href="demo__intelligent__evolution_8py_source.html#l00049">demo_intelligent_evolution.py:49</a></div></div>
+<div class="ttc" id="aclassexamples_1_1demo__intelligent__evolution_1_1AdaptiveCNN_html_ad8d59a479955c45bb1f30a80f991d723"><div class="ttname"><a href="classexamples_1_1demo__intelligent__evolution_1_1AdaptiveCNN.html#ad8d59a479955c45bb1f30a80f991d723">examples.demo_intelligent_evolution.AdaptiveCNN.features</a></div><div class="ttdeci">features</div><div class="ttdef"><b>Definition</b> <a href="demo__intelligent__evolution_8py_source.html#l00031">demo_intelligent_evolution.py:31</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1trainer_1_1Trainer_html"><div class="ttname"><a href="classneuroexapt_1_1trainer_1_1Trainer.html">neuroexapt.trainer.Trainer</a></div><div class="ttdef"><b>Definition</b> <a href="trainer_8py_source.html#l00025">trainer.py:25</a></div></div>
+<div class="ttc" id="anamespaceexamples_1_1demo__intelligent__evolution_html_a1ccb8d9905135a569771f108e5455d65"><div class="ttname"><a href="namespaceexamples_1_1demo__intelligent__evolution.html#a1ccb8d9905135a569771f108e5455d65">examples.demo_intelligent_evolution.analyze_evolved_architecture</a></div><div class="ttdeci">analyze_evolved_architecture(model, neuroexapt)</div><div class="ttdef"><b>Definition</b> <a href="demo__intelligent__evolution_8py_source.html#l00144">demo_intelligent_evolution.py:144</a></div></div>
+<div class="ttc" id="anamespaceexamples_1_1demo__intelligent__evolution_html_a64ed0bfd0c1af2ad525128c24b76f958"><div class="ttname"><a href="namespaceexamples_1_1demo__intelligent__evolution.html#a64ed0bfd0c1af2ad525128c24b76f958">examples.demo_intelligent_evolution.main</a></div><div class="ttdeci">main()</div><div class="ttdef"><b>Definition</b> <a href="demo__intelligent__evolution_8py_source.html#l00183">demo_intelligent_evolution.py:183</a></div></div>
+<div class="ttc" id="anamespaceexamples_1_1demo__intelligent__evolution_html_a771c5cc90b93b78c119266db6805450b"><div class="ttname"><a href="namespaceexamples_1_1demo__intelligent__evolution.html#a771c5cc90b93b78c119266db6805450b">examples.demo_intelligent_evolution.visualize_evolution_process</a></div><div class="ttdeci">visualize_evolution_process(neuroexapt, save_path=&quot;evolution_analysis.png&quot;)</div><div class="ttdef"><b>Definition</b> <a href="demo__intelligent__evolution_8py_source.html#l00067">demo_intelligent_evolution.py:67</a></div></div>
+<div class="ttc" id="anamespaceneuroexapt_1_1trainer_html"><div class="ttname"><a href="namespaceneuroexapt_1_1trainer.html">neuroexapt.trainer</a></div><div class="ttdef"><b>Definition</b> <a href="trainer_8py_source.html#l00001">trainer.py:1</a></div></div>
+</div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
+<!-- do not remove this div, it is closed by doxygen! -->
+</div>
+<!-- Custom Footer -->
+<div style="background: #f8f9fa; border-top: 1px solid #e9ecef; margin-top: 50px; padding: 30px 0; text-align: center;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-bottom: 20px;">
+            <!-- Project Info -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🧠 NeuroExapt</h4>
+                <p style="color: #6c757d; margin: 0; font-size: 0.9em;">
+                    Advanced Neural Architecture Search and Dynamic Morphogenesis Framework for next-generation AI research.
+                </p>
+            </div>
+            <!-- Quick Links -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">📚 Quick Links</h4>
+                <div style="text-align: left;">
+                    <a href="index.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🏠 Home</a>
+                    <a href="modules.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📦 Modules</a>
+                    <a href="examples.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💡 Examples</a>
+                    <a href="files.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📁 Files</a>
+                </div>
+            </div>
+            <!-- Resources -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🔗 Resources</h4>
+                <div style="text-align: left;">
+                    <a href="https://github.com/your-username/neuroexapt" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💻 GitHub Repository</a>
+                    <a href="https://github.com/your-username/neuroexapt/issues" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🐛 Issue Tracker</a>
+                    <a href="https://github.com/your-username/neuroexapt/wiki" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📖 Wiki</a>
+                    <a href="https://github.com/your-username/neuroexapt/releases" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🚀 Releases</a>
+                </div>
+            </div>
+        </div>
+        <hr style="border: 0; height: 1px; background: #e9ecef; margin: 20px 0;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+            <div style="color: #6c757d; font-size: 0.9em;">
+                © 2024 NeuroExapt Project. Generated with 
+                <a href="https://www.doxygen.nl/index.html" style="color: #667eea; text-decoration: none;">Doxygen 1.9.8</a>
+            </div>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <span style="font-size: 0.9em; color: #6c757d;">Built with ❤️ for AI Research</span>
+                <div style="display: flex; gap: 10px;">
+                    <span style="background: #28a745; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">🟢 Active</span>
+                    <span style="background: #17a2b8; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">v3.0</span>
+                </div>
+            </div>
+        </div>
+        <!-- Technology Stack -->
+        <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #e9ecef;">
+            <div style="font-size: 0.8em; color: #868e96; text-align: center;">
+                <strong>Built with:</strong>
+                <span style="margin: 0 5px;">🐍 Python</span>
+                <span style="margin: 0 5px;">🔥 PyTorch</span>
+                <span style="margin: 0 5px;">⚡ CUDA</span>
+                <span style="margin: 0 5px;">🧮 NumPy</span>
+                <span style="margin: 0 5px;">📊 Matplotlib</span>
+                <span style="margin: 0 5px;">🚀 Triton</span>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Back to top button -->
+<div id="back-to-top" style="position: fixed; bottom: 20px; right: 20px; display: none; z-index: 1000;">
+    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" 
+            style="background: #667eea; color: white; border: none; padding: 10px 15px; border-radius: 50%; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,0.2); font-size: 16px;">
+        ⬆️
+    </button>
+</div>
+<script>
+// Back to top button functionality
+window.addEventListener('scroll', function() {
+    const backToTop = document.getElementById('back-to-top');
+    if (window.pageYOffset > 300) {
+        backToTop.style.display = 'block';
+    } else {
+        backToTop.style.display = 'none';
+    }
+});
+// Enhanced search functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Add search enhancement if search box exists
+    const searchBox = document.getElementById('MSearchField');
+    if (searchBox) {
+        searchBox.placeholder = 'Search documentation... 🔍';
+        searchBox.style.borderRadius = '20px';
+        searchBox.style.padding = '8px 15px';
+    }
+    // Add copy code button to code blocks
+    const codeBlocks = document.querySelectorAll('.fragment');
+    codeBlocks.forEach(function(block) {
+        const copyBtn = document.createElement('button');
+        copyBtn.innerHTML = '📋';
+        copyBtn.title = 'Copy code';
+        copyBtn.style.cssText = 'position: absolute; top: 10px; right: 10px; background: #667eea; color: white; border: none; padding: 5px; border-radius: 3px; cursor: pointer; font-size: 12px;';
+        block.style.position = 'relative';
+        block.appendChild(copyBtn);
+        copyBtn.addEventListener('click', function() {
+            const text = block.textContent;
+            navigator.clipboard.writeText(text).then(function() {
+                copyBtn.innerHTML = '✅';
+                setTimeout(function() {
+                    copyBtn.innerHTML = '📋';
+                }, 2000);
+            });
+        });
+    });
+});
+// Dark mode toggle (optional)
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+}
+// Load saved dark mode preference
+if (localStorage.getItem('darkMode') === 'true') {
+    document.body.classList.add('dark-mode');
+}
+</script>
+</body>
+</html>

@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+"""
+\defgroup group_dnm_connection_growth Dnm Connection Growth
+\ingroup core
+Dnm Connection Growth module for NeuroExapt framework.
+"""
+
+
 Dynamic Neural Morphogenesis - 连接生长模块
 
 基于梯度引导的连接动态生长机制：

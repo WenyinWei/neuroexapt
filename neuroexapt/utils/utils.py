@@ -1,4 +1,11 @@
 
+"""
+\defgroup group_utils Utils
+\ingroup core
+Utils module for NeuroExapt framework.
+"""
+
+
 import torch
 
 class AvgrageMeter(object):

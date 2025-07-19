@@ -1,0 +1,1014 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="description" content="NeuroExapt - Advanced Neural Architecture Search and Dynamic Morphogenesis Framework">
+    <meta name="keywords" content="neural architecture search, dynamic morphogenesis, deep learning, AI, PyTorch">
+    <meta name="author" content="NeuroExapt Team">
+    <meta property="og:title" content="NeuroExapt Documentation">
+    <meta property="og:description" content="Advanced Neural Architecture Search Framework">
+    <meta property="og:type" content="website">
+
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>NeuroExapt: neuroexapt/core/optimized_architect.py Source File</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="custom.css" rel="stylesheet" type="text/css"/>
+<!-- NeuroExapt Custom Styles -->
+<style>
+/* Enhanced header styling */
+.header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+.header h1 {
+    margin: 0;
+    font-size: 2.5em;
+    font-weight: 300;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+.header .subtitle {
+    font-size: 1.2em;
+    opacity: 0.9;
+    margin-top: 10px;
+}
+/* Enhanced navigation */
+.tablist {
+    background: #f8f9fa;
+    border-bottom: 2px solid #e9ecef;
+}
+.tablist li.current a {
+    background: #667eea;
+    color: white;
+}
+/* Improved content layout */
+.contents {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+/* Code highlighting */
+.fragment {
+    background: #f8f9fa;
+    border-left: 4px solid #667eea;
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 0 8px 8px 0;
+}
+/* Enhanced tables */
+table.memberdecls {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 20px 0;
+}
+table.memberdecls td {
+    border: 1px solid #e9ecef;
+    padding: 12px;
+}
+/* Better typography */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #343a40;
+}
+h1, h2, h3, h4, h5, h6 {
+    color: #495057;
+    font-weight: 500;
+}
+/* Responsive design */
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 2em;
+    }
+    .contents {
+        padding: 15px;
+    }
+}
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #1a1a1a;
+        color: #e9ecef;
+    }
+    .header {
+        background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+    }
+    .fragment {
+        background: #2d3748;
+        color: #e9ecef;
+    }
+}
+</style>
+<!-- Analytics (if needed) -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<!--
+<script async src="https://www.googletagmanager.com/gtag/js?id=GA_TRACKING_ID"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'GA_TRACKING_ID');
+</script>
+-->
+</head>
+<body>
+<!-- Custom Header -->
+<div class="header">
+    <h1>🧠 NeuroExapt</h1>
+    <div class="subtitle">Advanced Neural Architecture Search and Dynamic Morphogenesis Framework</div>
+    <div style="margin-top: 15px; font-size: 0.9em;">
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🚀 Dynamic Neural Morphogenesis
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🔬 Advanced Architecture Search
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            ⚡ High-Performance Computing
+        </span>
+    </div>
+</div>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! --><!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function() { init_codefold(0); });
+/* @license-end */
+</script>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('optimized__architect_8py_source.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">optimized_architect.py</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="optimized__architect_8py.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno"><a class="line" href="namespaceneuroexapt_1_1core_1_1optimized__architect.html">    1</a></span><span class="stringliteral">&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="stringliteral">\defgroup group_optimized_architect Optimized Architect</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="stringliteral">\ingroup core</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="stringliteral">Optimized Architect module for NeuroExapt framework.</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="stringliteral">&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="keyword">import</span> torch</div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="keyword">import</span> torch.nn.functional <span class="keyword">as</span> F</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="keyword">from</span> <a class="code hl_namespace" href="namespacetorch_1_1autograd.html">torch.autograd</a> <span class="keyword">import</span> Variable</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="keyword">from</span> typing <span class="keyword">import</span> Optional, Dict, Any, List, Tuple</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="keyword">import</span> time</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">import</span> gc</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="keyword">from</span> collections <span class="keyword">import</span> OrderedDict</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="keyword">from</span> .architect <span class="keyword">import</span> Architect</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="keyword">from</span> ..utils.performance_monitor <span class="keyword">import</span> PerformanceMonitor</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
+<div class="foldopen" id="foldopen00021" data-start="" data-end="">
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html">   21</a></span><span class="keyword">class </span><a class="code hl_class" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html">OptimizedArchitect</a>(<a class="code hl_class" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html">Architect</a>):</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    <span class="stringliteral">&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="stringliteral">    优化的架构搜索器，利用PyTorch的参数优化设施来提高性能</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="stringliteral">    </span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="stringliteral">    主要优化策略：</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="stringliteral">    1. 减少架构更新频率</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="stringliteral">    2. 使用一阶近似替代二阶近似</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="stringliteral">    3. 梯度累积和批处理</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="stringliteral">    4. 内存管理优化</span></div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="stringliteral">    5. 早停机制</span></div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="stringliteral">    &quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    </div>
+<div class="foldopen" id="foldopen00033" data-start="" data-end="">
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a0ca1be201e44549edf3ea8a953051484">   33</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a0ca1be201e44549edf3ea8a953051484">__init__</a>(self, model, args, performance_monitor: Optional[PerformanceMonitor] = <span class="keywordtype">None</span>):</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>        super().<a class="code hl_function" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a0ca1be201e44549edf3ea8a953051484">__init__</a>(model, args)</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>        </div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>        <span class="comment"># 性能监控</span></div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a5ab957196c5bbe42f5c2207e84d04784">   37</a></span>        self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a5ab957196c5bbe42f5c2207e84d04784">monitor</a> = performance_monitor</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>        </div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>        <span class="comment"># 优化参数</span></div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a1d9bdf0c329999d034c360caa97d8e47">   40</a></span>        self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a308cee7ca26b699d4b4decd39df5db0f">arch_update_freq</a><a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a1d9bdf0c329999d034c360caa97d8e47">arch_update_freq</a> = getattr(args, <span class="stringliteral">&#39;arch_update_freq&#39;</span>, 50)</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a12e6ddc93afba3d3bf2156219d5dfd70">   41</a></span>        self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a1a6f0b22b70e0a9a5507e03c409e3dc0">warmup_epochs</a><a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a12e6ddc93afba3d3bf2156219d5dfd70">warmup_epochs</a> = getattr(args, <span class="stringliteral">&#39;warmup_epochs&#39;</span>, 5)</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a5b21459921885f5bec3cf582fd5d8d22">   42</a></span>        self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a5b21459921885f5bec3cf582fd5d8d22">use_first_order</a> = getattr(args, <span class="stringliteral">&#39;use_first_order&#39;</span>, <span class="keyword">True</span>)</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a2e2d401412428110ddfdb302f279f66e">   43</a></span>        self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a2e2d401412428110ddfdb302f279f66e">grad_accumulation_steps</a> = getattr(args, <span class="stringliteral">&#39;grad_accumulation_steps&#39;</span>, 1)</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a2d97313ee854d2efe121a6298be31450">   44</a></span>        self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a2d97313ee854d2efe121a6298be31450">arch_early_stop_patience</a> = getattr(args, <span class="stringliteral">&#39;arch_early_stop_patience&#39;</span>, 20)</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        </div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>        <span class="comment"># 训练相关</span></div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a179a17f7c32088285bd216ba2160078d">   47</a></span>        self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a179a17f7c32088285bd216ba2160078d">total_epochs</a> = getattr(args, <span class="stringliteral">&#39;epochs&#39;</span>, 50)  <span class="comment"># 总训练轮数</span></div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>        </div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        <span class="comment"># 状态跟踪</span></div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a6a96d86f95d1cdeb94095da2ba820b16">   50</a></span>        self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a29f176d7054f258c9125b02a72faa42f">current_epoch</a><a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a6a96d86f95d1cdeb94095da2ba820b16">current_epoch</a> = 0</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a446f06627dcf5c304b3b281d28ac1f5e">   51</a></span>        self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a446f06627dcf5c304b3b281d28ac1f5e">arch_step_count</a> = 0</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#acc40b5b6ae0f866dc8f51eabe3561e96">   52</a></span>        self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#acc40b5b6ae0f866dc8f51eabe3561e96">last_arch_loss</a> = float(<span class="stringliteral">&#39;inf&#39;</span>)</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a9d6bb70b51c7fdb1bc07d3acc8e8cf92">   53</a></span>        self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a9d6bb70b51c7fdb1bc07d3acc8e8cf92">arch_loss_history</a> = []</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#af64d5b668112726584a303a8dd6379f2">   54</a></span>        self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#af64d5b668112726584a303a8dd6379f2">no_improve_count</a> = 0</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        </div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>        <span class="comment"># 梯度累积缓冲区</span></div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a7293e57d0d8f22a7e143259d90e2422c">   57</a></span>        self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a7293e57d0d8f22a7e143259d90e2422c">accumulated_grads</a> = <span class="keywordtype">None</span></div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a4495f132dc4637d0878a60ddaf679530">   58</a></span>        self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a4495f132dc4637d0878a60ddaf679530">accumulation_count</a> = 0</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        </div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>        <span class="comment"># 优化器配置</span></div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a204ac7bae634625ea77702c518e16a62">   61</a></span>        self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a8d908ad32c2131370fd65ff59a52ae00">optimizer</a><a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a204ac7bae634625ea77702c518e16a62">optimizer</a> = self.<a class="code hl_function" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a3c9859a60c3ae0d025fc52d1eafac3be">_create_optimized_optimizer</a>(args)</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>        </div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>        <span class="comment"># 记录初始化</span></div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>        <span class="keywordflow">if</span> self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a5ab957196c5bbe42f5c2207e84d04784">monitor</a>:</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>            self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a5ab957196c5bbe42f5c2207e84d04784">monitor</a>.logger.info(f<span class="stringliteral">&quot;🚀 OptimizedArchitect initialized:&quot;</span>)</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>            self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a5ab957196c5bbe42f5c2207e84d04784">monitor</a>.logger.info(f<span class="stringliteral">&quot;   Update frequency: every {self.arch_update_freq} steps&quot;</span>)</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>            self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a5ab957196c5bbe42f5c2207e84d04784">monitor</a>.logger.info(f<span class="stringliteral">&quot;   Warmup epochs: {self.warmup_epochs}&quot;</span>)</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>            self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a5ab957196c5bbe42f5c2207e84d04784">monitor</a>.logger.info(f<span class="stringliteral">&quot;   First-order approximation: {self.use_first_order}&quot;</span>)</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>            self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a5ab957196c5bbe42f5c2207e84d04784">monitor</a>.logger.info(f<span class="stringliteral">&quot;   Gradient accumulation: {self.grad_accumulation_steps} steps&quot;</span>)</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    </div>
+</div>
+<div class="foldopen" id="foldopen00071" data-start="" data-end="">
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a3c9859a60c3ae0d025fc52d1eafac3be">   71</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a3c9859a60c3ae0d025fc52d1eafac3be">_create_optimized_optimizer</a>(self, args):</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>        <span class="stringliteral">&quot;&quot;&quot;创建优化的架构参数优化器&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>        arch_params = list(self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a8493e20b4b3db61e80298ed278b26452">model</a>.arch_parameters())</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>        </div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>        <span class="keywordflow">if</span> len(arch_params) == 0:</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>            <span class="keywordflow">return</span> <span class="keywordtype">None</span></div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>        </div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>        <span class="comment"># 使用AdamW优化器，更好的权重衰减</span></div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>        optimizer = torch.optim.AdamW(</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>            arch_params,</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>            lr=args.arch_learning_rate,</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>            betas=(0.9, 0.999),</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>            eps=1e-8,</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>            weight_decay=args.arch_weight_decay,</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>            amsgrad=<span class="keyword">True</span>  <span class="comment"># 使用AMSGrad变体</span></div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>        )</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>        </div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>        <span class="keywordflow">return</span> optimizer</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    </div>
+</div>
+<div class="foldopen" id="foldopen00090" data-start="" data-end="">
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a0f2c7bd94d21d8418797b02d205b5762">   90</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a0f2c7bd94d21d8418797b02d205b5762">set_epoch</a>(self, epoch: int):</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>        <span class="stringliteral">&quot;&quot;&quot;设置当前epoch&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>        self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a29f176d7054f258c9125b02a72faa42f">current_epoch</a><a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a6a96d86f95d1cdeb94095da2ba820b16">current_epoch</a> = epoch</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>        </div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>        <span class="comment"># 动态调整学习率</span></div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>        <span class="keywordflow">if</span> epoch &gt; self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a1a6f0b22b70e0a9a5507e03c409e3dc0">warmup_epochs</a><a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a12e6ddc93afba3d3bf2156219d5dfd70">warmup_epochs</a>:</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>            self.<a class="code hl_function" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a67905b3b3dbe578e387757c1c5d620d0">_adjust_learning_rate</a>(epoch)</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    </div>
+</div>
+<div class="foldopen" id="foldopen00098" data-start="" data-end="">
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a67905b3b3dbe578e387757c1c5d620d0">   98</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a67905b3b3dbe578e387757c1c5d620d0">_adjust_learning_rate</a>(self, epoch: int):</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>        <span class="stringliteral">&quot;&quot;&quot;动态调整架构学习率&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>        <span class="keywordflow">if</span> self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a8d908ad32c2131370fd65ff59a52ae00">optimizer</a><a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a204ac7bae634625ea77702c518e16a62">optimizer</a> <span class="keywordflow">is</span> <span class="keywordtype">None</span>:</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>            <span class="keywordflow">return</span></div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>        </div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>        <span class="comment"># 基于损失历史调整学习率</span></div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>        <span class="keywordflow">if</span> len(self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a9d6bb70b51c7fdb1bc07d3acc8e8cf92">arch_loss_history</a>) &gt;= 5:</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>            recent_losses = self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a9d6bb70b51c7fdb1bc07d3acc8e8cf92">arch_loss_history</a>[-5:]</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>            <span class="keywordflow">if</span> all(recent_losses[i] &gt;= recent_losses[i+1] <span class="keywordflow">for</span> i <span class="keywordflow">in</span> range(len(recent_losses)-1)):</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>                <span class="comment"># 损失在下降，保持学习率</span></div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>                <span class="keywordflow">pass</span></div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>            <span class="keywordflow">else</span>:</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>                <span class="comment"># 损失不稳定，减小学习率</span></div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>                <span class="keywordflow">for</span> param_group <span class="keywordflow">in</span> self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a8d908ad32c2131370fd65ff59a52ae00">optimizer</a><a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a204ac7bae634625ea77702c518e16a62">optimizer</a>.param_groups:</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>                    param_group[<span class="stringliteral">&#39;lr&#39;</span>] *= 0.95</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>                    </div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>                <span class="keywordflow">if</span> self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a5ab957196c5bbe42f5c2207e84d04784">monitor</a>:</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>                    self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a5ab957196c5bbe42f5c2207e84d04784">monitor</a>.logger.info(f<span class="stringliteral">&quot;🔧 Architecture learning rate adjusted to {param_group[&#39;lr&#39;]:.6f}&quot;</span>)</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    </div>
+</div>
+<div class="foldopen" id="foldopen00117" data-start="" data-end="">
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a41b0956ff0d6be0d0f6e11fa4339ed83">  117</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a41b0956ff0d6be0d0f6e11fa4339ed83">should_update_arch</a>(self) -&gt; bool:</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>        <span class="stringliteral">&quot;&quot;&quot;判断是否应该更新架构&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>        <span class="comment"># 预热期跳过，但要考虑总训练时间</span></div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>        <span class="keywordflow">if</span> self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a29f176d7054f258c9125b02a72faa42f">current_epoch</a><a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a6a96d86f95d1cdeb94095da2ba820b16">current_epoch</a> &lt; self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a1a6f0b22b70e0a9a5507e03c409e3dc0">warmup_epochs</a><a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a12e6ddc93afba3d3bf2156219d5dfd70">warmup_epochs</a>:</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>            <span class="keywordflow">return</span> <span class="keyword">False</span></div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>        </div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>        <span class="comment"># 早停检查</span></div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>        <span class="keywordflow">if</span> self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#af64d5b668112726584a303a8dd6379f2">no_improve_count</a> &gt;= self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a2d97313ee854d2efe121a6298be31450">arch_early_stop_patience</a>:</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>            <span class="keywordflow">return</span> <span class="keyword">False</span></div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>        </div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>        <span class="comment"># 智能频率控制</span></div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>        self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a446f06627dcf5c304b3b281d28ac1f5e">arch_step_count</a> += 1</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>        </div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>        <span class="comment"># 根据实际情况动态调整频率</span></div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>        <span class="keywordflow">if</span> self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a179a17f7c32088285bd216ba2160078d">total_epochs</a> &lt;= 5:</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>            <span class="comment"># 短时间训练，需要更频繁的架构更新</span></div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>            effective_freq = max(5, self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a308cee7ca26b699d4b4decd39df5db0f">arch_update_freq</a><a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a1d9bdf0c329999d034c360caa97d8e47">arch_update_freq</a> // 20)</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>        <span class="keywordflow">elif</span> self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a179a17f7c32088285bd216ba2160078d">total_epochs</a> &lt;= 10:</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>            effective_freq = max(10, self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a308cee7ca26b699d4b4decd39df5db0f">arch_update_freq</a><a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a1d9bdf0c329999d034c360caa97d8e47">arch_update_freq</a> // 10)</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>        <span class="keywordflow">elif</span> self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a179a17f7c32088285bd216ba2160078d">total_epochs</a> &lt;= 20:</div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>            effective_freq = max(20, self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a308cee7ca26b699d4b4decd39df5db0f">arch_update_freq</a><a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a1d9bdf0c329999d034c360caa97d8e47">arch_update_freq</a> // 5)</div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>        <span class="keywordflow">else</span>:</div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>            <span class="comment"># 长时间训练，使用原始频率</span></div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>            effective_freq = self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a308cee7ca26b699d4b4decd39df5db0f">arch_update_freq</a><a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a1d9bdf0c329999d034c360caa97d8e47">arch_update_freq</a></div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>        </div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>        should_update = self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a446f06627dcf5c304b3b281d28ac1f5e">arch_step_count</a> % effective_freq == 0</div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>        </div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>        <span class="keywordflow">if</span> should_update <span class="keywordflow">and</span> self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a5ab957196c5bbe42f5c2207e84d04784">monitor</a> <span class="keywordflow">and</span> effective_freq != self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a308cee7ca26b699d4b4decd39df5db0f">arch_update_freq</a><a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a1d9bdf0c329999d034c360caa97d8e47">arch_update_freq</a>:</div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>            self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a5ab957196c5bbe42f5c2207e84d04784">monitor</a>.logger.info(f<span class="stringliteral">&quot;🔧 Architecture update frequency auto-adjusted: &quot;</span></div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>                                   f<span class="stringliteral">&quot;{self.arch_update_freq} -&gt; {effective_freq} &quot;</span></div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>                                   f<span class="stringliteral">&quot;(step {self.arch_step_count})&quot;</span>)</div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>        </div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>        <span class="keywordflow">return</span> should_update</div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>    </div>
+</div>
+<div class="foldopen" id="foldopen00151" data-start="" data-end="">
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a353e6624eef30f02d29063312385dc8e">  151</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a353e6624eef30f02d29063312385dc8e">step</a>(self, input_train, target_train, input_valid, target_valid, eta, network_optimizer, unrolled):</div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>        <span class="stringliteral">&quot;&quot;&quot;优化的架构更新步骤&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>        <span class="keywordflow">if</span> <span class="keywordflow">not</span> self.<a class="code hl_function" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#aabd1a78e03b1f10fd5374682d640499d">should_update_arch</a><a class="code hl_function" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a41b0956ff0d6be0d0f6e11fa4339ed83">should_update_arch</a>():</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>            <span class="keywordflow">if</span> self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a5ab957196c5bbe42f5c2207e84d04784">monitor</a>:</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>                self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a5ab957196c5bbe42f5c2207e84d04784">monitor</a>.log_architecture_step(<span class="stringliteral">&#39;arch_skip&#39;</span>, 0.0)</div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>            <span class="keywordflow">return</span></div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>        </div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>        <span class="keywordflow">if</span> self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a8d908ad32c2131370fd65ff59a52ae00">optimizer</a><a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a204ac7bae634625ea77702c518e16a62">optimizer</a> <span class="keywordflow">is</span> <span class="keywordtype">None</span>:</div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>            <span class="keywordflow">return</span></div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>        </div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>        step_start_time = time.time()</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>        </div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>        <span class="keywordflow">try</span>:</div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>            <span class="keyword">with</span> torch.cuda.amp.autocast(enabled=torch.cuda.is_available()):</div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>                <span class="keywordflow">if</span> self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a5b21459921885f5bec3cf582fd5d8d22">use_first_order</a> <span class="keywordflow">or</span> <span class="keywordflow">not</span> unrolled:</div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>                    <span class="comment"># 使用高效的一阶近似</span></div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>                    self.<a class="code hl_function" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#acb4b1d12b2785725e576f7118e8dec1a">_step_first_order</a>(input_valid, target_valid)</div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>                <span class="keywordflow">else</span>:</div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>                    <span class="comment"># 使用二阶近似（更准确但更慢）</span></div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>                    self.<a class="code hl_function" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a93cd2ed14f9c1d834bfaf8c32bd67289">_step_second_order</a>(input_train, target_train, input_valid, target_valid, eta, network_optimizer)</div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>        </div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>        <span class="keywordflow">except</span> RuntimeError <span class="keyword">as</span> e:</div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>            <span class="keywordflow">if</span> <span class="stringliteral">&quot;out of memory&quot;</span> <span class="keywordflow">in</span> str(e):</div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>                <span class="keywordflow">if</span> self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a5ab957196c5bbe42f5c2207e84d04784">monitor</a>:</div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>                    self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a5ab957196c5bbe42f5c2207e84d04784">monitor</a>.logger.warning(f<span class="stringliteral">&quot;🔧 OOM in architecture step, falling back to first-order&quot;</span>)</div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>                torch.cuda.empty_cache()</div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>                self.<a class="code hl_function" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#acb4b1d12b2785725e576f7118e8dec1a">_step_first_order</a>(input_valid, target_valid)</div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>            <span class="keywordflow">else</span>:</div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>                <span class="keywordflow">raise</span> e</div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>        </div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>        step_time = time.time() - step_start_time</div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>        </div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>        <span class="keywordflow">if</span> self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a5ab957196c5bbe42f5c2207e84d04784">monitor</a>:</div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>            self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a5ab957196c5bbe42f5c2207e84d04784">monitor</a>.log_architecture_step(<span class="stringliteral">&#39;arch_update&#39;</span>, step_time, {</div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>                <span class="stringliteral">&#39;method&#39;</span>: <span class="stringliteral">&#39;first_order&#39;</span> <span class="keywordflow">if</span> self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a5b21459921885f5bec3cf582fd5d8d22">use_first_order</a> <span class="keywordflow">else</span> <span class="stringliteral">&#39;second_order&#39;</span>,</div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>                <span class="stringliteral">&#39;accumulation_steps&#39;</span>: self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a2e2d401412428110ddfdb302f279f66e">grad_accumulation_steps</a></div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>            })</div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>    </div>
+</div>
+<div class="foldopen" id="foldopen00189" data-start="" data-end="">
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#acb4b1d12b2785725e576f7118e8dec1a">  189</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#acb4b1d12b2785725e576f7118e8dec1a">_step_first_order</a>(self, input_valid, target_valid):</div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>        <span class="stringliteral">&quot;&quot;&quot;高效的一阶近似更新&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>        <span class="keywordflow">if</span> self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a8d908ad32c2131370fd65ff59a52ae00">optimizer</a><a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a204ac7bae634625ea77702c518e16a62">optimizer</a> <span class="keywordflow">is</span> <span class="keywordtype">None</span>:</div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>            <span class="keywordflow">return</span></div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>            </div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>        <span class="keywordflow">if</span> self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a2e2d401412428110ddfdb302f279f66e">grad_accumulation_steps</a> &lt;= 1:</div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>            <span class="comment"># 直接更新</span></div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>            self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a8d908ad32c2131370fd65ff59a52ae00">optimizer</a><a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a204ac7bae634625ea77702c518e16a62">optimizer</a>.zero_grad()</div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>            loss = self.<a class="code hl_function" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a124602001dc6489015a371fa1a25a2fd">_compute_arch_loss</a>(input_valid, target_valid)</div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>            loss.backward()</div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>            </div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>            <span class="comment"># 梯度裁剪</span></div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>            self.<a class="code hl_function" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a125272befb9bb464e30b73686da4856b">_clip_arch_gradients</a>()</div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>            </div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>            self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a8d908ad32c2131370fd65ff59a52ae00">optimizer</a><a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a204ac7bae634625ea77702c518e16a62">optimizer</a>.<a class="code hl_function" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a353e6624eef30f02d29063312385dc8e">step</a>()</div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>            self.<a class="code hl_function" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a7a8be7ffb1661607129cb1cf7041b481">_update_arch_loss_history</a>(loss.item())</div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>        <span class="keywordflow">else</span>:</div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>            <span class="comment"># 梯度累积</span></div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>            self.<a class="code hl_function" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#acf10bda49d95feb5f428ff9aac3662fd">_step_with_accumulation</a>(input_valid, target_valid)</div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>    </div>
+</div>
+<div class="foldopen" id="foldopen00209" data-start="" data-end="">
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a93cd2ed14f9c1d834bfaf8c32bd67289">  209</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a93cd2ed14f9c1d834bfaf8c32bd67289">_step_second_order</a>(self, input_train, target_train, input_valid, target_valid, eta, network_optimizer):</div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>        <span class="stringliteral">&quot;&quot;&quot;二阶近似更新（优化版本）&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>        <span class="keywordflow">if</span> self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a8d908ad32c2131370fd65ff59a52ae00">optimizer</a><a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a204ac7bae634625ea77702c518e16a62">optimizer</a> <span class="keywordflow">is</span> <span class="keywordtype">None</span>:</div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>            <span class="keywordflow">return</span></div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>            </div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>        self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a8d908ad32c2131370fd65ff59a52ae00">optimizer</a><a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a204ac7bae634625ea77702c518e16a62">optimizer</a>.zero_grad()</div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>        </div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>        <span class="comment"># 使用内存效率更高的二阶近似</span></div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>        <span class="keyword">with</span> torch.cuda.amp.autocast(enabled=torch.cuda.is_available()):</div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>            <span class="comment"># 计算虚拟模型</span></div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>            virtual_model = self.<a class="code hl_function" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a75a7205287688832b32a2c8fbb8c8339">_compute_virtual_model_efficient</a>(input_train, target_train, eta, network_optimizer)</div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>            </div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>            <span class="comment"># 计算架构损失</span></div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>            <span class="keywordflow">if</span> self.criterion <span class="keywordflow">is</span> <span class="keywordtype">None</span>:</div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>                <span class="keywordflow">raise</span> ValueError(<span class="stringliteral">&quot;Criterion not set&quot;</span>)</div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>            arch_loss = self.criterion(virtual_model(input_valid), target_valid)</div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>            </div>
+<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>            <span class="comment"># 计算梯度</span></div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>            arch_grads = torch.autograd.grad(arch_loss, self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a8493e20b4b3db61e80298ed278b26452">model</a>.arch_parameters(), </div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>                                           create_graph=<span class="keyword">False</span>, retain_graph=<span class="keyword">False</span>)</div>
+<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>            </div>
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>            <span class="comment"># 应用梯度</span></div>
+<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>            <span class="keywordflow">for</span> param, grad <span class="keywordflow">in</span> zip(self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a8493e20b4b3db61e80298ed278b26452">model</a>.arch_parameters(), arch_grads):</div>
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>                <span class="keywordflow">if</span> param.grad <span class="keywordflow">is</span> <span class="keywordtype">None</span>:</div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>                    param.grad = grad.detach()</div>
+<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>                <span class="keywordflow">else</span>:</div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>                    param.grad.data.copy_(grad.detach())</div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>        </div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>        <span class="comment"># 梯度裁剪</span></div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>        self.<a class="code hl_function" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a125272befb9bb464e30b73686da4856b">_clip_arch_gradients</a>()</div>
+<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>        </div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>        self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a8d908ad32c2131370fd65ff59a52ae00">optimizer</a><a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a204ac7bae634625ea77702c518e16a62">optimizer</a>.<a class="code hl_function" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a353e6624eef30f02d29063312385dc8e">step</a>()</div>
+<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>        self.<a class="code hl_function" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a7a8be7ffb1661607129cb1cf7041b481">_update_arch_loss_history</a>(arch_loss.item())</div>
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>    </div>
+</div>
+<div class="foldopen" id="foldopen00243" data-start="" data-end="">
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a75a7205287688832b32a2c8fbb8c8339">  243</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a75a7205287688832b32a2c8fbb8c8339">_compute_virtual_model_efficient</a>(self, input_train, target_train, eta, network_optimizer):</div>
+<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>        <span class="stringliteral">&quot;&quot;&quot;内存效率更高的虚拟模型计算&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>        <span class="comment"># 计算当前损失和梯度</span></div>
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>        <span class="keywordflow">if</span> self.criterion <span class="keywordflow">is</span> <span class="keywordtype">None</span>:</div>
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>            <span class="keywordflow">raise</span> ValueError(<span class="stringliteral">&quot;Criterion not set&quot;</span>)</div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>        self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a8493e20b4b3db61e80298ed278b26452">model</a>.zero_grad()</div>
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>        loss = self.criterion(self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a8493e20b4b3db61e80298ed278b26452">model</a>(input_train), target_train)</div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>        </div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>        <span class="comment"># 计算权重梯度</span></div>
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>        weight_grads = torch.autograd.grad(loss, self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a8493e20b4b3db61e80298ed278b26452">model</a>.parameters(), </div>
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>                                         create_graph=<span class="keyword">False</span>, retain_graph=<span class="keyword">False</span>)</div>
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>        </div>
+<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>        <span class="comment"># 创建虚拟参数</span></div>
+<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>        virtual_params = []</div>
+<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>        <span class="keywordflow">for</span> param, grad <span class="keywordflow">in</span> zip(self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a8493e20b4b3db61e80298ed278b26452">model</a>.parameters(), weight_grads):</div>
+<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>            <span class="comment"># 简化的权重更新（不考虑动量）</span></div>
+<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>            virtual_param = param - eta * grad</div>
+<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>            virtual_params.append(virtual_param)</div>
+<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>        </div>
+<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>        <span class="comment"># 创建虚拟模型</span></div>
+<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>        virtual_model = self.<a class="code hl_function" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#ac96bf17228068013881d6f61e0c43aab">_create_virtual_model</a>(virtual_params)</div>
+<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>        <span class="keywordflow">return</span> virtual_model</div>
+<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>    </div>
+</div>
+<div class="foldopen" id="foldopen00266" data-start="" data-end="">
+<div class="line"><a id="l00266" name="l00266"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#ac96bf17228068013881d6f61e0c43aab">  266</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#ac96bf17228068013881d6f61e0c43aab">_create_virtual_model</a>(self, virtual_params):</div>
+<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>        <span class="stringliteral">&quot;&quot;&quot;创建虚拟模型（共享架构参数）&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>        <span class="comment"># 这里需要根据具体的模型结构实现</span></div>
+<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>        <span class="comment"># 简化版本：直接返回当前模型</span></div>
+<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>        <span class="keywordflow">return</span> self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a8493e20b4b3db61e80298ed278b26452">model</a></div>
+<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>    </div>
+</div>
+<div class="foldopen" id="foldopen00272" data-start="" data-end="">
+<div class="line"><a id="l00272" name="l00272"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#acf10bda49d95feb5f428ff9aac3662fd">  272</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#acf10bda49d95feb5f428ff9aac3662fd">_step_with_accumulation</a>(self, input_valid, target_valid):</div>
+<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>        <span class="stringliteral">&quot;&quot;&quot;使用梯度累积的更新&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>        <span class="keywordflow">if</span> self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a8d908ad32c2131370fd65ff59a52ae00">optimizer</a><a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a204ac7bae634625ea77702c518e16a62">optimizer</a> <span class="keywordflow">is</span> <span class="keywordtype">None</span>:</div>
+<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>            <span class="keywordflow">return</span></div>
+<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>            </div>
+<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>        <span class="comment"># 计算当前批次的损失</span></div>
+<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>        loss = self.<a class="code hl_function" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a124602001dc6489015a371fa1a25a2fd">_compute_arch_loss</a>(input_valid, target_valid)</div>
+<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>        loss = loss / self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a2e2d401412428110ddfdb302f279f66e">grad_accumulation_steps</a></div>
+<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>        </div>
+<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>        <span class="comment"># 反向传播</span></div>
+<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>        loss.backward()</div>
+<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>        </div>
+<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>        self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a4495f132dc4637d0878a60ddaf679530">accumulation_count</a> += 1</div>
+<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span>        </div>
+<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>        <span class="comment"># 检查是否需要更新</span></div>
+<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span>        <span class="keywordflow">if</span> self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a4495f132dc4637d0878a60ddaf679530">accumulation_count</a> &gt;= self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a2e2d401412428110ddfdb302f279f66e">grad_accumulation_steps</a>:</div>
+<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span>            <span class="comment"># 梯度裁剪</span></div>
+<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span>            self.<a class="code hl_function" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a125272befb9bb464e30b73686da4856b">_clip_arch_gradients</a>()</div>
+<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span>            </div>
+<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span>            <span class="comment"># 更新参数</span></div>
+<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span>            self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a8d908ad32c2131370fd65ff59a52ae00">optimizer</a><a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a204ac7bae634625ea77702c518e16a62">optimizer</a>.<a class="code hl_function" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a353e6624eef30f02d29063312385dc8e">step</a>()</div>
+<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span>            self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a8d908ad32c2131370fd65ff59a52ae00">optimizer</a><a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a204ac7bae634625ea77702c518e16a62">optimizer</a>.zero_grad()</div>
+<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span>            </div>
+<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span>            <span class="comment"># 重置计数器</span></div>
+<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span>            self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a4495f132dc4637d0878a60ddaf679530">accumulation_count</a> = 0</div>
+<div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span>            </div>
+<div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span>            <span class="comment"># 更新损失历史</span></div>
+<div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span>            self.<a class="code hl_function" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a7a8be7ffb1661607129cb1cf7041b481">_update_arch_loss_history</a>(loss.item() * self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a2e2d401412428110ddfdb302f279f66e">grad_accumulation_steps</a>)</div>
+<div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span>    </div>
+</div>
+<div class="foldopen" id="foldopen00301" data-start="" data-end="">
+<div class="line"><a id="l00301" name="l00301"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a124602001dc6489015a371fa1a25a2fd">  301</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a124602001dc6489015a371fa1a25a2fd">_compute_arch_loss</a>(self, input_valid, target_valid):</div>
+<div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span>        <span class="stringliteral">&quot;&quot;&quot;计算架构损失&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span>        <span class="keywordflow">if</span> self.criterion <span class="keywordflow">is</span> <span class="keywordtype">None</span>:</div>
+<div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span>            <span class="keywordflow">raise</span> ValueError(<span class="stringliteral">&quot;Criterion not set&quot;</span>)</div>
+<div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span>        logits = self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a8493e20b4b3db61e80298ed278b26452">model</a>(input_valid)</div>
+<div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span>        loss = self.criterion(logits, target_valid)</div>
+<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span>        <span class="keywordflow">return</span> loss</div>
+<div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span>    </div>
+</div>
+<div class="foldopen" id="foldopen00309" data-start="" data-end="">
+<div class="line"><a id="l00309" name="l00309"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a125272befb9bb464e30b73686da4856b">  309</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a125272befb9bb464e30b73686da4856b">_clip_arch_gradients</a>(self, max_norm: float = 5.0):</div>
+<div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span>        <span class="stringliteral">&quot;&quot;&quot;架构梯度裁剪&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span>        <span class="keywordflow">if</span> self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a8493e20b4b3db61e80298ed278b26452">model</a>.arch_parameters():</div>
+<div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span>            arch_params = list(self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a8493e20b4b3db61e80298ed278b26452">model</a>.arch_parameters())</div>
+<div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span>            total_norm = torch.nn.utils.clip_grad_norm_(arch_params, max_norm)</div>
+<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span>            </div>
+<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>            <span class="keywordflow">if</span> self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a5ab957196c5bbe42f5c2207e84d04784">monitor</a> <span class="keywordflow">and</span> total_norm &gt; max_norm:</div>
+<div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span>                self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a5ab957196c5bbe42f5c2207e84d04784">monitor</a>.logger.info(f<span class="stringliteral">&quot;🔧 Architecture gradients clipped: {total_norm:.4f} -&gt; {max_norm}&quot;</span>)</div>
+<div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span>    </div>
+</div>
+<div class="foldopen" id="foldopen00318" data-start="" data-end="">
+<div class="line"><a id="l00318" name="l00318"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a7a8be7ffb1661607129cb1cf7041b481">  318</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a7a8be7ffb1661607129cb1cf7041b481">_update_arch_loss_history</a>(self, loss_value: float):</div>
+<div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span>        <span class="stringliteral">&quot;&quot;&quot;更新架构损失历史&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span>        self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a9d6bb70b51c7fdb1bc07d3acc8e8cf92">arch_loss_history</a>.append(loss_value)</div>
+<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span>        </div>
+<div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span>        <span class="comment"># 保持历史记录长度</span></div>
+<div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span>        <span class="keywordflow">if</span> len(self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a9d6bb70b51c7fdb1bc07d3acc8e8cf92">arch_loss_history</a>) &gt; 100:</div>
+<div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span>            self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a9d6bb70b51c7fdb1bc07d3acc8e8cf92">arch_loss_history</a> = self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a9d6bb70b51c7fdb1bc07d3acc8e8cf92">arch_loss_history</a>[-100:]</div>
+<div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span>        </div>
+<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>        <span class="comment"># 早停检查</span></div>
+<div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span>        <span class="keywordflow">if</span> loss_value &lt; self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#acc40b5b6ae0f866dc8f51eabe3561e96">last_arch_loss</a>:</div>
+<div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>            self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#acc40b5b6ae0f866dc8f51eabe3561e96">last_arch_loss</a> = loss_value</div>
+<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>            self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#af64d5b668112726584a303a8dd6379f2">no_improve_count</a> = 0</div>
+<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span>        <span class="keywordflow">else</span>:</div>
+<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>            self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#af64d5b668112726584a303a8dd6379f2">no_improve_count</a> += 1</div>
+<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span>    </div>
+</div>
+<div class="foldopen" id="foldopen00333" data-start="" data-end="">
+<div class="line"><a id="l00333" name="l00333"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a267fbd9bc2cde10563220bf5b2b82c13">  333</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a267fbd9bc2cde10563220bf5b2b82c13">get_arch_statistics</a>(self) -&gt; Dict[str, Any]:</div>
+<div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span>        <span class="stringliteral">&quot;&quot;&quot;获取架构搜索统计信息&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span>        stats = {</div>
+<div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span>            <span class="stringliteral">&#39;arch_step_count&#39;</span>: self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a446f06627dcf5c304b3b281d28ac1f5e">arch_step_count</a>,</div>
+<div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span>            <span class="stringliteral">&#39;current_epoch&#39;</span>: self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a29f176d7054f258c9125b02a72faa42f">current_epoch</a><a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a6a96d86f95d1cdeb94095da2ba820b16">current_epoch</a>,</div>
+<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>            <span class="stringliteral">&#39;last_arch_loss&#39;</span>: self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#acc40b5b6ae0f866dc8f51eabe3561e96">last_arch_loss</a>,</div>
+<div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>            <span class="stringliteral">&#39;no_improve_count&#39;</span>: self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#af64d5b668112726584a303a8dd6379f2">no_improve_count</a>,</div>
+<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>            <span class="stringliteral">&#39;arch_loss_history_length&#39;</span>: len(self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a9d6bb70b51c7fdb1bc07d3acc8e8cf92">arch_loss_history</a>)</div>
+<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>        }</div>
+<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span>        </div>
+<div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span>        <span class="keywordflow">if</span> self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a9d6bb70b51c7fdb1bc07d3acc8e8cf92">arch_loss_history</a>:</div>
+<div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span>            stats.update({</div>
+<div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span>                <span class="stringliteral">&#39;arch_loss_mean&#39;</span>: np.mean(self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a9d6bb70b51c7fdb1bc07d3acc8e8cf92">arch_loss_history</a>[-10:]),</div>
+<div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span>                <span class="stringliteral">&#39;arch_loss_std&#39;</span>: np.std(self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a9d6bb70b51c7fdb1bc07d3acc8e8cf92">arch_loss_history</a>[-10:]),</div>
+<div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span>                <span class="stringliteral">&#39;arch_loss_trend&#39;</span>: self.<a class="code hl_function" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#abb3a497f8b1c228a0c77ea2cad96c92f">_compute_loss_trend</a>()</div>
+<div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span>            })</div>
+<div class="line"><a id="l00349" name="l00349"></a><span class="lineno">  349</span>        </div>
+<div class="line"><a id="l00350" name="l00350"></a><span class="lineno">  350</span>        <span class="keywordflow">return</span> stats</div>
+<div class="line"><a id="l00351" name="l00351"></a><span class="lineno">  351</span>    </div>
+</div>
+<div class="foldopen" id="foldopen00352" data-start="" data-end="">
+<div class="line"><a id="l00352" name="l00352"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#abb3a497f8b1c228a0c77ea2cad96c92f">  352</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#abb3a497f8b1c228a0c77ea2cad96c92f">_compute_loss_trend</a>(self) -&gt; str:</div>
+<div class="line"><a id="l00353" name="l00353"></a><span class="lineno">  353</span>        <span class="stringliteral">&quot;&quot;&quot;计算损失趋势&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span>        <span class="keywordflow">if</span> len(self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a9d6bb70b51c7fdb1bc07d3acc8e8cf92">arch_loss_history</a>) &lt; 5:</div>
+<div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span>            <span class="keywordflow">return</span> <span class="stringliteral">&#39;insufficient_data&#39;</span></div>
+<div class="line"><a id="l00356" name="l00356"></a><span class="lineno">  356</span>        </div>
+<div class="line"><a id="l00357" name="l00357"></a><span class="lineno">  357</span>        recent_losses = self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a9d6bb70b51c7fdb1bc07d3acc8e8cf92">arch_loss_history</a>[-5:]</div>
+<div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span>        trend = np.polyfit(range(len(recent_losses)), recent_losses, 1)[0]</div>
+<div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span>        </div>
+<div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span>        <span class="keywordflow">if</span> trend &lt; -0.001:</div>
+<div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span>            <span class="keywordflow">return</span> <span class="stringliteral">&#39;decreasing&#39;</span></div>
+<div class="line"><a id="l00362" name="l00362"></a><span class="lineno">  362</span>        <span class="keywordflow">elif</span> trend &gt; 0.001:</div>
+<div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span>            <span class="keywordflow">return</span> <span class="stringliteral">&#39;increasing&#39;</span></div>
+<div class="line"><a id="l00364" name="l00364"></a><span class="lineno">  364</span>        <span class="keywordflow">else</span>:</div>
+<div class="line"><a id="l00365" name="l00365"></a><span class="lineno">  365</span>            <span class="keywordflow">return</span> <span class="stringliteral">&#39;stable&#39;</span></div>
+<div class="line"><a id="l00366" name="l00366"></a><span class="lineno">  366</span>    </div>
+</div>
+<div class="foldopen" id="foldopen00367" data-start="" data-end="">
+<div class="line"><a id="l00367" name="l00367"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a24a89082b0629fdcb31de6835dfa8297">  367</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a24a89082b0629fdcb31de6835dfa8297">cleanup_gradients</a>(self):</div>
+<div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span>        <span class="stringliteral">&quot;&quot;&quot;清理梯度和内存&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span>        <span class="comment"># 清理模型梯度</span></div>
+<div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span>        self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a8493e20b4b3db61e80298ed278b26452">model</a>.zero_grad()</div>
+<div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span>        </div>
+<div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span>        <span class="comment"># 清理架构参数梯度</span></div>
+<div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span>        <span class="keywordflow">for</span> param <span class="keywordflow">in</span> self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a8493e20b4b3db61e80298ed278b26452">model</a>.arch_parameters():</div>
+<div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span>            <span class="keywordflow">if</span> param.grad <span class="keywordflow">is</span> <span class="keywordflow">not</span> <span class="keywordtype">None</span>:</div>
+<div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span>                param.grad.data.zero_()</div>
+<div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span>        </div>
+<div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span>        <span class="comment"># 清理优化器状态</span></div>
+<div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span>        <span class="keywordflow">if</span> self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a8d908ad32c2131370fd65ff59a52ae00">optimizer</a><a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a204ac7bae634625ea77702c518e16a62">optimizer</a> <span class="keywordflow">is</span> <span class="keywordflow">not</span> <span class="keywordtype">None</span>:</div>
+<div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span>            self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a8d908ad32c2131370fd65ff59a52ae00">optimizer</a><a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a204ac7bae634625ea77702c518e16a62">optimizer</a>.zero_grad()</div>
+<div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span>        </div>
+<div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span>        <span class="comment"># 清理累积梯度</span></div>
+<div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span>        self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a7293e57d0d8f22a7e143259d90e2422c">accumulated_grads</a> = <span class="keywordtype">None</span></div>
+<div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span>        self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a4495f132dc4637d0878a60ddaf679530">accumulation_count</a> = 0</div>
+<div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span>        </div>
+<div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span>        <span class="comment"># 强制垃圾回收</span></div>
+<div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span>        gc.collect()</div>
+<div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span>        </div>
+<div class="line"><a id="l00388" name="l00388"></a><span class="lineno">  388</span>        <span class="comment"># 清理CUDA缓存</span></div>
+<div class="line"><a id="l00389" name="l00389"></a><span class="lineno">  389</span>        <span class="keywordflow">if</span> torch.cuda.is_available():</div>
+<div class="line"><a id="l00390" name="l00390"></a><span class="lineno">  390</span>            torch.cuda.empty_cache()</div>
+<div class="line"><a id="l00391" name="l00391"></a><span class="lineno">  391</span>    </div>
+</div>
+<div class="foldopen" id="foldopen00392" data-start="" data-end="">
+<div class="line"><a id="l00392" name="l00392"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#afc398a0fb2c54377975d7c864cfeaebe">  392</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#afc398a0fb2c54377975d7c864cfeaebe">save_checkpoint</a>(self, filepath: str):</div>
+<div class="line"><a id="l00393" name="l00393"></a><span class="lineno">  393</span>        <span class="stringliteral">&quot;&quot;&quot;保存检查点&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00394" name="l00394"></a><span class="lineno">  394</span>        checkpoint = {</div>
+<div class="line"><a id="l00395" name="l00395"></a><span class="lineno">  395</span>            <span class="stringliteral">&#39;arch_step_count&#39;</span>: self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a446f06627dcf5c304b3b281d28ac1f5e">arch_step_count</a>,</div>
+<div class="line"><a id="l00396" name="l00396"></a><span class="lineno">  396</span>            <span class="stringliteral">&#39;current_epoch&#39;</span>: self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a29f176d7054f258c9125b02a72faa42f">current_epoch</a><a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a6a96d86f95d1cdeb94095da2ba820b16">current_epoch</a>,</div>
+<div class="line"><a id="l00397" name="l00397"></a><span class="lineno">  397</span>            <span class="stringliteral">&#39;last_arch_loss&#39;</span>: self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#acc40b5b6ae0f866dc8f51eabe3561e96">last_arch_loss</a>,</div>
+<div class="line"><a id="l00398" name="l00398"></a><span class="lineno">  398</span>            <span class="stringliteral">&#39;arch_loss_history&#39;</span>: self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a9d6bb70b51c7fdb1bc07d3acc8e8cf92">arch_loss_history</a>,</div>
+<div class="line"><a id="l00399" name="l00399"></a><span class="lineno">  399</span>            <span class="stringliteral">&#39;no_improve_count&#39;</span>: self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#af64d5b668112726584a303a8dd6379f2">no_improve_count</a>,</div>
+<div class="line"><a id="l00400" name="l00400"></a><span class="lineno">  400</span>            <span class="stringliteral">&#39;optimizer_state_dict&#39;</span>: self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a8d908ad32c2131370fd65ff59a52ae00">optimizer</a><a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a204ac7bae634625ea77702c518e16a62">optimizer</a>.state_dict() <span class="keywordflow">if</span> self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a8d908ad32c2131370fd65ff59a52ae00">optimizer</a><a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a204ac7bae634625ea77702c518e16a62">optimizer</a> <span class="keywordflow">else</span> <span class="keywordtype">None</span></div>
+<div class="line"><a id="l00401" name="l00401"></a><span class="lineno">  401</span>        }</div>
+<div class="line"><a id="l00402" name="l00402"></a><span class="lineno">  402</span>        </div>
+<div class="line"><a id="l00403" name="l00403"></a><span class="lineno">  403</span>        torch.save(checkpoint, filepath)</div>
+<div class="line"><a id="l00404" name="l00404"></a><span class="lineno">  404</span>        </div>
+<div class="line"><a id="l00405" name="l00405"></a><span class="lineno">  405</span>        <span class="keywordflow">if</span> self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a5ab957196c5bbe42f5c2207e84d04784">monitor</a>:</div>
+<div class="line"><a id="l00406" name="l00406"></a><span class="lineno">  406</span>            self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a5ab957196c5bbe42f5c2207e84d04784">monitor</a>.logger.info(f<span class="stringliteral">&quot;💾 Architecture checkpoint saved to {filepath}&quot;</span>)</div>
+<div class="line"><a id="l00407" name="l00407"></a><span class="lineno">  407</span>    </div>
+</div>
+<div class="foldopen" id="foldopen00408" data-start="" data-end="">
+<div class="line"><a id="l00408" name="l00408"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a2c843ff074fcf032a806c8581319733b">  408</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a2c843ff074fcf032a806c8581319733b">load_checkpoint</a>(self, filepath: str):</div>
+<div class="line"><a id="l00409" name="l00409"></a><span class="lineno">  409</span>        <span class="stringliteral">&quot;&quot;&quot;加载检查点&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00410" name="l00410"></a><span class="lineno">  410</span>        checkpoint = torch.load(filepath, map_location=<span class="stringliteral">&#39;cpu&#39;</span>)</div>
+<div class="line"><a id="l00411" name="l00411"></a><span class="lineno">  411</span>        </div>
+<div class="line"><a id="l00412" name="l00412"></a><span class="lineno">  412</span>        self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a446f06627dcf5c304b3b281d28ac1f5e">arch_step_count</a> = checkpoint[<span class="stringliteral">&#39;arch_step_count&#39;</span>]</div>
+<div class="line"><a id="l00413" name="l00413"></a><span class="lineno">  413</span>        self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a29f176d7054f258c9125b02a72faa42f">current_epoch</a><a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a6a96d86f95d1cdeb94095da2ba820b16">current_epoch</a> = checkpoint[<span class="stringliteral">&#39;current_epoch&#39;</span>]</div>
+<div class="line"><a id="l00414" name="l00414"></a><span class="lineno">  414</span>        self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#acc40b5b6ae0f866dc8f51eabe3561e96">last_arch_loss</a> = checkpoint[<span class="stringliteral">&#39;last_arch_loss&#39;</span>]</div>
+<div class="line"><a id="l00415" name="l00415"></a><span class="lineno">  415</span>        self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a9d6bb70b51c7fdb1bc07d3acc8e8cf92">arch_loss_history</a> = checkpoint[<span class="stringliteral">&#39;arch_loss_history&#39;</span>]</div>
+<div class="line"><a id="l00416" name="l00416"></a><span class="lineno">  416</span>        self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#af64d5b668112726584a303a8dd6379f2">no_improve_count</a> = checkpoint[<span class="stringliteral">&#39;no_improve_count&#39;</span>]</div>
+<div class="line"><a id="l00417" name="l00417"></a><span class="lineno">  417</span>        </div>
+<div class="line"><a id="l00418" name="l00418"></a><span class="lineno">  418</span>        <span class="keywordflow">if</span> self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a8d908ad32c2131370fd65ff59a52ae00">optimizer</a><a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a204ac7bae634625ea77702c518e16a62">optimizer</a> <span class="keywordflow">and</span> checkpoint[<span class="stringliteral">&#39;optimizer_state_dict&#39;</span>]:</div>
+<div class="line"><a id="l00419" name="l00419"></a><span class="lineno">  419</span>            self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a8d908ad32c2131370fd65ff59a52ae00">optimizer</a><a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a204ac7bae634625ea77702c518e16a62">optimizer</a>.load_state_dict(checkpoint[<span class="stringliteral">&#39;optimizer_state_dict&#39;</span>])</div>
+<div class="line"><a id="l00420" name="l00420"></a><span class="lineno">  420</span>        </div>
+<div class="line"><a id="l00421" name="l00421"></a><span class="lineno">  421</span>        <span class="keywordflow">if</span> self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a5ab957196c5bbe42f5c2207e84d04784">monitor</a>:</div>
+<div class="line"><a id="l00422" name="l00422"></a><span class="lineno">  422</span>            self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a5ab957196c5bbe42f5c2207e84d04784">monitor</a>.logger.info(f<span class="stringliteral">&quot;📂 Architecture checkpoint loaded from {filepath}&quot;</span>)</div>
+<div class="line"><a id="l00423" name="l00423"></a><span class="lineno">  423</span> </div>
+<div class="line"><a id="l00424" name="l00424"></a><span class="lineno">  424</span> </div>
+</div>
+</div>
+<div class="foldopen" id="foldopen00425" data-start="" data-end="">
+<div class="line"><a id="l00425" name="l00425"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html">  425</a></span><span class="keyword">class </span><a class="code hl_class" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html">ArchitectureSpaceOptimizer</a>:</div>
+<div class="line"><a id="l00426" name="l00426"></a><span class="lineno">  426</span>    <span class="stringliteral">&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00427" name="l00427"></a><span class="lineno">  427</span><span class="stringliteral">    架构空间优化器，复用PyTorch的参数优化思路</span></div>
+<div class="line"><a id="l00428" name="l00428"></a><span class="lineno">  428</span><span class="stringliteral">    &quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00429" name="l00429"></a><span class="lineno">  429</span>    </div>
+<div class="foldopen" id="foldopen00430" data-start="" data-end="">
+<div class="line"><a id="l00430" name="l00430"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#a6e4919037124fa477cb8b408dac82c1c">  430</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#a6e4919037124fa477cb8b408dac82c1c">__init__</a>(self, model, optimizer_config: Dict[str, Any], monitor: Optional[PerformanceMonitor] = <span class="keywordtype">None</span>):</div>
+<div class="line"><a id="l00431" name="l00431"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#ac08037b95ea4647e1e82a564ba1d838d">  431</a></span>        self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#ac08037b95ea4647e1e82a564ba1d838d">model</a> = model</div>
+<div class="line"><a id="l00432" name="l00432"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#a88f719009ef902a7fb351046dd9f5197">  432</a></span>        self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#a88f719009ef902a7fb351046dd9f5197">monitor</a> = monitor</div>
+<div class="line"><a id="l00433" name="l00433"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#a380dd82710ea87c748c773ed2fb8c4d8">  433</a></span>        self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#a380dd82710ea87c748c773ed2fb8c4d8">config</a> = optimizer_config</div>
+<div class="line"><a id="l00434" name="l00434"></a><span class="lineno">  434</span>        </div>
+<div class="line"><a id="l00435" name="l00435"></a><span class="lineno">  435</span>        <span class="comment"># 创建参数组</span></div>
+<div class="line"><a id="l00436" name="l00436"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#a5f611b3ef1676cbced8f43c8eaad5537">  436</a></span>        self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#a5f611b3ef1676cbced8f43c8eaad5537">param_groups</a> = self.<a class="code hl_function" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#a7c1c2cc572fac17c4ecf0d7122a707bd">_create_parameter_groups</a>()</div>
+<div class="line"><a id="l00437" name="l00437"></a><span class="lineno">  437</span>        </div>
+<div class="line"><a id="l00438" name="l00438"></a><span class="lineno">  438</span>        <span class="comment"># 创建优化器</span></div>
+<div class="line"><a id="l00439" name="l00439"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#a89d5cc9dd12d183c56df425a93c9e49b">  439</a></span>        self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#a89d5cc9dd12d183c56df425a93c9e49b">optimizer</a> = self.<a class="code hl_function" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#af5edcaf537c47d9f6b4ca3a15d6998ae">_create_optimizer</a>()</div>
+<div class="line"><a id="l00440" name="l00440"></a><span class="lineno">  440</span>        </div>
+<div class="line"><a id="l00441" name="l00441"></a><span class="lineno">  441</span>        <span class="comment"># 学习率调度器</span></div>
+<div class="line"><a id="l00442" name="l00442"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#a454bfca06958ac797ae7073c2601850c">  442</a></span>        self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#a454bfca06958ac797ae7073c2601850c">scheduler</a> = self.<a class="code hl_function" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#a638c0254fdbebdbc4fad04a70a00ed9d">_create_scheduler</a>()</div>
+<div class="line"><a id="l00443" name="l00443"></a><span class="lineno">  443</span>        </div>
+<div class="line"><a id="l00444" name="l00444"></a><span class="lineno">  444</span>        <span class="keywordflow">if</span> self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#a88f719009ef902a7fb351046dd9f5197">monitor</a>:</div>
+<div class="line"><a id="l00445" name="l00445"></a><span class="lineno">  445</span>            self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#a88f719009ef902a7fb351046dd9f5197">monitor</a>.logger.info(f<span class="stringliteral">&quot;🔧 ArchitectureSpaceOptimizer initialized with {len(self.param_groups)} parameter groups&quot;</span>)</div>
+<div class="line"><a id="l00446" name="l00446"></a><span class="lineno">  446</span>    </div>
+</div>
+<div class="foldopen" id="foldopen00447" data-start="" data-end="">
+<div class="line"><a id="l00447" name="l00447"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#a7c1c2cc572fac17c4ecf0d7122a707bd">  447</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#a7c1c2cc572fac17c4ecf0d7122a707bd">_create_parameter_groups</a>(self) -&gt; List[Dict[str, Any]]:</div>
+<div class="line"><a id="l00448" name="l00448"></a><span class="lineno">  448</span>        <span class="stringliteral">&quot;&quot;&quot;创建参数组，为不同类型的架构参数设置不同的学习率&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00449" name="l00449"></a><span class="lineno">  449</span>        param_groups = []</div>
+<div class="line"><a id="l00450" name="l00450"></a><span class="lineno">  450</span>        </div>
+<div class="line"><a id="l00451" name="l00451"></a><span class="lineno">  451</span>        <span class="comment"># 正常单元的架构参数</span></div>
+<div class="line"><a id="l00452" name="l00452"></a><span class="lineno">  452</span>        normal_params = []</div>
+<div class="line"><a id="l00453" name="l00453"></a><span class="lineno">  453</span>        <span class="comment"># 降维单元的架构参数</span></div>
+<div class="line"><a id="l00454" name="l00454"></a><span class="lineno">  454</span>        reduce_params = []</div>
+<div class="line"><a id="l00455" name="l00455"></a><span class="lineno">  455</span>        <span class="comment"># 深度相关的架构参数</span></div>
+<div class="line"><a id="l00456" name="l00456"></a><span class="lineno">  456</span>        depth_params = []</div>
+<div class="line"><a id="l00457" name="l00457"></a><span class="lineno">  457</span>        </div>
+<div class="line"><a id="l00458" name="l00458"></a><span class="lineno">  458</span>        <span class="keywordflow">for</span> name, param <span class="keywordflow">in</span> self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#ac08037b95ea4647e1e82a564ba1d838d">model</a>.named_parameters():</div>
+<div class="line"><a id="l00459" name="l00459"></a><span class="lineno">  459</span>            <span class="keywordflow">if</span> <span class="stringliteral">&#39;arch&#39;</span> <span class="keywordflow">in</span> name.lower() <span class="keywordflow">or</span> <span class="stringliteral">&#39;alpha&#39;</span> <span class="keywordflow">in</span> name.lower():</div>
+<div class="line"><a id="l00460" name="l00460"></a><span class="lineno">  460</span>                <span class="keywordflow">if</span> <span class="stringliteral">&#39;normal&#39;</span> <span class="keywordflow">in</span> name.lower():</div>
+<div class="line"><a id="l00461" name="l00461"></a><span class="lineno">  461</span>                    normal_params.append(param)</div>
+<div class="line"><a id="l00462" name="l00462"></a><span class="lineno">  462</span>                <span class="keywordflow">elif</span> <span class="stringliteral">&#39;reduce&#39;</span> <span class="keywordflow">in</span> name.lower():</div>
+<div class="line"><a id="l00463" name="l00463"></a><span class="lineno">  463</span>                    reduce_params.append(param)</div>
+<div class="line"><a id="l00464" name="l00464"></a><span class="lineno">  464</span>                <span class="keywordflow">elif</span> <span class="stringliteral">&#39;depth&#39;</span> <span class="keywordflow">in</span> name.lower() <span class="keywordflow">or</span> <span class="stringliteral">&#39;gate&#39;</span> <span class="keywordflow">in</span> name.lower():</div>
+<div class="line"><a id="l00465" name="l00465"></a><span class="lineno">  465</span>                    depth_params.append(param)</div>
+<div class="line"><a id="l00466" name="l00466"></a><span class="lineno">  466</span>        </div>
+<div class="line"><a id="l00467" name="l00467"></a><span class="lineno">  467</span>        <span class="comment"># 为不同类型的参数设置不同的学习率</span></div>
+<div class="line"><a id="l00468" name="l00468"></a><span class="lineno">  468</span>        <span class="keywordflow">if</span> normal_params:</div>
+<div class="line"><a id="l00469" name="l00469"></a><span class="lineno">  469</span>            param_groups.append({</div>
+<div class="line"><a id="l00470" name="l00470"></a><span class="lineno">  470</span>                <span class="stringliteral">&#39;params&#39;</span>: normal_params,</div>
+<div class="line"><a id="l00471" name="l00471"></a><span class="lineno">  471</span>                <span class="stringliteral">&#39;lr&#39;</span>: self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#a380dd82710ea87c748c773ed2fb8c4d8">config</a>.get(<span class="stringliteral">&#39;normal_lr&#39;</span>, 3e-4),</div>
+<div class="line"><a id="l00472" name="l00472"></a><span class="lineno">  472</span>                <span class="stringliteral">&#39;weight_decay&#39;</span>: self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#a380dd82710ea87c748c773ed2fb8c4d8">config</a>.get(<span class="stringliteral">&#39;normal_wd&#39;</span>, 1e-3),</div>
+<div class="line"><a id="l00473" name="l00473"></a><span class="lineno">  473</span>                <span class="stringliteral">&#39;name&#39;</span>: <span class="stringliteral">&#39;normal_arch&#39;</span></div>
+<div class="line"><a id="l00474" name="l00474"></a><span class="lineno">  474</span>            })</div>
+<div class="line"><a id="l00475" name="l00475"></a><span class="lineno">  475</span>        </div>
+<div class="line"><a id="l00476" name="l00476"></a><span class="lineno">  476</span>        <span class="keywordflow">if</span> reduce_params:</div>
+<div class="line"><a id="l00477" name="l00477"></a><span class="lineno">  477</span>            param_groups.append({</div>
+<div class="line"><a id="l00478" name="l00478"></a><span class="lineno">  478</span>                <span class="stringliteral">&#39;params&#39;</span>: reduce_params,</div>
+<div class="line"><a id="l00479" name="l00479"></a><span class="lineno">  479</span>                <span class="stringliteral">&#39;lr&#39;</span>: self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#a380dd82710ea87c748c773ed2fb8c4d8">config</a>.get(<span class="stringliteral">&#39;reduce_lr&#39;</span>, 3e-4),</div>
+<div class="line"><a id="l00480" name="l00480"></a><span class="lineno">  480</span>                <span class="stringliteral">&#39;weight_decay&#39;</span>: self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#a380dd82710ea87c748c773ed2fb8c4d8">config</a>.get(<span class="stringliteral">&#39;reduce_wd&#39;</span>, 1e-3),</div>
+<div class="line"><a id="l00481" name="l00481"></a><span class="lineno">  481</span>                <span class="stringliteral">&#39;name&#39;</span>: <span class="stringliteral">&#39;reduce_arch&#39;</span></div>
+<div class="line"><a id="l00482" name="l00482"></a><span class="lineno">  482</span>            })</div>
+<div class="line"><a id="l00483" name="l00483"></a><span class="lineno">  483</span>        </div>
+<div class="line"><a id="l00484" name="l00484"></a><span class="lineno">  484</span>        <span class="keywordflow">if</span> depth_params:</div>
+<div class="line"><a id="l00485" name="l00485"></a><span class="lineno">  485</span>            param_groups.append({</div>
+<div class="line"><a id="l00486" name="l00486"></a><span class="lineno">  486</span>                <span class="stringliteral">&#39;params&#39;</span>: depth_params,</div>
+<div class="line"><a id="l00487" name="l00487"></a><span class="lineno">  487</span>                <span class="stringliteral">&#39;lr&#39;</span>: self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#a380dd82710ea87c748c773ed2fb8c4d8">config</a>.get(<span class="stringliteral">&#39;depth_lr&#39;</span>, 6e-4),</div>
+<div class="line"><a id="l00488" name="l00488"></a><span class="lineno">  488</span>                <span class="stringliteral">&#39;weight_decay&#39;</span>: self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#a380dd82710ea87c748c773ed2fb8c4d8">config</a>.get(<span class="stringliteral">&#39;depth_wd&#39;</span>, 1e-4),</div>
+<div class="line"><a id="l00489" name="l00489"></a><span class="lineno">  489</span>                <span class="stringliteral">&#39;name&#39;</span>: <span class="stringliteral">&#39;depth_arch&#39;</span></div>
+<div class="line"><a id="l00490" name="l00490"></a><span class="lineno">  490</span>            })</div>
+<div class="line"><a id="l00491" name="l00491"></a><span class="lineno">  491</span>        </div>
+<div class="line"><a id="l00492" name="l00492"></a><span class="lineno">  492</span>        <span class="keywordflow">return</span> param_groups</div>
+<div class="line"><a id="l00493" name="l00493"></a><span class="lineno">  493</span>    </div>
+</div>
+<div class="foldopen" id="foldopen00494" data-start="" data-end="">
+<div class="line"><a id="l00494" name="l00494"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#af5edcaf537c47d9f6b4ca3a15d6998ae">  494</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#af5edcaf537c47d9f6b4ca3a15d6998ae">_create_optimizer</a>(self):</div>
+<div class="line"><a id="l00495" name="l00495"></a><span class="lineno">  495</span>        <span class="stringliteral">&quot;&quot;&quot;创建优化器&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00496" name="l00496"></a><span class="lineno">  496</span>        optimizer_type = self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#a380dd82710ea87c748c773ed2fb8c4d8">config</a>.get(<span class="stringliteral">&#39;type&#39;</span>, <span class="stringliteral">&#39;adamw&#39;</span>)</div>
+<div class="line"><a id="l00497" name="l00497"></a><span class="lineno">  497</span>        </div>
+<div class="line"><a id="l00498" name="l00498"></a><span class="lineno">  498</span>        <span class="keywordflow">if</span> optimizer_type.lower() == <span class="stringliteral">&#39;adamw&#39;</span>:</div>
+<div class="line"><a id="l00499" name="l00499"></a><span class="lineno">  499</span>            <span class="keywordflow">return</span> torch.optim.AdamW(self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#a5f611b3ef1676cbced8f43c8eaad5537">param_groups</a>, amsgrad=<span class="keyword">True</span>)</div>
+<div class="line"><a id="l00500" name="l00500"></a><span class="lineno">  500</span>        <span class="keywordflow">elif</span> optimizer_type.lower() == <span class="stringliteral">&#39;adam&#39;</span>:</div>
+<div class="line"><a id="l00501" name="l00501"></a><span class="lineno">  501</span>            <span class="keywordflow">return</span> torch.optim.Adam(self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#a5f611b3ef1676cbced8f43c8eaad5537">param_groups</a>, amsgrad=<span class="keyword">True</span>)</div>
+<div class="line"><a id="l00502" name="l00502"></a><span class="lineno">  502</span>        <span class="keywordflow">elif</span> optimizer_type.lower() == <span class="stringliteral">&#39;sgd&#39;</span>:</div>
+<div class="line"><a id="l00503" name="l00503"></a><span class="lineno">  503</span>            <span class="keywordflow">return</span> torch.optim.SGD(self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#a5f611b3ef1676cbced8f43c8eaad5537">param_groups</a>, momentum=0.9, nesterov=<span class="keyword">True</span>)</div>
+<div class="line"><a id="l00504" name="l00504"></a><span class="lineno">  504</span>        <span class="keywordflow">else</span>:</div>
+<div class="line"><a id="l00505" name="l00505"></a><span class="lineno">  505</span>            <span class="keywordflow">raise</span> ValueError(f<span class="stringliteral">&quot;Unsupported optimizer type: {optimizer_type}&quot;</span>)</div>
+<div class="line"><a id="l00506" name="l00506"></a><span class="lineno">  506</span>    </div>
+</div>
+<div class="foldopen" id="foldopen00507" data-start="" data-end="">
+<div class="line"><a id="l00507" name="l00507"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#a638c0254fdbebdbc4fad04a70a00ed9d">  507</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#a638c0254fdbebdbc4fad04a70a00ed9d">_create_scheduler</a>(self):</div>
+<div class="line"><a id="l00508" name="l00508"></a><span class="lineno">  508</span>        <span class="stringliteral">&quot;&quot;&quot;创建学习率调度器&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00509" name="l00509"></a><span class="lineno">  509</span>        scheduler_type = self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#a380dd82710ea87c748c773ed2fb8c4d8">config</a>.get(<span class="stringliteral">&#39;scheduler&#39;</span>, <span class="stringliteral">&#39;cosine&#39;</span>)</div>
+<div class="line"><a id="l00510" name="l00510"></a><span class="lineno">  510</span>        </div>
+<div class="line"><a id="l00511" name="l00511"></a><span class="lineno">  511</span>        <span class="keywordflow">if</span> scheduler_type == <span class="stringliteral">&#39;cosine&#39;</span>:</div>
+<div class="line"><a id="l00512" name="l00512"></a><span class="lineno">  512</span>            <span class="keywordflow">return</span> torch.optim.lr_scheduler.CosineAnnealingLR(</div>
+<div class="line"><a id="l00513" name="l00513"></a><span class="lineno">  513</span>                self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#a89d5cc9dd12d183c56df425a93c9e49b">optimizer</a>, </div>
+<div class="line"><a id="l00514" name="l00514"></a><span class="lineno">  514</span>                T_max=self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#a380dd82710ea87c748c773ed2fb8c4d8">config</a>.get(<span class="stringliteral">&#39;max_epochs&#39;</span>, 50),</div>
+<div class="line"><a id="l00515" name="l00515"></a><span class="lineno">  515</span>                eta_min=self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#a380dd82710ea87c748c773ed2fb8c4d8">config</a>.get(<span class="stringliteral">&#39;min_lr&#39;</span>, 1e-6)</div>
+<div class="line"><a id="l00516" name="l00516"></a><span class="lineno">  516</span>            )</div>
+<div class="line"><a id="l00517" name="l00517"></a><span class="lineno">  517</span>        <span class="keywordflow">elif</span> scheduler_type == <span class="stringliteral">&#39;step&#39;</span>:</div>
+<div class="line"><a id="l00518" name="l00518"></a><span class="lineno">  518</span>            <span class="keywordflow">return</span> torch.optim.lr_scheduler.StepLR(</div>
+<div class="line"><a id="l00519" name="l00519"></a><span class="lineno">  519</span>                self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#a89d5cc9dd12d183c56df425a93c9e49b">optimizer</a>,</div>
+<div class="line"><a id="l00520" name="l00520"></a><span class="lineno">  520</span>                step_size=self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#a380dd82710ea87c748c773ed2fb8c4d8">config</a>.get(<span class="stringliteral">&#39;step_size&#39;</span>, 20),</div>
+<div class="line"><a id="l00521" name="l00521"></a><span class="lineno">  521</span>                gamma=self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#a380dd82710ea87c748c773ed2fb8c4d8">config</a>.get(<span class="stringliteral">&#39;gamma&#39;</span>, 0.5)</div>
+<div class="line"><a id="l00522" name="l00522"></a><span class="lineno">  522</span>            )</div>
+<div class="line"><a id="l00523" name="l00523"></a><span class="lineno">  523</span>        <span class="keywordflow">elif</span> scheduler_type == <span class="stringliteral">&#39;none&#39;</span>:</div>
+<div class="line"><a id="l00524" name="l00524"></a><span class="lineno">  524</span>            <span class="keywordflow">return</span> <span class="keywordtype">None</span></div>
+<div class="line"><a id="l00525" name="l00525"></a><span class="lineno">  525</span>        <span class="keywordflow">else</span>:</div>
+<div class="line"><a id="l00526" name="l00526"></a><span class="lineno">  526</span>            <span class="keywordflow">raise</span> ValueError(f<span class="stringliteral">&quot;Unsupported scheduler type: {scheduler_type}&quot;</span>)</div>
+<div class="line"><a id="l00527" name="l00527"></a><span class="lineno">  527</span>    </div>
+</div>
+<div class="foldopen" id="foldopen00528" data-start="" data-end="">
+<div class="line"><a id="l00528" name="l00528"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#ad583dd0fd65f2b8e815bd0a97c566ef6">  528</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#ad583dd0fd65f2b8e815bd0a97c566ef6">step</a>(self, loss):</div>
+<div class="line"><a id="l00529" name="l00529"></a><span class="lineno">  529</span>        <span class="stringliteral">&quot;&quot;&quot;执行一步优化&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00530" name="l00530"></a><span class="lineno">  530</span>        self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#a89d5cc9dd12d183c56df425a93c9e49b">optimizer</a>.zero_grad()</div>
+<div class="line"><a id="l00531" name="l00531"></a><span class="lineno">  531</span>        loss.backward()</div>
+<div class="line"><a id="l00532" name="l00532"></a><span class="lineno">  532</span>        </div>
+<div class="line"><a id="l00533" name="l00533"></a><span class="lineno">  533</span>        <span class="comment"># 梯度裁剪</span></div>
+<div class="line"><a id="l00534" name="l00534"></a><span class="lineno">  534</span>        <span class="keywordflow">if</span> self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#a380dd82710ea87c748c773ed2fb8c4d8">config</a>.get(<span class="stringliteral">&#39;grad_clip&#39;</span>, 0) &gt; 0:</div>
+<div class="line"><a id="l00535" name="l00535"></a><span class="lineno">  535</span>            torch.nn.utils.clip_grad_norm_(</div>
+<div class="line"><a id="l00536" name="l00536"></a><span class="lineno">  536</span>                [p <span class="keywordflow">for</span> group <span class="keywordflow">in</span> self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#a5f611b3ef1676cbced8f43c8eaad5537">param_groups</a> <span class="keywordflow">for</span> p <span class="keywordflow">in</span> group[<span class="stringliteral">&#39;params&#39;</span>]],</div>
+<div class="line"><a id="l00537" name="l00537"></a><span class="lineno">  537</span>                self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#a380dd82710ea87c748c773ed2fb8c4d8">config</a>[<span class="stringliteral">&#39;grad_clip&#39;</span>]</div>
+<div class="line"><a id="l00538" name="l00538"></a><span class="lineno">  538</span>            )</div>
+<div class="line"><a id="l00539" name="l00539"></a><span class="lineno">  539</span>        </div>
+<div class="line"><a id="l00540" name="l00540"></a><span class="lineno">  540</span>        self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#a89d5cc9dd12d183c56df425a93c9e49b">optimizer</a>.<a class="code hl_function" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#ad583dd0fd65f2b8e815bd0a97c566ef6">step</a>()</div>
+<div class="line"><a id="l00541" name="l00541"></a><span class="lineno">  541</span>        </div>
+<div class="line"><a id="l00542" name="l00542"></a><span class="lineno">  542</span>        <span class="comment"># 更新学习率</span></div>
+<div class="line"><a id="l00543" name="l00543"></a><span class="lineno">  543</span>        <span class="keywordflow">if</span> self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#a454bfca06958ac797ae7073c2601850c">scheduler</a>:</div>
+<div class="line"><a id="l00544" name="l00544"></a><span class="lineno">  544</span>            self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#a454bfca06958ac797ae7073c2601850c">scheduler</a>.<a class="code hl_function" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#ad583dd0fd65f2b8e815bd0a97c566ef6">step</a>()</div>
+<div class="line"><a id="l00545" name="l00545"></a><span class="lineno">  545</span>    </div>
+</div>
+<div class="foldopen" id="foldopen00546" data-start="" data-end="">
+<div class="line"><a id="l00546" name="l00546"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#aca9e789f720abf9ab058fe3b69404972">  546</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#aca9e789f720abf9ab058fe3b69404972">get_lr</a>(self):</div>
+<div class="line"><a id="l00547" name="l00547"></a><span class="lineno">  547</span>        <span class="stringliteral">&quot;&quot;&quot;获取当前学习率&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00548" name="l00548"></a><span class="lineno">  548</span>        <span class="keywordflow">return</span> [group[<span class="stringliteral">&#39;lr&#39;</span>] <span class="keywordflow">for</span> group <span class="keywordflow">in</span> self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#a89d5cc9dd12d183c56df425a93c9e49b">optimizer</a>.param_groups]</div>
+<div class="line"><a id="l00549" name="l00549"></a><span class="lineno">  549</span>    </div>
+</div>
+<div class="foldopen" id="foldopen00550" data-start="" data-end="">
+<div class="line"><a id="l00550" name="l00550"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#aa5bd631d1b6c4f3e2d7bf516be2cf2e0">  550</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#aa5bd631d1b6c4f3e2d7bf516be2cf2e0">state_dict</a>(self):</div>
+<div class="line"><a id="l00551" name="l00551"></a><span class="lineno">  551</span>        <span class="stringliteral">&quot;&quot;&quot;获取状态字典&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00552" name="l00552"></a><span class="lineno">  552</span>        <span class="keywordflow">return</span> {</div>
+<div class="line"><a id="l00553" name="l00553"></a><span class="lineno">  553</span>            <span class="stringliteral">&#39;optimizer&#39;</span>: self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#a89d5cc9dd12d183c56df425a93c9e49b">optimizer</a>.<a class="code hl_function" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#aa5bd631d1b6c4f3e2d7bf516be2cf2e0">state_dict</a>(),</div>
+<div class="line"><a id="l00554" name="l00554"></a><span class="lineno">  554</span>            <span class="stringliteral">&#39;scheduler&#39;</span>: self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#a454bfca06958ac797ae7073c2601850c">scheduler</a>.<a class="code hl_function" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#aa5bd631d1b6c4f3e2d7bf516be2cf2e0">state_dict</a>() <span class="keywordflow">if</span> self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#a454bfca06958ac797ae7073c2601850c">scheduler</a> <span class="keywordflow">else</span> <span class="keywordtype">None</span></div>
+<div class="line"><a id="l00555" name="l00555"></a><span class="lineno">  555</span>        }</div>
+<div class="line"><a id="l00556" name="l00556"></a><span class="lineno">  556</span>    </div>
+</div>
+<div class="foldopen" id="foldopen00557" data-start="" data-end="">
+<div class="line"><a id="l00557" name="l00557"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#a32519fdd389894c9f1dc3fdce5b58c0b">  557</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#a32519fdd389894c9f1dc3fdce5b58c0b">load_state_dict</a>(self, state_dict):</div>
+<div class="line"><a id="l00558" name="l00558"></a><span class="lineno">  558</span>        <span class="stringliteral">&quot;&quot;&quot;加载状态字典&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00559" name="l00559"></a><span class="lineno">  559</span>        self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#a89d5cc9dd12d183c56df425a93c9e49b">optimizer</a>.<a class="code hl_function" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#a32519fdd389894c9f1dc3fdce5b58c0b">load_state_dict</a>(state_dict[<span class="stringliteral">&#39;optimizer&#39;</span>])</div>
+<div class="line"><a id="l00560" name="l00560"></a><span class="lineno">  560</span>        <span class="keywordflow">if</span> self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#a454bfca06958ac797ae7073c2601850c">scheduler</a> <span class="keywordflow">and</span> state_dict[<span class="stringliteral">&#39;scheduler&#39;</span>]:</div>
+<div class="line"><a id="l00561" name="l00561"></a><span class="lineno">  561</span>            self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#a454bfca06958ac797ae7073c2601850c">scheduler</a>.<a class="code hl_function" href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#a32519fdd389894c9f1dc3fdce5b58c0b">load_state_dict</a>(state_dict[<span class="stringliteral">&#39;scheduler&#39;</span>]) </div>
+</div>
+</div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1architect_1_1Architect_html"><div class="ttname"><a href="classneuroexapt_1_1core_1_1architect_1_1Architect.html">neuroexapt.core.architect.Architect</a></div><div class="ttdef"><b>Definition</b> <a href="architect_8py_source.html#l00018">architect.py:18</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1architect_1_1Architect_html_a1a6f0b22b70e0a9a5507e03c409e3dc0"><div class="ttname"><a href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a1a6f0b22b70e0a9a5507e03c409e3dc0">neuroexapt.core.architect.Architect.warmup_epochs</a></div><div class="ttdeci">warmup_epochs</div><div class="ttdef"><b>Definition</b> <a href="architect_8py_source.html#l00035">architect.py:35</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1architect_1_1Architect_html_a29f176d7054f258c9125b02a72faa42f"><div class="ttname"><a href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a29f176d7054f258c9125b02a72faa42f">neuroexapt.core.architect.Architect.current_epoch</a></div><div class="ttdeci">current_epoch</div><div class="ttdef"><b>Definition</b> <a href="architect_8py_source.html#l00036">architect.py:36</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1architect_1_1Architect_html_a308cee7ca26b699d4b4decd39df5db0f"><div class="ttname"><a href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a308cee7ca26b699d4b4decd39df5db0f">neuroexapt.core.architect.Architect.arch_update_freq</a></div><div class="ttdeci">arch_update_freq</div><div class="ttdef"><b>Definition</b> <a href="architect_8py_source.html#l00034">architect.py:34</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1architect_1_1Architect_html_a8493e20b4b3db61e80298ed278b26452"><div class="ttname"><a href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a8493e20b4b3db61e80298ed278b26452">neuroexapt.core.architect.Architect.model</a></div><div class="ttdeci">model</div><div class="ttdef"><b>Definition</b> <a href="architect_8py_source.html#l00028">architect.py:28</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1architect_1_1Architect_html_a8d908ad32c2131370fd65ff59a52ae00"><div class="ttname"><a href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a8d908ad32c2131370fd65ff59a52ae00">neuroexapt.core.architect.Architect.optimizer</a></div><div class="ttdeci">optimizer</div><div class="ttdef"><b>Definition</b> <a href="architect_8py_source.html#l00029">architect.py:29</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1architect_1_1Architect_html_aabd1a78e03b1f10fd5374682d640499d"><div class="ttname"><a href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#aabd1a78e03b1f10fd5374682d640499d">neuroexapt.core.architect.Architect.should_update_arch</a></div><div class="ttdeci">bool should_update_arch(self)</div><div class="ttdef"><b>Definition</b> <a href="architect_8py_source.html#l00043">architect.py:43</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer_html"><div class="ttname"><a href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html">neuroexapt.core.optimized_architect.ArchitectureSpaceOptimizer</a></div><div class="ttdef"><b>Definition</b> <a href="optimized__architect_8py_source.html#l00425">optimized_architect.py:425</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer_html_a32519fdd389894c9f1dc3fdce5b58c0b"><div class="ttname"><a href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#a32519fdd389894c9f1dc3fdce5b58c0b">neuroexapt.core.optimized_architect.ArchitectureSpaceOptimizer.load_state_dict</a></div><div class="ttdeci">load_state_dict(self, state_dict)</div><div class="ttdef"><b>Definition</b> <a href="optimized__architect_8py_source.html#l00557">optimized_architect.py:557</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer_html_a380dd82710ea87c748c773ed2fb8c4d8"><div class="ttname"><a href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#a380dd82710ea87c748c773ed2fb8c4d8">neuroexapt.core.optimized_architect.ArchitectureSpaceOptimizer.config</a></div><div class="ttdeci">config</div><div class="ttdef"><b>Definition</b> <a href="optimized__architect_8py_source.html#l00433">optimized_architect.py:433</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer_html_a454bfca06958ac797ae7073c2601850c"><div class="ttname"><a href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#a454bfca06958ac797ae7073c2601850c">neuroexapt.core.optimized_architect.ArchitectureSpaceOptimizer.scheduler</a></div><div class="ttdeci">scheduler</div><div class="ttdef"><b>Definition</b> <a href="optimized__architect_8py_source.html#l00442">optimized_architect.py:442</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer_html_a5f611b3ef1676cbced8f43c8eaad5537"><div class="ttname"><a href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#a5f611b3ef1676cbced8f43c8eaad5537">neuroexapt.core.optimized_architect.ArchitectureSpaceOptimizer.param_groups</a></div><div class="ttdeci">param_groups</div><div class="ttdef"><b>Definition</b> <a href="optimized__architect_8py_source.html#l00436">optimized_architect.py:436</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer_html_a638c0254fdbebdbc4fad04a70a00ed9d"><div class="ttname"><a href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#a638c0254fdbebdbc4fad04a70a00ed9d">neuroexapt.core.optimized_architect.ArchitectureSpaceOptimizer._create_scheduler</a></div><div class="ttdeci">_create_scheduler(self)</div><div class="ttdef"><b>Definition</b> <a href="optimized__architect_8py_source.html#l00507">optimized_architect.py:507</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer_html_a6e4919037124fa477cb8b408dac82c1c"><div class="ttname"><a href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#a6e4919037124fa477cb8b408dac82c1c">neuroexapt.core.optimized_architect.ArchitectureSpaceOptimizer.__init__</a></div><div class="ttdeci">__init__(self, model, Dict[str, Any] optimizer_config, Optional[PerformanceMonitor] monitor=None)</div><div class="ttdef"><b>Definition</b> <a href="optimized__architect_8py_source.html#l00430">optimized_architect.py:430</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer_html_a7c1c2cc572fac17c4ecf0d7122a707bd"><div class="ttname"><a href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#a7c1c2cc572fac17c4ecf0d7122a707bd">neuroexapt.core.optimized_architect.ArchitectureSpaceOptimizer._create_parameter_groups</a></div><div class="ttdeci">List[Dict[str, Any]] _create_parameter_groups(self)</div><div class="ttdef"><b>Definition</b> <a href="optimized__architect_8py_source.html#l00447">optimized_architect.py:447</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer_html_a88f719009ef902a7fb351046dd9f5197"><div class="ttname"><a href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#a88f719009ef902a7fb351046dd9f5197">neuroexapt.core.optimized_architect.ArchitectureSpaceOptimizer.monitor</a></div><div class="ttdeci">monitor</div><div class="ttdef"><b>Definition</b> <a href="optimized__architect_8py_source.html#l00432">optimized_architect.py:432</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer_html_a89d5cc9dd12d183c56df425a93c9e49b"><div class="ttname"><a href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#a89d5cc9dd12d183c56df425a93c9e49b">neuroexapt.core.optimized_architect.ArchitectureSpaceOptimizer.optimizer</a></div><div class="ttdeci">optimizer</div><div class="ttdef"><b>Definition</b> <a href="optimized__architect_8py_source.html#l00439">optimized_architect.py:439</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer_html_aa5bd631d1b6c4f3e2d7bf516be2cf2e0"><div class="ttname"><a href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#aa5bd631d1b6c4f3e2d7bf516be2cf2e0">neuroexapt.core.optimized_architect.ArchitectureSpaceOptimizer.state_dict</a></div><div class="ttdeci">state_dict(self)</div><div class="ttdef"><b>Definition</b> <a href="optimized__architect_8py_source.html#l00550">optimized_architect.py:550</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer_html_ac08037b95ea4647e1e82a564ba1d838d"><div class="ttname"><a href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#ac08037b95ea4647e1e82a564ba1d838d">neuroexapt.core.optimized_architect.ArchitectureSpaceOptimizer.model</a></div><div class="ttdeci">model</div><div class="ttdef"><b>Definition</b> <a href="optimized__architect_8py_source.html#l00431">optimized_architect.py:431</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer_html_aca9e789f720abf9ab058fe3b69404972"><div class="ttname"><a href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#aca9e789f720abf9ab058fe3b69404972">neuroexapt.core.optimized_architect.ArchitectureSpaceOptimizer.get_lr</a></div><div class="ttdeci">get_lr(self)</div><div class="ttdef"><b>Definition</b> <a href="optimized__architect_8py_source.html#l00546">optimized_architect.py:546</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer_html_ad583dd0fd65f2b8e815bd0a97c566ef6"><div class="ttname"><a href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#ad583dd0fd65f2b8e815bd0a97c566ef6">neuroexapt.core.optimized_architect.ArchitectureSpaceOptimizer.step</a></div><div class="ttdeci">step(self, loss)</div><div class="ttdef"><b>Definition</b> <a href="optimized__architect_8py_source.html#l00528">optimized_architect.py:528</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer_html_af5edcaf537c47d9f6b4ca3a15d6998ae"><div class="ttname"><a href="classneuroexapt_1_1core_1_1optimized__architect_1_1ArchitectureSpaceOptimizer.html#af5edcaf537c47d9f6b4ca3a15d6998ae">neuroexapt.core.optimized_architect.ArchitectureSpaceOptimizer._create_optimizer</a></div><div class="ttdeci">_create_optimizer(self)</div><div class="ttdef"><b>Definition</b> <a href="optimized__architect_8py_source.html#l00494">optimized_architect.py:494</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect_html"><div class="ttname"><a href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html">neuroexapt.core.optimized_architect.OptimizedArchitect</a></div><div class="ttdef"><b>Definition</b> <a href="optimized__architect_8py_source.html#l00021">optimized_architect.py:21</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect_html_a0ca1be201e44549edf3ea8a953051484"><div class="ttname"><a href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a0ca1be201e44549edf3ea8a953051484">neuroexapt.core.optimized_architect.OptimizedArchitect.__init__</a></div><div class="ttdeci">__init__(self, model, args, Optional[PerformanceMonitor] performance_monitor=None)</div><div class="ttdef"><b>Definition</b> <a href="optimized__architect_8py_source.html#l00033">optimized_architect.py:33</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect_html_a0f2c7bd94d21d8418797b02d205b5762"><div class="ttname"><a href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a0f2c7bd94d21d8418797b02d205b5762">neuroexapt.core.optimized_architect.OptimizedArchitect.set_epoch</a></div><div class="ttdeci">set_epoch(self, int epoch)</div><div class="ttdef"><b>Definition</b> <a href="optimized__architect_8py_source.html#l00090">optimized_architect.py:90</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect_html_a124602001dc6489015a371fa1a25a2fd"><div class="ttname"><a href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a124602001dc6489015a371fa1a25a2fd">neuroexapt.core.optimized_architect.OptimizedArchitect._compute_arch_loss</a></div><div class="ttdeci">_compute_arch_loss(self, input_valid, target_valid)</div><div class="ttdef"><b>Definition</b> <a href="optimized__architect_8py_source.html#l00301">optimized_architect.py:301</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect_html_a125272befb9bb464e30b73686da4856b"><div class="ttname"><a href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a125272befb9bb464e30b73686da4856b">neuroexapt.core.optimized_architect.OptimizedArchitect._clip_arch_gradients</a></div><div class="ttdeci">_clip_arch_gradients(self, float max_norm=5.0)</div><div class="ttdef"><b>Definition</b> <a href="optimized__architect_8py_source.html#l00309">optimized_architect.py:309</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect_html_a12e6ddc93afba3d3bf2156219d5dfd70"><div class="ttname"><a href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a12e6ddc93afba3d3bf2156219d5dfd70">neuroexapt.core.optimized_architect.OptimizedArchitect.warmup_epochs</a></div><div class="ttdeci">warmup_epochs</div><div class="ttdef"><b>Definition</b> <a href="optimized__architect_8py_source.html#l00041">optimized_architect.py:41</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect_html_a179a17f7c32088285bd216ba2160078d"><div class="ttname"><a href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a179a17f7c32088285bd216ba2160078d">neuroexapt.core.optimized_architect.OptimizedArchitect.total_epochs</a></div><div class="ttdeci">total_epochs</div><div class="ttdef"><b>Definition</b> <a href="optimized__architect_8py_source.html#l00047">optimized_architect.py:47</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect_html_a1d9bdf0c329999d034c360caa97d8e47"><div class="ttname"><a href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a1d9bdf0c329999d034c360caa97d8e47">neuroexapt.core.optimized_architect.OptimizedArchitect.arch_update_freq</a></div><div class="ttdeci">arch_update_freq</div><div class="ttdef"><b>Definition</b> <a href="optimized__architect_8py_source.html#l00040">optimized_architect.py:40</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect_html_a204ac7bae634625ea77702c518e16a62"><div class="ttname"><a href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a204ac7bae634625ea77702c518e16a62">neuroexapt.core.optimized_architect.OptimizedArchitect.optimizer</a></div><div class="ttdeci">optimizer</div><div class="ttdef"><b>Definition</b> <a href="optimized__architect_8py_source.html#l00061">optimized_architect.py:61</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect_html_a24a89082b0629fdcb31de6835dfa8297"><div class="ttname"><a href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a24a89082b0629fdcb31de6835dfa8297">neuroexapt.core.optimized_architect.OptimizedArchitect.cleanup_gradients</a></div><div class="ttdeci">cleanup_gradients(self)</div><div class="ttdef"><b>Definition</b> <a href="optimized__architect_8py_source.html#l00367">optimized_architect.py:367</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect_html_a267fbd9bc2cde10563220bf5b2b82c13"><div class="ttname"><a href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a267fbd9bc2cde10563220bf5b2b82c13">neuroexapt.core.optimized_architect.OptimizedArchitect.get_arch_statistics</a></div><div class="ttdeci">Dict[str, Any] get_arch_statistics(self)</div><div class="ttdef"><b>Definition</b> <a href="optimized__architect_8py_source.html#l00333">optimized_architect.py:333</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect_html_a2c843ff074fcf032a806c8581319733b"><div class="ttname"><a href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a2c843ff074fcf032a806c8581319733b">neuroexapt.core.optimized_architect.OptimizedArchitect.load_checkpoint</a></div><div class="ttdeci">load_checkpoint(self, str filepath)</div><div class="ttdef"><b>Definition</b> <a href="optimized__architect_8py_source.html#l00408">optimized_architect.py:408</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect_html_a2d97313ee854d2efe121a6298be31450"><div class="ttname"><a href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a2d97313ee854d2efe121a6298be31450">neuroexapt.core.optimized_architect.OptimizedArchitect.arch_early_stop_patience</a></div><div class="ttdeci">arch_early_stop_patience</div><div class="ttdef"><b>Definition</b> <a href="optimized__architect_8py_source.html#l00044">optimized_architect.py:44</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect_html_a2e2d401412428110ddfdb302f279f66e"><div class="ttname"><a href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a2e2d401412428110ddfdb302f279f66e">neuroexapt.core.optimized_architect.OptimizedArchitect.grad_accumulation_steps</a></div><div class="ttdeci">grad_accumulation_steps</div><div class="ttdef"><b>Definition</b> <a href="optimized__architect_8py_source.html#l00043">optimized_architect.py:43</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect_html_a353e6624eef30f02d29063312385dc8e"><div class="ttname"><a href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a353e6624eef30f02d29063312385dc8e">neuroexapt.core.optimized_architect.OptimizedArchitect.step</a></div><div class="ttdeci">step(self, input_train, target_train, input_valid, target_valid, eta, network_optimizer, unrolled)</div><div class="ttdef"><b>Definition</b> <a href="optimized__architect_8py_source.html#l00151">optimized_architect.py:151</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect_html_a3c9859a60c3ae0d025fc52d1eafac3be"><div class="ttname"><a href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a3c9859a60c3ae0d025fc52d1eafac3be">neuroexapt.core.optimized_architect.OptimizedArchitect._create_optimized_optimizer</a></div><div class="ttdeci">_create_optimized_optimizer(self, args)</div><div class="ttdef"><b>Definition</b> <a href="optimized__architect_8py_source.html#l00071">optimized_architect.py:71</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect_html_a41b0956ff0d6be0d0f6e11fa4339ed83"><div class="ttname"><a href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a41b0956ff0d6be0d0f6e11fa4339ed83">neuroexapt.core.optimized_architect.OptimizedArchitect.should_update_arch</a></div><div class="ttdeci">bool should_update_arch(self)</div><div class="ttdef"><b>Definition</b> <a href="optimized__architect_8py_source.html#l00117">optimized_architect.py:117</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect_html_a446f06627dcf5c304b3b281d28ac1f5e"><div class="ttname"><a href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a446f06627dcf5c304b3b281d28ac1f5e">neuroexapt.core.optimized_architect.OptimizedArchitect.arch_step_count</a></div><div class="ttdeci">arch_step_count</div><div class="ttdef"><b>Definition</b> <a href="optimized__architect_8py_source.html#l00051">optimized_architect.py:51</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect_html_a4495f132dc4637d0878a60ddaf679530"><div class="ttname"><a href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a4495f132dc4637d0878a60ddaf679530">neuroexapt.core.optimized_architect.OptimizedArchitect.accumulation_count</a></div><div class="ttdeci">accumulation_count</div><div class="ttdef"><b>Definition</b> <a href="optimized__architect_8py_source.html#l00058">optimized_architect.py:58</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect_html_a5ab957196c5bbe42f5c2207e84d04784"><div class="ttname"><a href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a5ab957196c5bbe42f5c2207e84d04784">neuroexapt.core.optimized_architect.OptimizedArchitect.monitor</a></div><div class="ttdeci">monitor</div><div class="ttdef"><b>Definition</b> <a href="optimized__architect_8py_source.html#l00037">optimized_architect.py:37</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect_html_a5b21459921885f5bec3cf582fd5d8d22"><div class="ttname"><a href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a5b21459921885f5bec3cf582fd5d8d22">neuroexapt.core.optimized_architect.OptimizedArchitect.use_first_order</a></div><div class="ttdeci">use_first_order</div><div class="ttdef"><b>Definition</b> <a href="optimized__architect_8py_source.html#l00042">optimized_architect.py:42</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect_html_a67905b3b3dbe578e387757c1c5d620d0"><div class="ttname"><a href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a67905b3b3dbe578e387757c1c5d620d0">neuroexapt.core.optimized_architect.OptimizedArchitect._adjust_learning_rate</a></div><div class="ttdeci">_adjust_learning_rate(self, int epoch)</div><div class="ttdef"><b>Definition</b> <a href="optimized__architect_8py_source.html#l00098">optimized_architect.py:98</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect_html_a6a96d86f95d1cdeb94095da2ba820b16"><div class="ttname"><a href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a6a96d86f95d1cdeb94095da2ba820b16">neuroexapt.core.optimized_architect.OptimizedArchitect.current_epoch</a></div><div class="ttdeci">current_epoch</div><div class="ttdef"><b>Definition</b> <a href="optimized__architect_8py_source.html#l00050">optimized_architect.py:50</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect_html_a7293e57d0d8f22a7e143259d90e2422c"><div class="ttname"><a href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a7293e57d0d8f22a7e143259d90e2422c">neuroexapt.core.optimized_architect.OptimizedArchitect.accumulated_grads</a></div><div class="ttdeci">accumulated_grads</div><div class="ttdef"><b>Definition</b> <a href="optimized__architect_8py_source.html#l00057">optimized_architect.py:57</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect_html_a75a7205287688832b32a2c8fbb8c8339"><div class="ttname"><a href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a75a7205287688832b32a2c8fbb8c8339">neuroexapt.core.optimized_architect.OptimizedArchitect._compute_virtual_model_efficient</a></div><div class="ttdeci">_compute_virtual_model_efficient(self, input_train, target_train, eta, network_optimizer)</div><div class="ttdef"><b>Definition</b> <a href="optimized__architect_8py_source.html#l00243">optimized_architect.py:243</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect_html_a7a8be7ffb1661607129cb1cf7041b481"><div class="ttname"><a href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a7a8be7ffb1661607129cb1cf7041b481">neuroexapt.core.optimized_architect.OptimizedArchitect._update_arch_loss_history</a></div><div class="ttdeci">_update_arch_loss_history(self, float loss_value)</div><div class="ttdef"><b>Definition</b> <a href="optimized__architect_8py_source.html#l00318">optimized_architect.py:318</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect_html_a93cd2ed14f9c1d834bfaf8c32bd67289"><div class="ttname"><a href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a93cd2ed14f9c1d834bfaf8c32bd67289">neuroexapt.core.optimized_architect.OptimizedArchitect._step_second_order</a></div><div class="ttdeci">_step_second_order(self, input_train, target_train, input_valid, target_valid, eta, network_optimizer)</div><div class="ttdef"><b>Definition</b> <a href="optimized__architect_8py_source.html#l00209">optimized_architect.py:209</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect_html_a9d6bb70b51c7fdb1bc07d3acc8e8cf92"><div class="ttname"><a href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a9d6bb70b51c7fdb1bc07d3acc8e8cf92">neuroexapt.core.optimized_architect.OptimizedArchitect.arch_loss_history</a></div><div class="ttdeci">arch_loss_history</div><div class="ttdef"><b>Definition</b> <a href="optimized__architect_8py_source.html#l00053">optimized_architect.py:53</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect_html_abb3a497f8b1c228a0c77ea2cad96c92f"><div class="ttname"><a href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#abb3a497f8b1c228a0c77ea2cad96c92f">neuroexapt.core.optimized_architect.OptimizedArchitect._compute_loss_trend</a></div><div class="ttdeci">str _compute_loss_trend(self)</div><div class="ttdef"><b>Definition</b> <a href="optimized__architect_8py_source.html#l00352">optimized_architect.py:352</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect_html_ac96bf17228068013881d6f61e0c43aab"><div class="ttname"><a href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#ac96bf17228068013881d6f61e0c43aab">neuroexapt.core.optimized_architect.OptimizedArchitect._create_virtual_model</a></div><div class="ttdeci">_create_virtual_model(self, virtual_params)</div><div class="ttdef"><b>Definition</b> <a href="optimized__architect_8py_source.html#l00266">optimized_architect.py:266</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect_html_acb4b1d12b2785725e576f7118e8dec1a"><div class="ttname"><a href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#acb4b1d12b2785725e576f7118e8dec1a">neuroexapt.core.optimized_architect.OptimizedArchitect._step_first_order</a></div><div class="ttdeci">_step_first_order(self, input_valid, target_valid)</div><div class="ttdef"><b>Definition</b> <a href="optimized__architect_8py_source.html#l00189">optimized_architect.py:189</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect_html_acc40b5b6ae0f866dc8f51eabe3561e96"><div class="ttname"><a href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#acc40b5b6ae0f866dc8f51eabe3561e96">neuroexapt.core.optimized_architect.OptimizedArchitect.last_arch_loss</a></div><div class="ttdeci">last_arch_loss</div><div class="ttdef"><b>Definition</b> <a href="optimized__architect_8py_source.html#l00052">optimized_architect.py:52</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect_html_acf10bda49d95feb5f428ff9aac3662fd"><div class="ttname"><a href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#acf10bda49d95feb5f428ff9aac3662fd">neuroexapt.core.optimized_architect.OptimizedArchitect._step_with_accumulation</a></div><div class="ttdeci">_step_with_accumulation(self, input_valid, target_valid)</div><div class="ttdef"><b>Definition</b> <a href="optimized__architect_8py_source.html#l00272">optimized_architect.py:272</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect_html_af64d5b668112726584a303a8dd6379f2"><div class="ttname"><a href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#af64d5b668112726584a303a8dd6379f2">neuroexapt.core.optimized_architect.OptimizedArchitect.no_improve_count</a></div><div class="ttdeci">no_improve_count</div><div class="ttdef"><b>Definition</b> <a href="optimized__architect_8py_source.html#l00054">optimized_architect.py:54</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect_html_afc398a0fb2c54377975d7c864cfeaebe"><div class="ttname"><a href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#afc398a0fb2c54377975d7c864cfeaebe">neuroexapt.core.optimized_architect.OptimizedArchitect.save_checkpoint</a></div><div class="ttdeci">save_checkpoint(self, str filepath)</div><div class="ttdef"><b>Definition</b> <a href="optimized__architect_8py_source.html#l00392">optimized_architect.py:392</a></div></div>
+<div class="ttc" id="anamespacetorch_1_1autograd_html"><div class="ttname"><a href="namespacetorch_1_1autograd.html">torch.autograd</a></div></div>
+</div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
+<!-- do not remove this div, it is closed by doxygen! -->
+</div>
+<!-- Custom Footer -->
+<div style="background: #f8f9fa; border-top: 1px solid #e9ecef; margin-top: 50px; padding: 30px 0; text-align: center;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-bottom: 20px;">
+            <!-- Project Info -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🧠 NeuroExapt</h4>
+                <p style="color: #6c757d; margin: 0; font-size: 0.9em;">
+                    Advanced Neural Architecture Search and Dynamic Morphogenesis Framework for next-generation AI research.
+                </p>
+            </div>
+            <!-- Quick Links -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">📚 Quick Links</h4>
+                <div style="text-align: left;">
+                    <a href="index.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🏠 Home</a>
+                    <a href="modules.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📦 Modules</a>
+                    <a href="examples.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💡 Examples</a>
+                    <a href="files.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📁 Files</a>
+                </div>
+            </div>
+            <!-- Resources -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🔗 Resources</h4>
+                <div style="text-align: left;">
+                    <a href="https://github.com/your-username/neuroexapt" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💻 GitHub Repository</a>
+                    <a href="https://github.com/your-username/neuroexapt/issues" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🐛 Issue Tracker</a>
+                    <a href="https://github.com/your-username/neuroexapt/wiki" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📖 Wiki</a>
+                    <a href="https://github.com/your-username/neuroexapt/releases" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🚀 Releases</a>
+                </div>
+            </div>
+        </div>
+        <hr style="border: 0; height: 1px; background: #e9ecef; margin: 20px 0;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+            <div style="color: #6c757d; font-size: 0.9em;">
+                © 2024 NeuroExapt Project. Generated with 
+                <a href="https://www.doxygen.nl/index.html" style="color: #667eea; text-decoration: none;">Doxygen 1.9.8</a>
+            </div>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <span style="font-size: 0.9em; color: #6c757d;">Built with ❤️ for AI Research</span>
+                <div style="display: flex; gap: 10px;">
+                    <span style="background: #28a745; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">🟢 Active</span>
+                    <span style="background: #17a2b8; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">v3.0</span>
+                </div>
+            </div>
+        </div>
+        <!-- Technology Stack -->
+        <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #e9ecef;">
+            <div style="font-size: 0.8em; color: #868e96; text-align: center;">
+                <strong>Built with:</strong>
+                <span style="margin: 0 5px;">🐍 Python</span>
+                <span style="margin: 0 5px;">🔥 PyTorch</span>
+                <span style="margin: 0 5px;">⚡ CUDA</span>
+                <span style="margin: 0 5px;">🧮 NumPy</span>
+                <span style="margin: 0 5px;">📊 Matplotlib</span>
+                <span style="margin: 0 5px;">🚀 Triton</span>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Back to top button -->
+<div id="back-to-top" style="position: fixed; bottom: 20px; right: 20px; display: none; z-index: 1000;">
+    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" 
+            style="background: #667eea; color: white; border: none; padding: 10px 15px; border-radius: 50%; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,0.2); font-size: 16px;">
+        ⬆️
+    </button>
+</div>
+<script>
+// Back to top button functionality
+window.addEventListener('scroll', function() {
+    const backToTop = document.getElementById('back-to-top');
+    if (window.pageYOffset > 300) {
+        backToTop.style.display = 'block';
+    } else {
+        backToTop.style.display = 'none';
+    }
+});
+// Enhanced search functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Add search enhancement if search box exists
+    const searchBox = document.getElementById('MSearchField');
+    if (searchBox) {
+        searchBox.placeholder = 'Search documentation... 🔍';
+        searchBox.style.borderRadius = '20px';
+        searchBox.style.padding = '8px 15px';
+    }
+    // Add copy code button to code blocks
+    const codeBlocks = document.querySelectorAll('.fragment');
+    codeBlocks.forEach(function(block) {
+        const copyBtn = document.createElement('button');
+        copyBtn.innerHTML = '📋';
+        copyBtn.title = 'Copy code';
+        copyBtn.style.cssText = 'position: absolute; top: 10px; right: 10px; background: #667eea; color: white; border: none; padding: 5px; border-radius: 3px; cursor: pointer; font-size: 12px;';
+        block.style.position = 'relative';
+        block.appendChild(copyBtn);
+        copyBtn.addEventListener('click', function() {
+            const text = block.textContent;
+            navigator.clipboard.writeText(text).then(function() {
+                copyBtn.innerHTML = '✅';
+                setTimeout(function() {
+                    copyBtn.innerHTML = '📋';
+                }, 2000);
+            });
+        });
+    });
+});
+// Dark mode toggle (optional)
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+}
+// Load saved dark mode preference
+if (localStorage.getItem('darkMode') === 'true') {
+    document.body.classList.add('dark-mode');
+}
+</script>
+</body>
+</html>

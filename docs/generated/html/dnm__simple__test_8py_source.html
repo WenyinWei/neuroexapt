@@ -1,0 +1,654 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="description" content="NeuroExapt - Advanced Neural Architecture Search and Dynamic Morphogenesis Framework">
+    <meta name="keywords" content="neural architecture search, dynamic morphogenesis, deep learning, AI, PyTorch">
+    <meta name="author" content="NeuroExapt Team">
+    <meta property="og:title" content="NeuroExapt Documentation">
+    <meta property="og:description" content="Advanced Neural Architecture Search Framework">
+    <meta property="og:type" content="website">
+
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>NeuroExapt: examples/dnm_simple_test.py Source File</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="custom.css" rel="stylesheet" type="text/css"/>
+<!-- NeuroExapt Custom Styles -->
+<style>
+/* Enhanced header styling */
+.header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+.header h1 {
+    margin: 0;
+    font-size: 2.5em;
+    font-weight: 300;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+.header .subtitle {
+    font-size: 1.2em;
+    opacity: 0.9;
+    margin-top: 10px;
+}
+/* Enhanced navigation */
+.tablist {
+    background: #f8f9fa;
+    border-bottom: 2px solid #e9ecef;
+}
+.tablist li.current a {
+    background: #667eea;
+    color: white;
+}
+/* Improved content layout */
+.contents {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+/* Code highlighting */
+.fragment {
+    background: #f8f9fa;
+    border-left: 4px solid #667eea;
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 0 8px 8px 0;
+}
+/* Enhanced tables */
+table.memberdecls {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 20px 0;
+}
+table.memberdecls td {
+    border: 1px solid #e9ecef;
+    padding: 12px;
+}
+/* Better typography */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #343a40;
+}
+h1, h2, h3, h4, h5, h6 {
+    color: #495057;
+    font-weight: 500;
+}
+/* Responsive design */
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 2em;
+    }
+    .contents {
+        padding: 15px;
+    }
+}
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #1a1a1a;
+        color: #e9ecef;
+    }
+    .header {
+        background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+    }
+    .fragment {
+        background: #2d3748;
+        color: #e9ecef;
+    }
+}
+</style>
+<!-- Analytics (if needed) -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<!--
+<script async src="https://www.googletagmanager.com/gtag/js?id=GA_TRACKING_ID"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'GA_TRACKING_ID');
+</script>
+-->
+</head>
+<body>
+<!-- Custom Header -->
+<div class="header">
+    <h1>🧠 NeuroExapt</h1>
+    <div class="subtitle">Advanced Neural Architecture Search and Dynamic Morphogenesis Framework</div>
+    <div style="margin-top: 15px; font-size: 0.9em;">
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🚀 Dynamic Neural Morphogenesis
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🔬 Advanced Architecture Search
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            ⚡ High-Performance Computing
+        </span>
+    </div>
+</div>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! --><!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function() { init_codefold(0); });
+/* @license-end */
+</script>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('dnm__simple__test_8py_source.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">dnm_simple_test.py</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="dnm__simple__test_8py.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno"><a class="line" href="namespaceexamples_1_1dnm__simple__test.html">    1</a></span><span class="comment">#!/usr/bin/env python3</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="stringliteral">&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="stringliteral">简化的DNM测试 - 修复原始问题</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="stringliteral"></span> </div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="stringliteral">解决的问题：</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="stringliteral">1. view size is not compatible 错误</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="stringliteral">2. 架构实际未演化的问题</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="stringliteral">3. 提升性能表现</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="stringliteral">&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="keyword">import</span> torch</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="keyword">import</span> torch.optim <span class="keyword">as</span> optim</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="keyword">import</span> torchvision</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">import</span> torchvision.transforms <span class="keyword">as</span> transforms</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="keyword">from</span> torch.utils.data <span class="keyword">import</span> DataLoader</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="keyword">import</span> time</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="keyword">import</span> os</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="keyword">import</span> sys</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="comment"># 添加项目路径</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="comment"># 导入修复后的DNM框架</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="keyword">from</span> <a class="code hl_namespace" href="namespaceneuroexapt_1_1core_1_1dnm__framework.html">neuroexapt.core.dnm_framework</a> <span class="keyword">import</span> DNMFramework</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
+<div class="foldopen" id="foldopen00028" data-start="" data-end="">
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno"><a class="line" href="classexamples_1_1dnm__simple__test_1_1SimpleCNN.html">   28</a></span><span class="keyword">class </span><a class="code hl_class" href="classexamples_1_1dnm__simple__test_1_1SimpleCNN.html">SimpleCNN</a>(nn.Module):</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    <span class="stringliteral">&quot;&quot;&quot;简单但可演化的CNN模型&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    </div>
+<div class="foldopen" id="foldopen00031" data-start="" data-end="">
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="classexamples_1_1dnm__simple__test_1_1SimpleCNN.html#a52425ee896f66d9baef70bfe76c90cde">   31</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classexamples_1_1dnm__simple__test_1_1SimpleCNN.html#a52425ee896f66d9baef70bfe76c90cde">__init__</a>(self, num_classes=10):</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>        super().<a class="code hl_function" href="classexamples_1_1dnm__simple__test_1_1SimpleCNN.html#a52425ee896f66d9baef70bfe76c90cde">__init__</a>()</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>        </div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>        <span class="comment"># 特征提取层</span></div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno"><a class="line" href="classexamples_1_1dnm__simple__test_1_1SimpleCNN.html#a0e2788a48e833e258d3252d175e2e050">   35</a></span>        self.<a class="code hl_variable" href="classexamples_1_1dnm__simple__test_1_1SimpleCNN.html#a0e2788a48e833e258d3252d175e2e050">features</a> = nn.Sequential(</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>            <span class="comment"># 第一组卷积</span></div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>            nn.Conv2d(3, 32, kernel_size=3, padding=1),</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>            nn.BatchNorm2d(32),</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>            nn.ReLU(inplace=<span class="keyword">True</span>),</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>            nn.MaxPool2d(2, 2),</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>            </div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>            <span class="comment"># 第二组卷积</span></div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>            nn.Conv2d(32, 64, kernel_size=3, padding=1),</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>            nn.BatchNorm2d(64),</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>            nn.ReLU(inplace=<span class="keyword">True</span>),</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>            nn.MaxPool2d(2, 2),</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>            </div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>            <span class="comment"># 第三组卷积</span></div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>            nn.Conv2d(64, 128, kernel_size=3, padding=1),</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>            nn.BatchNorm2d(128),</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>            nn.ReLU(inplace=<span class="keyword">True</span>),</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>            nn.MaxPool2d(2, 2),</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        )</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        </div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        <span class="comment"># 分类器</span></div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno"><a class="line" href="classexamples_1_1dnm__simple__test_1_1SimpleCNN.html#aa2513e096c8df4c02310c26dda2b5340">   56</a></span>        self.<a class="code hl_variable" href="classexamples_1_1dnm__simple__test_1_1SimpleCNN.html#aa2513e096c8df4c02310c26dda2b5340">classifier</a> = nn.Sequential(</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>            nn.AdaptiveAvgPool2d((1, 1)),</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>            nn.Flatten(),</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>            nn.Linear(128, 256),</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>            nn.ReLU(inplace=<span class="keyword">True</span>),</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>            nn.Dropout(0.5),</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>            nn.Linear(256, 128),</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>            nn.ReLU(inplace=<span class="keyword">True</span>),</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>            nn.Dropout(0.3),</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>            nn.Linear(128, num_classes)</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>        )</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>        </div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>        <span class="comment"># 权重初始化</span></div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>        self.<a class="code hl_function" href="classexamples_1_1dnm__simple__test_1_1SimpleCNN.html#a5c9167511e77bd34c7907fadacda84b0">_initialize_weights</a>()</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    </div>
+</div>
+<div class="foldopen" id="foldopen00071" data-start="" data-end="">
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno"><a class="line" href="classexamples_1_1dnm__simple__test_1_1SimpleCNN.html#a5c9167511e77bd34c7907fadacda84b0">   71</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classexamples_1_1dnm__simple__test_1_1SimpleCNN.html#a5c9167511e77bd34c7907fadacda84b0">_initialize_weights</a>(self):</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>        <span class="keywordflow">for</span> m <span class="keywordflow">in</span> self.modules():</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>            <span class="keywordflow">if</span> isinstance(m, nn.Conv2d):</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>                nn.init.kaiming_normal_(m.weight, mode=<span class="stringliteral">&#39;fan_out&#39;</span>, nonlinearity=<span class="stringliteral">&#39;relu&#39;</span>)</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>                <span class="keywordflow">if</span> m.bias <span class="keywordflow">is</span> <span class="keywordflow">not</span> <span class="keywordtype">None</span>:</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>                    nn.init.constant_(m.bias, 0)</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>            <span class="keywordflow">elif</span> isinstance(m, nn.BatchNorm2d):</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>                nn.init.constant_(m.weight, 1)</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>                nn.init.constant_(m.bias, 0)</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>            <span class="keywordflow">elif</span> isinstance(m, nn.Linear):</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>                nn.init.normal_(m.weight, 0, 0.01)</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>                nn.init.constant_(m.bias, 0)</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    </div>
+</div>
+<div class="foldopen" id="foldopen00084" data-start="" data-end="">
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno"><a class="line" href="classexamples_1_1dnm__simple__test_1_1SimpleCNN.html#a1de0663bbd131e4c94fa3eaa69bf8d93">   84</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classexamples_1_1dnm__simple__test_1_1SimpleCNN.html#a1de0663bbd131e4c94fa3eaa69bf8d93">forward</a>(self, x):</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>        x = self.<a class="code hl_variable" href="classexamples_1_1dnm__simple__test_1_1SimpleCNN.html#a0e2788a48e833e258d3252d175e2e050">features</a>(x)</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>        x = self.<a class="code hl_variable" href="classexamples_1_1dnm__simple__test_1_1SimpleCNN.html#aa2513e096c8df4c02310c26dda2b5340">classifier</a>(x)</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>        <span class="keywordflow">return</span> x</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span> </div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span> </div>
+</div>
+</div>
+<div class="foldopen" id="foldopen00090" data-start="" data-end="">
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno"><a class="line" href="namespaceexamples_1_1dnm__simple__test.html#a628366540c888aded2cd836e4a5a61de">   90</a></span><span class="keyword">def </span><a class="code hl_function" href="namespaceexamples_1_1dnm__simple__test.html#a628366540c888aded2cd836e4a5a61de">prepare_small_cifar10</a>(batch_size=64):</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    <span class="stringliteral">&quot;&quot;&quot;准备CIFAR-10数据集（小规模测试）&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    </div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    transform_train = transforms.Compose([</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>        transforms.RandomHorizontalFlip(),</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>        transforms.RandomCrop(32, padding=4),</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>        transforms.ToTensor(),</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>        transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2470, 0.2435, 0.2616))</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>    ])</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>    </div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    transform_test = transforms.Compose([</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>        transforms.ToTensor(),</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>        transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2470, 0.2435, 0.2616))</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    ])</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    </div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    <span class="comment"># 加载数据集</span></div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>    trainset = torchvision.datasets.CIFAR10(</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>        root=<span class="stringliteral">&#39;./data&#39;</span>, train=<span class="keyword">True</span>, download=<span class="keyword">True</span>, transform=transform_train</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>    )</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    testset = torchvision.datasets.CIFAR10(</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>        root=<span class="stringliteral">&#39;./data&#39;</span>, train=<span class="keyword">False</span>, download=<span class="keyword">True</span>, transform=transform_test</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>    )</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>    </div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    train_loader = DataLoader(trainset, batch_size=batch_size, shuffle=<span class="keyword">True</span>)</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>    test_loader = DataLoader(testset, batch_size=batch_size, shuffle=<span class="keyword">False</span>)</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    </div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    print(f<span class="stringliteral">&quot;📊 CIFAR-10 loaded: {len(trainset)} train, {len(testset)} test samples&quot;</span>)</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>    <span class="keywordflow">return</span> train_loader, test_loader</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span> </div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span> </div>
+</div>
+<div class="foldopen" id="foldopen00120" data-start="" data-end="">
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno"><a class="line" href="namespaceexamples_1_1dnm__simple__test.html#a31eeef7b0bc3d75762141260962fe9cb">  120</a></span><span class="keyword">def </span><a class="code hl_function" href="namespaceexamples_1_1dnm__simple__test.html#a31eeef7b0bc3d75762141260962fe9cb">create_aggressive_dnm_config</a>():</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    <span class="stringliteral">&quot;&quot;&quot;创建更激进的DNM配置来确保演化发生&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>    </div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    <span class="keywordflow">return</span> {</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>        <span class="stringliteral">&#39;neuron_division&#39;</span>: {</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>            <span class="stringliteral">&#39;splitter&#39;</span>: {</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>                <span class="stringliteral">&#39;entropy_threshold&#39;</span>: 0.4,        <span class="comment"># 降低阈值，更容易分裂</span></div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>                <span class="stringliteral">&#39;overload_threshold&#39;</span>: 0.3,       <span class="comment"># 降低过载阈值</span></div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>                <span class="stringliteral">&#39;split_probability&#39;</span>: 0.8,        <span class="comment"># 提高分裂概率</span></div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>                <span class="stringliteral">&#39;max_splits_per_layer&#39;</span>: 3,       <span class="comment"># 允许分裂</span></div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>                <span class="stringliteral">&#39;inheritance_noise&#39;</span>: 0.1         <span class="comment"># 适中的噪声</span></div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>            },</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>            <span class="stringliteral">&#39;monitoring&#39;</span>: {</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>                <span class="stringliteral">&#39;target_layers&#39;</span>: [<span class="stringliteral">&#39;conv&#39;</span>, <span class="stringliteral">&#39;linear&#39;</span>],</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>                <span class="stringliteral">&#39;analysis_frequency&#39;</span>: 3,         <span class="comment"># 更频繁分析</span></div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>                <span class="stringliteral">&#39;min_epoch_before_split&#39;</span>: 5      <span class="comment"># 更早开始</span></div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>            }</div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>        },</div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>        <span class="stringliteral">&#39;connection_growth&#39;</span>: {</div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>            <span class="stringliteral">&#39;analyzer&#39;</span>: {</div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>                <span class="stringliteral">&#39;correlation_threshold&#39;</span>: 0.1,    <span class="comment"># 降低相关性阈值</span></div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>                <span class="stringliteral">&#39;history_length&#39;</span>: 6              <span class="comment"># 较短历史</span></div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>            },</div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>            <span class="stringliteral">&#39;growth&#39;</span>: {</div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>                <span class="stringliteral">&#39;max_new_connections&#39;</span>: 2,        <span class="comment"># 适中连接数</span></div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>                <span class="stringliteral">&#39;min_correlation_threshold&#39;</span>: 0.05,</div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>                <span class="stringliteral">&#39;growth_frequency&#39;</span>: 4,           <span class="comment"># 更频繁</span></div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>                <span class="stringliteral">&#39;connection_types&#39;</span>: [<span class="stringliteral">&#39;skip_connection&#39;</span>]  <span class="comment"># 简化连接类型</span></div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>            },</div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>            <span class="stringliteral">&#39;filtering&#39;</span>: {</div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>                <span class="stringliteral">&#39;min_layer_distance&#39;</span>: 1,</div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>                <span class="stringliteral">&#39;max_layer_distance&#39;</span>: 4,</div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>                <span class="stringliteral">&#39;avoid_redundant_connections&#39;</span>: <span class="keyword">True</span></div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>            }</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>        },</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>        <span class="stringliteral">&#39;multi_objective&#39;</span>: {</div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>            <span class="stringliteral">&#39;evolution&#39;</span>: {</div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>                <span class="stringliteral">&#39;population_size&#39;</span>: 6,            <span class="comment"># 较小种群</span></div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>                <span class="stringliteral">&#39;max_generations&#39;</span>: 8,            <span class="comment"># 较少代数</span></div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>                <span class="stringliteral">&#39;mutation_rate&#39;</span>: 0.5,</div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>                <span class="stringliteral">&#39;crossover_rate&#39;</span>: 0.7,</div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>                <span class="stringliteral">&#39;elitism_ratio&#39;</span>: 0.3</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>            },</div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>            <span class="stringliteral">&#39;optimization&#39;</span>: {</div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>                <span class="stringliteral">&#39;trigger_frequency&#39;</span>: 12,         <span class="comment"># 适中频率</span></div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>                <span class="stringliteral">&#39;performance_plateau_threshold&#39;</span>: 0.01,</div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>                <span class="stringliteral">&#39;min_improvement_epochs&#39;</span>: 2</div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>            }</div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>        },</div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>        <span class="stringliteral">&#39;framework&#39;</span>: {</div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>            <span class="stringliteral">&#39;morphogenesis_frequency&#39;</span>: 3,       <span class="comment"># 更频繁的形态发生</span></div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>            <span class="stringliteral">&#39;performance_tracking_window&#39;</span>: 5,</div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>            <span class="stringliteral">&#39;early_stopping_patience&#39;</span>: 20,</div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>            <span class="stringliteral">&#39;target_accuracy_threshold&#39;</span>: 85.0,  <span class="comment"># 适中目标</span></div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>            <span class="stringliteral">&#39;enable_architecture_snapshots&#39;</span>: <span class="keyword">True</span>,</div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>            <span class="stringliteral">&#39;adaptive_morphogenesis&#39;</span>: <span class="keyword">True</span></div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>        }</div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>    }</div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span> </div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span> </div>
+</div>
+<div class="foldopen" id="foldopen00180" data-start="" data-end="">
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno"><a class="line" href="namespaceexamples_1_1dnm__simple__test.html#ab273da20fdeccc6c400cb0726805fc5e">  180</a></span><span class="keyword">def </span><a class="code hl_function" href="namespaceexamples_1_1dnm__simple__test.html#ab273da20fdeccc6c400cb0726805fc5e">run_dnm_simple_test</a>():</div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>    <span class="stringliteral">&quot;&quot;&quot;运行简化的DNM测试&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>    </div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>    print(<span class="stringliteral">&quot;🧬 DNM Simple Test - Fixed Version&quot;</span>)</div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>    print(<span class="stringliteral">&quot;=&quot;</span> * 50)</div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>    </div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>    <span class="comment"># 设置设备</span></div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>    device = torch.device(<span class="stringliteral">&#39;cuda&#39;</span> <span class="keywordflow">if</span> torch.cuda.is_available() <span class="keywordflow">else</span> <span class="stringliteral">&#39;cpu&#39;</span>)</div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>    print(f<span class="stringliteral">&quot;🔧 Device: {device}&quot;</span>)</div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>    </div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>    <span class="comment"># 准备数据</span></div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>    train_loader, test_loader = <a class="code hl_function" href="namespaceexamples_1_1dnm__simple__test.html#a628366540c888aded2cd836e4a5a61de">prepare_small_cifar10</a>(batch_size=64)</div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>    </div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>    <span class="comment"># 创建模型</span></div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>    model = <a class="code hl_class" href="classexamples_1_1dnm__simple__test_1_1SimpleCNN.html">SimpleCNN</a>(num_classes=10)</div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>    initial_params = sum(p.numel() <span class="keywordflow">for</span> p <span class="keywordflow">in</span> model.parameters())</div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>    print(f<span class="stringliteral">&quot;🏗️ Initial model: {initial_params:,} parameters&quot;</span>)</div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>    </div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>    <span class="comment"># 创建DNM框架</span></div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>    dnm_config = <a class="code hl_function" href="namespaceexamples_1_1dnm__simple__test.html#a31eeef7b0bc3d75762141260962fe9cb">create_aggressive_dnm_config</a>()</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>    dnm = <a class="code hl_class" href="classneuroexapt_1_1core_1_1dnm__framework_1_1DNMFramework.html">DNMFramework</a>(dnm_config)</div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>    </div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>    <span class="comment"># 创建优化器</span></div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>    optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.9, weight_decay=1e-4)</div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>    criterion = nn.CrossEntropyLoss()</div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>    </div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>    print(f<span class="stringliteral">&quot;\n🚀 Starting DNM Training&quot;</span>)</div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>    print(<span class="stringliteral">&quot;=&quot;</span> * 50)</div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>    </div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>    <span class="comment"># 进度回调</span></div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>    <span class="keyword">def </span>simple_callback(dnm_framework, model, epoch_record):</div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>        epoch = epoch_record[<span class="stringliteral">&#39;epoch&#39;</span>]</div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>        train_acc = epoch_record[<span class="stringliteral">&#39;train_acc&#39;</span>]</div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>        val_acc = epoch_record[<span class="stringliteral">&#39;val_acc&#39;</span>]</div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>        params = epoch_record[<span class="stringliteral">&#39;model_params&#39;</span>]</div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>        </div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>        param_growth = (params - initial_params) / initial_params * 100</div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>        </div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>        <span class="keywordflow">if</span> epoch % 2 == 0:</div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>            print(f<span class="stringliteral">&quot;📈 Epoch {epoch}: Train={train_acc:.2f}%, &quot;</span></div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>                  f<span class="stringliteral">&quot;Val={val_acc:.2f}%, Params={params:,} (+{param_growth:.1f}%)&quot;</span>)</div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>    </div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>    <span class="comment"># 开始训练</span></div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>    start_time = time.time()</div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>    </div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>    <span class="keywordflow">try</span>:</div>
+<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>        result = dnm.train_with_morphogenesis(</div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>            model=model,</div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>            train_loader=train_loader,</div>
+<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>            val_loader=test_loader,</div>
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>            epochs=30,</div>
+<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>            optimizer=optimizer,</div>
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>            criterion=criterion,</div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>            callbacks=[simple_callback]</div>
+<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>        )</div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>        </div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>        <span class="comment"># 结果分析</span></div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>        training_time = time.time() - start_time</div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>        final_params = sum(p.numel() <span class="keywordflow">for</span> p <span class="keywordflow">in</span> result[<span class="stringliteral">&#39;model&#39;</span>].parameters())</div>
+<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>        param_growth = (final_params - initial_params) / initial_params * 100</div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>        </div>
+<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>        print(f<span class="stringliteral">&quot;\n🎉 DNM Test Completed!&quot;</span>)</div>
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>        print(<span class="stringliteral">&quot;=&quot;</span> * 50)</div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>        print(f<span class="stringliteral">&quot;📊 Results:&quot;</span>)</div>
+<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>        print(f<span class="stringliteral">&quot;   Best Accuracy: {result[&#39;best_val_accuracy&#39;]:.2f}%&quot;</span>)</div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>        print(f<span class="stringliteral">&quot;   Final Accuracy: {result[&#39;final_val_accuracy&#39;]:.2f}%&quot;</span>)</div>
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>        print(f<span class="stringliteral">&quot;   Parameter Growth: +{param_growth:.1f}%&quot;</span>)</div>
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>        print(f<span class="stringliteral">&quot;   Training Time: {training_time:.1f}s&quot;</span>)</div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>        print(f<span class="stringliteral">&quot;   Morphogenesis Events: {len(result[&#39;morphogenesis_events&#39;])}&quot;</span>)</div>
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>        </div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>        <span class="comment"># 形态发生分析</span></div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>        <span class="keywordflow">if</span> result[<span class="stringliteral">&#39;morphogenesis_events&#39;</span>]:</div>
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>            print(f<span class="stringliteral">&quot;\n🧬 Morphogenesis Events:&quot;</span>)</div>
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>            <span class="keywordflow">for</span> event <span class="keywordflow">in</span> result[<span class="stringliteral">&#39;morphogenesis_events&#39;</span>]:</div>
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>                print(f<span class="stringliteral">&quot;   Epoch {event[&#39;epoch&#39;]}: &quot;</span></div>
+<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>                      f<span class="stringliteral">&quot;{event[&#39;neuron_splits&#39;]} splits, &quot;</span></div>
+<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>                      f<span class="stringliteral">&quot;{event[&#39;connections_grown&#39;]} connections&quot;</span>)</div>
+<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>        <span class="keywordflow">else</span>:</div>
+<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>            print(f<span class="stringliteral">&quot;\n⚠️ No morphogenesis events occurred&quot;</span>)</div>
+<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>            print(f<span class="stringliteral">&quot;   Try lowering thresholds or increasing frequencies&quot;</span>)</div>
+<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>        </div>
+<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>        <span class="comment"># 成功评估</span></div>
+<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>        <span class="keywordflow">if</span> param_growth &gt; 0:</div>
+<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>            print(f<span class="stringliteral">&quot;\n✅ SUCCESS: Model actually evolved! (+{param_growth:.1f}% parameters)&quot;</span>)</div>
+<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>        <span class="keywordflow">else</span>:</div>
+<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>            print(f<span class="stringliteral">&quot;\n❌ No evolution detected. Model structure unchanged.&quot;</span>)</div>
+<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>        </div>
+<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>        <span class="keywordflow">if</span> result[<span class="stringliteral">&#39;best_val_accuracy&#39;</span>] &gt;= 60.0:</div>
+<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>            print(f<span class="stringliteral">&quot;✅ GOOD: Achieved decent accuracy ({result[&#39;best_val_accuracy&#39;]:.2f}%)&quot;</span>)</div>
+<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>        </div>
+<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>        <span class="keywordflow">return</span> result</div>
+<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>        </div>
+<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>    <span class="keywordflow">except</span> Exception <span class="keyword">as</span> e:</div>
+<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>        print(f<span class="stringliteral">&quot;\n❌ Test failed: {e}&quot;</span>)</div>
+<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>        <span class="keyword">import</span> traceback</div>
+<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>        traceback.print_exc()</div>
+<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>        <span class="keywordflow">return</span> <span class="keywordtype">None</span></div>
+<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span> </div>
+<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span> </div>
+</div>
+<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span><span class="keywordflow">if</span> __name__ == <span class="stringliteral">&quot;__main__&quot;</span>:</div>
+<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>    <span class="comment"># 设置随机种子</span></div>
+<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>    torch.manual_seed(42)</div>
+<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>    </div>
+<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>    <span class="comment"># 运行测试</span></div>
+<div class="line"><a id="l00284" name="l00284"></a><span class="lineno"><a class="line" href="namespaceexamples_1_1dnm__simple__test.html#a5df8b5f9f8beb69d63646227241b4a50">  284</a></span>    result = <a class="code hl_function" href="namespaceexamples_1_1dnm__simple__test.html#ab273da20fdeccc6c400cb0726805fc5e">run_dnm_simple_test</a>()</div>
+<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span>    </div>
+<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>    <span class="keywordflow">if</span> result:</div>
+<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span>        print(f<span class="stringliteral">&quot;\n🎯 Test Summary:&quot;</span>)</div>
+<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span>        print(f<span class="stringliteral">&quot;   The DNM framework is working!&quot;</span>)</div>
+<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span>        print(f<span class="stringliteral">&quot;   Check morphogenesis events for evolution details.&quot;</span>)</div>
+<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span>    <span class="keywordflow">else</span>:</div>
+<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span>        print(f<span class="stringliteral">&quot;\n🔧 Need debugging:&quot;</span>)</div>
+<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span>        print(f<span class="stringliteral">&quot;   Check error messages above for issues to fix.&quot;</span>)</div>
+<div class="ttc" id="aclassexamples_1_1dnm__simple__test_1_1SimpleCNN_html"><div class="ttname"><a href="classexamples_1_1dnm__simple__test_1_1SimpleCNN.html">examples.dnm_simple_test.SimpleCNN</a></div><div class="ttdef"><b>Definition</b> <a href="dnm__simple__test_8py_source.html#l00028">dnm_simple_test.py:28</a></div></div>
+<div class="ttc" id="aclassexamples_1_1dnm__simple__test_1_1SimpleCNN_html_a0e2788a48e833e258d3252d175e2e050"><div class="ttname"><a href="classexamples_1_1dnm__simple__test_1_1SimpleCNN.html#a0e2788a48e833e258d3252d175e2e050">examples.dnm_simple_test.SimpleCNN.features</a></div><div class="ttdeci">features</div><div class="ttdef"><b>Definition</b> <a href="dnm__simple__test_8py_source.html#l00035">dnm_simple_test.py:35</a></div></div>
+<div class="ttc" id="aclassexamples_1_1dnm__simple__test_1_1SimpleCNN_html_a1de0663bbd131e4c94fa3eaa69bf8d93"><div class="ttname"><a href="classexamples_1_1dnm__simple__test_1_1SimpleCNN.html#a1de0663bbd131e4c94fa3eaa69bf8d93">examples.dnm_simple_test.SimpleCNN.forward</a></div><div class="ttdeci">forward(self, x)</div><div class="ttdef"><b>Definition</b> <a href="dnm__simple__test_8py_source.html#l00084">dnm_simple_test.py:84</a></div></div>
+<div class="ttc" id="aclassexamples_1_1dnm__simple__test_1_1SimpleCNN_html_a52425ee896f66d9baef70bfe76c90cde"><div class="ttname"><a href="classexamples_1_1dnm__simple__test_1_1SimpleCNN.html#a52425ee896f66d9baef70bfe76c90cde">examples.dnm_simple_test.SimpleCNN.__init__</a></div><div class="ttdeci">__init__(self, num_classes=10)</div><div class="ttdef"><b>Definition</b> <a href="dnm__simple__test_8py_source.html#l00031">dnm_simple_test.py:31</a></div></div>
+<div class="ttc" id="aclassexamples_1_1dnm__simple__test_1_1SimpleCNN_html_a5c9167511e77bd34c7907fadacda84b0"><div class="ttname"><a href="classexamples_1_1dnm__simple__test_1_1SimpleCNN.html#a5c9167511e77bd34c7907fadacda84b0">examples.dnm_simple_test.SimpleCNN._initialize_weights</a></div><div class="ttdeci">_initialize_weights(self)</div><div class="ttdef"><b>Definition</b> <a href="dnm__simple__test_8py_source.html#l00071">dnm_simple_test.py:71</a></div></div>
+<div class="ttc" id="aclassexamples_1_1dnm__simple__test_1_1SimpleCNN_html_aa2513e096c8df4c02310c26dda2b5340"><div class="ttname"><a href="classexamples_1_1dnm__simple__test_1_1SimpleCNN.html#aa2513e096c8df4c02310c26dda2b5340">examples.dnm_simple_test.SimpleCNN.classifier</a></div><div class="ttdeci">classifier</div><div class="ttdef"><b>Definition</b> <a href="dnm__simple__test_8py_source.html#l00056">dnm_simple_test.py:56</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1dnm__framework_1_1DNMFramework_html"><div class="ttname"><a href="classneuroexapt_1_1core_1_1dnm__framework_1_1DNMFramework.html">neuroexapt.core.dnm_framework.DNMFramework</a></div><div class="ttdef"><b>Definition</b> <a href="dnm__framework_8py_source.html#l00697">dnm_framework.py:697</a></div></div>
+<div class="ttc" id="anamespaceexamples_1_1dnm__simple__test_html_a31eeef7b0bc3d75762141260962fe9cb"><div class="ttname"><a href="namespaceexamples_1_1dnm__simple__test.html#a31eeef7b0bc3d75762141260962fe9cb">examples.dnm_simple_test.create_aggressive_dnm_config</a></div><div class="ttdeci">create_aggressive_dnm_config()</div><div class="ttdef"><b>Definition</b> <a href="dnm__simple__test_8py_source.html#l00120">dnm_simple_test.py:120</a></div></div>
+<div class="ttc" id="anamespaceexamples_1_1dnm__simple__test_html_a628366540c888aded2cd836e4a5a61de"><div class="ttname"><a href="namespaceexamples_1_1dnm__simple__test.html#a628366540c888aded2cd836e4a5a61de">examples.dnm_simple_test.prepare_small_cifar10</a></div><div class="ttdeci">prepare_small_cifar10(batch_size=64)</div><div class="ttdef"><b>Definition</b> <a href="dnm__simple__test_8py_source.html#l00090">dnm_simple_test.py:90</a></div></div>
+<div class="ttc" id="anamespaceexamples_1_1dnm__simple__test_html_ab273da20fdeccc6c400cb0726805fc5e"><div class="ttname"><a href="namespaceexamples_1_1dnm__simple__test.html#ab273da20fdeccc6c400cb0726805fc5e">examples.dnm_simple_test.run_dnm_simple_test</a></div><div class="ttdeci">run_dnm_simple_test()</div><div class="ttdef"><b>Definition</b> <a href="dnm__simple__test_8py_source.html#l00180">dnm_simple_test.py:180</a></div></div>
+<div class="ttc" id="anamespaceneuroexapt_1_1core_1_1dnm__framework_html"><div class="ttname"><a href="namespaceneuroexapt_1_1core_1_1dnm__framework.html">neuroexapt.core.dnm_framework</a></div><div class="ttdef"><b>Definition</b> <a href="dnm__framework_8py_source.html#l00001">dnm_framework.py:1</a></div></div>
+</div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
+<!-- do not remove this div, it is closed by doxygen! -->
+</div>
+<!-- Custom Footer -->
+<div style="background: #f8f9fa; border-top: 1px solid #e9ecef; margin-top: 50px; padding: 30px 0; text-align: center;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-bottom: 20px;">
+            <!-- Project Info -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🧠 NeuroExapt</h4>
+                <p style="color: #6c757d; margin: 0; font-size: 0.9em;">
+                    Advanced Neural Architecture Search and Dynamic Morphogenesis Framework for next-generation AI research.
+                </p>
+            </div>
+            <!-- Quick Links -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">📚 Quick Links</h4>
+                <div style="text-align: left;">
+                    <a href="index.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🏠 Home</a>
+                    <a href="modules.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📦 Modules</a>
+                    <a href="examples.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💡 Examples</a>
+                    <a href="files.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📁 Files</a>
+                </div>
+            </div>
+            <!-- Resources -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🔗 Resources</h4>
+                <div style="text-align: left;">
+                    <a href="https://github.com/your-username/neuroexapt" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💻 GitHub Repository</a>
+                    <a href="https://github.com/your-username/neuroexapt/issues" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🐛 Issue Tracker</a>
+                    <a href="https://github.com/your-username/neuroexapt/wiki" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📖 Wiki</a>
+                    <a href="https://github.com/your-username/neuroexapt/releases" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🚀 Releases</a>
+                </div>
+            </div>
+        </div>
+        <hr style="border: 0; height: 1px; background: #e9ecef; margin: 20px 0;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+            <div style="color: #6c757d; font-size: 0.9em;">
+                © 2024 NeuroExapt Project. Generated with 
+                <a href="https://www.doxygen.nl/index.html" style="color: #667eea; text-decoration: none;">Doxygen 1.9.8</a>
+            </div>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <span style="font-size: 0.9em; color: #6c757d;">Built with ❤️ for AI Research</span>
+                <div style="display: flex; gap: 10px;">
+                    <span style="background: #28a745; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">🟢 Active</span>
+                    <span style="background: #17a2b8; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">v3.0</span>
+                </div>
+            </div>
+        </div>
+        <!-- Technology Stack -->
+        <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #e9ecef;">
+            <div style="font-size: 0.8em; color: #868e96; text-align: center;">
+                <strong>Built with:</strong>
+                <span style="margin: 0 5px;">🐍 Python</span>
+                <span style="margin: 0 5px;">🔥 PyTorch</span>
+                <span style="margin: 0 5px;">⚡ CUDA</span>
+                <span style="margin: 0 5px;">🧮 NumPy</span>
+                <span style="margin: 0 5px;">📊 Matplotlib</span>
+                <span style="margin: 0 5px;">🚀 Triton</span>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Back to top button -->
+<div id="back-to-top" style="position: fixed; bottom: 20px; right: 20px; display: none; z-index: 1000;">
+    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" 
+            style="background: #667eea; color: white; border: none; padding: 10px 15px; border-radius: 50%; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,0.2); font-size: 16px;">
+        ⬆️
+    </button>
+</div>
+<script>
+// Back to top button functionality
+window.addEventListener('scroll', function() {
+    const backToTop = document.getElementById('back-to-top');
+    if (window.pageYOffset > 300) {
+        backToTop.style.display = 'block';
+    } else {
+        backToTop.style.display = 'none';
+    }
+});
+// Enhanced search functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Add search enhancement if search box exists
+    const searchBox = document.getElementById('MSearchField');
+    if (searchBox) {
+        searchBox.placeholder = 'Search documentation... 🔍';
+        searchBox.style.borderRadius = '20px';
+        searchBox.style.padding = '8px 15px';
+    }
+    // Add copy code button to code blocks
+    const codeBlocks = document.querySelectorAll('.fragment');
+    codeBlocks.forEach(function(block) {
+        const copyBtn = document.createElement('button');
+        copyBtn.innerHTML = '📋';
+        copyBtn.title = 'Copy code';
+        copyBtn.style.cssText = 'position: absolute; top: 10px; right: 10px; background: #667eea; color: white; border: none; padding: 5px; border-radius: 3px; cursor: pointer; font-size: 12px;';
+        block.style.position = 'relative';
+        block.appendChild(copyBtn);
+        copyBtn.addEventListener('click', function() {
+            const text = block.textContent;
+            navigator.clipboard.writeText(text).then(function() {
+                copyBtn.innerHTML = '✅';
+                setTimeout(function() {
+                    copyBtn.innerHTML = '📋';
+                }, 2000);
+            });
+        });
+    });
+});
+// Dark mode toggle (optional)
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+}
+// Load saved dark mode preference
+if (localStorage.getItem('darkMode') === 'true') {
+    document.body.classList.add('dark-mode');
+}
+</script>
+</body>
+</html>

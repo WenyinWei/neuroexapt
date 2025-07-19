@@ -17,7 +17,7 @@ The Sourcery review provided 12 specific comments addressing critical issues in 
 - Replaced `DebugPrinter` class with `ConfigurableLogger` using Python's `logging` framework
 - Environment variable configuration:
   - `NEUROEXAPT_LOG_LEVEL`: Set logging level (DEBUG, INFO, WARNING, ERROR)
-  - `NEUROEXAPT_CONSOLE_LOG`: Enable/disable console output (true/false)
+  - `NEUROEXAPT_ENABLE_CONSOLE`: Enable/disable console output (true/false)
   - `NEUROEXAPT_LOG_FILE`: Optional file logging path
 - Performance optimizations: Logger level checks prevent expensive string formatting when disabled
 - Backward compatibility: Original `DebugPrinter` maintained with deprecation warning
@@ -178,7 +178,7 @@ Added comprehensive documentation about correlation as mutual information proxy:
 ```bash
 # Logging configuration
 export NEUROEXAPT_LOG_LEVEL=INFO          # DEBUG, INFO, WARNING, ERROR
-export NEUROEXAPT_CONSOLE_LOG=true        # Enable console output
+export NEUROEXAPT_ENABLE_CONSOLE=true      # Enable console output
 export NEUROEXAPT_LOG_FILE=/path/to/log   # Optional file logging
 
 # Memory management

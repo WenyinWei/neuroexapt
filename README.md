@@ -4,6 +4,8 @@
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.0+-red.svg)](https://pytorch.org/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Version](https://img.shields.io/badge/version-DNM--1.0-brightgreen.svg)](https://github.com/neuroexapt/neuroexapt)
+[![Documentation](https://img.shields.io/badge/docs-available-blue.svg)](https://your-username.github.io/neuroexapt/)
+[![Changelog](https://img.shields.io/badge/changelog-current-green.svg)](CHANGELOG.md)
 
 🧬 **动态神经形态发生框架** - 一个革命性的神经网络自适应架构进化系统，基于生物学启发的神经元分裂和连接生长机制。
 
@@ -277,6 +279,23 @@ DNM 框架基于以下生物学原理：
 - **问题反馈**: [GitHub Issues](https://github.com/neuroexapt/neuroexapt/issues)
 - **讨论交流**: [GitHub Discussions](https://github.com/neuroexapt/neuroexapt/discussions)
 - **邮件联系**: team@neuroexapt.ai
+
+## 📚 文档与资源
+
+- **📖 完整文档**: [GitHub Pages](https://your-username.github.io/neuroexapt/) - API文档和使用指南
+- **📝 变更日志**: [CHANGELOG.md](CHANGELOG.md) - 项目更新记录
+- **🔧 技术细节**: [docs/changelogs/](docs/changelogs/) - 详细的技术变更记录
+- **💡 代码示例**: [examples/](examples/) - 实用示例和教程
+- **🧪 测试案例**: [test/](test/) - 测试用例和验证
+
+### 快速构建文档
+```bash
+# 本地构建文档
+./docs/build.sh --open
+
+# 查看所有构建选项
+./docs/build.sh --help
+```
 
 ---
 

@@ -1,4 +1,11 @@
 """
+"""
+\defgroup group_gpu_manager Gpu Manager
+\ingroup core
+Gpu Manager module for NeuroExapt framework.
+"""
+
+
 GPU Manager for NeuroExapt
 Ensures proper NVIDIA GPU usage and optimal performance configuration.
 """

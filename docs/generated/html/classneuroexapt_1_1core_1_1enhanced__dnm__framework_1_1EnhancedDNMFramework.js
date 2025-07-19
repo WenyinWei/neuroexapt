@@ -1,0 +1,26 @@
+var classneuroexapt_1_1core_1_1enhanced__dnm__framework_1_1EnhancedDNMFramework =
+[
+    [ "__init__", "classneuroexapt_1_1core_1_1enhanced__dnm__framework_1_1EnhancedDNMFramework.html#afe75e306d5218630a41a71e466112f80", null ],
+    [ "_enhance_bottleneck_signatures_with_net2net", "classneuroexapt_1_1core_1_1enhanced__dnm__framework_1_1EnhancedDNMFramework.html#a971907a7d7837261b0690aa3da5ad7c1", null ],
+    [ "_execute_aggressive_morphogenesis", "classneuroexapt_1_1core_1_1enhanced__dnm__framework_1_1EnhancedDNMFramework.html#a1c68d40509c523208df8acce060a4937", null ],
+    [ "_execute_traditional_morphogenesis", "classneuroexapt_1_1core_1_1enhanced__dnm__framework_1_1EnhancedDNMFramework.html#a14b036b26502dc17902971a3ae43e191", null ],
+    [ "cache_activations_and_gradients", "classneuroexapt_1_1core_1_1enhanced__dnm__framework_1_1EnhancedDNMFramework.html#a6bc215f65e432109d0617812a8f3c47d", null ],
+    [ "execute_morphogenesis", "classneuroexapt_1_1core_1_1enhanced__dnm__framework_1_1EnhancedDNMFramework.html#a1da040c9617dbb01e2cbf4b01c59cead", null ],
+    [ "get_morphogenesis_summary", "classneuroexapt_1_1core_1_1enhanced__dnm__framework_1_1EnhancedDNMFramework.html#a35ea5089d5120a4a387f92babbd510b0", null ],
+    [ "should_trigger_morphogenesis", "classneuroexapt_1_1core_1_1enhanced__dnm__framework_1_1EnhancedDNMFramework.html#af1d8f40d46a7f8eee46c2a27435f12f8", null ],
+    [ "update_performance_history", "classneuroexapt_1_1core_1_1enhanced__dnm__framework_1_1EnhancedDNMFramework.html#a3ee32196c0006b824cb97d69613dc0a1", null ],
+    [ "activation_cache", "classneuroexapt_1_1core_1_1enhanced__dnm__framework_1_1EnhancedDNMFramework.html#aaa25a13c40ec3bdedd7c2e611d4acef8", null ],
+    [ "aggressive_analyzer", "classneuroexapt_1_1core_1_1enhanced__dnm__framework_1_1EnhancedDNMFramework.html#a5c07143cb20a362d86640e1cb1d8902a", null ],
+    [ "aggressive_executor", "classneuroexapt_1_1core_1_1enhanced__dnm__framework_1_1EnhancedDNMFramework.html#a2f7eadd2f192afed079e26c9db944071", null ],
+    [ "aggressive_mode_active", "classneuroexapt_1_1core_1_1enhanced__dnm__framework_1_1EnhancedDNMFramework.html#a69841b1afe778591f7a1bda5abaaab81", null ],
+    [ "bottleneck_analyzer", "classneuroexapt_1_1core_1_1enhanced__dnm__framework_1_1EnhancedDNMFramework.html#a5752010416b2f14dc5da6b4167747e97", null ],
+    [ "config", "classneuroexapt_1_1core_1_1enhanced__dnm__framework_1_1EnhancedDNMFramework.html#ab8afab505723213acfbebcbfd25f2f13", null ],
+    [ "decision_maker", "classneuroexapt_1_1core_1_1enhanced__dnm__framework_1_1EnhancedDNMFramework.html#a89f9a4af4b8348e55f5c85324b77ae17", null ],
+    [ "executor", "classneuroexapt_1_1core_1_1enhanced__dnm__framework_1_1EnhancedDNMFramework.html#a41ba97255036053ef35849554964fbe8", null ],
+    [ "gradient_cache", "classneuroexapt_1_1core_1_1enhanced__dnm__framework_1_1EnhancedDNMFramework.html#a9b0b7bc08f534cfde79e8f5532fbc0a9", null ],
+    [ "morphogenesis_events", "classneuroexapt_1_1core_1_1enhanced__dnm__framework_1_1EnhancedDNMFramework.html#a0d9018fd1a3b0a2c9706e06007e8b213", null ],
+    [ "mutation_planner", "classneuroexapt_1_1core_1_1enhanced__dnm__framework_1_1EnhancedDNMFramework.html#ab46af5d355c4823349ac911152fad4ea", null ],
+    [ "net2net_analyzer", "classneuroexapt_1_1core_1_1enhanced__dnm__framework_1_1EnhancedDNMFramework.html#a4363ab5de38f427eae8803497b491769", null ],
+    [ "performance_history", "classneuroexapt_1_1core_1_1enhanced__dnm__framework_1_1EnhancedDNMFramework.html#a576a57b2cf76c8a13459d9933ca75e82", null ],
+    [ "triggers", "classneuroexapt_1_1core_1_1enhanced__dnm__framework_1_1EnhancedDNMFramework.html#a44daf88c9b68ac57af01a96d7de68249", null ]
+];

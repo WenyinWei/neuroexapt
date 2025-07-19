@@ -1,0 +1,1716 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="description" content="NeuroExapt - Advanced Neural Architecture Search and Dynamic Morphogenesis Framework">
+    <meta name="keywords" content="neural architecture search, dynamic morphogenesis, deep learning, AI, PyTorch">
+    <meta name="author" content="NeuroExapt Team">
+    <meta property="og:title" content="NeuroExapt Documentation">
+    <meta property="og:description" content="Advanced Neural Architecture Search Framework">
+    <meta property="og:type" content="website">
+
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>NeuroExapt: neuroexapt.core.performance_guided_division.PerformanceGuidedDivision Class Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="custom.css" rel="stylesheet" type="text/css"/>
+<!-- NeuroExapt Custom Styles -->
+<style>
+/* Enhanced header styling */
+.header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+.header h1 {
+    margin: 0;
+    font-size: 2.5em;
+    font-weight: 300;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+.header .subtitle {
+    font-size: 1.2em;
+    opacity: 0.9;
+    margin-top: 10px;
+}
+/* Enhanced navigation */
+.tablist {
+    background: #f8f9fa;
+    border-bottom: 2px solid #e9ecef;
+}
+.tablist li.current a {
+    background: #667eea;
+    color: white;
+}
+/* Improved content layout */
+.contents {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+/* Code highlighting */
+.fragment {
+    background: #f8f9fa;
+    border-left: 4px solid #667eea;
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 0 8px 8px 0;
+}
+/* Enhanced tables */
+table.memberdecls {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 20px 0;
+}
+table.memberdecls td {
+    border: 1px solid #e9ecef;
+    padding: 12px;
+}
+/* Better typography */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #343a40;
+}
+h1, h2, h3, h4, h5, h6 {
+    color: #495057;
+    font-weight: 500;
+}
+/* Responsive design */
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 2em;
+    }
+    .contents {
+        padding: 15px;
+    }
+}
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #1a1a1a;
+        color: #e9ecef;
+    }
+    .header {
+        background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+    }
+    .fragment {
+        background: #2d3748;
+        color: #e9ecef;
+    }
+}
+</style>
+<!-- Analytics (if needed) -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<!--
+<script async src="https://www.googletagmanager.com/gtag/js?id=GA_TRACKING_ID"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'GA_TRACKING_ID');
+</script>
+-->
+</head>
+<body>
+<!-- Custom Header -->
+<div class="header">
+    <h1>🧠 NeuroExapt</h1>
+    <div class="subtitle">Advanced Neural Architecture Search and Dynamic Morphogenesis Framework</div>
+    <div style="margin-top: 15px; font-size: 0.9em;">
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🚀 Dynamic Neural Morphogenesis
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🔬 Advanced Architecture Search
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            ⚡ High-Performance Computing
+        </span>
+    </div>
+</div>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! --><!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('classneuroexapt_1_1core_1_1performance__guided__division_1_1PerformanceGuidedDivision.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#pro-methods">Protected Member Functions</a> &#124;
+<a href="classneuroexapt_1_1core_1_1performance__guided__division_1_1PerformanceGuidedDivision-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">neuroexapt.core.performance_guided_division.PerformanceGuidedDivision Class Reference</div></div>
+</div><!--header-->
+<div class="contents">
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a661c6552f79298ae72d70e69bd2202a4" id="r_a661c6552f79298ae72d70e69bd2202a4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1performance__guided__division_1_1PerformanceGuidedDivision.html#a661c6552f79298ae72d70e69bd2202a4">__init__</a> (self, float <a class="el" href="classneuroexapt_1_1core_1_1performance__guided__division_1_1PerformanceGuidedDivision.html#a44f06cfb3ba9d2e1fac8d2ef1a78eace">noise_scale</a>=0.1, int <a class="el" href="classneuroexapt_1_1core_1_1performance__guided__division_1_1PerformanceGuidedDivision.html#a2e53031a8c7e5ae627e3df67677c1a28">progressive_epochs</a>=5, float <a class="el" href="classneuroexapt_1_1core_1_1performance__guided__division_1_1PerformanceGuidedDivision.html#a9599a1fa69ac4fdc4f8c8e1293cff0ca">diversity_threshold</a>=0.8, bool <a class="el" href="classneuroexapt_1_1core_1_1performance__guided__division_1_1PerformanceGuidedDivision.html#ad52c9ce6cc1d61c1b514a95637e5b52c">performance_monitoring</a>=True)</td></tr>
+<tr class="separator:a661c6552f79298ae72d70e69bd2202a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af3f9c2fa11b02671bbb77266b27dd842" id="r_af3f9c2fa11b02671bbb77266b27dd842"><td class="memItemLeft" align="right" valign="top">Tuple[bool, Dict[str, Any]]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1performance__guided__division_1_1PerformanceGuidedDivision.html#af3f9c2fa11b02671bbb77266b27dd842">divide_neuron</a> (self, nn.Module layer, int neuron_idx, <a class="el" href="classneuroexapt_1_1core_1_1performance__guided__division_1_1DivisionStrategy.html">DivisionStrategy</a> strategy=<a class="el" href="classneuroexapt_1_1core_1_1performance__guided__division_1_1DivisionStrategy.html#a72b397f4d6f802b65591ae95b2d6c05e">DivisionStrategy.HYBRID</a>, Optional[torch.Tensor] activations=None, Optional[torch.Tensor] gradients=None, Optional[torch.Tensor] targets=None)</td></tr>
+<tr class="separator:af3f9c2fa11b02671bbb77266b27dd842"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3bef5319b3c087bf166c5059045aa858" id="r_a3bef5319b3c087bf166c5059045aa858"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1performance__guided__division_1_1PerformanceGuidedDivision.html#a3bef5319b3c087bf166c5059045aa858">update_epoch</a> (self, int epoch)</td></tr>
+<tr class="separator:a3bef5319b3c087bf166c5059045aa858"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6953d4284e9eb33b0922ac27642345ce" id="r_a6953d4284e9eb33b0922ac27642345ce"><td class="memItemLeft" align="right" valign="top">Dict[str, Any]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1performance__guided__division_1_1PerformanceGuidedDivision.html#a6953d4284e9eb33b0922ac27642345ce">get_division_summary</a> (self)</td></tr>
+<tr class="separator:a6953d4284e9eb33b0922ac27642345ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a44f06cfb3ba9d2e1fac8d2ef1a78eace" id="r_a44f06cfb3ba9d2e1fac8d2ef1a78eace"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1performance__guided__division_1_1PerformanceGuidedDivision.html#a44f06cfb3ba9d2e1fac8d2ef1a78eace">noise_scale</a></td></tr>
+<tr class="separator:a44f06cfb3ba9d2e1fac8d2ef1a78eace"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e53031a8c7e5ae627e3df67677c1a28" id="r_a2e53031a8c7e5ae627e3df67677c1a28"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1performance__guided__division_1_1PerformanceGuidedDivision.html#a2e53031a8c7e5ae627e3df67677c1a28">progressive_epochs</a></td></tr>
+<tr class="separator:a2e53031a8c7e5ae627e3df67677c1a28"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9599a1fa69ac4fdc4f8c8e1293cff0ca" id="r_a9599a1fa69ac4fdc4f8c8e1293cff0ca"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1performance__guided__division_1_1PerformanceGuidedDivision.html#a9599a1fa69ac4fdc4f8c8e1293cff0ca">diversity_threshold</a></td></tr>
+<tr class="separator:a9599a1fa69ac4fdc4f8c8e1293cff0ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad52c9ce6cc1d61c1b514a95637e5b52c" id="r_ad52c9ce6cc1d61c1b514a95637e5b52c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1performance__guided__division_1_1PerformanceGuidedDivision.html#ad52c9ce6cc1d61c1b514a95637e5b52c">performance_monitoring</a></td></tr>
+<tr class="separator:ad52c9ce6cc1d61c1b514a95637e5b52c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae0a0d947d5910b8b6d30603bcf49aa0c" id="r_ae0a0d947d5910b8b6d30603bcf49aa0c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1performance__guided__division_1_1PerformanceGuidedDivision.html#ae0a0d947d5910b8b6d30603bcf49aa0c">division_history</a></td></tr>
+<tr class="separator:ae0a0d947d5910b8b6d30603bcf49aa0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a452a84a043d76abc4b8d0d0737cf09ae" id="r_a452a84a043d76abc4b8d0d0737cf09ae"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1performance__guided__division_1_1PerformanceGuidedDivision.html#a452a84a043d76abc4b8d0d0737cf09ae">performance_before_division</a></td></tr>
+<tr class="separator:a452a84a043d76abc4b8d0d0737cf09ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a011733ff2dfde58e525024ea9b3b01de" id="r_a011733ff2dfde58e525024ea9b3b01de"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1performance__guided__division_1_1PerformanceGuidedDivision.html#a011733ff2dfde58e525024ea9b3b01de">performance_after_division</a></td></tr>
+<tr class="separator:a011733ff2dfde58e525024ea9b3b01de"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1a6895b17ea82ebd925d276d7198ff6e" id="r_a1a6895b17ea82ebd925d276d7198ff6e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1performance__guided__division_1_1PerformanceGuidedDivision.html#a1a6895b17ea82ebd925d276d7198ff6e">progressive_weights</a></td></tr>
+<tr class="separator:a1a6895b17ea82ebd925d276d7198ff6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2ec8fb425a8678fd8f55b1e3a8ea5bb8" id="r_a2ec8fb425a8678fd8f55b1e3a8ea5bb8"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1performance__guided__division_1_1PerformanceGuidedDivision.html#a2ec8fb425a8678fd8f55b1e3a8ea5bb8">current_epoch</a></td></tr>
+<tr class="separator:a2ec8fb425a8678fd8f55b1e3a8ea5bb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr class="memitem:a3537629f01ef492d36b25e7f61340333" id="r_a3537629f01ef492d36b25e7f61340333"><td class="memItemLeft" align="right" valign="top">Tuple[bool, Dict[str, Any]]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1performance__guided__division_1_1PerformanceGuidedDivision.html#a3537629f01ef492d36b25e7f61340333">_gradient_guided_division</a> (self, nn.Module layer, int neuron_idx, Optional[torch.Tensor] gradients)</td></tr>
+<tr class="separator:a3537629f01ef492d36b25e7f61340333"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a99357a174bfe21c63354834bc4f930bd" id="r_a99357a174bfe21c63354834bc4f930bd"><td class="memItemLeft" align="right" valign="top">Tuple[bool, Dict[str, Any]]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1performance__guided__division_1_1PerformanceGuidedDivision.html#a99357a174bfe21c63354834bc4f930bd">_activation_guided_division</a> (self, nn.Module layer, int neuron_idx, Optional[torch.Tensor] activations)</td></tr>
+<tr class="separator:a99357a174bfe21c63354834bc4f930bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a69821704eddac499b237b1b4bd468e9b" id="r_a69821704eddac499b237b1b4bd468e9b"><td class="memItemLeft" align="right" valign="top">Tuple[bool, Dict[str, Any]]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1performance__guided__division_1_1PerformanceGuidedDivision.html#a69821704eddac499b237b1b4bd468e9b">_information_guided_division</a> (self, nn.Module layer, int neuron_idx, Optional[torch.Tensor] activations, Optional[torch.Tensor] targets)</td></tr>
+<tr class="separator:a69821704eddac499b237b1b4bd468e9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afde9db119981ff29296631b0dce8770e" id="r_afde9db119981ff29296631b0dce8770e"><td class="memItemLeft" align="right" valign="top">Tuple[bool, Dict[str, Any]]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1performance__guided__division_1_1PerformanceGuidedDivision.html#afde9db119981ff29296631b0dce8770e">_high_information_division</a> (self, nn.Module layer, int neuron_idx, float mutual_info, float entropy)</td></tr>
+<tr class="separator:afde9db119981ff29296631b0dce8770e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a37e0b7887afedaaf63b4f245100424bc" id="r_a37e0b7887afedaaf63b4f245100424bc"><td class="memItemLeft" align="right" valign="top">Tuple[bool, Dict[str, Any]]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1performance__guided__division_1_1PerformanceGuidedDivision.html#a37e0b7887afedaaf63b4f245100424bc">_low_information_division</a> (self, nn.Module layer, int neuron_idx, float mutual_info, float entropy)</td></tr>
+<tr class="separator:a37e0b7887afedaaf63b4f245100424bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9c005dd788c7c6349dc27c28ddcb3fa0" id="r_a9c005dd788c7c6349dc27c28ddcb3fa0"><td class="memItemLeft" align="right" valign="top">Tuple[bool, Dict[str, Any]]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1performance__guided__division_1_1PerformanceGuidedDivision.html#a9c005dd788c7c6349dc27c28ddcb3fa0">_hybrid_division_strategy</a> (self, nn.Module layer, int neuron_idx, Optional[torch.Tensor] activations, Optional[torch.Tensor] gradients, Optional[torch.Tensor] targets)</td></tr>
+<tr class="separator:a9c005dd788c7c6349dc27c28ddcb3fa0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad7d0625fea7c660f5aee786f8cf6f883" id="r_ad7d0625fea7c660f5aee786f8cf6f883"><td class="memItemLeft" align="right" valign="top">Tuple[bool, Dict[str, Any]]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1performance__guided__division_1_1PerformanceGuidedDivision.html#ad7d0625fea7c660f5aee786f8cf6f883">_divide_conv_neuron_gradient</a> (self, nn.Conv2d layer, int neuron_idx, torch.Tensor gradients, torch.Tensor original_weight)</td></tr>
+<tr class="separator:ad7d0625fea7c660f5aee786f8cf6f883"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9f8e6d2e89c0398204092734e0084a56" id="r_a9f8e6d2e89c0398204092734e0084a56"><td class="memItemLeft" align="right" valign="top">Tuple[bool, Dict[str, Any]]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1performance__guided__division_1_1PerformanceGuidedDivision.html#a9f8e6d2e89c0398204092734e0084a56">_divide_linear_neuron_gradient</a> (self, nn.Linear layer, int neuron_idx, torch.Tensor gradients, torch.Tensor original_weight)</td></tr>
+<tr class="separator:a9f8e6d2e89c0398204092734e0084a56"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a613cdfda5b0cb473c11f19c9cd75c605" id="r_a613cdfda5b0cb473c11f19c9cd75c605"><td class="memItemLeft" align="right" valign="top">Dict[str, float]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1performance__guided__division_1_1PerformanceGuidedDivision.html#a613cdfda5b0cb473c11f19c9cd75c605">_analyze_activation_pattern</a> (self, torch.Tensor activations, int neuron_idx)</td></tr>
+<tr class="separator:a613cdfda5b0cb473c11f19c9cd75c605"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a34b414b37993e786fcd448c2154d752e" id="r_a34b414b37993e786fcd448c2154d752e"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1performance__guided__division_1_1PerformanceGuidedDivision.html#a34b414b37993e786fcd448c2154d752e">_estimate_mutual_information</a> (self, torch.Tensor activations, torch.Tensor targets, int neuron_idx)</td></tr>
+<tr class="separator:a34b414b37993e786fcd448c2154d752e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abd2c0f686f77e19d15abf45e4b67120b" id="r_abd2c0f686f77e19d15abf45e4b67120b"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1performance__guided__division_1_1PerformanceGuidedDivision.html#abd2c0f686f77e19d15abf45e4b67120b">_estimate_neuron_entropy</a> (self, torch.Tensor activations, int neuron_idx)</td></tr>
+<tr class="separator:abd2c0f686f77e19d15abf45e4b67120b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaf55d3db1cf88bde657c70b3a2f88b21" id="r_aaf55d3db1cf88bde657c70b3a2f88b21"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1performance__guided__division_1_1PerformanceGuidedDivision.html#aaf55d3db1cf88bde657c70b3a2f88b21">_evaluate_gradient_importance</a> (self, torch.Tensor gradients, int neuron_idx)</td></tr>
+<tr class="separator:aaf55d3db1cf88bde657c70b3a2f88b21"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb866a4ed8a460931047721341013cdd" id="r_abb866a4ed8a460931047721341013cdd"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1performance__guided__division_1_1PerformanceGuidedDivision.html#abb866a4ed8a460931047721341013cdd">_evaluate_activation_importance</a> (self, torch.Tensor activations, int neuron_idx)</td></tr>
+<tr class="separator:abb866a4ed8a460931047721341013cdd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0991eb4ca3527013377448d2b807dfbb" id="r_a0991eb4ca3527013377448d2b807dfbb"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1performance__guided__division_1_1PerformanceGuidedDivision.html#a0991eb4ca3527013377448d2b807dfbb">_evaluate_information_importance</a> (self, torch.Tensor activations, torch.Tensor targets, int neuron_idx)</td></tr>
+<tr class="separator:a0991eb4ca3527013377448d2b807dfbb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a23ec2f606dcf1b7ee1380d1e4174f4c6" id="r_a23ec2f606dcf1b7ee1380d1e4174f4c6"><td class="memItemLeft" align="right" valign="top">Tuple[bool, Dict[str, Any]]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1performance__guided__division_1_1PerformanceGuidedDivision.html#a23ec2f606dcf1b7ee1380d1e4174f4c6">_conservative_division</a> (self, nn.Module layer, int neuron_idx, float score)</td></tr>
+<tr class="separator:a23ec2f606dcf1b7ee1380d1e4174f4c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acdb464243c14e69ae7a550b81dac0a3c" id="r_acdb464243c14e69ae7a550b81dac0a3c"><td class="memItemLeft" align="right" valign="top">Tuple[bool, Dict[str, Any]]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1performance__guided__division_1_1PerformanceGuidedDivision.html#acdb464243c14e69ae7a550b81dac0a3c">_standard_division</a> (self, nn.Module layer, int neuron_idx, float score)</td></tr>
+<tr class="separator:acdb464243c14e69ae7a550b81dac0a3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad1230209a52c9dd8557f11776a498f39" id="r_ad1230209a52c9dd8557f11776a498f39"><td class="memItemLeft" align="right" valign="top">Tuple[bool, Dict[str, Any]]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1performance__guided__division_1_1PerformanceGuidedDivision.html#ad1230209a52c9dd8557f11776a498f39">_aggressive_division</a> (self, nn.Module layer, int neuron_idx, float score)</td></tr>
+<tr class="separator:ad1230209a52c9dd8557f11776a498f39"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aba73a755c8fb20ac4fba3871a901d0e9" id="r_aba73a755c8fb20ac4fba3871a901d0e9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1performance__guided__division_1_1PerformanceGuidedDivision.html#aba73a755c8fb20ac4fba3871a901d0e9">_replace_layer_in_model</a> (self, nn.Module old_layer, nn.Module new_layer)</td></tr>
+<tr class="separator:aba73a755c8fb20ac4fba3871a901d0e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1d35e91041c3f2882405fb85a4216285" id="r_a1d35e91041c3f2882405fb85a4216285"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1performance__guided__division_1_1PerformanceGuidedDivision.html#a1d35e91041c3f2882405fb85a4216285">_record_division</a> (self, str strategy, nn.Module layer, int neuron_idx, Dict[str, Any] info)</td></tr>
+<tr class="separator:a1d35e91041c3f2882405fb85a4216285"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><pre class="fragment">基于性能导向的神经元分裂器
+
+提供多种分裂策略：
+1. 梯度导向分裂 - 基于梯度信息选择分裂位置
+2. 激活导向分裂 - 基于激活模式选择分裂位置
+3. 混合策略 - 综合考虑多种因素
+4. 信息导向分裂 - 基于信息论指标
+</pre> 
+<p class="definition">Definition at line <a class="el" href="performance__guided__division_8py_source.html#l00034">34</a> of file <a class="el" href="performance__guided__division_8py_source.html">performance_guided_division.py</a>.</p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a661c6552f79298ae72d70e69bd2202a4" name="a661c6552f79298ae72d70e69bd2202a4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a661c6552f79298ae72d70e69bd2202a4">&#9670;&#160;</a></span>__init__()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.performance_guided_division.PerformanceGuidedDivision.__init__ </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float &#160;</td>
+          <td class="paramname"><em>noise_scale</em> = <code>0.1</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int &#160;</td>
+          <td class="paramname"><em>progressive_epochs</em> = <code>5</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float &#160;</td>
+          <td class="paramname"><em>diversity_threshold</em> = <code>0.8</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool &#160;</td>
+          <td class="paramname"><em>performance_monitoring</em> = <code>True</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">初始化分裂器
+
+Args:
+    noise_scale: 权重初始化噪声强度
+    progressive_epochs: 渐进式激活的周期数
+    diversity_threshold: 多样性阈值
+    performance_monitoring: 是否启用性能监控
+</pre> 
+<p class="definition">Definition at line <a class="el" href="performance__guided__division_8py_source.html#l00044">44</a> of file <a class="el" href="performance__guided__division_8py_source.html">performance_guided_division.py</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a99357a174bfe21c63354834bc4f930bd" name="a99357a174bfe21c63354834bc4f930bd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a99357a174bfe21c63354834bc4f930bd">&#9670;&#160;</a></span>_activation_guided_division()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Tuple[bool, Dict[str, Any]] neuroexapt.core.performance_guided_division.PerformanceGuidedDivision._activation_guided_division </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">nn.Module&#160;</td>
+          <td class="paramname"><em>layer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>neuron_idx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Optional[torch.Tensor]&#160;</td>
+          <td class="paramname"><em>activations</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">基于激活的神经元分裂</pre> 
+<p class="definition">Definition at line <a class="el" href="performance__guided__division_8py_source.html#l00134">134</a> of file <a class="el" href="performance__guided__division_8py_source.html">performance_guided_division.py</a>.</p>
+
+</div>
+</div>
+<a id="ad1230209a52c9dd8557f11776a498f39" name="ad1230209a52c9dd8557f11776a498f39"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad1230209a52c9dd8557f11776a498f39">&#9670;&#160;</a></span>_aggressive_division()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Tuple[bool, Dict[str, Any]] neuroexapt.core.performance_guided_division.PerformanceGuidedDivision._aggressive_division </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">nn.Module&#160;</td>
+          <td class="paramname"><em>layer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>neuron_idx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>score</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">激进分裂策略 - 用于低重要性神经元</pre> 
+<p class="definition">Definition at line <a class="el" href="performance__guided__division_8py_source.html#l00473">473</a> of file <a class="el" href="performance__guided__division_8py_source.html">performance_guided_division.py</a>.</p>
+
+</div>
+</div>
+<a id="a613cdfda5b0cb473c11f19c9cd75c605" name="a613cdfda5b0cb473c11f19c9cd75c605"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a613cdfda5b0cb473c11f19c9cd75c605">&#9670;&#160;</a></span>_analyze_activation_pattern()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Dict[str, float] neuroexapt.core.performance_guided_division.PerformanceGuidedDivision._analyze_activation_pattern </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">torch.Tensor&#160;</td>
+          <td class="paramname"><em>activations</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>neuron_idx</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">分析激活模式</pre> 
+<p class="definition">Definition at line <a class="el" href="performance__guided__division_8py_source.html#l00324">324</a> of file <a class="el" href="performance__guided__division_8py_source.html">performance_guided_division.py</a>.</p>
+
+</div>
+</div>
+<a id="a23ec2f606dcf1b7ee1380d1e4174f4c6" name="a23ec2f606dcf1b7ee1380d1e4174f4c6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a23ec2f606dcf1b7ee1380d1e4174f4c6">&#9670;&#160;</a></span>_conservative_division()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Tuple[bool, Dict[str, Any]] neuroexapt.core.performance_guided_division.PerformanceGuidedDivision._conservative_division </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">nn.Module&#160;</td>
+          <td class="paramname"><em>layer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>neuron_idx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>score</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">保守分裂策略 - 用于高重要性神经元</pre> 
+<p class="definition">Definition at line <a class="el" href="performance__guided__division_8py_source.html#l00441">441</a> of file <a class="el" href="performance__guided__division_8py_source.html">performance_guided_division.py</a>.</p>
+
+</div>
+</div>
+<a id="ad7d0625fea7c660f5aee786f8cf6f883" name="ad7d0625fea7c660f5aee786f8cf6f883"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad7d0625fea7c660f5aee786f8cf6f883">&#9670;&#160;</a></span>_divide_conv_neuron_gradient()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Tuple[bool, Dict[str, Any]] neuroexapt.core.performance_guided_division.PerformanceGuidedDivision._divide_conv_neuron_gradient </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">nn.Conv2d&#160;</td>
+          <td class="paramname"><em>layer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>neuron_idx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">torch.Tensor&#160;</td>
+          <td class="paramname"><em>gradients</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">torch.Tensor&#160;</td>
+          <td class="paramname"><em>original_weight</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">基于梯度分裂卷积神经元</pre> 
+<p class="definition">Definition at line <a class="el" href="performance__guided__division_8py_source.html#l00233">233</a> of file <a class="el" href="performance__guided__division_8py_source.html">performance_guided_division.py</a>.</p>
+
+</div>
+</div>
+<a id="a9f8e6d2e89c0398204092734e0084a56" name="a9f8e6d2e89c0398204092734e0084a56"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9f8e6d2e89c0398204092734e0084a56">&#9670;&#160;</a></span>_divide_linear_neuron_gradient()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Tuple[bool, Dict[str, Any]] neuroexapt.core.performance_guided_division.PerformanceGuidedDivision._divide_linear_neuron_gradient </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">nn.Linear&#160;</td>
+          <td class="paramname"><em>layer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>neuron_idx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">torch.Tensor&#160;</td>
+          <td class="paramname"><em>gradients</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">torch.Tensor&#160;</td>
+          <td class="paramname"><em>original_weight</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">基于梯度分裂线性神经元</pre> 
+<p class="definition">Definition at line <a class="el" href="performance__guided__division_8py_source.html#l00285">285</a> of file <a class="el" href="performance__guided__division_8py_source.html">performance_guided_division.py</a>.</p>
+
+</div>
+</div>
+<a id="a34b414b37993e786fcd448c2154d752e" name="a34b414b37993e786fcd448c2154d752e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a34b414b37993e786fcd448c2154d752e">&#9670;&#160;</a></span>_estimate_mutual_information()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> float neuroexapt.core.performance_guided_division.PerformanceGuidedDivision._estimate_mutual_information </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">torch.Tensor&#160;</td>
+          <td class="paramname"><em>activations</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">torch.Tensor&#160;</td>
+          <td class="paramname"><em>targets</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>neuron_idx</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">估计互信息</pre> 
+<p class="definition">Definition at line <a class="el" href="performance__guided__division_8py_source.html#l00347">347</a> of file <a class="el" href="performance__guided__division_8py_source.html">performance_guided_division.py</a>.</p>
+
+</div>
+</div>
+<a id="abd2c0f686f77e19d15abf45e4b67120b" name="abd2c0f686f77e19d15abf45e4b67120b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abd2c0f686f77e19d15abf45e4b67120b">&#9670;&#160;</a></span>_estimate_neuron_entropy()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> float neuroexapt.core.performance_guided_division.PerformanceGuidedDivision._estimate_neuron_entropy </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">torch.Tensor&#160;</td>
+          <td class="paramname"><em>activations</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>neuron_idx</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">估计神经元熵</pre> 
+<p class="definition">Definition at line <a class="el" href="performance__guided__division_8py_source.html#l00373">373</a> of file <a class="el" href="performance__guided__division_8py_source.html">performance_guided_division.py</a>.</p>
+
+</div>
+</div>
+<a id="abb866a4ed8a460931047721341013cdd" name="abb866a4ed8a460931047721341013cdd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abb866a4ed8a460931047721341013cdd">&#9670;&#160;</a></span>_evaluate_activation_importance()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> float neuroexapt.core.performance_guided_division.PerformanceGuidedDivision._evaluate_activation_importance </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">torch.Tensor&#160;</td>
+          <td class="paramname"><em>activations</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>neuron_idx</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">评估激活重要性</pre> 
+<p class="definition">Definition at line <a class="el" href="performance__guided__division_8py_source.html#l00410">410</a> of file <a class="el" href="performance__guided__division_8py_source.html">performance_guided_division.py</a>.</p>
+
+</div>
+</div>
+<a id="aaf55d3db1cf88bde657c70b3a2f88b21" name="aaf55d3db1cf88bde657c70b3a2f88b21"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaf55d3db1cf88bde657c70b3a2f88b21">&#9670;&#160;</a></span>_evaluate_gradient_importance()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> float neuroexapt.core.performance_guided_division.PerformanceGuidedDivision._evaluate_gradient_importance </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">torch.Tensor&#160;</td>
+          <td class="paramname"><em>gradients</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>neuron_idx</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">评估梯度重要性</pre> 
+<p class="definition">Definition at line <a class="el" href="performance__guided__division_8py_source.html#l00394">394</a> of file <a class="el" href="performance__guided__division_8py_source.html">performance_guided_division.py</a>.</p>
+
+</div>
+</div>
+<a id="a0991eb4ca3527013377448d2b807dfbb" name="a0991eb4ca3527013377448d2b807dfbb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0991eb4ca3527013377448d2b807dfbb">&#9670;&#160;</a></span>_evaluate_information_importance()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> float neuroexapt.core.performance_guided_division.PerformanceGuidedDivision._evaluate_information_importance </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">torch.Tensor&#160;</td>
+          <td class="paramname"><em>activations</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">torch.Tensor&#160;</td>
+          <td class="paramname"><em>targets</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>neuron_idx</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">评估信息重要性</pre> 
+<p class="definition">Definition at line <a class="el" href="performance__guided__division_8py_source.html#l00427">427</a> of file <a class="el" href="performance__guided__division_8py_source.html">performance_guided_division.py</a>.</p>
+
+</div>
+</div>
+<a id="a3537629f01ef492d36b25e7f61340333" name="a3537629f01ef492d36b25e7f61340333"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3537629f01ef492d36b25e7f61340333">&#9670;&#160;</a></span>_gradient_guided_division()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Tuple[bool, Dict[str, Any]] neuroexapt.core.performance_guided_division.PerformanceGuidedDivision._gradient_guided_division </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">nn.Module&#160;</td>
+          <td class="paramname"><em>layer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>neuron_idx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Optional[torch.Tensor]&#160;</td>
+          <td class="paramname"><em>gradients</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">基于梯度的神经元分裂</pre> 
+<p class="definition">Definition at line <a class="el" href="performance__guided__division_8py_source.html#l00105">105</a> of file <a class="el" href="performance__guided__division_8py_source.html">performance_guided_division.py</a>.</p>
+
+</div>
+</div>
+<a id="afde9db119981ff29296631b0dce8770e" name="afde9db119981ff29296631b0dce8770e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afde9db119981ff29296631b0dce8770e">&#9670;&#160;</a></span>_high_information_division()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Tuple[bool, Dict[str, Any]] neuroexapt.core.performance_guided_division.PerformanceGuidedDivision._high_information_division </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">nn.Module&#160;</td>
+          <td class="paramname"><em>layer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>neuron_idx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>mutual_info</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>entropy</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">高信息量神经元的分裂策略</pre> 
+<p class="definition">Definition at line <a class="el" href="performance__guided__division_8py_source.html#l00192">192</a> of file <a class="el" href="performance__guided__division_8py_source.html">performance_guided_division.py</a>.</p>
+
+</div>
+</div>
+<a id="a9c005dd788c7c6349dc27c28ddcb3fa0" name="a9c005dd788c7c6349dc27c28ddcb3fa0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9c005dd788c7c6349dc27c28ddcb3fa0">&#9670;&#160;</a></span>_hybrid_division_strategy()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Tuple[bool, Dict[str, Any]] neuroexapt.core.performance_guided_division.PerformanceGuidedDivision._hybrid_division_strategy </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">nn.Module&#160;</td>
+          <td class="paramname"><em>layer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>neuron_idx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Optional[torch.Tensor]&#160;</td>
+          <td class="paramname"><em>activations</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Optional[torch.Tensor]&#160;</td>
+          <td class="paramname"><em>gradients</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Optional[torch.Tensor]&#160;</td>
+          <td class="paramname"><em>targets</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">混合分裂策略</pre> 
+<p class="definition">Definition at line <a class="el" href="performance__guided__division_8py_source.html#l00202">202</a> of file <a class="el" href="performance__guided__division_8py_source.html">performance_guided_division.py</a>.</p>
+
+</div>
+</div>
+<a id="a69821704eddac499b237b1b4bd468e9b" name="a69821704eddac499b237b1b4bd468e9b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a69821704eddac499b237b1b4bd468e9b">&#9670;&#160;</a></span>_information_guided_division()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Tuple[bool, Dict[str, Any]] neuroexapt.core.performance_guided_division.PerformanceGuidedDivision._information_guided_division </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">nn.Module&#160;</td>
+          <td class="paramname"><em>layer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>neuron_idx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Optional[torch.Tensor]&#160;</td>
+          <td class="paramname"><em>activations</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Optional[torch.Tensor]&#160;</td>
+          <td class="paramname"><em>targets</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">基于信息论的神经元分裂</pre> 
+<p class="definition">Definition at line <a class="el" href="performance__guided__division_8py_source.html#l00168">168</a> of file <a class="el" href="performance__guided__division_8py_source.html">performance_guided_division.py</a>.</p>
+
+</div>
+</div>
+<a id="a37e0b7887afedaaf63b4f245100424bc" name="a37e0b7887afedaaf63b4f245100424bc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a37e0b7887afedaaf63b4f245100424bc">&#9670;&#160;</a></span>_low_information_division()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Tuple[bool, Dict[str, Any]] neuroexapt.core.performance_guided_division.PerformanceGuidedDivision._low_information_division </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">nn.Module&#160;</td>
+          <td class="paramname"><em>layer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>neuron_idx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>mutual_info</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>entropy</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">低信息量神经元的分裂策略</pre> 
+<p class="definition">Definition at line <a class="el" href="performance__guided__division_8py_source.html#l00197">197</a> of file <a class="el" href="performance__guided__division_8py_source.html">performance_guided_division.py</a>.</p>
+
+</div>
+</div>
+<a id="a1d35e91041c3f2882405fb85a4216285" name="a1d35e91041c3f2882405fb85a4216285"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1d35e91041c3f2882405fb85a4216285">&#9670;&#160;</a></span>_record_division()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.performance_guided_division.PerformanceGuidedDivision._record_division </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str&#160;</td>
+          <td class="paramname"><em>strategy</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">nn.Module&#160;</td>
+          <td class="paramname"><em>layer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>neuron_idx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Dict[str, Any]&#160;</td>
+          <td class="paramname"><em>info</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">记录分裂历史</pre> 
+<p class="definition">Definition at line <a class="el" href="performance__guided__division_8py_source.html#l00496">496</a> of file <a class="el" href="performance__guided__division_8py_source.html">performance_guided_division.py</a>.</p>
+
+</div>
+</div>
+<a id="aba73a755c8fb20ac4fba3871a901d0e9" name="aba73a755c8fb20ac4fba3871a901d0e9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aba73a755c8fb20ac4fba3871a901d0e9">&#9670;&#160;</a></span>_replace_layer_in_model()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.performance_guided_division.PerformanceGuidedDivision._replace_layer_in_model </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">nn.Module&#160;</td>
+          <td class="paramname"><em>old_layer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">nn.Module&#160;</td>
+          <td class="paramname"><em>new_layer</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">在模型中替换层 - 这需要在调用者中实现具体的替换逻辑</pre> 
+<p class="definition">Definition at line <a class="el" href="performance__guided__division_8py_source.html#l00491">491</a> of file <a class="el" href="performance__guided__division_8py_source.html">performance_guided_division.py</a>.</p>
+
+</div>
+</div>
+<a id="acdb464243c14e69ae7a550b81dac0a3c" name="acdb464243c14e69ae7a550b81dac0a3c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acdb464243c14e69ae7a550b81dac0a3c">&#9670;&#160;</a></span>_standard_division()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Tuple[bool, Dict[str, Any]] neuroexapt.core.performance_guided_division.PerformanceGuidedDivision._standard_division </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">nn.Module&#160;</td>
+          <td class="paramname"><em>layer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>neuron_idx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>score</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">标准分裂策略</pre> 
+<p class="definition">Definition at line <a class="el" href="performance__guided__division_8py_source.html#l00459">459</a> of file <a class="el" href="performance__guided__division_8py_source.html">performance_guided_division.py</a>.</p>
+
+</div>
+</div>
+<a id="af3f9c2fa11b02671bbb77266b27dd842" name="af3f9c2fa11b02671bbb77266b27dd842"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af3f9c2fa11b02671bbb77266b27dd842">&#9670;&#160;</a></span>divide_neuron()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Tuple[bool, Dict[str, Any]] neuroexapt.core.performance_guided_division.PerformanceGuidedDivision.divide_neuron </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">nn.Module&#160;</td>
+          <td class="paramname"><em>layer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>neuron_idx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classneuroexapt_1_1core_1_1performance__guided__division_1_1DivisionStrategy.html">DivisionStrategy</a> &#160;</td>
+          <td class="paramname"><em>strategy</em> = <code><a class="el" href="classneuroexapt_1_1core_1_1performance__guided__division_1_1DivisionStrategy.html#a72b397f4d6f802b65591ae95b2d6c05e">DivisionStrategy.HYBRID</a></code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Optional[torch.Tensor] &#160;</td>
+          <td class="paramname"><em>activations</em> = <code>None</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Optional[torch.Tensor] &#160;</td>
+          <td class="paramname"><em>gradients</em> = <code>None</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Optional[torch.Tensor] &#160;</td>
+          <td class="paramname"><em>targets</em> = <code>None</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">执行神经元分裂
+
+Args:
+    layer: 目标层
+    neuron_idx: 神经元索引
+    strategy: 分裂策略
+    activations: 激活值
+    gradients: 梯度信息
+    targets: 目标值
+    
+Returns:
+    Tuple[bool, Dict]: (是否成功, 分裂信息)
+</pre> 
+<p class="definition">Definition at line <a class="el" href="performance__guided__division_8py_source.html#l00071">71</a> of file <a class="el" href="performance__guided__division_8py_source.html">performance_guided_division.py</a>.</p>
+
+</div>
+</div>
+<a id="a6953d4284e9eb33b0922ac27642345ce" name="a6953d4284e9eb33b0922ac27642345ce"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6953d4284e9eb33b0922ac27642345ce">&#9670;&#160;</a></span>get_division_summary()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Dict[str, Any] neuroexapt.core.performance_guided_division.PerformanceGuidedDivision.get_division_summary </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">获取分裂摘要信息</pre> 
+<p class="definition">Definition at line <a class="el" href="performance__guided__division_8py_source.html#l00510">510</a> of file <a class="el" href="performance__guided__division_8py_source.html">performance_guided_division.py</a>.</p>
+
+</div>
+</div>
+<a id="a3bef5319b3c087bf166c5059045aa858" name="a3bef5319b3c087bf166c5059045aa858"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3bef5319b3c087bf166c5059045aa858">&#9670;&#160;</a></span>update_epoch()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.performance_guided_division.PerformanceGuidedDivision.update_epoch </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>epoch</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">更新当前训练周期</pre> 
+<p class="definition">Definition at line <a class="el" href="performance__guided__division_8py_source.html#l00506">506</a> of file <a class="el" href="performance__guided__division_8py_source.html">performance_guided_division.py</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a2ec8fb425a8678fd8f55b1e3a8ea5bb8" name="a2ec8fb425a8678fd8f55b1e3a8ea5bb8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2ec8fb425a8678fd8f55b1e3a8ea5bb8">&#9670;&#160;</a></span>current_epoch</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.performance_guided_division.PerformanceGuidedDivision.current_epoch</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="performance__guided__division_8py_source.html#l00069">69</a> of file <a class="el" href="performance__guided__division_8py_source.html">performance_guided_division.py</a>.</p>
+
+</div>
+</div>
+<a id="a9599a1fa69ac4fdc4f8c8e1293cff0ca" name="a9599a1fa69ac4fdc4f8c8e1293cff0ca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9599a1fa69ac4fdc4f8c8e1293cff0ca">&#9670;&#160;</a></span>diversity_threshold</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.performance_guided_division.PerformanceGuidedDivision.diversity_threshold</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="performance__guided__division_8py_source.html#l00059">59</a> of file <a class="el" href="performance__guided__division_8py_source.html">performance_guided_division.py</a>.</p>
+
+</div>
+</div>
+<a id="ae0a0d947d5910b8b6d30603bcf49aa0c" name="ae0a0d947d5910b8b6d30603bcf49aa0c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae0a0d947d5910b8b6d30603bcf49aa0c">&#9670;&#160;</a></span>division_history</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.performance_guided_division.PerformanceGuidedDivision.division_history</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="performance__guided__division_8py_source.html#l00063">63</a> of file <a class="el" href="performance__guided__division_8py_source.html">performance_guided_division.py</a>.</p>
+
+</div>
+</div>
+<a id="a44f06cfb3ba9d2e1fac8d2ef1a78eace" name="a44f06cfb3ba9d2e1fac8d2ef1a78eace"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a44f06cfb3ba9d2e1fac8d2ef1a78eace">&#9670;&#160;</a></span>noise_scale</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.performance_guided_division.PerformanceGuidedDivision.noise_scale</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="performance__guided__division_8py_source.html#l00057">57</a> of file <a class="el" href="performance__guided__division_8py_source.html">performance_guided_division.py</a>.</p>
+
+</div>
+</div>
+<a id="a011733ff2dfde58e525024ea9b3b01de" name="a011733ff2dfde58e525024ea9b3b01de"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a011733ff2dfde58e525024ea9b3b01de">&#9670;&#160;</a></span>performance_after_division</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.performance_guided_division.PerformanceGuidedDivision.performance_after_division</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="performance__guided__division_8py_source.html#l00065">65</a> of file <a class="el" href="performance__guided__division_8py_source.html">performance_guided_division.py</a>.</p>
+
+</div>
+</div>
+<a id="a452a84a043d76abc4b8d0d0737cf09ae" name="a452a84a043d76abc4b8d0d0737cf09ae"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a452a84a043d76abc4b8d0d0737cf09ae">&#9670;&#160;</a></span>performance_before_division</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.performance_guided_division.PerformanceGuidedDivision.performance_before_division</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="performance__guided__division_8py_source.html#l00064">64</a> of file <a class="el" href="performance__guided__division_8py_source.html">performance_guided_division.py</a>.</p>
+
+</div>
+</div>
+<a id="ad52c9ce6cc1d61c1b514a95637e5b52c" name="ad52c9ce6cc1d61c1b514a95637e5b52c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad52c9ce6cc1d61c1b514a95637e5b52c">&#9670;&#160;</a></span>performance_monitoring</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.performance_guided_division.PerformanceGuidedDivision.performance_monitoring</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="performance__guided__division_8py_source.html#l00060">60</a> of file <a class="el" href="performance__guided__division_8py_source.html">performance_guided_division.py</a>.</p>
+
+</div>
+</div>
+<a id="a2e53031a8c7e5ae627e3df67677c1a28" name="a2e53031a8c7e5ae627e3df67677c1a28"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2e53031a8c7e5ae627e3df67677c1a28">&#9670;&#160;</a></span>progressive_epochs</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.performance_guided_division.PerformanceGuidedDivision.progressive_epochs</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="performance__guided__division_8py_source.html#l00058">58</a> of file <a class="el" href="performance__guided__division_8py_source.html">performance_guided_division.py</a>.</p>
+
+</div>
+</div>
+<a id="a1a6895b17ea82ebd925d276d7198ff6e" name="a1a6895b17ea82ebd925d276d7198ff6e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1a6895b17ea82ebd925d276d7198ff6e">&#9670;&#160;</a></span>progressive_weights</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.performance_guided_division.PerformanceGuidedDivision.progressive_weights</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="performance__guided__division_8py_source.html#l00068">68</a> of file <a class="el" href="performance__guided__division_8py_source.html">performance_guided_division.py</a>.</p>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following file:<ul>
+<li>neuroexapt/core/<a class="el" href="performance__guided__division_8py_source.html">performance_guided_division.py</a></li>
+</ul>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<!-- do not remove this div, it is closed by doxygen! -->
+</div>
+<!-- Custom Footer -->
+<div style="background: #f8f9fa; border-top: 1px solid #e9ecef; margin-top: 50px; padding: 30px 0; text-align: center;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-bottom: 20px;">
+            <!-- Project Info -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🧠 NeuroExapt</h4>
+                <p style="color: #6c757d; margin: 0; font-size: 0.9em;">
+                    Advanced Neural Architecture Search and Dynamic Morphogenesis Framework for next-generation AI research.
+                </p>
+            </div>
+            <!-- Quick Links -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">📚 Quick Links</h4>
+                <div style="text-align: left;">
+                    <a href="index.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🏠 Home</a>
+                    <a href="modules.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📦 Modules</a>
+                    <a href="examples.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💡 Examples</a>
+                    <a href="files.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📁 Files</a>
+                </div>
+            </div>
+            <!-- Resources -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🔗 Resources</h4>
+                <div style="text-align: left;">
+                    <a href="https://github.com/your-username/neuroexapt" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💻 GitHub Repository</a>
+                    <a href="https://github.com/your-username/neuroexapt/issues" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🐛 Issue Tracker</a>
+                    <a href="https://github.com/your-username/neuroexapt/wiki" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📖 Wiki</a>
+                    <a href="https://github.com/your-username/neuroexapt/releases" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🚀 Releases</a>
+                </div>
+            </div>
+        </div>
+        <hr style="border: 0; height: 1px; background: #e9ecef; margin: 20px 0;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+            <div style="color: #6c757d; font-size: 0.9em;">
+                © 2024 NeuroExapt Project. Generated with 
+                <a href="https://www.doxygen.nl/index.html" style="color: #667eea; text-decoration: none;">Doxygen 1.9.8</a>
+            </div>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <span style="font-size: 0.9em; color: #6c757d;">Built with ❤️ for AI Research</span>
+                <div style="display: flex; gap: 10px;">
+                    <span style="background: #28a745; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">🟢 Active</span>
+                    <span style="background: #17a2b8; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">v3.0</span>
+                </div>
+            </div>
+        </div>
+        <!-- Technology Stack -->
+        <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #e9ecef;">
+            <div style="font-size: 0.8em; color: #868e96; text-align: center;">
+                <strong>Built with:</strong>
+                <span style="margin: 0 5px;">🐍 Python</span>
+                <span style="margin: 0 5px;">🔥 PyTorch</span>
+                <span style="margin: 0 5px;">⚡ CUDA</span>
+                <span style="margin: 0 5px;">🧮 NumPy</span>
+                <span style="margin: 0 5px;">📊 Matplotlib</span>
+                <span style="margin: 0 5px;">🚀 Triton</span>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Back to top button -->
+<div id="back-to-top" style="position: fixed; bottom: 20px; right: 20px; display: none; z-index: 1000;">
+    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" 
+            style="background: #667eea; color: white; border: none; padding: 10px 15px; border-radius: 50%; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,0.2); font-size: 16px;">
+        ⬆️
+    </button>
+</div>
+<script>
+// Back to top button functionality
+window.addEventListener('scroll', function() {
+    const backToTop = document.getElementById('back-to-top');
+    if (window.pageYOffset > 300) {
+        backToTop.style.display = 'block';
+    } else {
+        backToTop.style.display = 'none';
+    }
+});
+// Enhanced search functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Add search enhancement if search box exists
+    const searchBox = document.getElementById('MSearchField');
+    if (searchBox) {
+        searchBox.placeholder = 'Search documentation... 🔍';
+        searchBox.style.borderRadius = '20px';
+        searchBox.style.padding = '8px 15px';
+    }
+    // Add copy code button to code blocks
+    const codeBlocks = document.querySelectorAll('.fragment');
+    codeBlocks.forEach(function(block) {
+        const copyBtn = document.createElement('button');
+        copyBtn.innerHTML = '📋';
+        copyBtn.title = 'Copy code';
+        copyBtn.style.cssText = 'position: absolute; top: 10px; right: 10px; background: #667eea; color: white; border: none; padding: 5px; border-radius: 3px; cursor: pointer; font-size: 12px;';
+        block.style.position = 'relative';
+        block.appendChild(copyBtn);
+        copyBtn.addEventListener('click', function() {
+            const text = block.textContent;
+            navigator.clipboard.writeText(text).then(function() {
+                copyBtn.innerHTML = '✅';
+                setTimeout(function() {
+                    copyBtn.innerHTML = '📋';
+                }, 2000);
+            });
+        });
+    });
+});
+// Dark mode toggle (optional)
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+}
+// Load saved dark mode preference
+if (localStorage.getItem('darkMode') === 'true') {
+    document.body.classList.add('dark-mode');
+}
+</script>
+</body>
+</html>

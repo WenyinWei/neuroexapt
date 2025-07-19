@@ -1,4 +1,11 @@
 
+"""
+\defgroup group_model Model
+\ingroup core
+Model module for NeuroExapt framework.
+"""
+
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F

@@ -1,4 +1,11 @@
 """
+"""
+\defgroup group_trainer Trainer
+\ingroup core
+Trainer module for NeuroExapt framework.
+"""
+
+
 NeuroExapt Trainer - Simplified Interface
 
 This module provides a simplified interface for using NeuroExapt with

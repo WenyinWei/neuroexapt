@@ -1,0 +1,25 @@
+var classneuroexapt_1_1trainer_1_1Trainer =
+[
+    [ "__init__", "classneuroexapt_1_1trainer_1_1Trainer.html#ac5bd82cc30a6c6820e36be65a6d6f7b3", null ],
+    [ "__repr__", "classneuroexapt_1_1trainer_1_1Trainer.html#afd2502b9194f8b8293686c2c12ab43a3", null ],
+    [ "_create_criterion", "classneuroexapt_1_1trainer_1_1Trainer.html#a409f04623412d39a2f5eff088056e9d5", null ],
+    [ "_create_optimizer", "classneuroexapt_1_1trainer_1_1Trainer.html#ab9391496bf4c09ef9a9ca8fc627c8e00", null ],
+    [ "analyze_architecture", "classneuroexapt_1_1trainer_1_1Trainer.html#a7a953f42b67d77e0569e3918e78425c9", null ],
+    [ "evaluate", "classneuroexapt_1_1trainer_1_1Trainer.html#af13f4417831849659a55b16bacb8579f", null ],
+    [ "fit", "classneuroexapt_1_1trainer_1_1Trainer.html#afb56d928ab7a6d5f4c6cf1ea0cbd046b", null ],
+    [ "get_best_model", "classneuroexapt_1_1trainer_1_1Trainer.html#afc9d4a3665c802ddbfe95506f1173878", null ],
+    [ "get_evolution_summary", "classneuroexapt_1_1trainer_1_1Trainer.html#aee426a1877fe4f5472d42f4c01428654", null ],
+    [ "get_model", "classneuroexapt_1_1trainer_1_1Trainer.html#a41bf94e78881dc283a8bbddca83038c5", null ],
+    [ "load_model", "classneuroexapt_1_1trainer_1_1Trainer.html#aedbe3cf906bd787c7bfe206d93012d06", null ],
+    [ "save_model", "classneuroexapt_1_1trainer_1_1Trainer.html#a48dbadde2c4e5f8d228124e8bed5de58", null ],
+    [ "best_accuracy", "classneuroexapt_1_1trainer_1_1Trainer.html#a07c504c5aa4a5a581195a78f61896871", null ],
+    [ "best_model_state", "classneuroexapt_1_1trainer_1_1Trainer.html#ac9bace36b5f0eeeb166e536cc6dfdbc5", null ],
+    [ "device", "classneuroexapt_1_1trainer_1_1Trainer.html#a93edda41d74aba26bde118fc5179a50e", null ],
+    [ "has_architecture_changes", "classneuroexapt_1_1trainer_1_1Trainer.html#a4f0b17cffa0701d6ee601a4e7ee9373a", null ],
+    [ "history", "classneuroexapt_1_1trainer_1_1Trainer.html#a1aca4cd4ef1554de9271199d29274281", null ],
+    [ "initial_params", "classneuroexapt_1_1trainer_1_1Trainer.html#a0b21115b43f6b756345e01c071ee95bc", null ],
+    [ "model", "classneuroexapt_1_1trainer_1_1Trainer.html#abcff63edc28b507917330d7a4df3f284", null ],
+    [ "neuroexapt", "classneuroexapt_1_1trainer_1_1Trainer.html#a3578fef170ae3e756769fec3711708f9", null ],
+    [ "previous_params", "classneuroexapt_1_1trainer_1_1Trainer.html#aa8919ece0335c96e7e2b0883519a08fb", null ],
+    [ "verbose", "classneuroexapt_1_1trainer_1_1Trainer.html#a8605e2381b0805b9d66096899786f3a5", null ]
+];

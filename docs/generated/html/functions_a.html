@@ -1,0 +1,406 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="description" content="NeuroExapt - Advanced Neural Architecture Search and Dynamic Morphogenesis Framework">
+    <meta name="keywords" content="neural architecture search, dynamic morphogenesis, deep learning, AI, PyTorch">
+    <meta name="author" content="NeuroExapt Team">
+    <meta property="og:title" content="NeuroExapt Documentation">
+    <meta property="og:description" content="Advanced Neural Architecture Search Framework">
+    <meta property="og:type" content="website">
+
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>NeuroExapt: Class Members</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="custom.css" rel="stylesheet" type="text/css"/>
+<!-- NeuroExapt Custom Styles -->
+<style>
+/* Enhanced header styling */
+.header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+.header h1 {
+    margin: 0;
+    font-size: 2.5em;
+    font-weight: 300;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+.header .subtitle {
+    font-size: 1.2em;
+    opacity: 0.9;
+    margin-top: 10px;
+}
+/* Enhanced navigation */
+.tablist {
+    background: #f8f9fa;
+    border-bottom: 2px solid #e9ecef;
+}
+.tablist li.current a {
+    background: #667eea;
+    color: white;
+}
+/* Improved content layout */
+.contents {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+/* Code highlighting */
+.fragment {
+    background: #f8f9fa;
+    border-left: 4px solid #667eea;
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 0 8px 8px 0;
+}
+/* Enhanced tables */
+table.memberdecls {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 20px 0;
+}
+table.memberdecls td {
+    border: 1px solid #e9ecef;
+    padding: 12px;
+}
+/* Better typography */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #343a40;
+}
+h1, h2, h3, h4, h5, h6 {
+    color: #495057;
+    font-weight: 500;
+}
+/* Responsive design */
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 2em;
+    }
+    .contents {
+        padding: 15px;
+    }
+}
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #1a1a1a;
+        color: #e9ecef;
+    }
+    .header {
+        background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+    }
+    .fragment {
+        background: #2d3748;
+        color: #e9ecef;
+    }
+}
+</style>
+<!-- Analytics (if needed) -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<!--
+<script async src="https://www.googletagmanager.com/gtag/js?id=GA_TRACKING_ID"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'GA_TRACKING_ID');
+</script>
+-->
+</head>
+<body>
+<!-- Custom Header -->
+<div class="header">
+    <h1>🧠 NeuroExapt</h1>
+    <div class="subtitle">Advanced Neural Architecture Search and Dynamic Morphogenesis Framework</div>
+    <div style="margin-top: 15px; font-size: 0.9em;">
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🚀 Dynamic Neural Morphogenesis
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🔬 Advanced Architecture Search
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            ⚡ High-Performance Computing
+        </span>
+    </div>
+</div>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! --><!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('functions_a.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="contents">
+<div class="textblock">Here is a list of all class members with links to the classes they belong to:</div>
+
+<h3><a id="index_a" name="index_a"></a>- a -</h3><ul>
+<li>accumulated_grads&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a7293e57d0d8f22a7e143259d90e2422c">neuroexapt.core.optimized_architect.OptimizedArchitect</a></li>
+<li>accumulation_count&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a4495f132dc4637d0878a60ddaf679530">neuroexapt.core.optimized_architect.OptimizedArchitect</a></li>
+<li>accuracy&#160;:&#160;<a class="el" href="classneuroexapt_1_1math_1_1pareto__optimization_1_1FitnessMetrics.html#aabf2b37d4653f3397a58365e540dd1bc">neuroexapt.math.pareto_optimization.FitnessMetrics</a></li>
+<li>accuracy_history&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1aggressive__morphogenesis_1_1AggressiveMorphogenesisAnalyzer.html#a1212d4c945c180ed6b784159fa1f3441">neuroexapt.core.aggressive_morphogenesis.AggressiveMorphogenesisAnalyzer</a></li>
+<li>accuracy_plateau_threshold&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1aggressive__morphogenesis_1_1AggressiveMorphogenesisAnalyzer.html#a023a2cbf4c74ee49907bcf5db6de5a1a">neuroexapt.core.aggressive_morphogenesis.AggressiveMorphogenesisAnalyzer</a></li>
+<li>ACTIVATION_BASED&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1performance__guided__division_1_1DivisionStrategy.html#a99c9a9e13884d137df4952b81d9617c3">neuroexapt.core.performance_guided_division.DivisionStrategy</a></li>
+<li>activation_cache&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1dnm__framework_1_1DNMFramework.html#a4f8da9f146049cd584cf55269e9c776d">neuroexapt.core.dnm_framework.DNMFramework</a>, <a class="el" href="classneuroexapt_1_1core_1_1enhanced__dnm__framework_1_1EnhancedDNMFramework.html#aaa25a13c40ec3bdedd7c2e611d4acef8">neuroexapt.core.enhanced_dnm_framework.EnhancedDNMFramework</a></li>
+<li>activation_history&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1enhanced__bottleneck__detector_1_1EnhancedBottleneckDetector.html#a28b8bfddc3ec381f144e0efe464668d0">neuroexapt.core.enhanced_bottleneck_detector.EnhancedBottleneckDetector</a></li>
+<li>activation_hooks&#160;:&#160;<a class="el" href="classexamples_1_1enhanced__deep__classification_1_1DeepEvolvableCNN.html#a0f9306c5e310fbb20b17dc3a840e53c6">examples.enhanced_deep_classification.DeepEvolvableCNN</a></li>
+<li>activations&#160;:&#160;<a class="el" href="classexamples_1_1dnm__enhanced__test_1_1ActivationHook.html#ad19e475f4f90c2cd9169699e6f0f80e7">examples.dnm_enhanced_test.ActivationHook</a>, <a class="el" href="classexamples_1_1dnm__fixed__test_1_1ActivationHook.html#afdb28231fafe6436dcd218b401109d06">examples.dnm_fixed_test.ActivationHook</a></li>
+<li>active_ops_avg&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1fast__operations_1_1FastMixedOp.html#af4ee68f919c61a46f8de2c4db4cfb8f3">neuroexapt.core.fast_operations.FastMixedOp</a></li>
+<li>active_subnetworks&#160;:&#160;<a class="el" href="classexamples_1_1demo__subnetwork__evolution_1_1ModularCNN.html#a38ea4f5ebd601b99d347af921c87c165">examples.demo_subnetwork_evolution.ModularCNN</a></li>
+<li>adaptive_gradient_clipping()&#160;:&#160;<a class="el" href="classneuroexapt_1_1math_1_1fast__math_1_1FastGradients.html#ad25af378f2d8906da27a08ce4eb078b2">neuroexapt.math.fast_math.FastGradients</a></li>
+<li>adaptive_temperature_control()&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1gumbel__softmax__explorer_1_1GumbelSoftmaxExplorer.html#a494301a3857b9911d06ca4296a79377e">neuroexapt.core.gumbel_softmax_explorer.GumbelSoftmaxExplorer</a></li>
+<li>add_advanced_operation()&#160;:&#160;<a class="el" href="classexamples_1_1dynamic__architecture__evolution_1_1DynamicArchitecture.html#a48c4669439a6402d9e3d746044b7da20">examples.dynamic_architecture_evolution.DynamicArchitecture</a></li>
+<li>add_branch()&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1architecture__mutator_1_1ArchitectureMutator.html#a2bdd8b8a03dc76d16cc2bb94b86cf846">neuroexapt.core.architecture_mutator.ArchitectureMutator</a></li>
+<li>add_child()&#160;:&#160;<a class="el" href="classneuroexapt_1_1utils_1_1visualization_1_1LayoutNode.html#a85482ad3527fc49741181a7acb6fac99">neuroexapt.utils.visualization.LayoutNode</a></li>
+<li>add_depth()&#160;:&#160;<a class="el" href="classexamples_1_1dynamic__architecture__evolution_1_1DynamicArchitecture.html#aeac4bb79bed80a9041f75e81b5cc1e3a">examples.dynamic_architecture_evolution.DynamicArchitecture</a></li>
+<li>add_layer()&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1architecture__mutator_1_1ArchitectureMutator.html#a0956bfc19e4f9630f45456b88e5e9c60">neuroexapt.core.architecture_mutator.ArchitectureMutator</a></li>
+<li>add_operation()&#160;:&#160;<a class="el" href="classexamples_1_1dynamic__architecture__evolution_1_1EvolvableBlock.html#aadd796dc455968db127072e34172c1f5">examples.dynamic_architecture_evolution.EvolvableBlock</a></li>
+<li>add_residual_connection()&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1dnm__net2net_1_1DNMArchitectureMutator.html#a42fefa033fc6d56d9a20eb7a911f4167">neuroexapt.core.dnm_net2net.DNMArchitectureMutator</a></li>
+<li>add_subnetwork()&#160;:&#160;<a class="el" href="classexamples_1_1demo__subnetwork__evolution_1_1ModularCNN.html#a709139e37c4c148f5f6eb2885ef9f2cd">examples.demo_subnetwork_evolution.ModularCNN</a></li>
+<li>aggressive_analyzer&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1enhanced__dnm__framework_1_1EnhancedDNMFramework.html#a5c07143cb20a362d86640e1cb1d8902a">neuroexapt.core.enhanced_dnm_framework.EnhancedDNMFramework</a></li>
+<li>aggressive_executor&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1enhanced__dnm__framework_1_1EnhancedDNMFramework.html#a2f7eadd2f192afed079e26c9db944071">neuroexapt.core.enhanced_dnm_framework.EnhancedDNMFramework</a></li>
+<li>aggressive_mode_active&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1enhanced__dnm__framework_1_1EnhancedDNMFramework.html#a69841b1afe778591f7a1bda5abaaab81">neuroexapt.core.enhanced_dnm_framework.EnhancedDNMFramework</a></li>
+<li>aggressive_trigger_threshold&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1aggressive__morphogenesis_1_1AggressiveMorphogenesisAnalyzer.html#a8648ab7d929f7da763533b4aa5b21f64">neuroexapt.core.aggressive_morphogenesis.AggressiveMorphogenesisAnalyzer</a></li>
+<li>alert_window&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1stability__monitor_1_1PerformanceDegradationDetector.html#a062f7c6cc24c1de5e497840e17c6dece">neuroexapt.core.stability_monitor.PerformanceDegradationDetector</a></li>
+<li>alignment&#160;:&#160;<a class="el" href="classneuroexapt_1_1utils_1_1visualization_1_1LayoutNode.html#abf38b5d9bd15a6176be508bf2168802e">neuroexapt.utils.visualization.LayoutNode</a></li>
+<li>alphas_normal&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1clean__model_1_1CleanNetwork.html#abd26dae4bddd282c5e5d3de06d429654">neuroexapt.core.clean_model.CleanNetwork</a>, <a class="el" href="classneuroexapt_1_1core_1_1model_1_1Network.html#a94d8713bc34fef351bb770e3b054f39a">neuroexapt.core.model.Network</a></li>
+<li>alphas_reduce&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1clean__model_1_1CleanNetwork.html#ac924b63d5ec1d35cfd8ec11ae81ff9d9">neuroexapt.core.clean_model.CleanNetwork</a>, <a class="el" href="classneuroexapt_1_1core_1_1model_1_1Network.html#a9ad6e283362908a38785f4e113c451d3">neuroexapt.core.model.Network</a></li>
+<li>analysis_cache&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1net2net__subnetwork__analyzer_1_1ParameterSpaceAnalyzer.html#a866afa70b6daf8f095e5cc2335a9603f">neuroexapt.core.net2net_subnetwork_analyzer.ParameterSpaceAnalyzer</a></li>
+<li>analysis_history&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1advanced__morphogenesis_1_1AdvancedBottleneckAnalyzer.html#a167f84da42f0fbc86b6d14d193fbb32d">neuroexapt.core.advanced_morphogenesis.AdvancedBottleneckAnalyzer</a></li>
+<li>analyze_all_layers()&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1dnm__layer__analyzer_1_1LayerPerformanceAnalyzer.html#ae1bc6215c4ac8d5a6d01c3bf2ea3ab9f">neuroexapt.core.dnm_layer_analyzer.LayerPerformanceAnalyzer</a></li>
+<li>analyze_and_grow_connections()&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1dnm__connection__growth_1_1DNMConnectionGrowth.html#aed0398ab5bcd1f22adeb6789aad2828f">neuroexapt.core.dnm_connection_growth.DNMConnectionGrowth</a></li>
+<li>analyze_architecture()&#160;:&#160;<a class="el" href="classneuroexapt_1_1neuroexapt__v3_1_1NeuroExaptV3.html#a39cbf177505e7336f33cd62371fcfe33">neuroexapt.neuroexapt_v3.NeuroExaptV3</a>, <a class="el" href="classneuroexapt_1_1trainer_1_1Trainer.html#a7a953f42b67d77e0569e3918e78425c9">neuroexapt.trainer.Trainer</a></li>
+<li>analyze_layer_mutation_potential()&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1net2net__subnetwork__analyzer_1_1Net2NetSubnetworkAnalyzer.html#a4fd309bf01f39a1ab7bf7234cce4bbf2">neuroexapt.core.net2net_subnetwork_analyzer.Net2NetSubnetworkAnalyzer</a></li>
+<li>analyze_morphogenesis_effects()&#160;:&#160;<a class="el" href="classexamples_1_1advanced__dnm__demo_1_1AdvancedDNMTrainer.html#a12715e8ada11c6bb5e734d16f3c28e3f">examples.advanced_dnm_demo.AdvancedDNMTrainer</a></li>
+<li>analyze_network_bottlenecks()&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1advanced__morphogenesis_1_1AdvancedBottleneckAnalyzer.html#afa249cc192db623951c47dc36f4ccb01">neuroexapt.core.advanced_morphogenesis.AdvancedBottleneckAnalyzer</a></li>
+<li>analyze_parameter_space_efficiency()&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1net2net__subnetwork__analyzer_1_1ParameterSpaceAnalyzer.html#acadbdffcd52310df96f4bb50b1d3091d">neuroexapt.core.net2net_subnetwork_analyzer.ParameterSpaceAnalyzer</a></li>
+<li>analyze_reverse_gradient_projection()&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1aggressive__morphogenesis_1_1AggressiveMorphogenesisAnalyzer.html#a9833264ad3148330c121492e019e3eb4">neuroexapt.core.aggressive_morphogenesis.AggressiveMorphogenesisAnalyzer</a></li>
+<li>analyzer&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1dnm__connection__growth_1_1DNMConnectionGrowth.html#ae14598865645c9c9948ce1225c7856fb">neuroexapt.core.dnm_connection_growth.DNMConnectionGrowth</a>, <a class="el" href="classneuroexapt_1_1core_1_1dnm__layer__analyzer_1_1SmartLayerSelector.html#a91c3abc7f092c78bd7892e7d18e15266">neuroexapt.core.dnm_layer_analyzer.SmartLayerSelector</a></li>
+<li>anneal_rate&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1fast__operations_1_1BatchedArchitectureUpdate.html#a3ca2776766e1d4ef2ce1c277176fb8b7">neuroexapt.core.fast_operations.BatchedArchitectureUpdate</a>, <a class="el" href="classneuroexapt_1_1core_1_1gumbel__softmax__explorer_1_1GumbelSoftmaxExplorer.html#a1f60f3793be0bfb31492c7fe3ea25153">neuroexapt.core.gumbel_softmax_explorer.GumbelSoftmaxExplorer</a></li>
+<li>anneal_temperature()&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1fast__operations_1_1BatchedArchitectureUpdate.html#a9a15fc5beff0a4fb5ae7aafb98085caf">neuroexapt.core.fast_operations.BatchedArchitectureUpdate</a></li>
+<li>apply_evolution()&#160;:&#160;<a class="el" href="classneuroexapt_1_1neuroexapt__v3_1_1NeuroExaptV3.html#a7b91ea0c9ee917d838450c1fc3b2fd12">neuroexapt.neuroexapt_v3.NeuroExaptV3</a></li>
+<li>arch_early_stop_patience&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a2d97313ee854d2efe121a6298be31450">neuroexapt.core.optimized_architect.OptimizedArchitect</a></li>
+<li>arch_loss_history&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a9d6bb70b51c7fdb1bc07d3acc8e8cf92">neuroexapt.core.optimized_architect.OptimizedArchitect</a></li>
+<li>arch_optimizer&#160;:&#160;<a class="el" href="classexamples_1_1dynamic__architecture__evolution_1_1DynamicArchTrainer.html#a1cac5b09bc175cf99889951f944e1310">examples.dynamic_architecture_evolution.DynamicArchTrainer</a>, <a class="el" href="classneuroexapt_1_1core_1_1separated__training_1_1SeparatedOptimizer.html#a3584365c7f746567c4af893085401f6c">neuroexapt.core.separated_training.SeparatedOptimizer</a></li>
+<li>arch_parameters()&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1clean__model_1_1CleanNetwork.html#ac2a7418c42e93ae45ce805463205c9ae">neuroexapt.core.clean_model.CleanNetwork</a>, <a class="el" href="classneuroexapt_1_1core_1_1model_1_1Network.html#a87dd07ece50bc9ad98375860c98ac528">neuroexapt.core.model.Network</a></li>
+<li>arch_params&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1fast__operations_1_1BatchedArchitectureUpdate.html#a56c271e601fdce641c8203e961ed07c3">neuroexapt.core.fast_operations.BatchedArchitectureUpdate</a>, <a class="el" href="classneuroexapt_1_1core_1_1separated__training_1_1SeparatedOptimizer.html#a3924e0cbe9599046bda2505ce68755e5">neuroexapt.core.separated_training.SeparatedOptimizer</a></li>
+<li>arch_scheduler&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1separated__training_1_1SeparatedTrainer.html#a502806763af1fca2c786d7d8fa633d43">neuroexapt.core.separated_training.SeparatedTrainer</a></li>
+<li>arch_step_count&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a446f06627dcf5c304b3b281d28ac1f5e">neuroexapt.core.optimized_architect.OptimizedArchitect</a></li>
+<li>arch_training_epochs&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1separated__training_1_1SeparatedTrainingStrategy.html#a5ab0920bcc932a5833d2acdd15535ec7">neuroexapt.core.separated_training.SeparatedTrainingStrategy</a></li>
+<li>arch_training_time&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1separated__training_1_1SeparatedTrainingStrategy.html#a141945142d788aab08251f5e8002e86f">neuroexapt.core.separated_training.SeparatedTrainingStrategy</a></li>
+<li>arch_update_freq&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1architect_1_1Architect.html#a308cee7ca26b699d4b4decd39df5db0f">neuroexapt.core.architect.Architect</a>, <a class="el" href="classneuroexapt_1_1core_1_1optimized__architect_1_1OptimizedArchitect.html#a1d9bdf0c329999d034c360caa97d8e47">neuroexapt.core.optimized_architect.OptimizedArchitect</a>, <a class="el" href="classneuroexapt_1_1core_1_1simple__architect_1_1SimpleArchitect.html#aedd3793df3ed883381496e01638d23a5">neuroexapt.core.simple_architect.SimpleArchitect</a></li>
+<li>arch_updater&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1fast__operations_1_1MemoryEfficientCell.html#a287d18e3cf01261731959ea39282a9e3">neuroexapt.core.fast_operations.MemoryEfficientCell</a></li>
+<li>architecture_diversity()&#160;:&#160;<a class="el" href="classneuroexapt_1_1math_1_1fast__math_1_1FastStatistics.html#ad1f8fc18d5f2394bbdc2be8eb737deb5">neuroexapt.math.fast_math.FastStatistics</a></li>
+<li>architecture_history&#160;:&#160;<a class="el" href="classexamples_1_1demo__bayesian__architecture__evolution_1_1BayesianEvolvableCNN.html#a529b9a5669f926606da99cd8785d6857">examples.demo_bayesian_architecture_evolution.BayesianEvolvableCNN</a></li>
+<li>architecture_similarity()&#160;:&#160;<a class="el" href="classneuroexapt_1_1math_1_1fast__math_1_1FastSimilarity.html#ae75e97ca801a6eb8d9384a4fab4a08f9">neuroexapt.math.fast_math.FastSimilarity</a></li>
+<li>architecture_summary&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1evolution__checkpoint_1_1EvolutionCheckpoint.html#a56a26912dbd0dca7bb89a8a1bdd47a5c">neuroexapt.core.evolution_checkpoint.EvolutionCheckpoint</a></li>
+<li>architecture_tracker&#160;:&#160;<a class="el" href="classneuroexapt_1_1utils_1_1visualization_1_1ModelVisualizer.html#a5a7b83cfa5e2837193e229dfc03cd683">neuroexapt.utils.visualization.ModelVisualizer</a></li>
+<li>asymmetric_division()&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1dnm__neuron__division_1_1NeuronDivisionStrategies.html#abd8c770a9890fc69efe6c5c397331c12">neuroexapt.core.dnm_neuron_division.NeuronDivisionStrategies</a></li>
+<li>attention&#160;:&#160;<a class="el" href="classexamples_1_1enhanced__deep__classification_1_1ResidualBlock.html#a9f0c254c436db6108922160895f921f0">examples.enhanced_deep_classification.ResidualBlock</a>, <a class="el" href="classneuroexapt_1_1core_1_1advanced__morphogenesis_1_1AdvancedMorphogenesisExecutor.html#a3668640e1e34a59b2238c162f675a904">neuroexapt.core.advanced_morphogenesis.AdvancedMorphogenesisExecutor</a></li>
+<li>attention_branch&#160;:&#160;<a class="el" href="classexamples_1_1advanced__visualization__demo_1_1MultiLevelBranchNet.html#a62ebe91e471bed6d1580933254a50c94">examples.advanced_visualization_demo.MultiLevelBranchNet</a></li>
+<li>attention_conv&#160;:&#160;<a class="el" href="classexamples_1_1demo__subnetwork__evolution_1_1ModularCNN.html#a85d55527dd6a79286497f25bcad60b0b">examples.demo_subnetwork_evolution.ModularCNN</a></li>
+<li>attention_gate&#160;:&#160;<a class="el" href="classexamples_1_1demo__subnetwork__evolution_1_1ModularCNN.html#abbafeebdc915c259c534f7a4ca3e2bf9">examples.demo_subnetwork_evolution.ModularCNN</a></li>
+<li>ATTENTION_INJECTION&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1advanced__morphogenesis_1_1MorphogenesisType.html#af3ef4c3a0b85fe48f4356691b0dba5f7">neuroexapt.core.advanced_morphogenesis.MorphogenesisType</a></li>
+<li>attention_net&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1dnm__connection__growth_1_1ChannelAttention.html#addad20f4f37177079020ff5a0bfb9590">neuroexapt.core.dnm_connection_growth.ChannelAttention</a>, <a class="el" href="classneuroexapt_1_1core_1_1dnm__connection__growth_1_1FeatureAttention.html#ab2212719fadfd15f9b5b1aaedfc0c696">neuroexapt.core.dnm_connection_growth.FeatureAttention</a></li>
+<li>attention_projection&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1advanced__morphogenesis_1_1AdvancedMorphogenesisExecutor.html#a2aa42d6de6bb5c817ef0570befdadb71">neuroexapt.core.advanced_morphogenesis.AdvancedMorphogenesisExecutor</a></li>
+<li>auto_save_interval&#160;:&#160;<a class="el" href="classneuroexapt_1_1core_1_1checkpoint__manager_1_1CheckpointManager.html#a74d652319a85430a585e33573eba7c88">neuroexapt.core.checkpoint_manager.CheckpointManager</a></li>
+<li>aux_classifier&#160;:&#160;<a class="el" href="classexamples_1_1enhanced__deep__classification_1_1DeepEvolvableCNN.html#a8a732836141c66d4039510429d54f868">examples.enhanced_deep_classification.DeepEvolvableCNN</a></li>
+<li>avg&#160;:&#160;<a class="el" href="classneuroexapt_1_1utils_1_1utils_1_1AvgrageMeter.html#a2ce07a45627b2449f73c6b1b71088d35">neuroexapt.utils.utils.AvgrageMeter</a></li>
+<li>avgpool&#160;:&#160;<a class="el" href="classexamples_1_1cifar10__dnm__benchmark_1_1EvolvableResNet18.html#aa3b17a9505d4546fd3607d7244621e02">examples.cifar10_dnm_benchmark.EvolvableResNet18</a>, <a class="el" href="classexamples_1_1debug__batchnorm__sync_1_1SimpleTestNet.html#a06726a5b9605f4e2f5cd183f25ca1277">examples.debug_batchnorm_sync.SimpleTestNet</a>, <a class="el" href="classexamples_1_1demo__intelligent__evolution_1_1AdaptiveCNN.html#aab862f2fae034c00b32caa83ad4b8303">examples.demo_intelligent_evolution.AdaptiveCNN</a></li>
+<li>axes&#160;:&#160;<a class="el" href="classexamples_1_1demo__intelligent__architecture__evolution_1_1DemoEvolutionVisualization.html#a94cb98d57475beeb314ef49a50c667bd">examples.demo_intelligent_architecture_evolution.DemoEvolutionVisualization</a></li>
+</ul>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<!-- do not remove this div, it is closed by doxygen! -->
+</div>
+<!-- Custom Footer -->
+<div style="background: #f8f9fa; border-top: 1px solid #e9ecef; margin-top: 50px; padding: 30px 0; text-align: center;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-bottom: 20px;">
+            <!-- Project Info -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🧠 NeuroExapt</h4>
+                <p style="color: #6c757d; margin: 0; font-size: 0.9em;">
+                    Advanced Neural Architecture Search and Dynamic Morphogenesis Framework for next-generation AI research.
+                </p>
+            </div>
+            <!-- Quick Links -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">📚 Quick Links</h4>
+                <div style="text-align: left;">
+                    <a href="index.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🏠 Home</a>
+                    <a href="modules.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📦 Modules</a>
+                    <a href="examples.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💡 Examples</a>
+                    <a href="files.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📁 Files</a>
+                </div>
+            </div>
+            <!-- Resources -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🔗 Resources</h4>
+                <div style="text-align: left;">
+                    <a href="https://github.com/your-username/neuroexapt" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💻 GitHub Repository</a>
+                    <a href="https://github.com/your-username/neuroexapt/issues" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🐛 Issue Tracker</a>
+                    <a href="https://github.com/your-username/neuroexapt/wiki" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📖 Wiki</a>
+                    <a href="https://github.com/your-username/neuroexapt/releases" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🚀 Releases</a>
+                </div>
+            </div>
+        </div>
+        <hr style="border: 0; height: 1px; background: #e9ecef; margin: 20px 0;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+            <div style="color: #6c757d; font-size: 0.9em;">
+                © 2024 NeuroExapt Project. Generated with 
+                <a href="https://www.doxygen.nl/index.html" style="color: #667eea; text-decoration: none;">Doxygen 1.9.8</a>
+            </div>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <span style="font-size: 0.9em; color: #6c757d;">Built with ❤️ for AI Research</span>
+                <div style="display: flex; gap: 10px;">
+                    <span style="background: #28a745; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">🟢 Active</span>
+                    <span style="background: #17a2b8; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">v3.0</span>
+                </div>
+            </div>
+        </div>
+        <!-- Technology Stack -->
+        <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #e9ecef;">
+            <div style="font-size: 0.8em; color: #868e96; text-align: center;">
+                <strong>Built with:</strong>
+                <span style="margin: 0 5px;">🐍 Python</span>
+                <span style="margin: 0 5px;">🔥 PyTorch</span>
+                <span style="margin: 0 5px;">⚡ CUDA</span>
+                <span style="margin: 0 5px;">🧮 NumPy</span>
+                <span style="margin: 0 5px;">📊 Matplotlib</span>
+                <span style="margin: 0 5px;">🚀 Triton</span>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Back to top button -->
+<div id="back-to-top" style="position: fixed; bottom: 20px; right: 20px; display: none; z-index: 1000;">
+    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" 
+            style="background: #667eea; color: white; border: none; padding: 10px 15px; border-radius: 50%; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,0.2); font-size: 16px;">
+        ⬆️
+    </button>
+</div>
+<script>
+// Back to top button functionality
+window.addEventListener('scroll', function() {
+    const backToTop = document.getElementById('back-to-top');
+    if (window.pageYOffset > 300) {
+        backToTop.style.display = 'block';
+    } else {
+        backToTop.style.display = 'none';
+    }
+});
+// Enhanced search functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Add search enhancement if search box exists
+    const searchBox = document.getElementById('MSearchField');
+    if (searchBox) {
+        searchBox.placeholder = 'Search documentation... 🔍';
+        searchBox.style.borderRadius = '20px';
+        searchBox.style.padding = '8px 15px';
+    }
+    // Add copy code button to code blocks
+    const codeBlocks = document.querySelectorAll('.fragment');
+    codeBlocks.forEach(function(block) {
+        const copyBtn = document.createElement('button');
+        copyBtn.innerHTML = '📋';
+        copyBtn.title = 'Copy code';
+        copyBtn.style.cssText = 'position: absolute; top: 10px; right: 10px; background: #667eea; color: white; border: none; padding: 5px; border-radius: 3px; cursor: pointer; font-size: 12px;';
+        block.style.position = 'relative';
+        block.appendChild(copyBtn);
+        copyBtn.addEventListener('click', function() {
+            const text = block.textContent;
+            navigator.clipboard.writeText(text).then(function() {
+                copyBtn.innerHTML = '✅';
+                setTimeout(function() {
+                    copyBtn.innerHTML = '📋';
+                }, 2000);
+            });
+        });
+    });
+});
+// Dark mode toggle (optional)
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+}
+// Load saved dark mode preference
+if (localStorage.getItem('darkMode') === 'true') {
+    document.body.classList.add('dark-mode');
+}
+</script>
+</body>
+</html>

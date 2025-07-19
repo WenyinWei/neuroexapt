@@ -1,0 +1,946 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="description" content="NeuroExapt - Advanced Neural Architecture Search and Dynamic Morphogenesis Framework">
+    <meta name="keywords" content="neural architecture search, dynamic morphogenesis, deep learning, AI, PyTorch">
+    <meta name="author" content="NeuroExapt Team">
+    <meta property="og:title" content="NeuroExapt Documentation">
+    <meta property="og:description" content="Advanced Neural Architecture Search Framework">
+    <meta property="og:type" content="website">
+
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>NeuroExapt: neuroexapt.core.gumbel_softmax_explorer.GumbelSoftmaxExplorer Class Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="custom.css" rel="stylesheet" type="text/css"/>
+<!-- NeuroExapt Custom Styles -->
+<style>
+/* Enhanced header styling */
+.header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+.header h1 {
+    margin: 0;
+    font-size: 2.5em;
+    font-weight: 300;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+.header .subtitle {
+    font-size: 1.2em;
+    opacity: 0.9;
+    margin-top: 10px;
+}
+/* Enhanced navigation */
+.tablist {
+    background: #f8f9fa;
+    border-bottom: 2px solid #e9ecef;
+}
+.tablist li.current a {
+    background: #667eea;
+    color: white;
+}
+/* Improved content layout */
+.contents {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+/* Code highlighting */
+.fragment {
+    background: #f8f9fa;
+    border-left: 4px solid #667eea;
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 0 8px 8px 0;
+}
+/* Enhanced tables */
+table.memberdecls {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 20px 0;
+}
+table.memberdecls td {
+    border: 1px solid #e9ecef;
+    padding: 12px;
+}
+/* Better typography */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #343a40;
+}
+h1, h2, h3, h4, h5, h6 {
+    color: #495057;
+    font-weight: 500;
+}
+/* Responsive design */
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 2em;
+    }
+    .contents {
+        padding: 15px;
+    }
+}
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #1a1a1a;
+        color: #e9ecef;
+    }
+    .header {
+        background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+    }
+    .fragment {
+        background: #2d3748;
+        color: #e9ecef;
+    }
+}
+</style>
+<!-- Analytics (if needed) -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<!--
+<script async src="https://www.googletagmanager.com/gtag/js?id=GA_TRACKING_ID"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'GA_TRACKING_ID');
+</script>
+-->
+</head>
+<body>
+<!-- Custom Header -->
+<div class="header">
+    <h1>🧠 NeuroExapt</h1>
+    <div class="subtitle">Advanced Neural Architecture Search and Dynamic Morphogenesis Framework</div>
+    <div style="margin-top: 15px; font-size: 0.9em;">
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🚀 Dynamic Neural Morphogenesis
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🔬 Advanced Architecture Search
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            ⚡ High-Performance Computing
+        </span>
+    </div>
+</div>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! --><!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('classneuroexapt_1_1core_1_1gumbel__softmax__explorer_1_1GumbelSoftmaxExplorer.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#pro-methods">Protected Member Functions</a> &#124;
+<a href="classneuroexapt_1_1core_1_1gumbel__softmax__explorer_1_1GumbelSoftmaxExplorer-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">neuroexapt.core.gumbel_softmax_explorer.GumbelSoftmaxExplorer Class Reference</div></div>
+</div><!--header-->
+<div class="contents">
+<div class="dynheader">
+Inheritance diagram for neuroexapt.core.gumbel_softmax_explorer.GumbelSoftmaxExplorer:</div>
+<div class="dyncontent">
+ <div class="center">
+  <img src="classneuroexapt_1_1core_1_1gumbel__softmax__explorer_1_1GumbelSoftmaxExplorer.png" usemap="#neuroexapt.core.gumbel_5Fsoftmax_5Fexplorer.GumbelSoftmaxExplorer_map" alt=""/>
+  <map id="neuroexapt.core.gumbel_5Fsoftmax_5Fexplorer.GumbelSoftmaxExplorer_map" name="neuroexapt.core.gumbel_5Fsoftmax_5Fexplorer.GumbelSoftmaxExplorer_map">
+<area href="classneuroexapt_1_1core_1_1gumbel__softmax__explorer_1_1MultiObjectiveExplorer.html" alt="neuroexapt.core.gumbel_softmax_explorer.MultiObjectiveExplorer" shape="rect" coords="0,56,390,80"/>
+  </map>
+</div></div>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:ade44c0bf85141672eca3a40c600cf062" id="r_ade44c0bf85141672eca3a40c600cf062"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1gumbel__softmax__explorer_1_1GumbelSoftmaxExplorer.html#ade44c0bf85141672eca3a40c600cf062">__init__</a> (self, float <a class="el" href="classneuroexapt_1_1core_1_1gumbel__softmax__explorer_1_1GumbelSoftmaxExplorer.html#a37a41ad73df56bef72ffdfe61e119a46">initial_temp</a>=5.0, float <a class="el" href="classneuroexapt_1_1core_1_1gumbel__softmax__explorer_1_1GumbelSoftmaxExplorer.html#a43ea12aa1d7edfcc958212c95e2e6387">min_temp</a>=0.1, float <a class="el" href="classneuroexapt_1_1core_1_1gumbel__softmax__explorer_1_1GumbelSoftmaxExplorer.html#a1f60f3793be0bfb31492c7fe3ea25153">anneal_rate</a>=0.98, float <a class="el" href="classneuroexapt_1_1core_1_1gumbel__softmax__explorer_1_1GumbelSoftmaxExplorer.html#acf1b15f16b006ede3e373a83ca0bbecc">exploration_factor</a>=1.0)</td></tr>
+<tr class="separator:ade44c0bf85141672eca3a40c600cf062"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a36586d77a49136a3b0a1ba2c75a12d1c" id="r_a36586d77a49136a3b0a1ba2c75a12d1c"><td class="memItemLeft" align="right" valign="top">Tuple[torch.Tensor, Dict]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1gumbel__softmax__explorer_1_1GumbelSoftmaxExplorer.html#a36586d77a49136a3b0a1ba2c75a12d1c">sample_architecture</a> (self, torch.Tensor alpha_weights, bool hard=False)</td></tr>
+<tr class="separator:a36586d77a49136a3b0a1ba2c75a12d1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a47d6d90ed22b69a7572a1f502e61cca5" id="r_a47d6d90ed22b69a7572a1f502e61cca5"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1gumbel__softmax__explorer_1_1GumbelSoftmaxExplorer.html#a47d6d90ed22b69a7572a1f502e61cca5">update_temperature</a> (self, Optional[float] performance_gain=None, bool force_anneal=False)</td></tr>
+<tr class="separator:a47d6d90ed22b69a7572a1f502e61cca5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a96ce3f991aee86292061812062dbb9f7" id="r_a96ce3f991aee86292061812062dbb9f7"><td class="memItemLeft" align="right" valign="top">List[float]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1gumbel__softmax__explorer_1_1GumbelSoftmaxExplorer.html#a96ce3f991aee86292061812062dbb9f7">get_exploration_schedule</a> (self, int total_steps)</td></tr>
+<tr class="separator:a96ce3f991aee86292061812062dbb9f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a494301a3857b9911d06ca4296a79377e" id="r_a494301a3857b9911d06ca4296a79377e"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1gumbel__softmax__explorer_1_1GumbelSoftmaxExplorer.html#a494301a3857b9911d06ca4296a79377e">adaptive_temperature_control</a> (self, List[float] validation_loss_history, int window_size=5)</td></tr>
+<tr class="separator:a494301a3857b9911d06ca4296a79377e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1adb367af5df119e2e30c4f2922b455f" id="r_a1adb367af5df119e2e30c4f2922b455f"><td class="memItemLeft" align="right" valign="top">Dict&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1gumbel__softmax__explorer_1_1GumbelSoftmaxExplorer.html#a1adb367af5df119e2e30c4f2922b455f">get_exploration_report</a> (self)</td></tr>
+<tr class="separator:a1adb367af5df119e2e30c4f2922b455f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a37a41ad73df56bef72ffdfe61e119a46" id="r_a37a41ad73df56bef72ffdfe61e119a46"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1gumbel__softmax__explorer_1_1GumbelSoftmaxExplorer.html#a37a41ad73df56bef72ffdfe61e119a46">initial_temp</a></td></tr>
+<tr class="separator:a37a41ad73df56bef72ffdfe61e119a46"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adae2e6bd1587651c484b7073119fca4f" id="r_adae2e6bd1587651c484b7073119fca4f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1gumbel__softmax__explorer_1_1GumbelSoftmaxExplorer.html#adae2e6bd1587651c484b7073119fca4f">current_temp</a></td></tr>
+<tr class="separator:adae2e6bd1587651c484b7073119fca4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a43ea12aa1d7edfcc958212c95e2e6387" id="r_a43ea12aa1d7edfcc958212c95e2e6387"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1gumbel__softmax__explorer_1_1GumbelSoftmaxExplorer.html#a43ea12aa1d7edfcc958212c95e2e6387">min_temp</a></td></tr>
+<tr class="separator:a43ea12aa1d7edfcc958212c95e2e6387"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f60f3793be0bfb31492c7fe3ea25153" id="r_a1f60f3793be0bfb31492c7fe3ea25153"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1gumbel__softmax__explorer_1_1GumbelSoftmaxExplorer.html#a1f60f3793be0bfb31492c7fe3ea25153">anneal_rate</a></td></tr>
+<tr class="separator:a1f60f3793be0bfb31492c7fe3ea25153"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acf1b15f16b006ede3e373a83ca0bbecc" id="r_acf1b15f16b006ede3e373a83ca0bbecc"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1gumbel__softmax__explorer_1_1GumbelSoftmaxExplorer.html#acf1b15f16b006ede3e373a83ca0bbecc">exploration_factor</a></td></tr>
+<tr class="separator:acf1b15f16b006ede3e373a83ca0bbecc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a39ca47d1a60e70297d5e6014cfc04efe" id="r_a39ca47d1a60e70297d5e6014cfc04efe"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1gumbel__softmax__explorer_1_1GumbelSoftmaxExplorer.html#a39ca47d1a60e70297d5e6014cfc04efe">exploration_history</a></td></tr>
+<tr class="separator:a39ca47d1a60e70297d5e6014cfc04efe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab9245332d09406bc290c4311b7a56805" id="r_ab9245332d09406bc290c4311b7a56805"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1gumbel__softmax__explorer_1_1GumbelSoftmaxExplorer.html#ab9245332d09406bc290c4311b7a56805">diversity_scores</a></td></tr>
+<tr class="separator:ab9245332d09406bc290c4311b7a56805"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1db754caa79afb9e1a46d84b981ae270" id="r_a1db754caa79afb9e1a46d84b981ae270"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1gumbel__softmax__explorer_1_1GumbelSoftmaxExplorer.html#a1db754caa79afb9e1a46d84b981ae270">step_count</a></td></tr>
+<tr class="separator:a1db754caa79afb9e1a46d84b981ae270"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr class="memitem:a18507be5a2ffb3280dd002dce82f884e" id="r_a18507be5a2ffb3280dd002dce82f884e"><td class="memItemLeft" align="right" valign="top">torch.Tensor&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1gumbel__softmax__explorer_1_1GumbelSoftmaxExplorer.html#a18507be5a2ffb3280dd002dce82f884e">_sample_gumbel</a> (self, Tuple[int,...] shape, float eps=1e-20)</td></tr>
+<tr class="separator:a18507be5a2ffb3280dd002dce82f884e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb4ff6422166819964444b24c9029b68" id="r_abb4ff6422166819964444b24c9029b68"><td class="memItemLeft" align="right" valign="top">torch.Tensor&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1gumbel__softmax__explorer_1_1GumbelSoftmaxExplorer.html#abb4ff6422166819964444b24c9029b68">_straight_through_softmax</a> (self, torch.Tensor soft_samples)</td></tr>
+<tr class="separator:abb4ff6422166819964444b24c9029b68"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0926e2dccbc6d964f5aae3c0b9c5cd0f" id="r_a0926e2dccbc6d964f5aae3c0b9c5cd0f"><td class="memItemLeft" align="right" valign="top">Dict&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1gumbel__softmax__explorer_1_1GumbelSoftmaxExplorer.html#a0926e2dccbc6d964f5aae3c0b9c5cd0f">_compute_exploration_stats</a> (self, torch.Tensor alpha_weights, torch.Tensor samples, torch.Tensor logits)</td></tr>
+<tr class="separator:a0926e2dccbc6d964f5aae3c0b9c5cd0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aab2783fa11e778cca0091d4237630a91" id="r_aab2783fa11e778cca0091d4237630a91"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1core_1_1gumbel__softmax__explorer_1_1GumbelSoftmaxExplorer.html#aab2783fa11e778cca0091d4237630a91">_compute_diversity_score</a> (self, torch.Tensor samples)</td></tr>
+<tr class="separator:aab2783fa11e778cca0091d4237630a91"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><pre class="fragment">Gumbel-Softmax引导式探索器
+
+通过可控的随机性实现架构空间的有效探索
+</pre> 
+<p class="definition">Definition at line <a class="el" href="gumbel__softmax__explorer_8py_source.html#l00034">34</a> of file <a class="el" href="gumbel__softmax__explorer_8py_source.html">gumbel_softmax_explorer.py</a>.</p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="ade44c0bf85141672eca3a40c600cf062" name="ade44c0bf85141672eca3a40c600cf062"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ade44c0bf85141672eca3a40c600cf062">&#9670;&#160;</a></span>__init__()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.gumbel_softmax_explorer.GumbelSoftmaxExplorer.__init__ </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float &#160;</td>
+          <td class="paramname"><em>initial_temp</em> = <code>5.0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float &#160;</td>
+          <td class="paramname"><em>min_temp</em> = <code>0.1</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float &#160;</td>
+          <td class="paramname"><em>anneal_rate</em> = <code>0.98</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float &#160;</td>
+          <td class="paramname"><em>exploration_factor</em> = <code>1.0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">Args:
+    initial_temp: 初始温度，控制随机性强度
+    min_temp: 最小温度，防止完全确定性选择
+    anneal_rate: 温度退火率，每轮衰减比例
+    exploration_factor: 探索因子，调节探索强度
+</pre> 
+<p>Reimplemented in <a class="el" href="classneuroexapt_1_1core_1_1gumbel__softmax__explorer_1_1MultiObjectiveExplorer.html#a23b1209e0dfefffae459708f142d3c11">neuroexapt.core.gumbel_softmax_explorer.MultiObjectiveExplorer</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="gumbel__softmax__explorer_8py_source.html#l00041">41</a> of file <a class="el" href="gumbel__softmax__explorer_8py_source.html">gumbel_softmax_explorer.py</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="aab2783fa11e778cca0091d4237630a91" name="aab2783fa11e778cca0091d4237630a91"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aab2783fa11e778cca0091d4237630a91">&#9670;&#160;</a></span>_compute_diversity_score()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> float neuroexapt.core.gumbel_softmax_explorer.GumbelSoftmaxExplorer._compute_diversity_score </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">torch.Tensor&#160;</td>
+          <td class="paramname"><em>samples</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">计算架构选择的多样性分数</pre> 
+<p class="definition">Definition at line <a class="el" href="gumbel__softmax__explorer_8py_source.html#l00151">151</a> of file <a class="el" href="gumbel__softmax__explorer_8py_source.html">gumbel_softmax_explorer.py</a>.</p>
+
+</div>
+</div>
+<a id="a0926e2dccbc6d964f5aae3c0b9c5cd0f" name="a0926e2dccbc6d964f5aae3c0b9c5cd0f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0926e2dccbc6d964f5aae3c0b9c5cd0f">&#9670;&#160;</a></span>_compute_exploration_stats()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Dict neuroexapt.core.gumbel_softmax_explorer.GumbelSoftmaxExplorer._compute_exploration_stats </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">torch.Tensor&#160;</td>
+          <td class="paramname"><em>alpha_weights</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">torch.Tensor&#160;</td>
+          <td class="paramname"><em>samples</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">torch.Tensor&#160;</td>
+          <td class="paramname"><em>logits</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">计算探索相关统计信息</pre> 
+<p class="definition">Definition at line <a class="el" href="gumbel__softmax__explorer_8py_source.html#l00124">124</a> of file <a class="el" href="gumbel__softmax__explorer_8py_source.html">gumbel_softmax_explorer.py</a>.</p>
+
+</div>
+</div>
+<a id="a18507be5a2ffb3280dd002dce82f884e" name="a18507be5a2ffb3280dd002dce82f884e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a18507be5a2ffb3280dd002dce82f884e">&#9670;&#160;</a></span>_sample_gumbel()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> torch.Tensor neuroexapt.core.gumbel_softmax_explorer.GumbelSoftmaxExplorer._sample_gumbel </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Tuple[int, ...]&#160;</td>
+          <td class="paramname"><em>shape</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float &#160;</td>
+          <td class="paramname"><em>eps</em> = <code>1e-20</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">采样Gumbel分布噪声</pre> 
+<p class="definition">Definition at line <a class="el" href="gumbel__softmax__explorer_8py_source.html#l00108">108</a> of file <a class="el" href="gumbel__softmax__explorer_8py_source.html">gumbel_softmax_explorer.py</a>.</p>
+
+</div>
+</div>
+<a id="abb4ff6422166819964444b24c9029b68" name="abb4ff6422166819964444b24c9029b68"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abb4ff6422166819964444b24c9029b68">&#9670;&#160;</a></span>_straight_through_softmax()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> torch.Tensor neuroexapt.core.gumbel_softmax_explorer.GumbelSoftmaxExplorer._straight_through_softmax </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">torch.Tensor&#160;</td>
+          <td class="paramname"><em>soft_samples</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">Straight-through硬采样，保持梯度流</pre> 
+<p class="definition">Definition at line <a class="el" href="gumbel__softmax__explorer_8py_source.html#l00114">114</a> of file <a class="el" href="gumbel__softmax__explorer_8py_source.html">gumbel_softmax_explorer.py</a>.</p>
+
+</div>
+</div>
+<a id="a494301a3857b9911d06ca4296a79377e" name="a494301a3857b9911d06ca4296a79377e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a494301a3857b9911d06ca4296a79377e">&#9670;&#160;</a></span>adaptive_temperature_control()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> float neuroexapt.core.gumbel_softmax_explorer.GumbelSoftmaxExplorer.adaptive_temperature_control </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">List[float]&#160;</td>
+          <td class="paramname"><em>validation_loss_history</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int &#160;</td>
+          <td class="paramname"><em>window_size</em> = <code>5</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">基于验证损失历史的自适应温度控制
+
+Args:
+    validation_loss_history: 验证损失历史
+    window_size: 滑动窗口大小
+    
+Returns:
+    调整后的温度
+</pre> 
+<p class="definition">Definition at line <a class="el" href="gumbel__softmax__explorer_8py_source.html#l00212">212</a> of file <a class="el" href="gumbel__softmax__explorer_8py_source.html">gumbel_softmax_explorer.py</a>.</p>
+
+</div>
+</div>
+<a id="a1adb367af5df119e2e30c4f2922b455f" name="a1adb367af5df119e2e30c4f2922b455f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1adb367af5df119e2e30c4f2922b455f">&#9670;&#160;</a></span>get_exploration_report()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Dict neuroexapt.core.gumbel_softmax_explorer.GumbelSoftmaxExplorer.get_exploration_report </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">获取探索过程的详细报告</pre> 
+<p class="definition">Definition at line <a class="el" href="gumbel__softmax__explorer_8py_source.html#l00240">240</a> of file <a class="el" href="gumbel__softmax__explorer_8py_source.html">gumbel_softmax_explorer.py</a>.</p>
+
+</div>
+</div>
+<a id="a96ce3f991aee86292061812062dbb9f7" name="a96ce3f991aee86292061812062dbb9f7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a96ce3f991aee86292061812062dbb9f7">&#9670;&#160;</a></span>get_exploration_schedule()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> List[float] neuroexapt.core.gumbel_softmax_explorer.GumbelSoftmaxExplorer.get_exploration_schedule </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>total_steps</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">生成完整的探索温度计划
+
+Args:
+    total_steps: 总步数
+    
+Returns:
+    温度计划列表
+</pre> 
+<p class="definition">Definition at line <a class="el" href="gumbel__softmax__explorer_8py_source.html#l00193">193</a> of file <a class="el" href="gumbel__softmax__explorer_8py_source.html">gumbel_softmax_explorer.py</a>.</p>
+
+</div>
+</div>
+<a id="a36586d77a49136a3b0a1ba2c75a12d1c" name="a36586d77a49136a3b0a1ba2c75a12d1c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a36586d77a49136a3b0a1ba2c75a12d1c">&#9670;&#160;</a></span>sample_architecture()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Tuple[torch.Tensor, Dict] neuroexapt.core.gumbel_softmax_explorer.GumbelSoftmaxExplorer.sample_architecture </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">torch.Tensor&#160;</td>
+          <td class="paramname"><em>alpha_weights</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool &#160;</td>
+          <td class="paramname"><em>hard</em> = <code>False</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">使用Gumbel-Softmax采样架构
+
+Args:
+    alpha_weights: 架构参数 [num_edges, num_ops]
+    hard: 是否使用硬采样（straight-through）
+    
+Returns:
+    采样结果和统计信息
+</pre> 
+<p class="definition">Definition at line <a class="el" href="gumbel__softmax__explorer_8py_source.html#l00065">65</a> of file <a class="el" href="gumbel__softmax__explorer_8py_source.html">gumbel_softmax_explorer.py</a>.</p>
+
+</div>
+</div>
+<a id="a47d6d90ed22b69a7572a1f502e61cca5" name="a47d6d90ed22b69a7572a1f502e61cca5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a47d6d90ed22b69a7572a1f502e61cca5">&#9670;&#160;</a></span>update_temperature()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> float neuroexapt.core.gumbel_softmax_explorer.GumbelSoftmaxExplorer.update_temperature </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Optional[float] &#160;</td>
+          <td class="paramname"><em>performance_gain</em> = <code>None</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool &#160;</td>
+          <td class="paramname"><em>force_anneal</em> = <code>False</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">更新温度参数
+
+Args:
+    performance_gain: 性能提升，用于自适应温度调节
+    force_anneal: 强制退火
+    
+Returns:
+    新的温度值
+</pre> 
+<p class="definition">Definition at line <a class="el" href="gumbel__softmax__explorer_8py_source.html#l00165">165</a> of file <a class="el" href="gumbel__softmax__explorer_8py_source.html">gumbel_softmax_explorer.py</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a1f60f3793be0bfb31492c7fe3ea25153" name="a1f60f3793be0bfb31492c7fe3ea25153"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1f60f3793be0bfb31492c7fe3ea25153">&#9670;&#160;</a></span>anneal_rate</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.gumbel_softmax_explorer.GumbelSoftmaxExplorer.anneal_rate</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="gumbel__softmax__explorer_8py_source.html#l00053">53</a> of file <a class="el" href="gumbel__softmax__explorer_8py_source.html">gumbel_softmax_explorer.py</a>.</p>
+
+</div>
+</div>
+<a id="adae2e6bd1587651c484b7073119fca4f" name="adae2e6bd1587651c484b7073119fca4f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adae2e6bd1587651c484b7073119fca4f">&#9670;&#160;</a></span>current_temp</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.gumbel_softmax_explorer.GumbelSoftmaxExplorer.current_temp</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="gumbel__softmax__explorer_8py_source.html#l00051">51</a> of file <a class="el" href="gumbel__softmax__explorer_8py_source.html">gumbel_softmax_explorer.py</a>.</p>
+
+</div>
+</div>
+<a id="ab9245332d09406bc290c4311b7a56805" name="ab9245332d09406bc290c4311b7a56805"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab9245332d09406bc290c4311b7a56805">&#9670;&#160;</a></span>diversity_scores</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.gumbel_softmax_explorer.GumbelSoftmaxExplorer.diversity_scores</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="gumbel__softmax__explorer_8py_source.html#l00058">58</a> of file <a class="el" href="gumbel__softmax__explorer_8py_source.html">gumbel_softmax_explorer.py</a>.</p>
+
+</div>
+</div>
+<a id="acf1b15f16b006ede3e373a83ca0bbecc" name="acf1b15f16b006ede3e373a83ca0bbecc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acf1b15f16b006ede3e373a83ca0bbecc">&#9670;&#160;</a></span>exploration_factor</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.gumbel_softmax_explorer.GumbelSoftmaxExplorer.exploration_factor</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="gumbel__softmax__explorer_8py_source.html#l00054">54</a> of file <a class="el" href="gumbel__softmax__explorer_8py_source.html">gumbel_softmax_explorer.py</a>.</p>
+
+</div>
+</div>
+<a id="a39ca47d1a60e70297d5e6014cfc04efe" name="a39ca47d1a60e70297d5e6014cfc04efe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a39ca47d1a60e70297d5e6014cfc04efe">&#9670;&#160;</a></span>exploration_history</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.gumbel_softmax_explorer.GumbelSoftmaxExplorer.exploration_history</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="gumbel__softmax__explorer_8py_source.html#l00057">57</a> of file <a class="el" href="gumbel__softmax__explorer_8py_source.html">gumbel_softmax_explorer.py</a>.</p>
+
+</div>
+</div>
+<a id="a37a41ad73df56bef72ffdfe61e119a46" name="a37a41ad73df56bef72ffdfe61e119a46"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a37a41ad73df56bef72ffdfe61e119a46">&#9670;&#160;</a></span>initial_temp</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.gumbel_softmax_explorer.GumbelSoftmaxExplorer.initial_temp</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="gumbel__softmax__explorer_8py_source.html#l00050">50</a> of file <a class="el" href="gumbel__softmax__explorer_8py_source.html">gumbel_softmax_explorer.py</a>.</p>
+
+</div>
+</div>
+<a id="a43ea12aa1d7edfcc958212c95e2e6387" name="a43ea12aa1d7edfcc958212c95e2e6387"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a43ea12aa1d7edfcc958212c95e2e6387">&#9670;&#160;</a></span>min_temp</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.gumbel_softmax_explorer.GumbelSoftmaxExplorer.min_temp</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="gumbel__softmax__explorer_8py_source.html#l00052">52</a> of file <a class="el" href="gumbel__softmax__explorer_8py_source.html">gumbel_softmax_explorer.py</a>.</p>
+
+</div>
+</div>
+<a id="a1db754caa79afb9e1a46d84b981ae270" name="a1db754caa79afb9e1a46d84b981ae270"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1db754caa79afb9e1a46d84b981ae270">&#9670;&#160;</a></span>step_count</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.core.gumbel_softmax_explorer.GumbelSoftmaxExplorer.step_count</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="gumbel__softmax__explorer_8py_source.html#l00059">59</a> of file <a class="el" href="gumbel__softmax__explorer_8py_source.html">gumbel_softmax_explorer.py</a>.</p>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following file:<ul>
+<li>neuroexapt/core/<a class="el" href="gumbel__softmax__explorer_8py_source.html">gumbel_softmax_explorer.py</a></li>
+</ul>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<!-- do not remove this div, it is closed by doxygen! -->
+</div>
+<!-- Custom Footer -->
+<div style="background: #f8f9fa; border-top: 1px solid #e9ecef; margin-top: 50px; padding: 30px 0; text-align: center;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-bottom: 20px;">
+            <!-- Project Info -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🧠 NeuroExapt</h4>
+                <p style="color: #6c757d; margin: 0; font-size: 0.9em;">
+                    Advanced Neural Architecture Search and Dynamic Morphogenesis Framework for next-generation AI research.
+                </p>
+            </div>
+            <!-- Quick Links -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">📚 Quick Links</h4>
+                <div style="text-align: left;">
+                    <a href="index.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🏠 Home</a>
+                    <a href="modules.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📦 Modules</a>
+                    <a href="examples.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💡 Examples</a>
+                    <a href="files.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📁 Files</a>
+                </div>
+            </div>
+            <!-- Resources -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🔗 Resources</h4>
+                <div style="text-align: left;">
+                    <a href="https://github.com/your-username/neuroexapt" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💻 GitHub Repository</a>
+                    <a href="https://github.com/your-username/neuroexapt/issues" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🐛 Issue Tracker</a>
+                    <a href="https://github.com/your-username/neuroexapt/wiki" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📖 Wiki</a>
+                    <a href="https://github.com/your-username/neuroexapt/releases" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🚀 Releases</a>
+                </div>
+            </div>
+        </div>
+        <hr style="border: 0; height: 1px; background: #e9ecef; margin: 20px 0;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+            <div style="color: #6c757d; font-size: 0.9em;">
+                © 2024 NeuroExapt Project. Generated with 
+                <a href="https://www.doxygen.nl/index.html" style="color: #667eea; text-decoration: none;">Doxygen 1.9.8</a>
+            </div>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <span style="font-size: 0.9em; color: #6c757d;">Built with ❤️ for AI Research</span>
+                <div style="display: flex; gap: 10px;">
+                    <span style="background: #28a745; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">🟢 Active</span>
+                    <span style="background: #17a2b8; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">v3.0</span>
+                </div>
+            </div>
+        </div>
+        <!-- Technology Stack -->
+        <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #e9ecef;">
+            <div style="font-size: 0.8em; color: #868e96; text-align: center;">
+                <strong>Built with:</strong>
+                <span style="margin: 0 5px;">🐍 Python</span>
+                <span style="margin: 0 5px;">🔥 PyTorch</span>
+                <span style="margin: 0 5px;">⚡ CUDA</span>
+                <span style="margin: 0 5px;">🧮 NumPy</span>
+                <span style="margin: 0 5px;">📊 Matplotlib</span>
+                <span style="margin: 0 5px;">🚀 Triton</span>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Back to top button -->
+<div id="back-to-top" style="position: fixed; bottom: 20px; right: 20px; display: none; z-index: 1000;">
+    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" 
+            style="background: #667eea; color: white; border: none; padding: 10px 15px; border-radius: 50%; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,0.2); font-size: 16px;">
+        ⬆️
+    </button>
+</div>
+<script>
+// Back to top button functionality
+window.addEventListener('scroll', function() {
+    const backToTop = document.getElementById('back-to-top');
+    if (window.pageYOffset > 300) {
+        backToTop.style.display = 'block';
+    } else {
+        backToTop.style.display = 'none';
+    }
+});
+// Enhanced search functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Add search enhancement if search box exists
+    const searchBox = document.getElementById('MSearchField');
+    if (searchBox) {
+        searchBox.placeholder = 'Search documentation... 🔍';
+        searchBox.style.borderRadius = '20px';
+        searchBox.style.padding = '8px 15px';
+    }
+    // Add copy code button to code blocks
+    const codeBlocks = document.querySelectorAll('.fragment');
+    codeBlocks.forEach(function(block) {
+        const copyBtn = document.createElement('button');
+        copyBtn.innerHTML = '📋';
+        copyBtn.title = 'Copy code';
+        copyBtn.style.cssText = 'position: absolute; top: 10px; right: 10px; background: #667eea; color: white; border: none; padding: 5px; border-radius: 3px; cursor: pointer; font-size: 12px;';
+        block.style.position = 'relative';
+        block.appendChild(copyBtn);
+        copyBtn.addEventListener('click', function() {
+            const text = block.textContent;
+            navigator.clipboard.writeText(text).then(function() {
+                copyBtn.innerHTML = '✅';
+                setTimeout(function() {
+                    copyBtn.innerHTML = '📋';
+                }, 2000);
+            });
+        });
+    });
+});
+// Dark mode toggle (optional)
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+}
+// Load saved dark mode preference
+if (localStorage.getItem('darkMode') === 'true') {
+    document.body.classList.add('dark-mode');
+}
+</script>
+</body>
+</html>

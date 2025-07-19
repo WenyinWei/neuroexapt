@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+"""
+\defgroup group_dnm_framework Dnm Framework
+\ingroup core
+Dnm Framework module for NeuroExapt framework.
+"""
+
+
 Dynamic Neural Morphogenesis (DNM) Framework - 重构版本
 
 🧬 核心理论支撑：

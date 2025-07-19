@@ -1,0 +1,995 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="description" content="NeuroExapt - Advanced Neural Architecture Search and Dynamic Morphogenesis Framework">
+    <meta name="keywords" content="neural architecture search, dynamic morphogenesis, deep learning, AI, PyTorch">
+    <meta name="author" content="NeuroExapt Team">
+    <meta property="og:title" content="NeuroExapt Documentation">
+    <meta property="og:description" content="Advanced Neural Architecture Search Framework">
+    <meta property="og:type" content="website">
+
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>NeuroExapt: neuroexapt.utils.dataset_loader.AdvancedDatasetLoader Class Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="custom.css" rel="stylesheet" type="text/css"/>
+<!-- NeuroExapt Custom Styles -->
+<style>
+/* Enhanced header styling */
+.header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+.header h1 {
+    margin: 0;
+    font-size: 2.5em;
+    font-weight: 300;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+.header .subtitle {
+    font-size: 1.2em;
+    opacity: 0.9;
+    margin-top: 10px;
+}
+/* Enhanced navigation */
+.tablist {
+    background: #f8f9fa;
+    border-bottom: 2px solid #e9ecef;
+}
+.tablist li.current a {
+    background: #667eea;
+    color: white;
+}
+/* Improved content layout */
+.contents {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+/* Code highlighting */
+.fragment {
+    background: #f8f9fa;
+    border-left: 4px solid #667eea;
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 0 8px 8px 0;
+}
+/* Enhanced tables */
+table.memberdecls {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 20px 0;
+}
+table.memberdecls td {
+    border: 1px solid #e9ecef;
+    padding: 12px;
+}
+/* Better typography */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #343a40;
+}
+h1, h2, h3, h4, h5, h6 {
+    color: #495057;
+    font-weight: 500;
+}
+/* Responsive design */
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 2em;
+    }
+    .contents {
+        padding: 15px;
+    }
+}
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #1a1a1a;
+        color: #e9ecef;
+    }
+    .header {
+        background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+    }
+    .fragment {
+        background: #2d3748;
+        color: #e9ecef;
+    }
+}
+</style>
+<!-- Analytics (if needed) -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<!--
+<script async src="https://www.googletagmanager.com/gtag/js?id=GA_TRACKING_ID"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'GA_TRACKING_ID');
+</script>
+-->
+</head>
+<body>
+<!-- Custom Header -->
+<div class="header">
+    <h1>🧠 NeuroExapt</h1>
+    <div class="subtitle">Advanced Neural Architecture Search and Dynamic Morphogenesis Framework</div>
+    <div style="margin-top: 15px; font-size: 0.9em;">
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🚀 Dynamic Neural Morphogenesis
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🔬 Advanced Architecture Search
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            ⚡ High-Performance Computing
+        </span>
+    </div>
+</div>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! --><!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#pro-methods">Protected Member Functions</a> &#124;
+<a href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">neuroexapt.utils.dataset_loader.AdvancedDatasetLoader Class Reference</div></div>
+</div><!--header-->
+<div class="contents">
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a700b9574f9468fc2c99f9a2c5b2b0db3" id="r_a700b9574f9468fc2c99f9a2c5b2b0db3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#a700b9574f9468fc2c99f9a2c5b2b0db3">__init__</a> (self, str cache_dir=&quot;./data_cache&quot;, str <a class="el" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#aa3231b36c395eed368c8341ab5c10f09">download_dir</a>=&quot;./data&quot;, bool use_p2p=True, bool use_xunlei=True, int <a class="el" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#aa65e83089f5d59e9d55586e73f802cf7">max_retries</a>=3)</td></tr>
+<tr class="separator:a700b9574f9468fc2c99f9a2c5b2b0db3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa25053bc1f628bc75a3decfb068f658d" id="r_aa25053bc1f628bc75a3decfb068f658d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#aa25053bc1f628bc75a3decfb068f658d">download_dataset</a> (self, str dataset_name, bool force_download=False)</td></tr>
+<tr class="separator:aa25053bc1f628bc75a3decfb068f658d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac8b512c7f82ad5dd961152b080a02814" id="r_ac8b512c7f82ad5dd961152b080a02814"><td class="memItemLeft" align="right" valign="top">Tuple[DataLoader, DataLoader]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#ac8b512c7f82ad5dd961152b080a02814">get_cifar10_dataloaders</a> (self, int batch_size=128, int num_workers=2, bool download=True, bool force_download=False)</td></tr>
+<tr class="separator:ac8b512c7f82ad5dd961152b080a02814"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a790b462aced6b612446a87de24778f8b" id="r_a790b462aced6b612446a87de24778f8b"><td class="memItemLeft" align="right" valign="top">Tuple[DataLoader, DataLoader]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#a790b462aced6b612446a87de24778f8b">get_cifar100_dataloaders</a> (self, int batch_size=128, int num_workers=2, bool download=True, bool force_download=False)</td></tr>
+<tr class="separator:a790b462aced6b612446a87de24778f8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a83e1e7b2d0088df8019bef8858599004" id="r_a83e1e7b2d0088df8019bef8858599004"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#a83e1e7b2d0088df8019bef8858599004">clear_cache</a> (self, Optional[str] dataset_name=None)</td></tr>
+<tr class="separator:a83e1e7b2d0088df8019bef8858599004"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac2239398a2cc2fb4611099c935e1f05b" id="r_ac2239398a2cc2fb4611099c935e1f05b"><td class="memItemLeft" align="right" valign="top">Dict&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#ac2239398a2cc2fb4611099c935e1f05b">get_cache_info</a> (self)</td></tr>
+<tr class="separator:ac2239398a2cc2fb4611099c935e1f05b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:ab55c063912c5f2150feeec0a3813bf1e" id="r_ab55c063912c5f2150feeec0a3813bf1e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#ab55c063912c5f2150feeec0a3813bf1e">cache</a></td></tr>
+<tr class="separator:ab55c063912c5f2150feeec0a3813bf1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa3231b36c395eed368c8341ab5c10f09" id="r_aa3231b36c395eed368c8341ab5c10f09"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#aa3231b36c395eed368c8341ab5c10f09">download_dir</a></td></tr>
+<tr class="separator:aa3231b36c395eed368c8341ab5c10f09"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a682c7f94749fef8367d68e90694ef72a" id="r_a682c7f94749fef8367d68e90694ef72a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#a682c7f94749fef8367d68e90694ef72a">p2p_downloader</a></td></tr>
+<tr class="separator:a682c7f94749fef8367d68e90694ef72a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a328f8d0ac3295fcd2cd20fa367d14ced" id="r_a328f8d0ac3295fcd2cd20fa367d14ced"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#a328f8d0ac3295fcd2cd20fa367d14ced">xunlei_downloader</a></td></tr>
+<tr class="separator:a328f8d0ac3295fcd2cd20fa367d14ced"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa65e83089f5d59e9d55586e73f802cf7" id="r_aa65e83089f5d59e9d55586e73f802cf7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#aa65e83089f5d59e9d55586e73f802cf7">max_retries</a></td></tr>
+<tr class="separator:aa65e83089f5d59e9d55586e73f802cf7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a79a2f0163ec7ac1c75748aa29ccbc199" id="r_a79a2f0163ec7ac1c75748aa29ccbc199"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#a79a2f0163ec7ac1c75748aa29ccbc199">mirrors</a></td></tr>
+<tr class="separator:a79a2f0163ec7ac1c75748aa29ccbc199"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a975163c70b342a2fc5eb482fdb291174" id="r_a975163c70b342a2fc5eb482fdb291174"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#a975163c70b342a2fc5eb482fdb291174">dataset_configs</a></td></tr>
+<tr class="separator:a975163c70b342a2fc5eb482fdb291174"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr class="memitem:aaf228bd0e54ff7ea2a00ca4cc716b6f3" id="r_aaf228bd0e54ff7ea2a00ca4cc716b6f3"><td class="memItemLeft" align="right" valign="top">List[<a class="el" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetMirror.html">DatasetMirror</a>]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#aaf228bd0e54ff7ea2a00ca4cc716b6f3">_initialize_mirrors</a> (self)</td></tr>
+<tr class="separator:aaf228bd0e54ff7ea2a00ca4cc716b6f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aea762c608fa0d49b5f8d81f09f991063" id="r_aea762c608fa0d49b5f8d81f09f991063"><td class="memItemLeft" align="right" valign="top">Optional[<a class="el" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetMirror.html">DatasetMirror</a>]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#aea762c608fa0d49b5f8d81f09f991063">_get_best_mirror</a> (self)</td></tr>
+<tr class="separator:aea762c608fa0d49b5f8d81f09f991063"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3db9112a32ab4ca6bf00f396b14b26dd" id="r_a3db9112a32ab4ca6bf00f396b14b26dd"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#a3db9112a32ab4ca6bf00f396b14b26dd">_extract_dataset</a> (self, str dataset_name, Path dataset_dir)</td></tr>
+<tr class="separator:a3db9112a32ab4ca6bf00f396b14b26dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9b2229812a12f7836d970b89bcd865a9" id="r_a9b2229812a12f7836d970b89bcd865a9"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#a9b2229812a12f7836d970b89bcd865a9">_download_file_with_fallback</a> (self, str url, Path filepath, str filename)</td></tr>
+<tr class="separator:a9b2229812a12f7836d970b89bcd865a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af192d081d99b3c4f471534aca99721b3" id="r_af192d081d99b3c4f471534aca99721b3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#af192d081d99b3c4f471534aca99721b3">_download_with_chunks</a> (self, str url, Path filepath, str filename)</td></tr>
+<tr class="separator:af192d081d99b3c4f471534aca99721b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0e2d5012df030ac019ba2529fe8c7915" id="r_a0e2d5012df030ac019ba2529fe8c7915"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1AdvancedDatasetLoader.html#a0e2d5012df030ac019ba2529fe8c7915">_is_dataset_complete</a> (self, str dataset_name, Path dataset_dir)</td></tr>
+<tr class="separator:a0e2d5012df030ac019ba2529fe8c7915"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><pre class="fragment">Advanced dataset loader with P2P acceleration, intelligent caching, and 迅雷 integration.</pre> 
+<p class="definition">Definition at line <a class="el" href="dataset__loader_8py_source.html#l00229">229</a> of file <a class="el" href="dataset__loader_8py_source.html">dataset_loader.py</a>.</p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a700b9574f9468fc2c99f9a2c5b2b0db3" name="a700b9574f9468fc2c99f9a2c5b2b0db3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a700b9574f9468fc2c99f9a2c5b2b0db3">&#9670;&#160;</a></span>__init__()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.utils.dataset_loader.AdvancedDatasetLoader.__init__ </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str &#160;</td>
+          <td class="paramname"><em>cache_dir</em> = <code>&quot;./data_cache&quot;</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str &#160;</td>
+          <td class="paramname"><em>download_dir</em> = <code>&quot;./data&quot;</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool &#160;</td>
+          <td class="paramname"><em>use_p2p</em> = <code>True</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool &#160;</td>
+          <td class="paramname"><em>use_xunlei</em> = <code>True</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int &#160;</td>
+          <td class="paramname"><em>max_retries</em> = <code>3</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="dataset__loader_8py_source.html#l00232">232</a> of file <a class="el" href="dataset__loader_8py_source.html">dataset_loader.py</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a9b2229812a12f7836d970b89bcd865a9" name="a9b2229812a12f7836d970b89bcd865a9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9b2229812a12f7836d970b89bcd865a9">&#9670;&#160;</a></span>_download_file_with_fallback()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> bool neuroexapt.utils.dataset_loader.AdvancedDatasetLoader._download_file_with_fallback </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str&#160;</td>
+          <td class="paramname"><em>url</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Path&#160;</td>
+          <td class="paramname"><em>filepath</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str&#160;</td>
+          <td class="paramname"><em>filename</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">Download file with robust fallback, 迅雷 integration, and chunked downloads.</pre> 
+<p class="definition">Definition at line <a class="el" href="dataset__loader_8py_source.html#l00482">482</a> of file <a class="el" href="dataset__loader_8py_source.html">dataset_loader.py</a>.</p>
+
+</div>
+</div>
+<a id="af192d081d99b3c4f471534aca99721b3" name="af192d081d99b3c4f471534aca99721b3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af192d081d99b3c4f471534aca99721b3">&#9670;&#160;</a></span>_download_with_chunks()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> bool neuroexapt.utils.dataset_loader.AdvancedDatasetLoader._download_with_chunks </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str&#160;</td>
+          <td class="paramname"><em>url</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Path&#160;</td>
+          <td class="paramname"><em>filepath</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str&#160;</td>
+          <td class="paramname"><em>filename</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">Download file with chunked transfer and robust error handling.
+
+Args:
+    url (str): Download URL
+    filepath (Path): Local file path
+    filename (str): Filename for logging
+    
+Returns:
+    bool: True if download successful
+</pre> 
+<p class="definition">Definition at line <a class="el" href="dataset__loader_8py_source.html#l00515">515</a> of file <a class="el" href="dataset__loader_8py_source.html">dataset_loader.py</a>.</p>
+
+</div>
+</div>
+<a id="a3db9112a32ab4ca6bf00f396b14b26dd" name="a3db9112a32ab4ca6bf00f396b14b26dd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3db9112a32ab4ca6bf00f396b14b26dd">&#9670;&#160;</a></span>_extract_dataset()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> bool neuroexapt.utils.dataset_loader.AdvancedDatasetLoader._extract_dataset </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str&#160;</td>
+          <td class="paramname"><em>dataset_name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Path&#160;</td>
+          <td class="paramname"><em>dataset_dir</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">Extract downloaded dataset files.</pre> 
+<p class="definition">Definition at line <a class="el" href="dataset__loader_8py_source.html#l00449">449</a> of file <a class="el" href="dataset__loader_8py_source.html">dataset_loader.py</a>.</p>
+
+</div>
+</div>
+<a id="aea762c608fa0d49b5f8d81f09f991063" name="aea762c608fa0d49b5f8d81f09f991063"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aea762c608fa0d49b5f8d81f09f991063">&#9670;&#160;</a></span>_get_best_mirror()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Optional[<a class="el" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetMirror.html">DatasetMirror</a>] neuroexapt.utils.dataset_loader.AdvancedDatasetLoader._get_best_mirror </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">Get the best available mirror.</pre> 
+<p class="definition">Definition at line <a class="el" href="dataset__loader_8py_source.html#l00352">352</a> of file <a class="el" href="dataset__loader_8py_source.html">dataset_loader.py</a>.</p>
+
+</div>
+</div>
+<a id="aaf228bd0e54ff7ea2a00ca4cc716b6f3" name="aaf228bd0e54ff7ea2a00ca4cc716b6f3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaf228bd0e54ff7ea2a00ca4cc716b6f3">&#9670;&#160;</a></span>_initialize_mirrors()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> List[<a class="el" href="classneuroexapt_1_1utils_1_1dataset__loader_1_1DatasetMirror.html">DatasetMirror</a>] neuroexapt.utils.dataset_loader.AdvancedDatasetLoader._initialize_mirrors </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">Initialize dataset mirrors with priority for Chinese users.</pre> 
+<p class="definition">Definition at line <a class="el" href="dataset__loader_8py_source.html#l00320">320</a> of file <a class="el" href="dataset__loader_8py_source.html">dataset_loader.py</a>.</p>
+
+</div>
+</div>
+<a id="a0e2d5012df030ac019ba2529fe8c7915" name="a0e2d5012df030ac019ba2529fe8c7915"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0e2d5012df030ac019ba2529fe8c7915">&#9670;&#160;</a></span>_is_dataset_complete()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> bool neuroexapt.utils.dataset_loader.AdvancedDatasetLoader._is_dataset_complete </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str&#160;</td>
+          <td class="paramname"><em>dataset_name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Path&#160;</td>
+          <td class="paramname"><em>dataset_dir</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">Check if dataset is complete.</pre> 
+<p class="definition">Definition at line <a class="el" href="dataset__loader_8py_source.html#l00608">608</a> of file <a class="el" href="dataset__loader_8py_source.html">dataset_loader.py</a>.</p>
+
+</div>
+</div>
+<a id="a83e1e7b2d0088df8019bef8858599004" name="a83e1e7b2d0088df8019bef8858599004"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a83e1e7b2d0088df8019bef8858599004">&#9670;&#160;</a></span>clear_cache()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.utils.dataset_loader.AdvancedDatasetLoader.clear_cache </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Optional[str] &#160;</td>
+          <td class="paramname"><em>dataset_name</em> = <code>None</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">Clear cache for specific dataset or all datasets.</pre> 
+<p class="definition">Definition at line <a class="el" href="dataset__loader_8py_source.html#l00730">730</a> of file <a class="el" href="dataset__loader_8py_source.html">dataset_loader.py</a>.</p>
+
+</div>
+</div>
+<a id="aa25053bc1f628bc75a3decfb068f658d" name="aa25053bc1f628bc75a3decfb068f658d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa25053bc1f628bc75a3decfb068f658d">&#9670;&#160;</a></span>download_dataset()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> bool neuroexapt.utils.dataset_loader.AdvancedDatasetLoader.download_dataset </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str&#160;</td>
+          <td class="paramname"><em>dataset_name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool &#160;</td>
+          <td class="paramname"><em>force_download</em> = <code>False</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">Download dataset with intelligent caching and P2P acceleration.</pre> 
+<p class="definition">Definition at line <a class="el" href="dataset__loader_8py_source.html#l00359">359</a> of file <a class="el" href="dataset__loader_8py_source.html">dataset_loader.py</a>.</p>
+
+</div>
+</div>
+<a id="ac2239398a2cc2fb4611099c935e1f05b" name="ac2239398a2cc2fb4611099c935e1f05b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac2239398a2cc2fb4611099c935e1f05b">&#9670;&#160;</a></span>get_cache_info()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Dict neuroexapt.utils.dataset_loader.AdvancedDatasetLoader.get_cache_info </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">Get cache information.</pre> 
+<p class="definition">Definition at line <a class="el" href="dataset__loader_8py_source.html#l00744">744</a> of file <a class="el" href="dataset__loader_8py_source.html">dataset_loader.py</a>.</p>
+
+</div>
+</div>
+<a id="a790b462aced6b612446a87de24778f8b" name="a790b462aced6b612446a87de24778f8b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a790b462aced6b612446a87de24778f8b">&#9670;&#160;</a></span>get_cifar100_dataloaders()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Tuple[DataLoader, DataLoader] neuroexapt.utils.dataset_loader.AdvancedDatasetLoader.get_cifar100_dataloaders </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int &#160;</td>
+          <td class="paramname"><em>batch_size</em> = <code>128</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int &#160;</td>
+          <td class="paramname"><em>num_workers</em> = <code>2</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool &#160;</td>
+          <td class="paramname"><em>download</em> = <code>True</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool &#160;</td>
+          <td class="paramname"><em>force_download</em> = <code>False</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">Get CIFAR-100 data loaders with advanced downloading.</pre> 
+<p class="definition">Definition at line <a class="el" href="dataset__loader_8py_source.html#l00677">677</a> of file <a class="el" href="dataset__loader_8py_source.html">dataset_loader.py</a>.</p>
+
+</div>
+</div>
+<a id="ac8b512c7f82ad5dd961152b080a02814" name="ac8b512c7f82ad5dd961152b080a02814"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac8b512c7f82ad5dd961152b080a02814">&#9670;&#160;</a></span>get_cifar10_dataloaders()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Tuple[DataLoader, DataLoader] neuroexapt.utils.dataset_loader.AdvancedDatasetLoader.get_cifar10_dataloaders </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int &#160;</td>
+          <td class="paramname"><em>batch_size</em> = <code>128</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int &#160;</td>
+          <td class="paramname"><em>num_workers</em> = <code>2</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool &#160;</td>
+          <td class="paramname"><em>download</em> = <code>True</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool &#160;</td>
+          <td class="paramname"><em>force_download</em> = <code>False</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">Get CIFAR-10 data loaders with advanced downloading.</pre> 
+<p class="definition">Definition at line <a class="el" href="dataset__loader_8py_source.html#l00624">624</a> of file <a class="el" href="dataset__loader_8py_source.html">dataset_loader.py</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="ab55c063912c5f2150feeec0a3813bf1e" name="ab55c063912c5f2150feeec0a3813bf1e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab55c063912c5f2150feeec0a3813bf1e">&#9670;&#160;</a></span>cache</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.utils.dataset_loader.AdvancedDatasetLoader.cache</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="dataset__loader_8py_source.html#l00237">237</a> of file <a class="el" href="dataset__loader_8py_source.html">dataset_loader.py</a>.</p>
+
+</div>
+</div>
+<a id="a975163c70b342a2fc5eb482fdb291174" name="a975163c70b342a2fc5eb482fdb291174"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a975163c70b342a2fc5eb482fdb291174">&#9670;&#160;</a></span>dataset_configs</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.utils.dataset_loader.AdvancedDatasetLoader.dataset_configs</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="dataset__loader_8py_source.html#l00262">262</a> of file <a class="el" href="dataset__loader_8py_source.html">dataset_loader.py</a>.</p>
+
+</div>
+</div>
+<a id="aa3231b36c395eed368c8341ab5c10f09" name="aa3231b36c395eed368c8341ab5c10f09"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa3231b36c395eed368c8341ab5c10f09">&#9670;&#160;</a></span>download_dir</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.utils.dataset_loader.AdvancedDatasetLoader.download_dir</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="dataset__loader_8py_source.html#l00238">238</a> of file <a class="el" href="dataset__loader_8py_source.html">dataset_loader.py</a>.</p>
+
+</div>
+</div>
+<a id="aa65e83089f5d59e9d55586e73f802cf7" name="aa65e83089f5d59e9d55586e73f802cf7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa65e83089f5d59e9d55586e73f802cf7">&#9670;&#160;</a></span>max_retries</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.utils.dataset_loader.AdvancedDatasetLoader.max_retries</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="dataset__loader_8py_source.html#l00256">256</a> of file <a class="el" href="dataset__loader_8py_source.html">dataset_loader.py</a>.</p>
+
+</div>
+</div>
+<a id="a79a2f0163ec7ac1c75748aa29ccbc199" name="a79a2f0163ec7ac1c75748aa29ccbc199"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a79a2f0163ec7ac1c75748aa29ccbc199">&#9670;&#160;</a></span>mirrors</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.utils.dataset_loader.AdvancedDatasetLoader.mirrors</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="dataset__loader_8py_source.html#l00259">259</a> of file <a class="el" href="dataset__loader_8py_source.html">dataset_loader.py</a>.</p>
+
+</div>
+</div>
+<a id="a682c7f94749fef8367d68e90694ef72a" name="a682c7f94749fef8367d68e90694ef72a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a682c7f94749fef8367d68e90694ef72a">&#9670;&#160;</a></span>p2p_downloader</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.utils.dataset_loader.AdvancedDatasetLoader.p2p_downloader</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="dataset__loader_8py_source.html#l00240">240</a> of file <a class="el" href="dataset__loader_8py_source.html">dataset_loader.py</a>.</p>
+
+</div>
+</div>
+<a id="a328f8d0ac3295fcd2cd20fa367d14ced" name="a328f8d0ac3295fcd2cd20fa367d14ced"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a328f8d0ac3295fcd2cd20fa367d14ced">&#9670;&#160;</a></span>xunlei_downloader</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">neuroexapt.utils.dataset_loader.AdvancedDatasetLoader.xunlei_downloader</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="dataset__loader_8py_source.html#l00243">243</a> of file <a class="el" href="dataset__loader_8py_source.html">dataset_loader.py</a>.</p>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following file:<ul>
+<li>neuroexapt/utils/<a class="el" href="dataset__loader_8py_source.html">dataset_loader.py</a></li>
+</ul>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<!-- do not remove this div, it is closed by doxygen! -->
+</div>
+<!-- Custom Footer -->
+<div style="background: #f8f9fa; border-top: 1px solid #e9ecef; margin-top: 50px; padding: 30px 0; text-align: center;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-bottom: 20px;">
+            <!-- Project Info -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🧠 NeuroExapt</h4>
+                <p style="color: #6c757d; margin: 0; font-size: 0.9em;">
+                    Advanced Neural Architecture Search and Dynamic Morphogenesis Framework for next-generation AI research.
+                </p>
+            </div>
+            <!-- Quick Links -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">📚 Quick Links</h4>
+                <div style="text-align: left;">
+                    <a href="index.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🏠 Home</a>
+                    <a href="modules.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📦 Modules</a>
+                    <a href="examples.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💡 Examples</a>
+                    <a href="files.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📁 Files</a>
+                </div>
+            </div>
+            <!-- Resources -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🔗 Resources</h4>
+                <div style="text-align: left;">
+                    <a href="https://github.com/your-username/neuroexapt" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💻 GitHub Repository</a>
+                    <a href="https://github.com/your-username/neuroexapt/issues" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🐛 Issue Tracker</a>
+                    <a href="https://github.com/your-username/neuroexapt/wiki" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📖 Wiki</a>
+                    <a href="https://github.com/your-username/neuroexapt/releases" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🚀 Releases</a>
+                </div>
+            </div>
+        </div>
+        <hr style="border: 0; height: 1px; background: #e9ecef; margin: 20px 0;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+            <div style="color: #6c757d; font-size: 0.9em;">
+                © 2024 NeuroExapt Project. Generated with 
+                <a href="https://www.doxygen.nl/index.html" style="color: #667eea; text-decoration: none;">Doxygen 1.9.8</a>
+            </div>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <span style="font-size: 0.9em; color: #6c757d;">Built with ❤️ for AI Research</span>
+                <div style="display: flex; gap: 10px;">
+                    <span style="background: #28a745; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">🟢 Active</span>
+                    <span style="background: #17a2b8; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">v3.0</span>
+                </div>
+            </div>
+        </div>
+        <!-- Technology Stack -->
+        <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #e9ecef;">
+            <div style="font-size: 0.8em; color: #868e96; text-align: center;">
+                <strong>Built with:</strong>
+                <span style="margin: 0 5px;">🐍 Python</span>
+                <span style="margin: 0 5px;">🔥 PyTorch</span>
+                <span style="margin: 0 5px;">⚡ CUDA</span>
+                <span style="margin: 0 5px;">🧮 NumPy</span>
+                <span style="margin: 0 5px;">📊 Matplotlib</span>
+                <span style="margin: 0 5px;">🚀 Triton</span>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Back to top button -->
+<div id="back-to-top" style="position: fixed; bottom: 20px; right: 20px; display: none; z-index: 1000;">
+    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" 
+            style="background: #667eea; color: white; border: none; padding: 10px 15px; border-radius: 50%; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,0.2); font-size: 16px;">
+        ⬆️
+    </button>
+</div>
+<script>
+// Back to top button functionality
+window.addEventListener('scroll', function() {
+    const backToTop = document.getElementById('back-to-top');
+    if (window.pageYOffset > 300) {
+        backToTop.style.display = 'block';
+    } else {
+        backToTop.style.display = 'none';
+    }
+});
+// Enhanced search functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Add search enhancement if search box exists
+    const searchBox = document.getElementById('MSearchField');
+    if (searchBox) {
+        searchBox.placeholder = 'Search documentation... 🔍';
+        searchBox.style.borderRadius = '20px';
+        searchBox.style.padding = '8px 15px';
+    }
+    // Add copy code button to code blocks
+    const codeBlocks = document.querySelectorAll('.fragment');
+    codeBlocks.forEach(function(block) {
+        const copyBtn = document.createElement('button');
+        copyBtn.innerHTML = '📋';
+        copyBtn.title = 'Copy code';
+        copyBtn.style.cssText = 'position: absolute; top: 10px; right: 10px; background: #667eea; color: white; border: none; padding: 5px; border-radius: 3px; cursor: pointer; font-size: 12px;';
+        block.style.position = 'relative';
+        block.appendChild(copyBtn);
+        copyBtn.addEventListener('click', function() {
+            const text = block.textContent;
+            navigator.clipboard.writeText(text).then(function() {
+                copyBtn.innerHTML = '✅';
+                setTimeout(function() {
+                    copyBtn.innerHTML = '📋';
+                }, 2000);
+            });
+        });
+    });
+});
+// Dark mode toggle (optional)
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+}
+// Load saved dark mode preference
+if (localStorage.getItem('darkMode') === 'true') {
+    document.body.classList.add('dark-mode');
+}
+</script>
+</body>
+</html>

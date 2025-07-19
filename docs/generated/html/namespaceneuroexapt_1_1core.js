@@ -1,0 +1,37 @@
+var namespaceneuroexapt_1_1core =
+[
+    [ "advanced_morphogenesis", "namespaceneuroexapt_1_1core_1_1advanced__morphogenesis.html", "namespaceneuroexapt_1_1core_1_1advanced__morphogenesis" ],
+    [ "aggressive_morphogenesis", "namespaceneuroexapt_1_1core_1_1aggressive__morphogenesis.html", "namespaceneuroexapt_1_1core_1_1aggressive__morphogenesis" ],
+    [ "architect", "namespaceneuroexapt_1_1core_1_1architect.html", "namespaceneuroexapt_1_1core_1_1architect" ],
+    [ "architecture_mutator", "namespaceneuroexapt_1_1core_1_1architecture__mutator.html", "namespaceneuroexapt_1_1core_1_1architecture__mutator" ],
+    [ "checkpoint_manager", "namespaceneuroexapt_1_1core_1_1checkpoint__manager.html", "namespaceneuroexapt_1_1core_1_1checkpoint__manager" ],
+    [ "clean_model", "namespaceneuroexapt_1_1core_1_1clean__model.html", "namespaceneuroexapt_1_1core_1_1clean__model" ],
+    [ "device_manager", "namespaceneuroexapt_1_1core_1_1device__manager.html", "namespaceneuroexapt_1_1core_1_1device__manager" ],
+    [ "dnm_connection_growth", "namespaceneuroexapt_1_1core_1_1dnm__connection__growth.html", "namespaceneuroexapt_1_1core_1_1dnm__connection__growth" ],
+    [ "dnm_framework", "namespaceneuroexapt_1_1core_1_1dnm__framework.html", "namespaceneuroexapt_1_1core_1_1dnm__framework" ],
+    [ "dnm_layer_analyzer", "namespaceneuroexapt_1_1core_1_1dnm__layer__analyzer.html", "namespaceneuroexapt_1_1core_1_1dnm__layer__analyzer" ],
+    [ "dnm_net2net", "namespaceneuroexapt_1_1core_1_1dnm__net2net.html", "namespaceneuroexapt_1_1core_1_1dnm__net2net" ],
+    [ "dnm_neuron_division", "namespaceneuroexapt_1_1core_1_1dnm__neuron__division.html", "namespaceneuroexapt_1_1core_1_1dnm__neuron__division" ],
+    [ "enhanced_bottleneck_detector", "namespaceneuroexapt_1_1core_1_1enhanced__bottleneck__detector.html", "namespaceneuroexapt_1_1core_1_1enhanced__bottleneck__detector" ],
+    [ "enhanced_dnm_framework", "namespaceneuroexapt_1_1core_1_1enhanced__dnm__framework.html", "namespaceneuroexapt_1_1core_1_1enhanced__dnm__framework" ],
+    [ "evolution_checkpoint", "namespaceneuroexapt_1_1core_1_1evolution__checkpoint.html", "namespaceneuroexapt_1_1core_1_1evolution__checkpoint" ],
+    [ "evolvable_model", "namespaceneuroexapt_1_1core_1_1evolvable__model.html", "namespaceneuroexapt_1_1core_1_1evolvable__model" ],
+    [ "fast_operations", "namespaceneuroexapt_1_1core_1_1fast__operations.html", "namespaceneuroexapt_1_1core_1_1fast__operations" ],
+    [ "function_preserving_init", "namespaceneuroexapt_1_1core_1_1function__preserving__init.html", "namespaceneuroexapt_1_1core_1_1function__preserving__init" ],
+    [ "genotypes", "namespaceneuroexapt_1_1core_1_1genotypes.html", [
+      [ "Genotype", "namespaceneuroexapt_1_1core_1_1genotypes.html#ae2e1f07845fb2f0daa8d52317cfdb83e", null ],
+      [ "PRIMITIVES", "namespaceneuroexapt_1_1core_1_1genotypes.html#a499e06b38a476262602c3899ba93eeb9", null ]
+    ] ],
+    [ "gumbel_softmax_explorer", "namespaceneuroexapt_1_1core_1_1gumbel__softmax__explorer.html", "namespaceneuroexapt_1_1core_1_1gumbel__softmax__explorer" ],
+    [ "logging_utils", "namespaceneuroexapt_1_1core_1_1logging__utils.html", "namespaceneuroexapt_1_1core_1_1logging__utils" ],
+    [ "model", "namespaceneuroexapt_1_1core_1_1model.html", "namespaceneuroexapt_1_1core_1_1model" ],
+    [ "net2net_subnetwork_analyzer", "namespaceneuroexapt_1_1core_1_1net2net__subnetwork__analyzer.html", "namespaceneuroexapt_1_1core_1_1net2net__subnetwork__analyzer" ],
+    [ "net2net_transfer", "namespaceneuroexapt_1_1core_1_1net2net__transfer.html", "namespaceneuroexapt_1_1core_1_1net2net__transfer" ],
+    [ "operations", "namespaceneuroexapt_1_1core_1_1operations.html", "namespaceneuroexapt_1_1core_1_1operations" ],
+    [ "optimized_architect", "namespaceneuroexapt_1_1core_1_1optimized__architect.html", "namespaceneuroexapt_1_1core_1_1optimized__architect" ],
+    [ "performance_guided_division", "namespaceneuroexapt_1_1core_1_1performance__guided__division.html", "namespaceneuroexapt_1_1core_1_1performance__guided__division" ],
+    [ "separated_training", "namespaceneuroexapt_1_1core_1_1separated__training.html", "namespaceneuroexapt_1_1core_1_1separated__training" ],
+    [ "simple_architect", "namespaceneuroexapt_1_1core_1_1simple__architect.html", "namespaceneuroexapt_1_1core_1_1simple__architect" ],
+    [ "stability_monitor", "namespaceneuroexapt_1_1core_1_1stability__monitor.html", "namespaceneuroexapt_1_1core_1_1stability__monitor" ],
+    [ "__all__", "namespaceneuroexapt_1_1core.html#adebf54d69f55c1bacce5e200ed04b942", null ]
+];

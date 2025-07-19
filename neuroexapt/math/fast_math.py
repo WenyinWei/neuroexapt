@@ -1,4 +1,11 @@
 """
+"""
+\defgroup group_fast_math Fast Math
+\ingroup core
+Fast Math module for NeuroExapt framework.
+"""
+
+
 高性能数学计算模块
 
 专门为ASO-SE架构搜索优化的数学运算，包括：

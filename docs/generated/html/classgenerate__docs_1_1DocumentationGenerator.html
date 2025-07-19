@@ -1,0 +1,728 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="description" content="NeuroExapt - Advanced Neural Architecture Search and Dynamic Morphogenesis Framework">
+    <meta name="keywords" content="neural architecture search, dynamic morphogenesis, deep learning, AI, PyTorch">
+    <meta name="author" content="NeuroExapt Team">
+    <meta property="og:title" content="NeuroExapt Documentation">
+    <meta property="og:description" content="Advanced Neural Architecture Search Framework">
+    <meta property="og:type" content="website">
+
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>NeuroExapt: generate_docs.DocumentationGenerator Class Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="custom.css" rel="stylesheet" type="text/css"/>
+<!-- NeuroExapt Custom Styles -->
+<style>
+/* Enhanced header styling */
+.header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+.header h1 {
+    margin: 0;
+    font-size: 2.5em;
+    font-weight: 300;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+.header .subtitle {
+    font-size: 1.2em;
+    opacity: 0.9;
+    margin-top: 10px;
+}
+/* Enhanced navigation */
+.tablist {
+    background: #f8f9fa;
+    border-bottom: 2px solid #e9ecef;
+}
+.tablist li.current a {
+    background: #667eea;
+    color: white;
+}
+/* Improved content layout */
+.contents {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+/* Code highlighting */
+.fragment {
+    background: #f8f9fa;
+    border-left: 4px solid #667eea;
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 0 8px 8px 0;
+}
+/* Enhanced tables */
+table.memberdecls {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 20px 0;
+}
+table.memberdecls td {
+    border: 1px solid #e9ecef;
+    padding: 12px;
+}
+/* Better typography */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #343a40;
+}
+h1, h2, h3, h4, h5, h6 {
+    color: #495057;
+    font-weight: 500;
+}
+/* Responsive design */
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 2em;
+    }
+    .contents {
+        padding: 15px;
+    }
+}
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #1a1a1a;
+        color: #e9ecef;
+    }
+    .header {
+        background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+    }
+    .fragment {
+        background: #2d3748;
+        color: #e9ecef;
+    }
+}
+</style>
+<!-- Analytics (if needed) -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<!--
+<script async src="https://www.googletagmanager.com/gtag/js?id=GA_TRACKING_ID"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'GA_TRACKING_ID');
+</script>
+-->
+</head>
+<body>
+<!-- Custom Header -->
+<div class="header">
+    <h1>🧠 NeuroExapt</h1>
+    <div class="subtitle">Advanced Neural Architecture Search and Dynamic Morphogenesis Framework</div>
+    <div style="margin-top: 15px; font-size: 0.9em;">
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🚀 Dynamic Neural Morphogenesis
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🔬 Advanced Architecture Search
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            ⚡ High-Performance Computing
+        </span>
+    </div>
+</div>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! --><!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('classgenerate__docs_1_1DocumentationGenerator.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="classgenerate__docs_1_1DocumentationGenerator-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">generate_docs.DocumentationGenerator Class Reference</div></div>
+</div><!--header-->
+<div class="contents">
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a6124cf9cc45a90451e32aadb2707ede2" id="r_a6124cf9cc45a90451e32aadb2707ede2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgenerate__docs_1_1DocumentationGenerator.html#a6124cf9cc45a90451e32aadb2707ede2">__init__</a> (self, str <a class="el" href="classgenerate__docs_1_1DocumentationGenerator.html#a5e35ce0be971b663d1fbc884cd8e9767">project_root</a>=&quot;.&quot;)</td></tr>
+<tr class="separator:a6124cf9cc45a90451e32aadb2707ede2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aee5e795d895f539dca88ceb3afae5dc1" id="r_aee5e795d895f539dca88ceb3afae5dc1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgenerate__docs_1_1DocumentationGenerator.html#aee5e795d895f539dca88ceb3afae5dc1">clean_old_docs</a> (self)</td></tr>
+<tr class="separator:aee5e795d895f539dca88ceb3afae5dc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa49372d78c8529e9fe332f0c9f7dee44" id="r_aa49372d78c8529e9fe332f0c9f7dee44"><td class="memItemLeft" align="right" valign="top">List[Path]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgenerate__docs_1_1DocumentationGenerator.html#aa49372d78c8529e9fe332f0c9f7dee44">collect_markdown_files</a> (self)</td></tr>
+<tr class="separator:aa49372d78c8529e9fe332f0c9f7dee44"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a057680806d6c02d18c12d8412f2aae23" id="r_a057680806d6c02d18c12d8412f2aae23"><td class="memItemLeft" align="right" valign="top">Dict[str, List[Path]]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgenerate__docs_1_1DocumentationGenerator.html#a057680806d6c02d18c12d8412f2aae23">categorize_markdown_files</a> (self, List[Path] md_files)</td></tr>
+<tr class="separator:a057680806d6c02d18c12d8412f2aae23"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2a87ed912235fadd5cddbb8228775edf" id="r_a2a87ed912235fadd5cddbb8228775edf"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgenerate__docs_1_1DocumentationGenerator.html#a2a87ed912235fadd5cddbb8228775edf">create_master_documentation</a> (self, Dict[str, List[Path]] categories)</td></tr>
+<tr class="separator:a2a87ed912235fadd5cddbb8228775edf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:affca69d3ffd95b49935bc57f432f1623" id="r_affca69d3ffd95b49935bc57f432f1623"><td class="memItemLeft" align="right" valign="top">Dict[str, str]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgenerate__docs_1_1DocumentationGenerator.html#affca69d3ffd95b49935bc57f432f1623">run_example_tests</a> (self)</td></tr>
+<tr class="separator:affca69d3ffd95b49935bc57f432f1623"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acaea88198d3652d2a09738960d01f562" id="r_acaea88198d3652d2a09738960d01f562"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgenerate__docs_1_1DocumentationGenerator.html#acaea88198d3652d2a09738960d01f562">create_test_results_page</a> (self, Dict[str, str] test_results)</td></tr>
+<tr class="separator:acaea88198d3652d2a09738960d01f562"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2202fdb11a281bfb2a49bab5b08ee6b9" id="r_a2202fdb11a281bfb2a49bab5b08ee6b9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgenerate__docs_1_1DocumentationGenerator.html#a2202fdb11a281bfb2a49bab5b08ee6b9">enhance_python_docstrings</a> (self)</td></tr>
+<tr class="separator:a2202fdb11a281bfb2a49bab5b08ee6b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a49d98de03b9649a91133255f79818abe" id="r_a49d98de03b9649a91133255f79818abe"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgenerate__docs_1_1DocumentationGenerator.html#a49d98de03b9649a91133255f79818abe">run_doxygen</a> (self)</td></tr>
+<tr class="separator:a49d98de03b9649a91133255f79818abe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab5712fe0d9cc11a2bc20c811bd40bc24" id="r_ab5712fe0d9cc11a2bc20c811bd40bc24"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgenerate__docs_1_1DocumentationGenerator.html#ab5712fe0d9cc11a2bc20c811bd40bc24">create_images_directory</a> (self)</td></tr>
+<tr class="separator:ab5712fe0d9cc11a2bc20c811bd40bc24"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3a3d521db2cb985cf7f2ae751131b629" id="r_a3a3d521db2cb985cf7f2ae751131b629"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgenerate__docs_1_1DocumentationGenerator.html#a3a3d521db2cb985cf7f2ae751131b629">post_process_html</a> (self)</td></tr>
+<tr class="separator:a3a3d521db2cb985cf7f2ae751131b629"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb042d45402ccf854b344df3c1a95f29" id="r_adb042d45402ccf854b344df3c1a95f29"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgenerate__docs_1_1DocumentationGenerator.html#adb042d45402ccf854b344df3c1a95f29">generate_documentation</a> (self)</td></tr>
+<tr class="separator:adb042d45402ccf854b344df3c1a95f29"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a5e35ce0be971b663d1fbc884cd8e9767" id="r_a5e35ce0be971b663d1fbc884cd8e9767"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgenerate__docs_1_1DocumentationGenerator.html#a5e35ce0be971b663d1fbc884cd8e9767">project_root</a></td></tr>
+<tr class="separator:a5e35ce0be971b663d1fbc884cd8e9767"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af0f4769a7ee398dbd2e92bb7a6d7c67b" id="r_af0f4769a7ee398dbd2e92bb7a6d7c67b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgenerate__docs_1_1DocumentationGenerator.html#af0f4769a7ee398dbd2e92bb7a6d7c67b">docs_dir</a></td></tr>
+<tr class="separator:af0f4769a7ee398dbd2e92bb7a6d7c67b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a44884cdece94fbf8427063f27db6f738" id="r_a44884cdece94fbf8427063f27db6f738"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgenerate__docs_1_1DocumentationGenerator.html#a44884cdece94fbf8427063f27db6f738">generated_dir</a></td></tr>
+<tr class="separator:a44884cdece94fbf8427063f27db6f738"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a20af239cc1fae63cc979e4a4d36722a8" id="r_a20af239cc1fae63cc979e4a4d36722a8"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgenerate__docs_1_1DocumentationGenerator.html#a20af239cc1fae63cc979e4a4d36722a8">temp_dir</a></td></tr>
+<tr class="separator:a20af239cc1fae63cc979e4a4d36722a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock">
+<p class="definition">Definition at line <a class="el" href="generate__docs_8py_source.html#l00026">26</a> of file <a class="el" href="generate__docs_8py_source.html">generate_docs.py</a>.</p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a6124cf9cc45a90451e32aadb2707ede2" name="a6124cf9cc45a90451e32aadb2707ede2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6124cf9cc45a90451e32aadb2707ede2">&#9670;&#160;</a></span>__init__()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">generate_docs.DocumentationGenerator.__init__ </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str &#160;</td>
+          <td class="paramname"><em>project_root</em> = <code>&quot;.&quot;</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="generate__docs_8py_source.html#l00027">27</a> of file <a class="el" href="generate__docs_8py_source.html">generate_docs.py</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a057680806d6c02d18c12d8412f2aae23" name="a057680806d6c02d18c12d8412f2aae23"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a057680806d6c02d18c12d8412f2aae23">&#9670;&#160;</a></span>categorize_markdown_files()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Dict[str, List[Path]] generate_docs.DocumentationGenerator.categorize_markdown_files </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">List[Path]&#160;</td>
+          <td class="paramname"><em>md_files</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">将markdown文件按类别分组</pre> 
+<p class="definition">Definition at line <a class="el" href="generate__docs_8py_source.html#l00073">73</a> of file <a class="el" href="generate__docs_8py_source.html">generate_docs.py</a>.</p>
+
+</div>
+</div>
+<a id="aee5e795d895f539dca88ceb3afae5dc1" name="aee5e795d895f539dca88ceb3afae5dc1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aee5e795d895f539dca88ceb3afae5dc1">&#9670;&#160;</a></span>clean_old_docs()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">generate_docs.DocumentationGenerator.clean_old_docs </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">清理旧的生成文档</pre> 
+<p class="definition">Definition at line <a class="el" href="generate__docs_8py_source.html#l00038">38</a> of file <a class="el" href="generate__docs_8py_source.html">generate_docs.py</a>.</p>
+
+</div>
+</div>
+<a id="aa49372d78c8529e9fe332f0c9f7dee44" name="aa49372d78c8529e9fe332f0c9f7dee44"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa49372d78c8529e9fe332f0c9f7dee44">&#9670;&#160;</a></span>collect_markdown_files()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> List[Path] generate_docs.DocumentationGenerator.collect_markdown_files </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">收集项目中所有的markdown文件</pre> 
+<p class="definition">Definition at line <a class="el" href="generate__docs_8py_source.html#l00050">50</a> of file <a class="el" href="generate__docs_8py_source.html">generate_docs.py</a>.</p>
+
+</div>
+</div>
+<a id="ab5712fe0d9cc11a2bc20c811bd40bc24" name="ab5712fe0d9cc11a2bc20c811bd40bc24"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab5712fe0d9cc11a2bc20c811bd40bc24">&#9670;&#160;</a></span>create_images_directory()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">generate_docs.DocumentationGenerator.create_images_directory </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">创建图片目录并复制相关图片</pre> 
+<p class="definition">Definition at line <a class="el" href="generate__docs_8py_source.html#l00368">368</a> of file <a class="el" href="generate__docs_8py_source.html">generate_docs.py</a>.</p>
+
+</div>
+</div>
+<a id="a2a87ed912235fadd5cddbb8228775edf" name="a2a87ed912235fadd5cddbb8228775edf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2a87ed912235fadd5cddbb8228775edf">&#9670;&#160;</a></span>create_master_documentation()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">generate_docs.DocumentationGenerator.create_master_documentation </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Dict[str, List[Path]]&#160;</td>
+          <td class="paramname"><em>categories</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">创建主文档页面，整合所有markdown内容</pre> 
+<p class="definition">Definition at line <a class="el" href="generate__docs_8py_source.html#l00119">119</a> of file <a class="el" href="generate__docs_8py_source.html">generate_docs.py</a>.</p>
+
+</div>
+</div>
+<a id="acaea88198d3652d2a09738960d01f562" name="acaea88198d3652d2a09738960d01f562"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acaea88198d3652d2a09738960d01f562">&#9670;&#160;</a></span>create_test_results_page()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">generate_docs.DocumentationGenerator.create_test_results_page </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Dict[str, str]&#160;</td>
+          <td class="paramname"><em>test_results</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">创建测试结果页面</pre> 
+<p class="definition">Definition at line <a class="el" href="generate__docs_8py_source.html#l00270">270</a> of file <a class="el" href="generate__docs_8py_source.html">generate_docs.py</a>.</p>
+
+</div>
+</div>
+<a id="a2202fdb11a281bfb2a49bab5b08ee6b9" name="a2202fdb11a281bfb2a49bab5b08ee6b9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2202fdb11a281bfb2a49bab5b08ee6b9">&#9670;&#160;</a></span>enhance_python_docstrings()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">generate_docs.DocumentationGenerator.enhance_python_docstrings </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">增强Python文件的文档字符串以便Doxygen处理</pre> 
+<p class="definition">Definition at line <a class="el" href="generate__docs_8py_source.html#l00291">291</a> of file <a class="el" href="generate__docs_8py_source.html">generate_docs.py</a>.</p>
+
+</div>
+</div>
+<a id="adb042d45402ccf854b344df3c1a95f29" name="adb042d45402ccf854b344df3c1a95f29"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adb042d45402ccf854b344df3c1a95f29">&#9670;&#160;</a></span>generate_documentation()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">generate_docs.DocumentationGenerator.generate_documentation </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">主文档生成流程</pre> 
+<p class="definition">Definition at line <a class="el" href="generate__docs_8py_source.html#l00425">425</a> of file <a class="el" href="generate__docs_8py_source.html">generate_docs.py</a>.</p>
+
+</div>
+</div>
+<a id="a3a3d521db2cb985cf7f2ae751131b629" name="a3a3d521db2cb985cf7f2ae751131b629"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3a3d521db2cb985cf7f2ae751131b629">&#9670;&#160;</a></span>post_process_html()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">generate_docs.DocumentationGenerator.post_process_html </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">后处理生成的HTML文件</pre> 
+<p class="definition">Definition at line <a class="el" href="generate__docs_8py_source.html#l00390">390</a> of file <a class="el" href="generate__docs_8py_source.html">generate_docs.py</a>.</p>
+
+</div>
+</div>
+<a id="a49d98de03b9649a91133255f79818abe" name="a49d98de03b9649a91133255f79818abe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a49d98de03b9649a91133255f79818abe">&#9670;&#160;</a></span>run_doxygen()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">generate_docs.DocumentationGenerator.run_doxygen </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">运行Doxygen生成文档</pre> 
+<p class="definition">Definition at line <a class="el" href="generate__docs_8py_source.html#l00336">336</a> of file <a class="el" href="generate__docs_8py_source.html">generate_docs.py</a>.</p>
+
+</div>
+</div>
+<a id="affca69d3ffd95b49935bc57f432f1623" name="affca69d3ffd95b49935bc57f432f1623"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#affca69d3ffd95b49935bc57f432f1623">&#9670;&#160;</a></span>run_example_tests()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Dict[str, str] generate_docs.DocumentationGenerator.run_example_tests </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">运行examples中的代码并收集输出</pre> 
+<p class="definition">Definition at line <a class="el" href="generate__docs_8py_source.html#l00207">207</a> of file <a class="el" href="generate__docs_8py_source.html">generate_docs.py</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="af0f4769a7ee398dbd2e92bb7a6d7c67b" name="af0f4769a7ee398dbd2e92bb7a6d7c67b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af0f4769a7ee398dbd2e92bb7a6d7c67b">&#9670;&#160;</a></span>docs_dir</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">generate_docs.DocumentationGenerator.docs_dir</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="generate__docs_8py_source.html#l00029">29</a> of file <a class="el" href="generate__docs_8py_source.html">generate_docs.py</a>.</p>
+
+</div>
+</div>
+<a id="a44884cdece94fbf8427063f27db6f738" name="a44884cdece94fbf8427063f27db6f738"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a44884cdece94fbf8427063f27db6f738">&#9670;&#160;</a></span>generated_dir</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">generate_docs.DocumentationGenerator.generated_dir</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="generate__docs_8py_source.html#l00030">30</a> of file <a class="el" href="generate__docs_8py_source.html">generate_docs.py</a>.</p>
+
+</div>
+</div>
+<a id="a5e35ce0be971b663d1fbc884cd8e9767" name="a5e35ce0be971b663d1fbc884cd8e9767"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5e35ce0be971b663d1fbc884cd8e9767">&#9670;&#160;</a></span>project_root</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">generate_docs.DocumentationGenerator.project_root</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="generate__docs_8py_source.html#l00028">28</a> of file <a class="el" href="generate__docs_8py_source.html">generate_docs.py</a>.</p>
+
+</div>
+</div>
+<a id="a20af239cc1fae63cc979e4a4d36722a8" name="a20af239cc1fae63cc979e4a4d36722a8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a20af239cc1fae63cc979e4a4d36722a8">&#9670;&#160;</a></span>temp_dir</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">generate_docs.DocumentationGenerator.temp_dir</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="generate__docs_8py_source.html#l00031">31</a> of file <a class="el" href="generate__docs_8py_source.html">generate_docs.py</a>.</p>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following file:<ul>
+<li>docs/<a class="el" href="generate__docs_8py_source.html">generate_docs.py</a></li>
+</ul>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<!-- do not remove this div, it is closed by doxygen! -->
+</div>
+<!-- Custom Footer -->
+<div style="background: #f8f9fa; border-top: 1px solid #e9ecef; margin-top: 50px; padding: 30px 0; text-align: center;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-bottom: 20px;">
+            <!-- Project Info -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🧠 NeuroExapt</h4>
+                <p style="color: #6c757d; margin: 0; font-size: 0.9em;">
+                    Advanced Neural Architecture Search and Dynamic Morphogenesis Framework for next-generation AI research.
+                </p>
+            </div>
+            <!-- Quick Links -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">📚 Quick Links</h4>
+                <div style="text-align: left;">
+                    <a href="index.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🏠 Home</a>
+                    <a href="modules.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📦 Modules</a>
+                    <a href="examples.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💡 Examples</a>
+                    <a href="files.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📁 Files</a>
+                </div>
+            </div>
+            <!-- Resources -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🔗 Resources</h4>
+                <div style="text-align: left;">
+                    <a href="https://github.com/your-username/neuroexapt" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💻 GitHub Repository</a>
+                    <a href="https://github.com/your-username/neuroexapt/issues" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🐛 Issue Tracker</a>
+                    <a href="https://github.com/your-username/neuroexapt/wiki" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📖 Wiki</a>
+                    <a href="https://github.com/your-username/neuroexapt/releases" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🚀 Releases</a>
+                </div>
+            </div>
+        </div>
+        <hr style="border: 0; height: 1px; background: #e9ecef; margin: 20px 0;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+            <div style="color: #6c757d; font-size: 0.9em;">
+                © 2024 NeuroExapt Project. Generated with 
+                <a href="https://www.doxygen.nl/index.html" style="color: #667eea; text-decoration: none;">Doxygen 1.9.8</a>
+            </div>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <span style="font-size: 0.9em; color: #6c757d;">Built with ❤️ for AI Research</span>
+                <div style="display: flex; gap: 10px;">
+                    <span style="background: #28a745; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">🟢 Active</span>
+                    <span style="background: #17a2b8; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">v3.0</span>
+                </div>
+            </div>
+        </div>
+        <!-- Technology Stack -->
+        <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #e9ecef;">
+            <div style="font-size: 0.8em; color: #868e96; text-align: center;">
+                <strong>Built with:</strong>
+                <span style="margin: 0 5px;">🐍 Python</span>
+                <span style="margin: 0 5px;">🔥 PyTorch</span>
+                <span style="margin: 0 5px;">⚡ CUDA</span>
+                <span style="margin: 0 5px;">🧮 NumPy</span>
+                <span style="margin: 0 5px;">📊 Matplotlib</span>
+                <span style="margin: 0 5px;">🚀 Triton</span>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Back to top button -->
+<div id="back-to-top" style="position: fixed; bottom: 20px; right: 20px; display: none; z-index: 1000;">
+    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" 
+            style="background: #667eea; color: white; border: none; padding: 10px 15px; border-radius: 50%; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,0.2); font-size: 16px;">
+        ⬆️
+    </button>
+</div>
+<script>
+// Back to top button functionality
+window.addEventListener('scroll', function() {
+    const backToTop = document.getElementById('back-to-top');
+    if (window.pageYOffset > 300) {
+        backToTop.style.display = 'block';
+    } else {
+        backToTop.style.display = 'none';
+    }
+});
+// Enhanced search functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Add search enhancement if search box exists
+    const searchBox = document.getElementById('MSearchField');
+    if (searchBox) {
+        searchBox.placeholder = 'Search documentation... 🔍';
+        searchBox.style.borderRadius = '20px';
+        searchBox.style.padding = '8px 15px';
+    }
+    // Add copy code button to code blocks
+    const codeBlocks = document.querySelectorAll('.fragment');
+    codeBlocks.forEach(function(block) {
+        const copyBtn = document.createElement('button');
+        copyBtn.innerHTML = '📋';
+        copyBtn.title = 'Copy code';
+        copyBtn.style.cssText = 'position: absolute; top: 10px; right: 10px; background: #667eea; color: white; border: none; padding: 5px; border-radius: 3px; cursor: pointer; font-size: 12px;';
+        block.style.position = 'relative';
+        block.appendChild(copyBtn);
+        copyBtn.addEventListener('click', function() {
+            const text = block.textContent;
+            navigator.clipboard.writeText(text).then(function() {
+                copyBtn.innerHTML = '✅';
+                setTimeout(function() {
+                    copyBtn.innerHTML = '📋';
+                }, 2000);
+            });
+        });
+    });
+});
+// Dark mode toggle (optional)
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+}
+// Load saved dark mode preference
+if (localStorage.getItem('darkMode') === 'true') {
+    document.body.classList.add('dark-mode');
+}
+</script>
+</body>
+</html>

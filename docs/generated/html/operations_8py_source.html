@@ -1,0 +1,570 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="description" content="NeuroExapt - Advanced Neural Architecture Search and Dynamic Morphogenesis Framework">
+    <meta name="keywords" content="neural architecture search, dynamic morphogenesis, deep learning, AI, PyTorch">
+    <meta name="author" content="NeuroExapt Team">
+    <meta property="og:title" content="NeuroExapt Documentation">
+    <meta property="og:description" content="Advanced Neural Architecture Search Framework">
+    <meta property="og:type" content="website">
+
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>NeuroExapt: neuroexapt/core/operations.py Source File</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="custom.css" rel="stylesheet" type="text/css"/>
+<!-- NeuroExapt Custom Styles -->
+<style>
+/* Enhanced header styling */
+.header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+.header h1 {
+    margin: 0;
+    font-size: 2.5em;
+    font-weight: 300;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+.header .subtitle {
+    font-size: 1.2em;
+    opacity: 0.9;
+    margin-top: 10px;
+}
+/* Enhanced navigation */
+.tablist {
+    background: #f8f9fa;
+    border-bottom: 2px solid #e9ecef;
+}
+.tablist li.current a {
+    background: #667eea;
+    color: white;
+}
+/* Improved content layout */
+.contents {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+/* Code highlighting */
+.fragment {
+    background: #f8f9fa;
+    border-left: 4px solid #667eea;
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 0 8px 8px 0;
+}
+/* Enhanced tables */
+table.memberdecls {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 20px 0;
+}
+table.memberdecls td {
+    border: 1px solid #e9ecef;
+    padding: 12px;
+}
+/* Better typography */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #343a40;
+}
+h1, h2, h3, h4, h5, h6 {
+    color: #495057;
+    font-weight: 500;
+}
+/* Responsive design */
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 2em;
+    }
+    .contents {
+        padding: 15px;
+    }
+}
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #1a1a1a;
+        color: #e9ecef;
+    }
+    .header {
+        background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+    }
+    .fragment {
+        background: #2d3748;
+        color: #e9ecef;
+    }
+}
+</style>
+<!-- Analytics (if needed) -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<!--
+<script async src="https://www.googletagmanager.com/gtag/js?id=GA_TRACKING_ID"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'GA_TRACKING_ID');
+</script>
+-->
+</head>
+<body>
+<!-- Custom Header -->
+<div class="header">
+    <h1>🧠 NeuroExapt</h1>
+    <div class="subtitle">Advanced Neural Architecture Search and Dynamic Morphogenesis Framework</div>
+    <div style="margin-top: 15px; font-size: 0.9em;">
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🚀 Dynamic Neural Morphogenesis
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            🔬 Advanced Architecture Search
+        </span>
+        <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; margin: 0 5px;">
+            ⚡ High-Performance Computing
+        </span>
+    </div>
+</div>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! --><!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function() { init_codefold(0); });
+/* @license-end */
+</script>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('operations_8py_source.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">operations.py</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="operations_8py.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno"><a class="line" href="namespaceneuroexapt_1_1core_1_1operations.html">    1</a></span> </div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="stringliteral">&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="stringliteral">\defgroup group_operations Operations</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="stringliteral">\ingroup core</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="stringliteral">Operations module for NeuroExapt framework.</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="stringliteral">&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="keyword">import</span> torch</div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="keyword">import</span> torch.nn.functional <span class="keyword">as</span> F</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="comment"># A collection of all possible operations that can be placed on an edge of the network graph</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="comment"># This has been simplified to use standard, reliable PyTorch modules.</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno"><a class="line" href="namespaceneuroexapt_1_1core_1_1operations.html#a5442be07bea0d5680f3884445eec13c8">   15</a></span>OPS = {</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>    <span class="stringliteral">&#39;none&#39;</span>: <span class="keyword">lambda</span> C, stride, affine: <a class="code hl_class" href="classneuroexapt_1_1core_1_1operations_1_1Zero.html">Zero</a>(stride),</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>    <span class="stringliteral">&#39;avg_pool_3x3&#39;</span>: <span class="keyword">lambda</span> C, stride, affine: nn.AvgPool2d(3, stride=stride, padding=1, count_include_pad=<span class="keyword">False</span>),</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>    <span class="stringliteral">&#39;max_pool_3x3&#39;</span>: <span class="keyword">lambda</span> C, stride, affine: nn.MaxPool2d(3, stride=stride, padding=1),</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    <span class="stringliteral">&#39;skip_connect&#39;</span>: <span class="keyword">lambda</span> C, stride, affine: <a class="code hl_class" href="classneuroexapt_1_1core_1_1operations_1_1Identity.html">Identity</a>() <span class="keywordflow">if</span> stride == 1 <span class="keywordflow">else</span> <a class="code hl_class" href="classneuroexapt_1_1core_1_1operations_1_1FactorizedReduce.html">FactorizedReduce</a>(C, C, affine=affine),</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>    <span class="stringliteral">&#39;sep_conv_3x3&#39;</span>: <span class="keyword">lambda</span> C, stride, affine: <a class="code hl_class" href="classneuroexapt_1_1core_1_1operations_1_1SepConv.html">SepConv</a>(C, C, 3, stride, 1, affine=affine),</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    <span class="stringliteral">&#39;sep_conv_5x5&#39;</span>: <span class="keyword">lambda</span> C, stride, affine: <a class="code hl_class" href="classneuroexapt_1_1core_1_1operations_1_1SepConv.html">SepConv</a>(C, C, 5, stride, 2, affine=affine),</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    <span class="stringliteral">&#39;sep_conv_7x7&#39;</span>: <span class="keyword">lambda</span> C, stride, affine: <a class="code hl_class" href="classneuroexapt_1_1core_1_1operations_1_1SepConv.html">SepConv</a>(C, C, 7, stride, 3, affine=affine),</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    <span class="stringliteral">&#39;dil_conv_3x3&#39;</span>: <span class="keyword">lambda</span> C, stride, affine: <a class="code hl_class" href="classneuroexapt_1_1core_1_1operations_1_1DilConv.html">DilConv</a>(C, C, 3, stride, 2, 2, affine=affine),</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    <span class="stringliteral">&#39;dil_conv_5x5&#39;</span>: <span class="keyword">lambda</span> C, stride, affine: <a class="code hl_class" href="classneuroexapt_1_1core_1_1operations_1_1DilConv.html">DilConv</a>(C, C, 5, stride, 4, 2, affine=affine),</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    <span class="stringliteral">&#39;conv_7x1_1x7&#39;</span>: <span class="keyword">lambda</span> C, stride, affine: nn.Sequential(</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>        nn.ReLU(inplace=<span class="keyword">False</span>),</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>        nn.Conv2d(C, C, (1, 7), stride=(1, stride), padding=(0, 3), bias=<span class="keyword">False</span>),</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>        nn.Conv2d(C, C, (7, 1), stride=(stride, 1), padding=(3, 0), bias=<span class="keyword">False</span>),</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>        nn.BatchNorm2d(C, affine=affine)</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    ),</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>}</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
+<div class="foldopen" id="foldopen00033" data-start="" data-end="">
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1operations_1_1ReLUConvBN.html">   33</a></span><span class="keyword">class </span><a class="code hl_class" href="classneuroexapt_1_1core_1_1operations_1_1ReLUConvBN.html">ReLUConvBN</a>(nn.Module):</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    <span class="stringliteral">&quot;&quot;&quot;Standard ReLU-Conv-BatchNorm block.&quot;&quot;&quot;</span></div>
+<div class="foldopen" id="foldopen00035" data-start="" data-end="">
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1operations_1_1ReLUConvBN.html#a57bda6eda1ee5c3150028a4bf54e7dc6">   35</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1core_1_1operations_1_1ReLUConvBN.html#a57bda6eda1ee5c3150028a4bf54e7dc6">__init__</a>(self, C_in, C_out, kernel_size, stride, padding, affine=True):</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>        super(ReLUConvBN, self).<a class="code hl_function" href="classneuroexapt_1_1core_1_1operations_1_1ReLUConvBN.html#a57bda6eda1ee5c3150028a4bf54e7dc6">__init__</a>()</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1operations_1_1ReLUConvBN.html#a10b5ec28355e4d0aeb956574eca05a2b">   37</a></span>        self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1operations_1_1ReLUConvBN.html#a10b5ec28355e4d0aeb956574eca05a2b">op</a> = nn.Sequential(</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>            nn.ReLU(inplace=<span class="keyword">False</span>),</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>            nn.Conv2d(C_in, C_out, kernel_size, stride=stride, padding=padding, bias=<span class="keyword">False</span>),</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>            nn.BatchNorm2d(C_out, affine=affine)</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>        )</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
+</div>
+<div class="foldopen" id="foldopen00043" data-start="" data-end="">
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1operations_1_1ReLUConvBN.html#aa44c6caaf589fd0ce9cff6393cac5f3b">   43</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1core_1_1operations_1_1ReLUConvBN.html#aa44c6caaf589fd0ce9cff6393cac5f3b">forward</a>(self, x):</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>        <span class="keywordflow">return</span> self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1operations_1_1ReLUConvBN.html#a10b5ec28355e4d0aeb956574eca05a2b">op</a>(x)</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
+</div>
+</div>
+<div class="foldopen" id="foldopen00046" data-start="" data-end="">
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1operations_1_1DilConv.html">   46</a></span><span class="keyword">class </span><a class="code hl_class" href="classneuroexapt_1_1core_1_1operations_1_1DilConv.html">DilConv</a>(nn.Module):</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="stringliteral">&quot;&quot;&quot;Dilated separable convolution (simplified).&quot;&quot;&quot;</span></div>
+<div class="foldopen" id="foldopen00048" data-start="" data-end="">
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1operations_1_1DilConv.html#ac6472ce0a7ee5a0b9376f366fb375aa5">   48</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1core_1_1operations_1_1DilConv.html#ac6472ce0a7ee5a0b9376f366fb375aa5">__init__</a>(self, C_in, C_out, kernel_size, stride, padding, dilation, affine=True):</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        super(DilConv, self).<a class="code hl_function" href="classneuroexapt_1_1core_1_1operations_1_1DilConv.html#ac6472ce0a7ee5a0b9376f366fb375aa5">__init__</a>()</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1operations_1_1DilConv.html#ad28d624ca4055f7c7a97f16cc59061c5">   50</a></span>        self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1operations_1_1DilConv.html#ad28d624ca4055f7c7a97f16cc59061c5">op</a> = nn.Sequential(</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>            nn.ReLU(inplace=<span class="keyword">False</span>),</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>            nn.Conv2d(C_in, C_in, kernel_size=kernel_size, stride=stride, padding=padding, dilation=dilation, groups=C_in, bias=<span class="keyword">False</span>),</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>            nn.Conv2d(C_in, C_out, kernel_size=1, padding=0, bias=<span class="keyword">False</span>),</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>            nn.BatchNorm2d(C_out, affine=affine),</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        )</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
+</div>
+<div class="foldopen" id="foldopen00057" data-start="" data-end="">
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1operations_1_1DilConv.html#a305879f17f04642466a13426d625fba3">   57</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1core_1_1operations_1_1DilConv.html#a305879f17f04642466a13426d625fba3">forward</a>(self, x):</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        <span class="keywordflow">return</span> self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1operations_1_1DilConv.html#ad28d624ca4055f7c7a97f16cc59061c5">op</a>(x)</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
+</div>
+</div>
+<div class="foldopen" id="foldopen00060" data-start="" data-end="">
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1operations_1_1SepConv.html">   60</a></span><span class="keyword">class </span><a class="code hl_class" href="classneuroexapt_1_1core_1_1operations_1_1SepConv.html">SepConv</a>(nn.Module):</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <span class="stringliteral">&quot;&quot;&quot;Separable convolution (simplified).&quot;&quot;&quot;</span></div>
+<div class="foldopen" id="foldopen00062" data-start="" data-end="">
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1operations_1_1SepConv.html#a6f5b452d5eef0332bcfc0eb23fe04c22">   62</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1core_1_1operations_1_1SepConv.html#a6f5b452d5eef0332bcfc0eb23fe04c22">__init__</a>(self, C_in, C_out, kernel_size, stride, padding, affine=True):</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>        super(SepConv, self).<a class="code hl_function" href="classneuroexapt_1_1core_1_1operations_1_1SepConv.html#a6f5b452d5eef0332bcfc0eb23fe04c22">__init__</a>()</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1operations_1_1SepConv.html#a32676dd63f2596e06114883201fcd361">   64</a></span>        self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1operations_1_1SepConv.html#a32676dd63f2596e06114883201fcd361">op</a> = nn.Sequential(</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>            nn.ReLU(inplace=<span class="keyword">False</span>),</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>            nn.Conv2d(C_in, C_in, kernel_size=kernel_size, stride=stride, padding=padding, groups=C_in, bias=<span class="keyword">False</span>),</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>            nn.Conv2d(C_in, C_in, kernel_size=1, padding=0, bias=<span class="keyword">False</span>),</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>            nn.BatchNorm2d(C_in, affine=affine),</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>            nn.ReLU(inplace=<span class="keyword">False</span>),</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>            nn.Conv2d(C_in, C_in, kernel_size=kernel_size, stride=1, padding=padding, groups=C_in, bias=<span class="keyword">False</span>),</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>            nn.Conv2d(C_in, C_out, kernel_size=1, padding=0, bias=<span class="keyword">False</span>),</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>            nn.BatchNorm2d(C_out, affine=affine),</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>        )</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span> </div>
+</div>
+<div class="foldopen" id="foldopen00075" data-start="" data-end="">
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1operations_1_1SepConv.html#a454b9105b1935282248e1f93ccdd29df">   75</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1core_1_1operations_1_1SepConv.html#a454b9105b1935282248e1f93ccdd29df">forward</a>(self, x):</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>        <span class="keywordflow">return</span> self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1operations_1_1SepConv.html#a32676dd63f2596e06114883201fcd361">op</a>(x)</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span> </div>
+</div>
+</div>
+<div class="foldopen" id="foldopen00078" data-start="" data-end="">
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1operations_1_1Identity.html">   78</a></span><span class="keyword">class </span><a class="code hl_class" href="classneuroexapt_1_1core_1_1operations_1_1Identity.html">Identity</a>(nn.Module):</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    <span class="stringliteral">&quot;&quot;&quot;Identity mapping.&quot;&quot;&quot;</span></div>
+<div class="foldopen" id="foldopen00080" data-start="" data-end="">
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1operations_1_1Identity.html#adf36b98960dae2cb9f9aa0a6a9ba2130">   80</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1core_1_1operations_1_1Identity.html#adf36b98960dae2cb9f9aa0a6a9ba2130">__init__</a>(self):</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>        super(Identity, self).<a class="code hl_function" href="classneuroexapt_1_1core_1_1operations_1_1Identity.html#adf36b98960dae2cb9f9aa0a6a9ba2130">__init__</a>()</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span> </div>
+</div>
+<div class="foldopen" id="foldopen00083" data-start="" data-end="">
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1operations_1_1Identity.html#a0b4ea45259d19f4e708373191ab22b23">   83</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1core_1_1operations_1_1Identity.html#a0b4ea45259d19f4e708373191ab22b23">forward</a>(self, x):</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>        <span class="keywordflow">return</span> x</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span> </div>
+</div>
+</div>
+<div class="foldopen" id="foldopen00086" data-start="" data-end="">
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1operations_1_1Zero.html">   86</a></span><span class="keyword">class </span><a class="code hl_class" href="classneuroexapt_1_1core_1_1operations_1_1Zero.html">Zero</a>(nn.Module):</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    <span class="stringliteral">&quot;&quot;&quot;Zero operation, effectively removing a connection.&quot;&quot;&quot;</span></div>
+<div class="foldopen" id="foldopen00088" data-start="" data-end="">
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1operations_1_1Zero.html#a495ad93415656f0d5e3efcd00232636b">   88</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1core_1_1operations_1_1Zero.html#a495ad93415656f0d5e3efcd00232636b">__init__</a>(self, stride):</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>        super(Zero, self).<a class="code hl_function" href="classneuroexapt_1_1core_1_1operations_1_1Zero.html#a495ad93415656f0d5e3efcd00232636b">__init__</a>()</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1operations_1_1Zero.html#a419abbaa33690ee8168bdc8c169b27ec">   90</a></span>        self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1operations_1_1Zero.html#a419abbaa33690ee8168bdc8c169b27ec">stride</a> = stride</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span> </div>
+</div>
+<div class="foldopen" id="foldopen00092" data-start="" data-end="">
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1operations_1_1Zero.html#aae6431f58529aa12f0869c3eac7702ab">   92</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1core_1_1operations_1_1Zero.html#aae6431f58529aa12f0869c3eac7702ab">forward</a>(self, x):</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>        <span class="keywordflow">if</span> self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1operations_1_1Zero.html#a419abbaa33690ee8168bdc8c169b27ec">stride</a> == 1:</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>            <span class="keywordflow">return</span> x.mul(0.)</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>        <span class="keywordflow">return</span> x[:, :, ::self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1operations_1_1Zero.html#a419abbaa33690ee8168bdc8c169b27ec">stride</a>, ::self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1operations_1_1Zero.html#a419abbaa33690ee8168bdc8c169b27ec">stride</a>].mul(0.)</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span> </div>
+</div>
+</div>
+<div class="foldopen" id="foldopen00097" data-start="" data-end="">
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1operations_1_1FactorizedReduce.html">   97</a></span><span class="keyword">class </span><a class="code hl_class" href="classneuroexapt_1_1core_1_1operations_1_1FactorizedReduce.html">FactorizedReduce</a>(nn.Module):</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>    <span class="stringliteral">&quot;&quot;&quot;Reduces the spatial dimensions and doubles the channel dimensions.&quot;&quot;&quot;</span></div>
+<div class="foldopen" id="foldopen00099" data-start="" data-end="">
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1operations_1_1FactorizedReduce.html#a12ff90b64ea553e53c5756c8186289ec">   99</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1core_1_1operations_1_1FactorizedReduce.html#a12ff90b64ea553e53c5756c8186289ec">__init__</a>(self, C_in, C_out, affine=True):</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>        super(FactorizedReduce, self).<a class="code hl_function" href="classneuroexapt_1_1core_1_1operations_1_1FactorizedReduce.html#a12ff90b64ea553e53c5756c8186289ec">__init__</a>()</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>        <span class="keyword">assert</span> C_out % 2 == 0</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1operations_1_1FactorizedReduce.html#aef0c3e2a3d67baa1bf86a05f4d34e60e">  102</a></span>        self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1operations_1_1FactorizedReduce.html#aef0c3e2a3d67baa1bf86a05f4d34e60e">relu</a> = nn.ReLU(inplace=<span class="keyword">False</span>)</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1operations_1_1FactorizedReduce.html#acb1c45f1badddca6b77b1977fd4239dd">  103</a></span>        self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1operations_1_1FactorizedReduce.html#acb1c45f1badddca6b77b1977fd4239dd">conv_1</a> = nn.Conv2d(C_in, C_out // 2, 1, stride=2, padding=0, bias=<span class="keyword">False</span>)</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1operations_1_1FactorizedReduce.html#a9dcc6e5f7d7cfd23ef7446ccf7095f31">  104</a></span>        self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1operations_1_1FactorizedReduce.html#a9dcc6e5f7d7cfd23ef7446ccf7095f31">conv_2</a> = nn.Conv2d(C_in, C_out // 2, 1, stride=2, padding=0, bias=<span class="keyword">False</span>)</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1operations_1_1FactorizedReduce.html#a74bcb74183638915f912b283128c43a0">  105</a></span>        self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1operations_1_1FactorizedReduce.html#a74bcb74183638915f912b283128c43a0">bn</a> = nn.BatchNorm2d(C_out, affine=affine)</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span> </div>
+</div>
+<div class="foldopen" id="foldopen00107" data-start="" data-end="">
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1operations_1_1FactorizedReduce.html#a5ab40fbf8bd7d1f2c1fd1daff21e4fb0">  107</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1core_1_1operations_1_1FactorizedReduce.html#a5ab40fbf8bd7d1f2c1fd1daff21e4fb0">forward</a>(self, x):</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>        x = self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1operations_1_1FactorizedReduce.html#aef0c3e2a3d67baa1bf86a05f4d34e60e">relu</a>(x)</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>        <span class="comment"># Slicing to handle odd input dimensions</span></div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>        out = torch.cat([self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1operations_1_1FactorizedReduce.html#acb1c45f1badddca6b77b1977fd4239dd">conv_1</a>(x), self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1operations_1_1FactorizedReduce.html#a9dcc6e5f7d7cfd23ef7446ccf7095f31">conv_2</a>(x[:, :, 1:, 1:])], dim=1)</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>        out = self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1operations_1_1FactorizedReduce.html#a74bcb74183638915f912b283128c43a0">bn</a>(out)</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>        <span class="keywordflow">return</span> out</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span> </div>
+</div>
+</div>
+<div class="foldopen" id="foldopen00114" data-start="" data-end="">
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1operations_1_1MixedOp.html">  114</a></span><span class="keyword">class </span><a class="code hl_class" href="classneuroexapt_1_1core_1_1operations_1_1MixedOp.html">MixedOp</a>(nn.Module):</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    <span class="stringliteral">&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span><span class="stringliteral">    A standard, simplified mixed operation.</span></div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span><span class="stringliteral">    It computes a weighted sum of a set of operations.</span></div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span><span class="stringliteral">    &quot;&quot;&quot;</span></div>
+<div class="foldopen" id="foldopen00119" data-start="" data-end="">
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1operations_1_1MixedOp.html#a13848efc8a5d19c3fd72f1af4626d5f0">  119</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1core_1_1operations_1_1MixedOp.html#a13848efc8a5d19c3fd72f1af4626d5f0">__init__</a>(self, C, stride):</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>        super(MixedOp, self).<a class="code hl_function" href="classneuroexapt_1_1core_1_1operations_1_1MixedOp.html#a13848efc8a5d19c3fd72f1af4626d5f0">__init__</a>()</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>        <span class="keyword">from</span> .genotypes <span class="keyword">import</span> PRIMITIVES</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>        </div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1operations_1_1MixedOp.html#ab317d6f1bb3cd500048b47c75d050be1">  123</a></span>        self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1operations_1_1MixedOp.html#ab317d6f1bb3cd500048b47c75d050be1">_ops</a> = nn.ModuleList()</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>        <span class="keywordflow">for</span> primitive <span class="keywordflow">in</span> PRIMITIVES:</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>            op = OPS[primitive](C, stride, <span class="keyword">False</span>)</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>            <span class="comment"># Add batch norm after pooling operations for stability</span></div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>            <span class="keywordflow">if</span> <span class="stringliteral">&#39;pool&#39;</span> <span class="keywordflow">in</span> primitive:</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>                op = nn.Sequential(op, nn.BatchNorm2d(C, affine=<span class="keyword">False</span>))</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>            self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1operations_1_1MixedOp.html#ab317d6f1bb3cd500048b47c75d050be1">_ops</a>.append(op)</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span> </div>
+</div>
+<div class="foldopen" id="foldopen00131" data-start="" data-end="">
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno"><a class="line" href="classneuroexapt_1_1core_1_1operations_1_1MixedOp.html#a4a26529442e98a784b022913ff55e018">  131</a></span>    <span class="keyword">def </span><a class="code hl_function" href="classneuroexapt_1_1core_1_1operations_1_1MixedOp.html#a4a26529442e98a784b022913ff55e018">forward</a>(self, x, weights):</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>        <span class="stringliteral">&quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span><span class="stringliteral">        Args:</span></div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span><span class="stringliteral">            x: input tensor</span></div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span><span class="stringliteral">            weights: a tensor of shape [num_ops], representing arch params.</span></div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span><span class="stringliteral">        Returns:</span></div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span><span class="stringliteral">            The weighted sum of the outputs of all operations.</span></div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span><span class="stringliteral">        &quot;&quot;&quot;</span></div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>        <span class="comment"># Calculate the weighted sum of operations</span></div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>        <span class="comment"># This implementation avoids creating a large intermediate tensor of all outputs.</span></div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>        <span class="comment"># It computes and adds them one by one.</span></div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>        </div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>        <span class="comment"># Find the first op with a non-zero weight to initialize the output tensor</span></div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>        <span class="comment"># This handles cases where the first op might be &#39;none&#39;</span></div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>        res = <span class="keywordtype">None</span></div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>        <span class="keywordflow">for</span> i, (op, w) <span class="keywordflow">in</span> enumerate(zip(self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1operations_1_1MixedOp.html#ab317d6f1bb3cd500048b47c75d050be1">_ops</a>, weights)):</div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>            <span class="keywordflow">if</span> w &gt; 1e-8: <span class="comment"># A small threshold to avoid negligible computations</span></div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>                <span class="keywordflow">if</span> res <span class="keywordflow">is</span> <span class="keywordtype">None</span>:</div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>                    res = op(x) * w</div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>                <span class="keywordflow">else</span>:</div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>                    res += op(x) * w</div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>        </div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>        <span class="comment"># If all weights are zero, return a zero tensor</span></div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>        <span class="keywordflow">if</span> res <span class="keywordflow">is</span> <span class="keywordtype">None</span>:</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>            <span class="comment"># For reduction cells, the output shape is halved.</span></div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>            <span class="keywordflow">if</span> self.<a class="code hl_variable" href="classneuroexapt_1_1core_1_1operations_1_1MixedOp.html#ab317d6f1bb3cd500048b47c75d050be1">_ops</a>[1].stride == 2: <span class="comment"># A simple way to check for reduction</span></div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>                 <span class="keywordflow">return</span> torch.zeros_like(x[:, :, ::2, ::2])</div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>            <span class="keywordflow">else</span>:</div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>                 <span class="keywordflow">return</span> torch.zeros_like(x)</div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span> </div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>        <span class="keywordflow">return</span> res </div>
+</div>
+</div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1operations_1_1DilConv_html"><div class="ttname"><a href="classneuroexapt_1_1core_1_1operations_1_1DilConv.html">neuroexapt.core.operations.DilConv</a></div><div class="ttdef"><b>Definition</b> <a href="operations_8py_source.html#l00046">operations.py:46</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1operations_1_1DilConv_html_a305879f17f04642466a13426d625fba3"><div class="ttname"><a href="classneuroexapt_1_1core_1_1operations_1_1DilConv.html#a305879f17f04642466a13426d625fba3">neuroexapt.core.operations.DilConv.forward</a></div><div class="ttdeci">forward(self, x)</div><div class="ttdef"><b>Definition</b> <a href="operations_8py_source.html#l00057">operations.py:57</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1operations_1_1DilConv_html_ac6472ce0a7ee5a0b9376f366fb375aa5"><div class="ttname"><a href="classneuroexapt_1_1core_1_1operations_1_1DilConv.html#ac6472ce0a7ee5a0b9376f366fb375aa5">neuroexapt.core.operations.DilConv.__init__</a></div><div class="ttdeci">__init__(self, C_in, C_out, kernel_size, stride, padding, dilation, affine=True)</div><div class="ttdef"><b>Definition</b> <a href="operations_8py_source.html#l00048">operations.py:48</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1operations_1_1DilConv_html_ad28d624ca4055f7c7a97f16cc59061c5"><div class="ttname"><a href="classneuroexapt_1_1core_1_1operations_1_1DilConv.html#ad28d624ca4055f7c7a97f16cc59061c5">neuroexapt.core.operations.DilConv.op</a></div><div class="ttdeci">op</div><div class="ttdef"><b>Definition</b> <a href="operations_8py_source.html#l00050">operations.py:50</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1operations_1_1FactorizedReduce_html"><div class="ttname"><a href="classneuroexapt_1_1core_1_1operations_1_1FactorizedReduce.html">neuroexapt.core.operations.FactorizedReduce</a></div><div class="ttdef"><b>Definition</b> <a href="operations_8py_source.html#l00097">operations.py:97</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1operations_1_1FactorizedReduce_html_a12ff90b64ea553e53c5756c8186289ec"><div class="ttname"><a href="classneuroexapt_1_1core_1_1operations_1_1FactorizedReduce.html#a12ff90b64ea553e53c5756c8186289ec">neuroexapt.core.operations.FactorizedReduce.__init__</a></div><div class="ttdeci">__init__(self, C_in, C_out, affine=True)</div><div class="ttdef"><b>Definition</b> <a href="operations_8py_source.html#l00099">operations.py:99</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1operations_1_1FactorizedReduce_html_a5ab40fbf8bd7d1f2c1fd1daff21e4fb0"><div class="ttname"><a href="classneuroexapt_1_1core_1_1operations_1_1FactorizedReduce.html#a5ab40fbf8bd7d1f2c1fd1daff21e4fb0">neuroexapt.core.operations.FactorizedReduce.forward</a></div><div class="ttdeci">forward(self, x)</div><div class="ttdef"><b>Definition</b> <a href="operations_8py_source.html#l00107">operations.py:107</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1operations_1_1FactorizedReduce_html_a74bcb74183638915f912b283128c43a0"><div class="ttname"><a href="classneuroexapt_1_1core_1_1operations_1_1FactorizedReduce.html#a74bcb74183638915f912b283128c43a0">neuroexapt.core.operations.FactorizedReduce.bn</a></div><div class="ttdeci">bn</div><div class="ttdef"><b>Definition</b> <a href="operations_8py_source.html#l00105">operations.py:105</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1operations_1_1FactorizedReduce_html_a9dcc6e5f7d7cfd23ef7446ccf7095f31"><div class="ttname"><a href="classneuroexapt_1_1core_1_1operations_1_1FactorizedReduce.html#a9dcc6e5f7d7cfd23ef7446ccf7095f31">neuroexapt.core.operations.FactorizedReduce.conv_2</a></div><div class="ttdeci">conv_2</div><div class="ttdef"><b>Definition</b> <a href="operations_8py_source.html#l00104">operations.py:104</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1operations_1_1FactorizedReduce_html_acb1c45f1badddca6b77b1977fd4239dd"><div class="ttname"><a href="classneuroexapt_1_1core_1_1operations_1_1FactorizedReduce.html#acb1c45f1badddca6b77b1977fd4239dd">neuroexapt.core.operations.FactorizedReduce.conv_1</a></div><div class="ttdeci">conv_1</div><div class="ttdef"><b>Definition</b> <a href="operations_8py_source.html#l00103">operations.py:103</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1operations_1_1FactorizedReduce_html_aef0c3e2a3d67baa1bf86a05f4d34e60e"><div class="ttname"><a href="classneuroexapt_1_1core_1_1operations_1_1FactorizedReduce.html#aef0c3e2a3d67baa1bf86a05f4d34e60e">neuroexapt.core.operations.FactorizedReduce.relu</a></div><div class="ttdeci">relu</div><div class="ttdef"><b>Definition</b> <a href="operations_8py_source.html#l00102">operations.py:102</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1operations_1_1Identity_html"><div class="ttname"><a href="classneuroexapt_1_1core_1_1operations_1_1Identity.html">neuroexapt.core.operations.Identity</a></div><div class="ttdef"><b>Definition</b> <a href="operations_8py_source.html#l00078">operations.py:78</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1operations_1_1Identity_html_a0b4ea45259d19f4e708373191ab22b23"><div class="ttname"><a href="classneuroexapt_1_1core_1_1operations_1_1Identity.html#a0b4ea45259d19f4e708373191ab22b23">neuroexapt.core.operations.Identity.forward</a></div><div class="ttdeci">forward(self, x)</div><div class="ttdef"><b>Definition</b> <a href="operations_8py_source.html#l00083">operations.py:83</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1operations_1_1Identity_html_adf36b98960dae2cb9f9aa0a6a9ba2130"><div class="ttname"><a href="classneuroexapt_1_1core_1_1operations_1_1Identity.html#adf36b98960dae2cb9f9aa0a6a9ba2130">neuroexapt.core.operations.Identity.__init__</a></div><div class="ttdeci">__init__(self)</div><div class="ttdef"><b>Definition</b> <a href="operations_8py_source.html#l00080">operations.py:80</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1operations_1_1MixedOp_html"><div class="ttname"><a href="classneuroexapt_1_1core_1_1operations_1_1MixedOp.html">neuroexapt.core.operations.MixedOp</a></div><div class="ttdef"><b>Definition</b> <a href="operations_8py_source.html#l00114">operations.py:114</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1operations_1_1MixedOp_html_a13848efc8a5d19c3fd72f1af4626d5f0"><div class="ttname"><a href="classneuroexapt_1_1core_1_1operations_1_1MixedOp.html#a13848efc8a5d19c3fd72f1af4626d5f0">neuroexapt.core.operations.MixedOp.__init__</a></div><div class="ttdeci">__init__(self, C, stride)</div><div class="ttdef"><b>Definition</b> <a href="operations_8py_source.html#l00119">operations.py:119</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1operations_1_1MixedOp_html_a4a26529442e98a784b022913ff55e018"><div class="ttname"><a href="classneuroexapt_1_1core_1_1operations_1_1MixedOp.html#a4a26529442e98a784b022913ff55e018">neuroexapt.core.operations.MixedOp.forward</a></div><div class="ttdeci">forward(self, x, weights)</div><div class="ttdef"><b>Definition</b> <a href="operations_8py_source.html#l00131">operations.py:131</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1operations_1_1MixedOp_html_ab317d6f1bb3cd500048b47c75d050be1"><div class="ttname"><a href="classneuroexapt_1_1core_1_1operations_1_1MixedOp.html#ab317d6f1bb3cd500048b47c75d050be1">neuroexapt.core.operations.MixedOp._ops</a></div><div class="ttdeci">_ops</div><div class="ttdef"><b>Definition</b> <a href="operations_8py_source.html#l00123">operations.py:123</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1operations_1_1ReLUConvBN_html"><div class="ttname"><a href="classneuroexapt_1_1core_1_1operations_1_1ReLUConvBN.html">neuroexapt.core.operations.ReLUConvBN</a></div><div class="ttdef"><b>Definition</b> <a href="operations_8py_source.html#l00033">operations.py:33</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1operations_1_1ReLUConvBN_html_a10b5ec28355e4d0aeb956574eca05a2b"><div class="ttname"><a href="classneuroexapt_1_1core_1_1operations_1_1ReLUConvBN.html#a10b5ec28355e4d0aeb956574eca05a2b">neuroexapt.core.operations.ReLUConvBN.op</a></div><div class="ttdeci">op</div><div class="ttdef"><b>Definition</b> <a href="operations_8py_source.html#l00037">operations.py:37</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1operations_1_1ReLUConvBN_html_a57bda6eda1ee5c3150028a4bf54e7dc6"><div class="ttname"><a href="classneuroexapt_1_1core_1_1operations_1_1ReLUConvBN.html#a57bda6eda1ee5c3150028a4bf54e7dc6">neuroexapt.core.operations.ReLUConvBN.__init__</a></div><div class="ttdeci">__init__(self, C_in, C_out, kernel_size, stride, padding, affine=True)</div><div class="ttdef"><b>Definition</b> <a href="operations_8py_source.html#l00035">operations.py:35</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1operations_1_1ReLUConvBN_html_aa44c6caaf589fd0ce9cff6393cac5f3b"><div class="ttname"><a href="classneuroexapt_1_1core_1_1operations_1_1ReLUConvBN.html#aa44c6caaf589fd0ce9cff6393cac5f3b">neuroexapt.core.operations.ReLUConvBN.forward</a></div><div class="ttdeci">forward(self, x)</div><div class="ttdef"><b>Definition</b> <a href="operations_8py_source.html#l00043">operations.py:43</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1operations_1_1SepConv_html"><div class="ttname"><a href="classneuroexapt_1_1core_1_1operations_1_1SepConv.html">neuroexapt.core.operations.SepConv</a></div><div class="ttdef"><b>Definition</b> <a href="operations_8py_source.html#l00060">operations.py:60</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1operations_1_1SepConv_html_a32676dd63f2596e06114883201fcd361"><div class="ttname"><a href="classneuroexapt_1_1core_1_1operations_1_1SepConv.html#a32676dd63f2596e06114883201fcd361">neuroexapt.core.operations.SepConv.op</a></div><div class="ttdeci">op</div><div class="ttdef"><b>Definition</b> <a href="operations_8py_source.html#l00064">operations.py:64</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1operations_1_1SepConv_html_a454b9105b1935282248e1f93ccdd29df"><div class="ttname"><a href="classneuroexapt_1_1core_1_1operations_1_1SepConv.html#a454b9105b1935282248e1f93ccdd29df">neuroexapt.core.operations.SepConv.forward</a></div><div class="ttdeci">forward(self, x)</div><div class="ttdef"><b>Definition</b> <a href="operations_8py_source.html#l00075">operations.py:75</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1operations_1_1SepConv_html_a6f5b452d5eef0332bcfc0eb23fe04c22"><div class="ttname"><a href="classneuroexapt_1_1core_1_1operations_1_1SepConv.html#a6f5b452d5eef0332bcfc0eb23fe04c22">neuroexapt.core.operations.SepConv.__init__</a></div><div class="ttdeci">__init__(self, C_in, C_out, kernel_size, stride, padding, affine=True)</div><div class="ttdef"><b>Definition</b> <a href="operations_8py_source.html#l00062">operations.py:62</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1operations_1_1Zero_html"><div class="ttname"><a href="classneuroexapt_1_1core_1_1operations_1_1Zero.html">neuroexapt.core.operations.Zero</a></div><div class="ttdef"><b>Definition</b> <a href="operations_8py_source.html#l00086">operations.py:86</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1operations_1_1Zero_html_a419abbaa33690ee8168bdc8c169b27ec"><div class="ttname"><a href="classneuroexapt_1_1core_1_1operations_1_1Zero.html#a419abbaa33690ee8168bdc8c169b27ec">neuroexapt.core.operations.Zero.stride</a></div><div class="ttdeci">stride</div><div class="ttdef"><b>Definition</b> <a href="operations_8py_source.html#l00090">operations.py:90</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1operations_1_1Zero_html_a495ad93415656f0d5e3efcd00232636b"><div class="ttname"><a href="classneuroexapt_1_1core_1_1operations_1_1Zero.html#a495ad93415656f0d5e3efcd00232636b">neuroexapt.core.operations.Zero.__init__</a></div><div class="ttdeci">__init__(self, stride)</div><div class="ttdef"><b>Definition</b> <a href="operations_8py_source.html#l00088">operations.py:88</a></div></div>
+<div class="ttc" id="aclassneuroexapt_1_1core_1_1operations_1_1Zero_html_aae6431f58529aa12f0869c3eac7702ab"><div class="ttname"><a href="classneuroexapt_1_1core_1_1operations_1_1Zero.html#aae6431f58529aa12f0869c3eac7702ab">neuroexapt.core.operations.Zero.forward</a></div><div class="ttdeci">forward(self, x)</div><div class="ttdef"><b>Definition</b> <a href="operations_8py_source.html#l00092">operations.py:92</a></div></div>
+</div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
+<!-- do not remove this div, it is closed by doxygen! -->
+</div>
+<!-- Custom Footer -->
+<div style="background: #f8f9fa; border-top: 1px solid #e9ecef; margin-top: 50px; padding: 30px 0; text-align: center;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-bottom: 20px;">
+            <!-- Project Info -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🧠 NeuroExapt</h4>
+                <p style="color: #6c757d; margin: 0; font-size: 0.9em;">
+                    Advanced Neural Architecture Search and Dynamic Morphogenesis Framework for next-generation AI research.
+                </p>
+            </div>
+            <!-- Quick Links -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">📚 Quick Links</h4>
+                <div style="text-align: left;">
+                    <a href="index.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🏠 Home</a>
+                    <a href="modules.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📦 Modules</a>
+                    <a href="examples.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💡 Examples</a>
+                    <a href="files.html" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📁 Files</a>
+                </div>
+            </div>
+            <!-- Resources -->
+            <div>
+                <h4 style="color: #495057; margin-bottom: 15px;">🔗 Resources</h4>
+                <div style="text-align: left;">
+                    <a href="https://github.com/your-username/neuroexapt" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">💻 GitHub Repository</a>
+                    <a href="https://github.com/your-username/neuroexapt/issues" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🐛 Issue Tracker</a>
+                    <a href="https://github.com/your-username/neuroexapt/wiki" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">📖 Wiki</a>
+                    <a href="https://github.com/your-username/neuroexapt/releases" style="display: block; color: #667eea; text-decoration: none; margin: 5px 0;">🚀 Releases</a>
+                </div>
+            </div>
+        </div>
+        <hr style="border: 0; height: 1px; background: #e9ecef; margin: 20px 0;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+            <div style="color: #6c757d; font-size: 0.9em;">
+                © 2024 NeuroExapt Project. Generated with 
+                <a href="https://www.doxygen.nl/index.html" style="color: #667eea; text-decoration: none;">Doxygen 1.9.8</a>
+            </div>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <span style="font-size: 0.9em; color: #6c757d;">Built with ❤️ for AI Research</span>
+                <div style="display: flex; gap: 10px;">
+                    <span style="background: #28a745; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">🟢 Active</span>
+                    <span style="background: #17a2b8; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">v3.0</span>
+                </div>
+            </div>
+        </div>
+        <!-- Technology Stack -->
+        <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #e9ecef;">
+            <div style="font-size: 0.8em; color: #868e96; text-align: center;">
+                <strong>Built with:</strong>
+                <span style="margin: 0 5px;">🐍 Python</span>
+                <span style="margin: 0 5px;">🔥 PyTorch</span>
+                <span style="margin: 0 5px;">⚡ CUDA</span>
+                <span style="margin: 0 5px;">🧮 NumPy</span>
+                <span style="margin: 0 5px;">📊 Matplotlib</span>
+                <span style="margin: 0 5px;">🚀 Triton</span>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Back to top button -->
+<div id="back-to-top" style="position: fixed; bottom: 20px; right: 20px; display: none; z-index: 1000;">
+    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" 
+            style="background: #667eea; color: white; border: none; padding: 10px 15px; border-radius: 50%; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,0.2); font-size: 16px;">
+        ⬆️
+    </button>
+</div>
+<script>
+// Back to top button functionality
+window.addEventListener('scroll', function() {
+    const backToTop = document.getElementById('back-to-top');
+    if (window.pageYOffset > 300) {
+        backToTop.style.display = 'block';
+    } else {
+        backToTop.style.display = 'none';
+    }
+});
+// Enhanced search functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Add search enhancement if search box exists
+    const searchBox = document.getElementById('MSearchField');
+    if (searchBox) {
+        searchBox.placeholder = 'Search documentation... 🔍';
+        searchBox.style.borderRadius = '20px';
+        searchBox.style.padding = '8px 15px';
+    }
+    // Add copy code button to code blocks
+    const codeBlocks = document.querySelectorAll('.fragment');
+    codeBlocks.forEach(function(block) {
+        const copyBtn = document.createElement('button');
+        copyBtn.innerHTML = '📋';
+        copyBtn.title = 'Copy code';
+        copyBtn.style.cssText = 'position: absolute; top: 10px; right: 10px; background: #667eea; color: white; border: none; padding: 5px; border-radius: 3px; cursor: pointer; font-size: 12px;';
+        block.style.position = 'relative';
+        block.appendChild(copyBtn);
+        copyBtn.addEventListener('click', function() {
+            const text = block.textContent;
+            navigator.clipboard.writeText(text).then(function() {
+                copyBtn.innerHTML = '✅';
+                setTimeout(function() {
+                    copyBtn.innerHTML = '📋';
+                }, 2000);
+            });
+        });
+    });
+});
+// Dark mode toggle (optional)
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+}
+// Load saved dark mode preference
+if (localStorage.getItem('darkMode') === 'true') {
+    document.body.classList.add('dark-mode');
+}
+</script>
+</body>
+</html>
