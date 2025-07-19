@@ -15,6 +15,15 @@ Advanced DNM Morphogenesis Demo - Aggressive Mode Edition
 - 🎯 激进多点形态发生系统（专门突破高准确率瓶颈）
 - 📊 实时显示停滞检测、瓶颈分析和变异策略选择
 - 🔧 包含所有Sourcery代码审查建议的修复
+
+🧠 新增智能形态发生引擎：
+- 🎯 解决"各组件配合生硬"问题 → 统一分析流水线
+- 📊 解决"检测结果全是0"问题 → 动态阈值和多层检测
+- 🔍 精准候选定位 → 明确"在哪里变异"
+- 🧪 智能策略选择 → 科学"怎么变异"
+- 📈 多维度决策融合 → 综合评估和风险分析
+- 🔄 自适应学习 → 持续优化变异成功率
+
 5. 性能对比分析
 
 🎯 目标：在CIFAR-10上实现95%+准确率（激进模式突破瓶颈）
@@ -42,6 +51,10 @@ from neuroexapt.core import (
     MorphogenesisType,
     MorphogenesisDecision
 )
+
+# 导入新的智能形态发生引擎
+from neuroexapt.core.intelligent_morphogenesis_engine import IntelligentMorphogenesisEngine
+from neuroexapt.core.intelligent_dnm_integration import IntelligentDNMCore
 
 # 配置日志
 logging.basicConfig(level=logging.INFO)
@@ -186,6 +199,10 @@ class AdvancedDNMTrainer:
         }
         
         self.dnm_framework = EnhancedDNMFramework(self.dnm_config)
+        
+        # 🧠 集成智能形态发生引擎
+        self.intelligent_dnm_core = IntelligentDNMCore()
+        self.use_intelligent_engine = True  # 启用智能引擎
         
         # 训练历史
         self.train_history = []
@@ -422,18 +439,44 @@ class AdvancedDNMTrainer:
                 
                 print("  🚀 开始执行形态发生分析...")
                 try:
-                    # 执行形态发生 - 使用新的增强接口
-                    results = self.dnm_framework.execute_morphogenesis(
-                        model=self.model,
-                        activations_or_context=context,  # 使用兼容接口
-                        gradients=None,  # context中已包含
-                        performance_history=None,  # context中已包含
-                        epoch=None,  # context中已包含
-                        targets=context.get('targets')  # 传递真实targets
-                    )
+                    # 🧠 选择执行引擎：智能引擎 vs 传统引擎
+                    if self.use_intelligent_engine:
+                        print("    🧠 使用智能形态发生引擎")
+                        results = self.intelligent_dnm_core.enhanced_morphogenesis_execution(
+                            model=self.model,
+                            context=context
+                        )
+                    else:
+                        print("    🤖 使用传统DNM框架")
+                        # 执行形态发生 - 使用新的增强接口
+                        results = self.dnm_framework.execute_morphogenesis(
+                            model=self.model,
+                            activations_or_context=context,  # 使用兼容接口
+                            gradients=None,  # context中已包含
+                            performance_history=None,  # context中已包含
+                            epoch=None,  # context中已包含
+                            targets=context.get('targets')  # 传递真实targets
+                        )
                     print(f"    ✅ 形态发生分析完成")
                     print(f"    📋 返回结果键: {list(results.keys())}")
                     print(f"    🔧 模型是否修改: {results.get('model_modified', False)}")
+                    
+                    # 🧠 显示智能引擎分析结果
+                    if self.use_intelligent_engine and 'intelligent_analysis' in results:
+                        intel_analysis = results['intelligent_analysis']
+                        print(f"    🧠 智能分析详情:")
+                        print(f"      🎯 候选点发现: {intel_analysis.get('candidates_found', 0)}个")
+                        print(f"      🧪 策略评估: {intel_analysis.get('strategies_evaluated', 0)}个")
+                        print(f"      ⭐ 最终决策: {intel_analysis.get('final_decisions', 0)}个")
+                        print(f"      🎲 执行置信度: {intel_analysis.get('execution_confidence', 0):.3f}")
+                        
+                        perf_situation = intel_analysis.get('performance_situation', {})
+                        print(f"      📊 性能态势: {perf_situation.get('situation_type', 'unknown')}")
+                        print(f"      📈 饱和度: {perf_situation.get('saturation_ratio', 0):.2%}")
+                        
+                        adaptive_thresholds = intel_analysis.get('adaptive_thresholds', {})
+                        if adaptive_thresholds:
+                            print(f"      🎛️  动态阈值: 瓶颈检测={adaptive_thresholds.get('bottleneck_severity', 0):.3f}")
                     
                     # 检查是否触发了激进模式
                     if results.get('morphogenesis_type') == 'aggressive_multi_point':
@@ -856,6 +899,10 @@ def main():
         model = AdaptiveResNet()
         trainer = AdvancedDNMTrainer(model, device, train_loader, test_loader)
         
+        # 🧠 启用智能形态发生引擎（可以设置为False使用传统方法对比）
+        trainer.use_intelligent_engine = True
+        print(f"🧠 使用引擎: {'智能形态发生引擎' if trainer.use_intelligent_engine else '传统DNM框架'}")
+        
         # 🚀 冲刺95%准确率 - 增加训练轮数
         best_acc = trainer.train_with_morphogenesis(epochs=80)
         
@@ -873,6 +920,25 @@ def main():
         print(f"  形态发生事件: {summary['total_events']}")
         print(f"  新增参数: {summary['total_parameters_added']:,}")
         print(f"  支持的形态发生类型: {len([r for r in morphogenesis_results.values() if r['success']])}/3")
+        
+        # 🧠 显示智能引擎统计
+        if trainer.use_intelligent_engine:
+            print(f"  🧠 智能引擎统计:")
+            try:
+                intel_stats = trainer.intelligent_dnm_core.get_analysis_statistics()
+                print(f"    总分析次数: {intel_stats['total_analyses']}")
+                print(f"    成功率: {intel_stats['success_rate']:.1%}")
+                print(f"    平均决策数: {intel_stats['average_decisions_per_analysis']:.1f}")
+                print(f"    引擎版本: {intel_stats['engine_version']}")
+                
+                mutation_rates = intel_stats.get('mutation_success_rates', {})
+                if mutation_rates:
+                    print(f"    变异成功率:")
+                    for mut_type, rate in mutation_rates.items():
+                        print(f"      {mut_type}: {rate:.1%}")
+                        
+            except Exception as e:
+                print(f"    无法获取统计信息: {e}")
         
         if best_acc >= 95.0:
             print("  🏆 恭喜！成功达到95%+准确率目标!")

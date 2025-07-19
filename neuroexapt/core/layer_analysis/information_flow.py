@@ -17,6 +17,82 @@ class InformationFlowAnalyzer:
     def __init__(self):
         self.flow_patterns = {}
         
+    def analyze_information_flow(self, model: torch.nn.Module, context: Dict[str, Any]) -> Dict[str, Any]:
+        """分析模型的信息流模式
+        
+        Args:
+            model: 要分析的模型
+            context: 分析上下文，包含激活值等信息
+            
+        Returns:
+            信息流分析结果
+        """
+        logger.debug("开始信息流分析")
+        
+        try:
+            # 如果有激活值直接分析
+            if 'activations' in context:
+                return self.analyze_flow_patterns(context['activations'])
+            
+            # 否则基于模型结构进行分析
+            return self._analyze_model_structure_flow(model, context)
+            
+        except Exception as e:
+            logger.error(f"信息流分析失败: {e}")
+            return {'layer_flow_metrics': {}, 'global_bottleneck_score': 0.5}
+    
+    def _analyze_model_structure_flow(self, model: torch.nn.Module, context: Dict[str, Any]) -> Dict[str, Any]:
+        """基于模型结构分析信息流"""
+        flow_metrics = {}
+        
+        # 分析每一层的信息传递能力
+        for name, module in model.named_modules():
+            if isinstance(module, (torch.nn.Conv2d, torch.nn.Linear, torch.nn.BatchNorm2d)):
+                # 计算信息容量
+                info_capacity = self._estimate_layer_information_capacity(module)
+                
+                # 计算传递效率（基于参数配置）
+                transfer_efficiency = self._estimate_transfer_efficiency(module)
+                
+                # 计算瓶颈分数
+                bottleneck_score = self._calculate_bottleneck_score(info_capacity, transfer_efficiency)
+                
+                flow_metrics[name] = {
+                    'information_density': info_capacity,
+                    'transfer_efficiency': transfer_efficiency,
+                    'bottleneck_score': bottleneck_score
+                }
+        
+        return {
+            'layer_flow_metrics': flow_metrics,
+            'global_bottleneck_score': self._calculate_global_bottleneck_score(flow_metrics)
+        }
+    
+    def _estimate_layer_information_capacity(self, module: torch.nn.Module) -> float:
+        """估计层的信息容量"""
+        if isinstance(module, torch.nn.Conv2d):
+            # 卷积层的信息容量与输出通道数和核大小相关
+            capacity = module.out_channels * module.kernel_size[0] * module.kernel_size[1]
+            return min(1.0, capacity / 10000.0)  # 标准化
+        elif isinstance(module, torch.nn.Linear):
+            # 线性层的信息容量与输出特征数相关
+            capacity = module.out_features
+            return min(1.0, capacity / 5000.0)  # 标准化
+        else:
+            return 0.5  # 默认值
+    
+    def _estimate_transfer_efficiency(self, module: torch.nn.Module) -> float:
+        """估计传递效率"""
+        if isinstance(module, torch.nn.Conv2d):
+            # 基于步长、填充等参数估计效率
+            stride_penalty = 1.0 / (module.stride[0] * module.stride[1])
+            return min(1.0, stride_penalty)
+        elif isinstance(module, torch.nn.Linear):
+            # 线性层通常有较高的传递效率
+            return 0.8
+        else:
+            return 0.6  # 默认值
+        
     def analyze_flow_patterns(self, activations: Dict[str, torch.Tensor]) -> Dict[str, Any]:
         """分析信息流模式"""
         logger.debug("信息流模式分析")

@@ -1,15 +1,17 @@
 """
 先验知识管理模块
 
-管理贝叶斯预测所需的所有先验知识，包括：
+管理贝叶斯推断所需的所有先验知识，包括：
 - 变异类型成功率先验
 - 层组合效果先验  
 - 瓶颈响应性先验
 - 操作适用性先验
+- Net2Net参数迁移成功率
 """
 
 from typing import Dict, Any
 import logging
+import numpy as np
 
 logger = logging.getLogger(__name__)
 
@@ -28,7 +30,16 @@ class PriorKnowledgeBase:
                 'widening': {'alpha': 3, 'beta': 2},  # Beta分布参数，倾向于成功
                 'deepening': {'alpha': 2, 'beta': 3},  # 相对保守
                 'hybrid_expansion': {'alpha': 4, 'beta': 2},  # 较为激进
-                'aggressive_widening': {'alpha': 2, 'beta': 1}  # 高风险高收益
+                'aggressive_widening': {'alpha': 2, 'beta': 1},  # 高风险高收益
+                'moderate_widening': {'alpha': 5, 'beta': 3}  # 稳健策略
+            },
+            
+            # Net2Net参数迁移成功率先验
+            'net2net_transfer_priors': {
+                'net2wider_conv': {'alpha': 8, 'beta': 2},  # Net2Wider通常很稳定
+                'net2deeper_conv': {'alpha': 6, 'beta': 4},  # Net2Deeper有一定风险
+                'net2branch': {'alpha': 7, 'beta': 3},  # 分支策略适中
+                'smooth_transition': {'alpha': 9, 'beta': 1}  # 平滑过渡极其稳定
             },
             
             # Serial vs Parallel mutation 先验知识
@@ -66,6 +77,25 @@ class PriorKnowledgeBase:
                     'linear_batch_norm': {'effectiveness': 0.8, 'stability': 0.9},
                     'conv2d_pool': {'effectiveness': 0.5, 'stability': 0.9},
                     'conv2d_residual_block': {'effectiveness': 0.9, 'stability': 0.8}
+                }
+            },
+            
+            # Net2Net架构变异收益先验
+            'net2net_mutation_benefits': {
+                'net2wider_expected_gain': {
+                    'low_complexity': 0.03,    # 简单模型扩展收益较大
+                    'medium_complexity': 0.015, # 中等复杂度适中收益
+                    'high_complexity': 0.008   # 复杂模型收益递减
+                },
+                'net2deeper_expected_gain': {
+                    'low_depth': 0.025,        # 浅层网络加深收益明显
+                    'medium_depth': 0.012,     # 中等深度收益适中
+                    'high_depth': 0.005        # 深层网络收益微小
+                },
+                'parameter_transfer_confidence': {
+                    'function_preserving': 0.95,  # 函数保持性确保高置信度
+                    'smooth_transition': 0.90,    # 平滑过渡降低风险
+                    'weight_inheritance': 0.85    # 权重继承基本可靠
                 }
             },
             
@@ -126,18 +156,21 @@ class PriorKnowledgeBase:
                     'widening_response': 0.8,
                     'deepening_response': 0.3,
                     'hybrid_response': 0.6,
+                    'net2net_response': 0.9,   # Net2Net对信息压缩瓶颈效果很好
                     'preferred_operations': ['conv2d', 'attention', 'residual_connection']
                 },
                 'gradient_learning_bottleneck': {
                     'widening_response': 0.4,
                     'deepening_response': 0.7,
                     'hybrid_response': 0.5,
+                    'net2net_response': 0.6,   # Net2Net对梯度学习有帮助
                     'preferred_operations': ['batch_norm', 'residual_connection', 'dropout']
                 },
                 'representational_bottleneck': {
                     'widening_response': 0.6,
                     'deepening_response': 0.5,
                     'hybrid_response': 0.9,
+                    'net2net_response': 0.8,   # Net2Net提升表示能力
                     'preferred_operations': ['attention', 'conv2d', 'depthwise_conv']
                 }
             },
@@ -151,10 +184,80 @@ class PriorKnowledgeBase:
         }
     
     def get_mutation_prior(self, mutation_type: str) -> Dict[str, float]:
-        """获取变异类型先验"""
-        return self.knowledge_base['mutation_success_priors'].get(
+        """获取变异类型先验，包含直接计算的成功率"""
+        prior_params = self.knowledge_base['mutation_success_priors'].get(
             mutation_type, {'alpha': 2, 'beta': 2}
         )
+        
+        # 从Beta分布参数计算期望成功率
+        alpha, beta = prior_params['alpha'], prior_params['beta']
+        success_rate = alpha / (alpha + beta)
+        confidence = (alpha + beta) / 10.0  # 样本越多置信度越高
+        
+        return {
+            'alpha': alpha,
+            'beta': beta, 
+            'success_rate': success_rate,
+            'confidence': min(1.0, confidence)
+        }
+    
+    def get_net2net_prior(self, transfer_type: str) -> Dict[str, float]:
+        """获取Net2Net参数迁移先验"""
+        prior_params = self.knowledge_base['net2net_transfer_priors'].get(
+            transfer_type, {'alpha': 5, 'beta': 3}
+        )
+        
+        alpha, beta = prior_params['alpha'], prior_params['beta']
+        success_rate = alpha / (alpha + beta)
+        
+        return {
+            'alpha': alpha,
+            'beta': beta,
+            'success_rate': success_rate,
+            'confidence': min(1.0, (alpha + beta) / 15.0)  # Net2Net数据更充分
+        }
+    
+    def get_net2net_benefit_prior(self, complexity_level: str, mutation_type: str) -> float:
+        """获取Net2Net变异收益先验"""
+        if mutation_type in ['widening', 'net2wider']:
+            return self.knowledge_base['net2net_mutation_benefits']['net2wider_expected_gain'].get(
+                complexity_level, 0.015
+            )
+        elif mutation_type in ['deepening', 'net2deeper']:
+            return self.knowledge_base['net2net_mutation_benefits']['net2deeper_expected_gain'].get(
+                complexity_level, 0.012
+            )
+        else:
+            return 0.01  # 默认期望收益
+    
+    def get_parameter_transfer_confidence(self, transfer_mechanism: str) -> float:
+        """获取参数迁移置信度"""
+        return self.knowledge_base['net2net_mutation_benefits']['parameter_transfer_confidence'].get(
+            transfer_mechanism, 0.8
+        )
+    
+    def assess_net2net_suitability(self, layer_analysis: Dict[str, Any], mutation_strategy: str) -> Dict[str, float]:
+        """评估Net2Net技术的适用性"""
+        
+        # 基于层类型判断适用性
+        param_analysis = layer_analysis.get('parameter_analysis', {})
+        mutation_readiness = param_analysis.get('mutation_readiness', 0.5)
+        
+        # Net2Net适用性评分
+        suitability_scores = {
+            'function_preserving_suitable': 0.9,  # Net2Net保持函数一致性
+            'parameter_efficiency': 0.8,          # 参数利用效率高
+            'training_stability': 0.85,           # 训练稳定性好
+            'convergence_speed': 0.7              # 收敛速度提升
+        }
+        
+        # 根据变异准备度调整评分
+        adjustment_factor = min(1.2, max(0.8, mutation_readiness + 0.2))
+        
+        for key in suitability_scores:
+            suitability_scores[key] *= adjustment_factor
+            
+        return suitability_scores
     
     def get_mode_prior(self, mode: str) -> Dict[str, Any]:
         """获取变异模式先验"""
@@ -178,6 +281,7 @@ class PriorKnowledgeBase:
                 'widening_response': 0.5,
                 'deepening_response': 0.5, 
                 'hybrid_response': 0.5,
+                'net2net_response': 0.7,   # 默认Net2Net响应较好
                 'preferred_operations': ['conv2d', 'batch_norm']
             }
         )
