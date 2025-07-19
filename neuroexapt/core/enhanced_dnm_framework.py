@@ -506,7 +506,7 @@ class EnhancedDNMFramework:
         
         # 新增激进形态发生组件
         if self.config['enable_aggressive_mode']:
-            from .aggressive_morphogenesis import (
+            from .advanced_morphogenesis import (
                 AggressiveMorphogenesisAnalyzer,
                 MultiPointMutationPlanner,
                 AggressiveMorphogenesisExecutor
@@ -529,84 +529,206 @@ class EnhancedDNMFramework:
         self.performance_history = []
         self.aggressive_mode_active = False
 
-    def should_trigger_morphogenesis(self, 
-                                   model: nn.Module,
-                                   epoch: int,
-                                   activations: Dict[str, torch.Tensor],
-                                   gradients: Dict[str, torch.Tensor],
-                                   performance_history: List[float]) -> Tuple[bool, List[str]]:
-        """增强的形态发生触发检查 - 支持激进模式"""
-        logger.enter_section("增强形态发生触发检查")
+    def check_morphogenesis_trigger(self, model: nn.Module, activations: Dict[str, torch.Tensor], 
+                                  gradients: Dict[str, torch.Tensor], 
+                                  performance_history: List[float], epoch: int) -> Tuple[bool, List[str]]:
+        """检查是否触发形态发生 - 智能瓶颈检测版本"""
+        logger.enter_section("智能形态发生触发检查")
         
-        # 检查当前准确率是否达到激进模式阈值
-        current_accuracy = performance_history[-1] if performance_history else 0.0
-        
-        # 激进模式激活条件
-        aggressive_mode_triggered = False
-        if (self.config['enable_aggressive_mode'] and 
-            current_accuracy >= self.config['aggressive_trigger_accuracy']):
-            
-            # 检测准确率停滞
-            is_plateau, stagnation_severity = self.aggressive_analyzer.detect_accuracy_plateau(performance_history)
-            
-            if is_plateau and stagnation_severity > 0.5:
-                logger.warning(f"🚨 检测到准确率停滞，激活激进模式！停滞严重程度: {stagnation_severity:.3f}")
-                aggressive_mode_triggered = True
-                self.aggressive_mode_active = True
-        
-        # 如果激进模式被触发，使用不同的判断逻辑
-        if aggressive_mode_triggered:
-            logger.info("🚀 使用激进形态发生策略")
-            # 激进模式下更频繁地触发，不受传统触发间隔限制
-            trigger_reasons = [f"激进模式: 准确率停滞(严重程度={stagnation_severity:.3f})"]
-            logger.exit_section("增强形态发生触发检查")
-            return True, trigger_reasons
-        
-        # 传统触发逻辑
-        logger.info(f"当前epoch: {epoch}, 触发间隔: {self.config['trigger_interval']}")
-        
-        if epoch % self.config['trigger_interval'] != 0:
-            logger.info(f"❌ 不在触发间隔内 ({epoch} % {self.config['trigger_interval']} != 0)")
-            logger.exit_section("增强形态发生触发检查")
+        # 📊 基础检查
+        if len(performance_history) < 3:
+            logger.info("❌ 性能历史不足3个点，跳过检查")
+            logger.exit_section("智能形态发生触发检查")
             return False, []
         
-        logger.info("✅ 在触发间隔内，检查各触发器")
+        # 🧠 智能瓶颈检测系统
+        logger.info("🔍 开始智能瓶颈检测...")
         
-        # 构建分析上下文
-        context = {
-            'epoch': epoch,
-            'activations': activations,
-            'gradients': gradients,
-            'performance_history': performance_history,
-            'model': model
-        }
+        # 1. 性能停滞检测
+        recent_performance = performance_history[-5:]  # 最近5个epoch
+        current_acc = recent_performance[-1]
         
-        # 检查各个触发器
-        trigger_results = []
-        trigger_reasons = []
+        # 计算停滞严重程度
+        if len(recent_performance) >= 3:
+            improvement_trend = []
+            for i in range(1, len(recent_performance)):
+                improvement_trend.append(recent_performance[i] - recent_performance[i-1])
+            
+            avg_improvement = sum(improvement_trend) / len(improvement_trend)
+            max_improvement = max(improvement_trend) if improvement_trend else 0
+            stagnation_severity = max(0, -avg_improvement * 100)  # 转换为正值表示停滞
+            
+            logger.info(f"📈 性能趋势分析:")
+            logger.info(f"  当前准确率: {current_acc:.4f}")
+            logger.info(f"  平均改进: {avg_improvement:.6f}")
+            logger.info(f"  停滞严重程度: {stagnation_severity:.3f}")
+        else:
+            stagnation_severity = 0
+            avg_improvement = 0
         
-        for name, trigger in self.triggers.items():
-            try:
-                logger.debug(f"检查触发器: {name}")
-                should_trigger, reason = trigger.should_trigger(context)
-                trigger_results.append(should_trigger)
+        # 2. 网络瓶颈深度分析
+        logger.info("🔬 执行网络瓶颈深度分析...")
+        try:
+            bottleneck_analysis = self.bottleneck_analyzer.analyze_network_bottlenecks(
+                model, activations, gradients
+            )
+            
+            # 寻找最严重的瓶颈
+            all_bottlenecks = {}
+            for bottleneck_type, results in bottleneck_analysis.items():
+                if isinstance(results, dict):
+                    for layer_name, score in results.items():
+                        if layer_name not in all_bottlenecks:
+                            all_bottlenecks[layer_name] = {}
+                        all_bottlenecks[layer_name][bottleneck_type] = score
+            
+            # 计算综合瓶颈分数
+            severe_bottlenecks = []
+            for layer_name, bottleneck_scores in all_bottlenecks.items():
+                # 计算加权平均瓶颈分数
+                weights = {
+                    'depth_bottlenecks': 0.3,
+                    'width_bottlenecks': 0.25,
+                    'information_flow_bottlenecks': 0.25,
+                    'gradient_flow_bottlenecks': 0.2
+                }
                 
-                logger.info(f"触发器[{name}]: {'✅激活' if should_trigger else '❌未激活'} - {reason}")
+                combined_score = 0
+                total_weight = 0
+                for bottleneck_type, score in bottleneck_scores.items():
+                    if bottleneck_type in weights:
+                        combined_score += weights[bottleneck_type] * score
+                        total_weight += weights[bottleneck_type]
                 
-                if should_trigger:
-                    trigger_reasons.append(f"{name}: {reason}")
+                if total_weight > 0:
+                    combined_score /= total_weight
                     
-            except Exception as e:
-                logger.error(f"❌ 触发器 {name} 执行失败: {e}")
-                logger.error(f"错误详情: {traceback.format_exc()}")
-                trigger_results.append(False)
+                    # 严重瓶颈阈值
+                    if combined_score > 0.6:  # 降低阈值，更敏感
+                        severe_bottlenecks.append((layer_name, combined_score, bottleneck_scores))
+            
+            # 排序找出最严重的瓶颈
+            severe_bottlenecks.sort(key=lambda x: x[1], reverse=True)
+            
+            logger.info(f"🎯 发现{len(severe_bottlenecks)}个严重瓶颈层:")
+            for layer_name, score, details in severe_bottlenecks[:3]:  # 显示前3个
+                logger.info(f"  {layer_name}: 综合分数={score:.3f}")
+                for bt, bs in details.items():
+                    logger.info(f"    {bt}: {bs:.3f}")
+            
+        except Exception as e:
+            logger.error(f"❌ 瓶颈分析失败: {e}")
+            severe_bottlenecks = []
+            bottleneck_analysis = {}
         
-        should_trigger = any(trigger_results)
+        # 3. Net2Net输出反向投影分析
+        logger.info("🧪 执行Net2Net输出反向投影分析...")
+        try:
+            from .dnm_net2net import Net2NetSubnetworkAnalyzer
+            net2net_analyzer = Net2NetSubnetworkAnalyzer()
+            
+            # 构建分析上下文
+            analysis_context = {
+                'model': model,
+                'activations': activations,
+                'gradients': gradients,
+                'performance_history': performance_history,
+                'epoch': epoch
+            }
+            
+            net2net_results = net2net_analyzer.analyze_all_layers(
+                model=model,
+                context=analysis_context
+            )
+            
+            # 识别Net2Net认为需要改进的层
+            improvement_candidates = []
+            for layer_name, analysis in net2net_results.items():
+                improvement_potential = analysis.get('mutation_prediction', {}).get('improvement_potential', 0)
+                if improvement_potential > 0.3:  # 改进潜力阈值
+                    improvement_candidates.append((layer_name, improvement_potential, analysis))
+            
+            improvement_candidates.sort(key=lambda x: x[1], reverse=True)
+            
+            logger.info(f"🚀 Net2Net发现{len(improvement_candidates)}个改进候选:")
+            for layer_name, potential, details in improvement_candidates[:3]:
+                recommendation = details.get('recommendation', {})
+                logger.info(f"  {layer_name}: 潜力={potential:.3f}, 建议={recommendation.get('action', 'unknown')}")
+            
+        except Exception as e:
+            logger.error(f"❌ Net2Net分析失败: {e}")
+            improvement_candidates = []
+            net2net_results = {}
         
-        logger.info(f"触发器汇总: {len([r for r in trigger_results if r])}/{len(trigger_results)} 激活")
-        logger.info(f"最终决定: {'✅触发形态发生' if should_trigger else '❌不触发'}")
+        # 4. 智能触发决策
+        logger.info("🎯 执行智能触发决策...")
         
-        logger.exit_section("增强形态发生触发检查")
+        trigger_reasons = []
+        should_trigger = False
+        
+        # 决策逻辑1: 严重瓶颈 + 性能停滞
+        if severe_bottlenecks and stagnation_severity > 0.01:  # 0.01% 停滞
+            should_trigger = True
+            top_bottleneck = severe_bottlenecks[0]
+            trigger_reasons.append(f"严重瓶颈检测: {top_bottleneck[0]} (分数={top_bottleneck[1]:.3f})")
+            trigger_reasons.append(f"性能停滞: {stagnation_severity:.3f}%")
+        
+        # 决策逻辑2: Net2Net强烈建议改进
+        if improvement_candidates and improvement_candidates[0][1] > 0.5:
+            should_trigger = True
+            top_candidate = improvement_candidates[0]
+            trigger_reasons.append(f"Net2Net强烈建议: {top_candidate[0]} (潜力={top_candidate[1]:.3f})")
+        
+        # 决策逻辑3: 多个中等瓶颈 + 轻微停滞
+        medium_bottlenecks = [b for b in severe_bottlenecks if 0.4 <= b[1] <= 0.6]
+        if len(medium_bottlenecks) >= 2 and stagnation_severity > 0.005:  # 0.005% 停滞
+            should_trigger = True
+            trigger_reasons.append(f"多点瓶颈: {len(medium_bottlenecks)}个中等瓶颈")
+            trigger_reasons.append(f"轻微停滞: {stagnation_severity:.3f}%")
+        
+        # 决策逻辑4: 长期无改进强制触发
+        if avg_improvement <= 0 and len(performance_history) >= 8:
+            recent_8 = performance_history[-8:]
+            if max(recent_8) - min(recent_8) < 0.005:  # 8轮内变化小于0.5%
+                should_trigger = True
+                trigger_reasons.append(f"长期无改进强制触发: 8轮内最大变化={max(recent_8) - min(recent_8):.4f}")
+        
+        # 5. 激进模式检查（保留原有逻辑）
+        if (self.config.get('enable_aggressive_mode', False) and 
+            current_acc > self.config.get('aggressive_trigger_accuracy', 0.85)):
+            
+            plateau_threshold = self.config.get('accuracy_plateau_threshold', 0.001)
+            window_size = self.config.get('plateau_detection_window', 5)
+            
+            if len(recent_performance) >= window_size:
+                performance_range = max(recent_performance) - min(recent_performance)
+                if performance_range < plateau_threshold:
+                    should_trigger = True
+                    trigger_reasons.append(f"激进模式: 高准确率停滞 (范围={performance_range:.4f})")
+        
+        # 输出决策结果
+        if should_trigger:
+            logger.info("✅ 触发形态发生!")
+            logger.info("📋 触发原因:")
+            for reason in trigger_reasons:
+                logger.info(f"  • {reason}")
+            
+            # 保存分析结果供后续使用
+            self._last_trigger_analysis = {
+                'severe_bottlenecks': severe_bottlenecks,
+                'improvement_candidates': improvement_candidates,
+                'bottleneck_analysis': bottleneck_analysis,
+                'net2net_results': net2net_results,
+                'stagnation_severity': stagnation_severity,
+                'performance_trend': avg_improvement
+            }
+        else:
+            logger.info("❌ 未达到触发条件")
+            logger.info(f"  瓶颈层数: {len(severe_bottlenecks)}")
+            logger.info(f"  停滞程度: {stagnation_severity:.3f}%")
+            logger.info(f"  改进候选: {len(improvement_candidates)}")
+        
+        logger.exit_section("智能形态发生触发检查")
         return should_trigger, trigger_reasons
 
     def execute_morphogenesis(self,
@@ -646,8 +768,8 @@ class EnhancedDNMFramework:
         
         try:
             # 检查是否满足触发条件
-            should_trigger, trigger_reasons = self.should_trigger_morphogenesis(
-                model, epoch, activations, gradients, performance_history
+            should_trigger, trigger_reasons = self.check_morphogenesis_trigger(
+                model, activations, gradients, performance_history, epoch
             )
             
             if not should_trigger:
@@ -829,45 +951,112 @@ class EnhancedDNMFramework:
                                          performance_history: List[float],
                                          epoch: int,
                                          trigger_reasons: List[str]) -> Dict[str, Any]:
-        """执行传统单点形态发生"""
-        logger.enter_section("传统形态发生")
+        """执行智能瓶颈导向的形态发生"""
+        logger.enter_section("智能瓶颈导向形态发生")
         
         try:
-            # 原有的传统形态发生逻辑
-            logger.info("执行传统单点形态发生策略")
+            # 获取之前保存的触发分析结果
+            trigger_analysis = getattr(self, '_last_trigger_analysis', None)
             
-            # 瓶颈分析
-            logger.enter_section("瓶颈分析")
+            if trigger_analysis is None:
+                logger.warning("未找到触发分析结果，执行新的瓶颈分析")
+                # 重新分析网络瓶颈
+                bottleneck_analysis = self.bottleneck_analyzer.analyze_network_bottlenecks(
+                    model, activations, gradients
+                )
+                severe_bottlenecks = []
+                improvement_candidates = []
+                net2net_results = {}
+            else:
+                logger.info("使用保存的触发分析结果")
+                bottleneck_analysis = trigger_analysis.get('bottleneck_analysis', {})
+                severe_bottlenecks = trigger_analysis.get('severe_bottlenecks', [])
+                improvement_candidates = trigger_analysis.get('improvement_candidates', [])
+                net2net_results = trigger_analysis.get('net2net_results', {})
             
-            if not activations or not gradients:
-                logger.error("❌ 缺少激活值或梯度信息，跳过形态发生")
-                logger.exit_section("瓶颈分析")
-                logger.exit_section("传统形态发生")
-                return {
-                    'model_modified': False,
-                    'new_model': model,
-                    'parameters_added': 0,
-                    'morphogenesis_events': [],
-                    'morphogenesis_type': 'failed',
-                    'trigger_reasons': trigger_reasons,
-                    'error': 'missing_analysis_data'
-                }
+            # 智能决策制定：基于瓶颈分析和Net2Net建议
+            logger.info("🧠 执行智能决策制定...")
             
-            logger.info(f"分析数据: 激活值{len(activations)}层, 梯度{len(gradients)}层")
-            bottleneck_analysis = self.bottleneck_analyzer.analyze_network_bottlenecks(model, activations, gradients)
+            decision = None
             
-            logger.success(f"瓶颈分析完成: {len(bottleneck_analysis) if bottleneck_analysis else 0}个瓶颈")
-            logger.exit_section("瓶颈分析")
+            # 优先级1: Net2Net强烈建议的层
+            if improvement_candidates and improvement_candidates[0][1] > 0.5:
+                target_info = improvement_candidates[0]
+                layer_name = target_info[0]
+                potential = target_info[1]
+                analysis = target_info[2]
+                recommendation = analysis.get('recommendation', {})
+                
+                # 根据Net2Net的建议选择形态发生类型
+                suggested_action = recommendation.get('action', 'widen')
+                if suggested_action == 'deepen':
+                    morphogenesis_type = MorphogenesisType.SERIAL_DIVISION
+                elif suggested_action == 'branch':
+                    morphogenesis_type = MorphogenesisType.PARALLEL_DIVISION
+                else:  # widen or other
+                    morphogenesis_type = MorphogenesisType.HYBRID_DIVISION
+                    
+                decision = MorphogenesisDecision(
+                    morphogenesis_type=morphogenesis_type,
+                    target_location=layer_name,
+                    confidence=min(0.9, potential),
+                    expected_improvement=potential * 0.1,  # 保守估计
+                    complexity_cost=0.3,
+                    parameters_added=recommendation.get('estimated_params', 5000),
+                    reasoning=f"Net2Net强烈建议: {suggested_action} (潜力={potential:.3f})"
+                )
+                
+                logger.info(f"🎯 采用Net2Net建议: {layer_name} -> {morphogenesis_type.value}")
+                
+            # 优先级2: 严重瓶颈层
+            elif severe_bottlenecks:
+                target_info = severe_bottlenecks[0]
+                layer_name = target_info[0]
+                bottleneck_score = target_info[1]
+                bottleneck_details = target_info[2]
+                
+                # 根据瓶颈类型选择形态发生策略
+                max_bottleneck_type = max(bottleneck_details.items(), key=lambda x: x[1])
+                bottleneck_type_name = max_bottleneck_type[0]
+                
+                if 'depth' in bottleneck_type_name:
+                    morphogenesis_type = MorphogenesisType.SERIAL_DIVISION
+                    reasoning = f"深度瓶颈: 增加网络深度"
+                elif 'width' in bottleneck_type_name:
+                    morphogenesis_type = MorphogenesisType.HYBRID_DIVISION  
+                    reasoning = f"宽度瓶颈: 增加神经元数量"
+                elif 'information_flow' in bottleneck_type_name:
+                    morphogenesis_type = MorphogenesisType.PARALLEL_DIVISION
+                    reasoning = f"信息流瓶颈: 创建并行分支"
+                else:
+                    morphogenesis_type = MorphogenesisType.HYBRID_DIVISION
+                    reasoning = f"混合瓶颈: 综合改进"
+                    
+                decision = MorphogenesisDecision(
+                    morphogenesis_type=morphogenesis_type,
+                    target_location=layer_name,
+                    confidence=min(0.8, bottleneck_score),
+                    expected_improvement=bottleneck_score * 0.05,
+                    complexity_cost=0.4,
+                    parameters_added=int(5000 * bottleneck_score),
+                    reasoning=f"{reasoning} (瓶颈分数={bottleneck_score:.3f})"
+                )
+                
+                logger.info(f"🎯 针对严重瓶颈: {layer_name} -> {morphogenesis_type.value}")
+                
+            # 优先级3: 回退到传统决策制定
+            if decision is None:
+                logger.info("回退到传统决策制定器")
+                if hasattr(self.decision_maker, 'make_morphogenesis_decision'):
+                    decision = self.decision_maker.make_morphogenesis_decision(
+                        model, activations, gradients, bottleneck_analysis, performance_history
+                    )
+                elif hasattr(self.decision_maker, 'make_decision'):
+                    decision = self.decision_maker.make_decision(bottleneck_analysis, performance_history)
             
-            # 形态发生决策
-            logger.enter_section("形态发生决策")
-            logger.info(f"性能历史: {len(performance_history)}个数据点")
-            
-            decision = self.decision_maker.make_decision(bottleneck_analysis, performance_history)
-            if not decision:
-                logger.warning("❌ 未发现需要形态发生的瓶颈")
-                logger.exit_section("形态发生决策")
-                logger.exit_section("传统形态发生")
+            if decision is None:
+                logger.warning("❌ 决策制定器未生成有效决策")
+                logger.exit_section("智能瓶颈导向形态发生")
                 return {
                     'model_modified': False,
                     'new_model': model,
@@ -877,23 +1066,26 @@ class EnhancedDNMFramework:
                     'trigger_reasons': trigger_reasons
                 }
             
-            logger.success(f"决策制定完成: {decision.morphogenesis_type.value} (置信度: {decision.confidence:.3f})")
-            logger.exit_section("形态发生决策")
+            logger.info(f"🎯 最终决策: {decision.morphogenesis_type.value}")
+            logger.info(f"  目标位置: {decision.target_location}")
+            logger.info(f"  置信度: {decision.confidence:.3f}")
+            logger.info(f"  预期改进: {decision.expected_improvement:.3f}")
+            logger.info(f"  决策依据: {decision.reasoning}")
             
-            # 形态发生执行
-            logger.enter_section("形态发生执行")
-            logger.info(f"执行策略: {decision.morphogenesis_type.value} 在 {decision.target_location}")
-            
-            new_model, parameters_added = self.executor.execute_morphogenesis(model, decision)
-            
-            logger.info(f"形态发生结果: 新增参数={parameters_added}")
-            logger.log_model_info(new_model, "新模型")
-            logger.exit_section("形态发生执行")
-            
-            if parameters_added > 0:
-                logger.success("✅ 形态发生成功，记录事件")
+            # 执行形态发生
+            try:
+                if hasattr(self, 'morphogenesis_executor'):
+                    new_model, parameters_added = self.morphogenesis_executor.execute_morphogenesis(model, decision)
+                elif hasattr(self, 'executor'):
+                    new_model, parameters_added = self.executor.execute_morphogenesis(model, decision)
+                else:
+                    raise AttributeError("找不到形态发生执行器")
                 
-                # 记录形态发生事件
+                logger.success(f"✅ 智能形态发生执行成功")
+                logger.info(f"  新增参数: {parameters_added:,}")
+                logger.info(f"  模型总参数: {sum(p.numel() for p in new_model.parameters()):,}")
+                
+                # 记录事件
                 morphogenesis_event = EnhancedMorphogenesisEvent(
                     epoch=epoch,
                     event_type=decision.morphogenesis_type.value,
@@ -908,29 +1100,36 @@ class EnhancedDNMFramework:
                 
                 self.morphogenesis_events.append(morphogenesis_event)
                 
-                logger.success(f"传统形态发生完成: {decision.morphogenesis_type.value}, 新增参数: {parameters_added:,}")
-                
+                logger.exit_section("智能瓶颈导向形态发生")
                 return {
                     'model_modified': True,
                     'new_model': new_model,
                     'parameters_added': parameters_added,
                     'morphogenesis_events': [morphogenesis_event],
                     'morphogenesis_type': decision.morphogenesis_type.value,
-                    'trigger_reasons': trigger_reasons
+                    'trigger_reasons': trigger_reasons,
+                    'decision_confidence': decision.confidence,
+                    'bottleneck_analysis': bottleneck_analysis,
+                    'intelligent_decision': True
                 }
-            else:
-                logger.warning("❌ 形态发生未添加任何参数")
+                
+            except Exception as e:
+                logger.error(f"❌ 智能形态发生执行失败: {e}")
+                import traceback
+                logger.error(f"错误堆栈: {traceback.format_exc()}")
+                logger.exit_section("智能瓶颈导向形态发生")
                 return {
                     'model_modified': False,
                     'new_model': model,
                     'parameters_added': 0,
                     'morphogenesis_events': [],
-                    'morphogenesis_type': 'failed',
-                    'trigger_reasons': trigger_reasons
+                    'morphogenesis_type': 'error',
+                    'trigger_reasons': trigger_reasons,
+                    'error': str(e)
                 }
                 
         except Exception as e:
-            logger.error(f"❌ 传统形态发生失败: {e}")
+            logger.error(f"❌ 智能瓶颈导向形态发生失败: {e}")
             logger.error(f"错误详情: {traceback.format_exc()}")
             return {
                 'model_modified': False,
@@ -942,7 +1141,7 @@ class EnhancedDNMFramework:
                 'error': str(e)
             }
         finally:
-            logger.exit_section("传统形态发生")
+            logger.exit_section("智能瓶颈导向形态发生")
     
     def _enhance_bottleneck_signatures_with_net2net(self, 
                                                    bottleneck_signatures: Dict,
