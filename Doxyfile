@@ -126,7 +126,10 @@ INPUT                  = neuroexapt \
                          examples \
                          docs/mainpage.md \
                          docs/theory.md \
-                         docs/symbols.md
+                         docs/symbols.md \
+                         docs/dnm_principles.md \
+                         docs/getting_started.md \
+                         docs/intelligent_growth.md
 
 INPUT_ENCODING         = UTF-8
 FILE_PATTERNS          = *.py \
