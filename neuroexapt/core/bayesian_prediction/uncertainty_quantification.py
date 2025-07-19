@@ -6,22 +6,9 @@
 
 from typing import Dict, Any, List, Tuple, Optional
 import numpy as np
+import torch
+import torch.nn.functional as F
 from abc import ABC, abstractmethod
-
-# Optional torch imports
-try:
-    import torch
-    import torch.nn.functional as F
-    TORCH_AVAILABLE = True
-except ImportError:
-    TORCH_AVAILABLE = False
-    # Create dummy classes for type hints when torch is not available
-    class torch:
-        class nn:
-            class Module:
-                pass
-        class Tensor:
-            pass
 
 
 class UncertaintyQuantifier:
@@ -146,8 +133,8 @@ class UncertaintyQuantifier:
         return np.clip(reliability, 0.0, 1.0)
     
     def estimate_model_uncertainty(self, 
-                                 model,  # torch.nn.Module when available
-                                 inputs,  # torch.Tensor when available
+                                 model: torch.nn.Module,
+                                 inputs: torch.Tensor,
                                  num_samples: Optional[int] = None) -> Dict[str, Any]:
         """
         估计模型不确定性（使用Dropout等方法）
@@ -160,9 +147,6 @@ class UncertaintyQuantifier:
         Returns:
             模型不确定性估计结果
         """
-        if not TORCH_AVAILABLE:
-            raise ImportError("PyTorch is required for model uncertainty estimation")
-            
         if num_samples is None:
             num_samples = self.mc_samples
             

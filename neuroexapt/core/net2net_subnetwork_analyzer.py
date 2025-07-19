@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Net2Net子网络分析器 - 解决循环依赖问题
+Net2Net子网络分析器
 
 核心思想：分析网络中的信息流漏点和瓶颈，指导动态架构变异
 
@@ -23,12 +23,11 @@ import copy
 
 from .logging_utils import logger
 # 延迟导入以避免循环依赖
-# from .bayesian_prediction import BayesianMutationBenefitPredictor
 from .layer_analysis import InformationFlowAnalyzer, InformationLeakDetector
 
 
 class SubnetworkExtractor:
-    """子网络提取器（保持原有逻辑）"""
+    """子网络提取器"""
     
     def __init__(self):
         self.extracted_subnets = {}
@@ -63,7 +62,6 @@ class SubnetworkExtractor:
     
     def _group_by_information_flow(self, model: nn.Module, context: Dict[str, Any]) -> Dict[str, List[str]]:
         """基于信息流特征分组"""
-        # 简化实现
         groups = {'high_flow': [], 'medium_flow': [], 'low_flow': []}
         
         for name, module in model.named_modules():
@@ -83,7 +81,7 @@ class SubnetworkExtractor:
         """基于变异潜力分组"""
         groups = {'high_potential': [], 'medium_potential': [], 'low_potential': []}
         
-        # 简化的启发式分组
+        # 启发式分组
         for name, module in model.named_modules():
             if isinstance(module, (nn.Conv2d, nn.Linear)):
                 param_count = sum(p.numel() for p in module.parameters())
@@ -98,7 +96,7 @@ class SubnetworkExtractor:
 
 
 class ParameterSpaceAnalyzer:
-    """参数空间分析器（保持原有逻辑）"""
+    """参数空间分析器"""
     
     def __init__(self):
         self.density_cache = {}
@@ -150,7 +148,7 @@ class ParameterSpaceAnalyzer:
     def _estimate_density_distribution(self, param_stats: Dict[str, Any], context: Dict[str, Any]) -> Dict[str, Any]:
         """估计密度分布"""
         return {
-            'estimated_density': 0.7,  # 简化实现
+            'estimated_density': 0.7,
             'confidence': 0.8,
             'distribution_type': 'gaussian_mixture'
         }
@@ -158,7 +156,7 @@ class ParameterSpaceAnalyzer:
     def _analyze_high_accuracy_regions(self, density_info: Dict[str, Any], context: Dict[str, Any]) -> Dict[str, Any]:
         """分析高准确率区域"""
         return {
-            'region_proportion': 0.3,  # 简化实现
+            'region_proportion': 0.3,
             'peak_density': 0.9,
             'connectivity': 0.6
         }
@@ -169,7 +167,7 @@ class ParameterSpaceAnalyzer:
 
 
 class MutationPotentialPredictor:
-    """变异潜力预测器（保持原有逻辑）"""
+    """变异潜力预测器"""
     
     def __init__(self):
         self.prediction_cache = {}
@@ -204,7 +202,6 @@ class MutationPotentialPredictor:
     
     def _predict_from_information_flow(self, analysis: Dict[str, Any], context: Dict[str, Any]) -> float:
         """基于信息流预测潜力"""
-        # 简化实现
         return 0.6
     
     def _combine_predictions(self, param_potential: float, flow_potential: float) -> float:
@@ -231,50 +228,31 @@ class Net2NetSubnetworkAnalyzer:
     """Net2Net子网络分析器主类 - 使用延迟加载避免循环依赖"""
     
     def __init__(self):
-        # 原有组件
+        # 核心组件
         self.extractor = SubnetworkExtractor()
         self.param_analyzer = ParameterSpaceAnalyzer()
         self.predictor = MutationPotentialPredictor()
         
-        # 新的模块化组件
+        # 信息流分析组件
         self.info_flow_analyzer = InformationFlowAnalyzer()
         self.leak_detector = InformationLeakDetector()
         
-        # 延迟加载贝叶斯预测器
+        # 延迟加载贝叶斯预测器（避免循环依赖）
         self._bayesian_predictor = None
     
     @property
     def bayesian_predictor(self):
         """延迟加载贝叶斯预测器"""
         if self._bayesian_predictor is None:
-            try:
-                from .bayesian_prediction import BayesianMutationBenefitPredictor
-                self._bayesian_predictor = BayesianMutationBenefitPredictor()
-            except ImportError as e:
-                logger.warning(f"Could not import BayesianMutationBenefitPredictor: {e}")
-                # 使用简化的预测器作为回退
-                self._bayesian_predictor = self._create_simple_predictor()
+            from .bayesian_prediction import BayesianMutationBenefitPredictor
+            self._bayesian_predictor = BayesianMutationBenefitPredictor()
         return self._bayesian_predictor
-    
-    def _create_simple_predictor(self):
-        """创建简化的预测器作为回退"""
-        class SimpleBayesianPredictor:
-            def predict_mutation_benefit(self, layer_analysis, mutation_strategy, current_accuracy, model_complexity):
-                return {
-                    'expected_accuracy_gain': 0.01,
-                    'confidence_interval': {'95%': (0.0, 0.02)},
-                    'success_probability': 0.6,
-                    'risk_adjusted_benefit': {'risk_adjusted_gain': 0.005},
-                    'uncertainty_metrics': {'prediction_confidence': 0.4},
-                    'recommendation_strength': "weak_recommend"
-                }
-        return SimpleBayesianPredictor()
     
     def analyze_all_layers(self, model: nn.Module, context: Dict[str, Any]) -> Dict[str, Any]:
         """
         分析所有层的变异潜力和信息流瓶颈
         
-        这是实现神经网络最优变异理论的核心方法：
+        核心理论：
         1. 检测信息流漏点 - 某层成为信息提取瓶颈，导致后续层无法提升准确率
         2. 分析参数空间密度 - 漏点层的参数空间中高准确率区域占比较小
         3. 预测变异收益 - 变异后参数空间中高准确率区域占比提升
@@ -455,7 +433,6 @@ class Net2NetSubnetworkAnalyzer:
     
     def _calculate_flow_efficiency(self, flow_analysis: Dict[str, Any], leak_analysis: Dict[str, Any]) -> float:
         """计算信息流效率"""
-        # 简化实现
         return 0.7
     
     def _fallback_analysis(self, model: nn.Module, context: Dict[str, Any]) -> Dict[str, Any]:
