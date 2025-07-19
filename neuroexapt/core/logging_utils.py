@@ -84,6 +84,53 @@ class ConfigurableLogger:
             self.section_stack.pop()
         indent = "  " * len(self.section_stack)
         self.logger.info(f"{indent}✅ 完成 {section_name}")
+    
+    def log_tensor_info(self, tensor, name: str):
+        """记录张量信息"""
+        if not self.logger.isEnabledFor(logging.DEBUG):
+            return
+            
+        if tensor is None:
+            self.warning(f"❌ {name}: None")
+            return
+        
+        try:
+            # 检查是否是torch tensor
+            if hasattr(tensor, 'device') and hasattr(tensor, 'shape') and hasattr(tensor, 'dtype'):
+                device_info = f"({tensor.device})" if hasattr(tensor, 'device') else ""
+                self.debug(f"📊 {name}: shape={list(tensor.shape)}, dtype={tensor.dtype}, device={device_info}")
+            else:
+                # 处理其他类型的tensor-like对象
+                if hasattr(tensor, 'shape'):
+                    self.debug(f"📊 {name}: shape={getattr(tensor, 'shape', 'unknown')}")
+                else:
+                    self.debug(f"📊 {name}: {type(tensor).__name__}")
+        except Exception as e:
+            self.warning(f"⚠️ 无法记录张量信息 {name}: {e}")
+    
+    def log_model_info(self, model, name: str = "Model"):
+        """记录模型信息"""
+        if not self.logger.isEnabledFor(logging.INFO):
+            return
+            
+        try:
+            # 检查是否是PyTorch模型
+            if hasattr(model, 'parameters'):
+                total_params = sum(p.numel() for p in model.parameters())
+                trainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
+                
+                # 尝试获取设备信息
+                try:
+                    device = next(model.parameters()).device if list(model.parameters()) else "Unknown"
+                except StopIteration:
+                    device = "Unknown"
+                
+                self.info(f"🧠 {name}: 总参数={total_params:,}, 可训练={trainable_params:,}, 设备={device}")
+            else:
+                # 处理其他类型的模型对象
+                self.info(f"🧠 {name}: {type(model).__name__}")
+        except Exception as e:
+            self.warning(f"⚠️ 无法记录模型信息 {name}: {e}")
 
 
 # 全局日志配置
@@ -132,6 +179,26 @@ class DebugPrinter:
         """退出调试区域"""
         self.indent_level = max(0, self.indent_level - 1)
         logger.exit_section(section_name)
+    
+    def log_tensor_info(self, tensor, name: str):
+        """记录张量信息（兼容接口）"""
+        if self.enabled:
+            logger.log_tensor_info(tensor, name)
+    
+    def log_model_info(self, model, name: str = "Model"):
+        """记录模型信息（兼容接口）"""
+        if self.enabled:
+            logger.log_model_info(model, name)
+    
+    def print_tensor_info(self, tensor, name: str):
+        """打印张量信息（兼容接口）"""
+        if self.enabled:
+            logger.log_tensor_info(tensor, name)
+    
+    def print_model_info(self, model, name: str = "Model"):
+        """打印模型信息（兼容接口）"""
+        if self.enabled:
+            logger.log_model_info(model, name)
 
 
 def get_logger(name: str = None) -> ConfigurableLogger:

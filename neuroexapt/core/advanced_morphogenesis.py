@@ -26,49 +26,8 @@ import time
 import traceback
 from collections import defaultdict
 
-# 配置详细调试日志
-logger = logging.getLogger(__name__)
-
-class DebugPrinter:
-    """调试输出管理器 - 高级形态发生模块专用"""
-    
-    def __init__(self, enabled: bool = True):
-        self.enabled = enabled
-        self.indent_level = 0
-        
-    def print_debug(self, message: str, level: str = "INFO"):
-        """打印调试信息"""
-        if not self.enabled:
-            return
-            
-        indent = "  " * self.indent_level
-        timestamp = time.strftime("%H:%M:%S", time.localtime())
-        
-        # 颜色编码
-        colors = {
-            "INFO": "\033[36m",      # 青色
-            "SUCCESS": "\033[32m",   # 绿色 
-            "WARNING": "\033[33m",   # 黄色
-            "ERROR": "\033[31m",     # 红色
-            "DEBUG": "\033[35m",     # 紫色
-        }
-        color = colors.get(level, "\033[0m")
-        reset = "\033[0m"
-        
-        print(f"{color}[{timestamp}] {indent}{level}: {message}{reset}")
-        
-    def enter_section(self, section_name: str):
-        """进入新的调试区域"""
-        self.print_debug(f"🔍 进入 {section_name}", "DEBUG")
-        self.indent_level += 1
-        
-    def exit_section(self, section_name: str):
-        """退出调试区域"""
-        self.indent_level = max(0, self.indent_level - 1)
-        self.print_debug(f"✅ 完成 {section_name}", "DEBUG")
-
 # 使用统一的logger系统
-from .logging_utils import logger
+from .logging_utils import logger, DebugPrinter
 
 class MorphogenesisType(Enum):
     """形态发生类型枚举"""

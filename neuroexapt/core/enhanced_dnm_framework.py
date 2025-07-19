@@ -107,8 +107,7 @@ class DebugPrinter:
         if self.enabled:
             self._logger.log_model_info(model, name)
 
-# 为了向后兼容保留debug_printer实例
-debug_printer = DebugPrinter(enabled=True)
+
 
 @dataclass
 class EnhancedMorphogenesisEvent:
@@ -267,7 +266,7 @@ class EnhancedBiologicalPrinciplesTrigger:
         performance_history = context.get('performance_history', [])
         epoch = context.get('epoch', 0)
         
-        debug_printer.print_debug(f"当前epoch: {epoch}, 性能历史长度: {len(performance_history)}", "DEBUG")
+        logger.debug(f"当前epoch: {epoch}, 性能历史长度: {len(performance_history)}")
         
         if len(performance_history) < 10:
             logger.warning("❌ 性能历史数据不足 (需要至少10个数据点)")
@@ -287,8 +286,10 @@ class EnhancedBiologicalPrinciplesTrigger:
         
         # 检测是否需要结构分化
         differentiation_needed = self._detect_structural_differentiation_need(maturation_score)
-        debug_printer.print_debug(f"结构分化需求: {'✅需要' if differentiation_needed else '❌不需要'}", 
-                               "SUCCESS" if differentiation_needed else "DEBUG")
+        if differentiation_needed:
+            logger.success(f"结构分化需求: ✅需要")
+        else:
+            logger.debug(f"结构分化需求: ❌不需要")
         
         if differentiation_needed:
             logger.success(f"✅ 触发条件满足: 成熟度={maturation_score:.3f}")
@@ -347,7 +348,7 @@ class EnhancedCognitiveScienceTrigger:
         performance_history = context.get('performance_history', [])
         activations = context.get('activations', {})
         
-        debug_printer.print_debug(f"性能历史长度: {len(performance_history)}, 激活值层数: {len(activations)}", "DEBUG")
+        logger.debug(f"性能历史长度: {len(performance_history)}, 激活值层数: {len(activations)}")
         
         if len(performance_history) < 8:
             logger.warning("❌ 学习历史数据不足 (需要至少8个数据点)")
@@ -357,20 +358,26 @@ class EnhancedCognitiveScienceTrigger:
         # 检测灾难性遗忘
         logger.debug("检测灾难性遗忘...")
         forgetting_detected = self._detect_catastrophic_forgetting(performance_history)
-        debug_printer.print_debug(f"灾难性遗忘检测: {'✅发现' if forgetting_detected else '❌未发现'}", 
-                               "WARNING" if forgetting_detected else "DEBUG")
+        if forgetting_detected:
+            logger.warning(f"灾难性遗忘检测: ✅发现")
+        else:
+            logger.debug(f"灾难性遗忘检测: ❌未发现")
         
         # 检测学习饱和
         logger.debug("检测学习饱和...")
         saturation_detected = self._detect_learning_saturation(performance_history)
-        debug_printer.print_debug(f"学习饱和检测: {'✅发现' if saturation_detected else '❌未发现'}", 
-                               "WARNING" if saturation_detected else "DEBUG")
+        if saturation_detected:
+            logger.warning(f"学习饱和检测: ✅发现")
+        else:
+            logger.debug(f"学习饱和检测: ❌未发现")
         
         # 检测特征表示冲突
         logger.debug("检测特征表示冲突...")
         conflict_detected = self._detect_representation_conflict(activations)
-        debug_printer.print_debug(f"特征表示冲突检测: {'✅发现' if conflict_detected else '❌未发现'}", 
-                               "WARNING" if conflict_detected else "DEBUG")
+        if conflict_detected:
+            logger.warning(f"特征表示冲突检测: ✅发现")
+        else:
+            logger.debug(f"特征表示冲突检测: ❌未发现")
         
         self.learning_patterns.append({
             'epoch': context.get('epoch', 0),
@@ -386,7 +393,7 @@ class EnhancedCognitiveScienceTrigger:
                 reason.append("灾难性遗忘风险")
             if conflict_detected:
                 reason.append("特征表示冲突")
-            debug_printer.print_debug(f"✅ 触发条件满足: {', '.join(reason)}", "SUCCESS")
+            logger.success(f"✅ 触发条件满足: {', '.join(reason)}")
             logger.exit_section("认知科学触发器检查")
             return True, f"认知瓶颈检测：{', '.join(reason)}，需要分化专门化神经元"
             
