@@ -335,6 +335,13 @@ class IntelligentDNMCore:
         for part in parts[:-1]:
             parent = getattr(parent, part)
         
+        # 获取原层的设备信息
+        original_layer = getattr(parent, parts[-1])
+        if hasattr(original_layer, 'weight') and original_layer.weight is not None:
+            device = original_layer.weight.device
+            new_layer = new_layer.to(device)
+            logger.info(f"🔧 新层已转移到设备: {device}")
+        
         # 替换最后一级的层
         setattr(parent, parts[-1], new_layer)
     
@@ -747,7 +754,24 @@ class IntelligentDNMCore:
     def _replace_module(self, model: nn.Module, module_name: str, new_module: nn.Module):
         """替换模型中的指定模块"""
         
-        # 解析模块路径
+        # 获取原模块的设备信息
+        original_module = None
+        if '.' in module_name:
+            parts = module_name.split('.')
+            parent = model
+            for part in parts[:-1]:
+                parent = getattr(parent, part)
+            original_module = getattr(parent, parts[-1])
+        else:
+            original_module = getattr(model, module_name)
+        
+        # 将新模块移到与原模块相同的设备
+        if original_module is not None:
+            device = next(original_module.parameters()).device
+            new_module = new_module.to(device)
+            logger.info(f"🔧 新模块已转移到设备: {device}")
+        
+        # 解析模块路径并替换
         if '.' in module_name:
             # 嵌套模块
             parts = module_name.split('.')

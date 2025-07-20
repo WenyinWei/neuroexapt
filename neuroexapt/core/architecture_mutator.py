@@ -289,6 +289,19 @@ class ArchitectureMutator:
         for part in parts[:-1]:
             parent = getattr(parent, part)
         
+        # 获取原模块的设备信息并转移新模块
+        original_module = getattr(parent, parts[-1])
+        if hasattr(original_module, 'weight') and original_module.weight is not None:
+            device = original_module.weight.device
+            new_module = new_module.to(device)
+        elif hasattr(original_module, 'parameters'):
+            # 对于没有权重但有参数的模块
+            try:
+                device = next(original_module.parameters()).device
+                new_module = new_module.to(device)
+            except StopIteration:
+                pass  # 没有参数的模块，无需转移设备
+        
         setattr(parent, parts[-1], new_module)
     
     def _update_subsequent_layers(self, model: nn.Module, changed_layer: str, new_channels: int):
