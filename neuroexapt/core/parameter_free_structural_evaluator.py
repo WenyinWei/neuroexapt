@@ -159,6 +159,61 @@ class ParameterFreeStructuralEvaluator:
         
         return metrics
     
+    def _generate_layer_input(self, layer: nn.Module) -> torch.Tensor:
+        """
+        根据层类型生成合适的输入张量
+        
+        Args:
+            layer: 网络层
+            
+        Returns:
+            torch.Tensor: 合适尺寸的输入张量
+        """
+        try:
+            if isinstance(layer, nn.Conv2d):
+                # 卷积层：根据输入通道数生成输入
+                in_channels = layer.in_channels
+                # 假设使用CIFAR-10的空间尺寸，但调整通道数
+                return torch.randn(self.sample_input_shape[0], in_channels, 
+                                 self.sample_input_shape[2], self.sample_input_shape[3], 
+                                 device=self.device)
+            
+            elif isinstance(layer, nn.Linear):
+                # 全连接层：根据输入特征数生成输入
+                in_features = layer.in_features
+                return torch.randn(self.sample_input_shape[0], in_features, device=self.device)
+            
+            elif isinstance(layer, (nn.BatchNorm2d, nn.GroupNorm, nn.LayerNorm)):
+                # 标准化层：根据预期输入形状生成
+                if isinstance(layer, nn.BatchNorm2d):
+                    num_features = layer.num_features
+                    return torch.randn(self.sample_input_shape[0], num_features, 
+                                     self.sample_input_shape[2], self.sample_input_shape[3], 
+                                     device=self.device)
+                else:
+                    # 对于其他标准化层，使用默认输入
+                    return self.sample_input
+            
+            elif isinstance(layer, (nn.ReLU, nn.GELU, nn.Sigmoid, nn.Tanh, nn.LeakyReLU)):
+                # 激活函数：使用默认输入
+                return self.sample_input
+            
+            elif isinstance(layer, (nn.Dropout, nn.Dropout2d)):
+                # Dropout层：使用默认输入
+                return self.sample_input
+                
+            elif isinstance(layer, (nn.MaxPool2d, nn.AvgPool2d, nn.AdaptiveAvgPool2d)):
+                # 池化层：使用默认输入
+                return self.sample_input
+                
+            else:
+                # 未知层类型：使用默认输入
+                return self.sample_input
+                
+        except Exception as e:
+            logger.debug(f"生成层输入失败，使用默认输入: {e}")
+            return self.sample_input
+
     def _compute_effective_information(self, layer: nn.Module) -> float:
         """
         计算有效信息 EI(S) = max_{p(x)} [I(X; Y) - I(X; Y|S)]
@@ -166,11 +221,14 @@ class ParameterFreeStructuralEvaluator:
         近似实现：通过比较输入输出的信息量差异
         """
         try:
+            # 生成适合当前层的输入张量
+            base_input = self._generate_layer_input(layer)
+            
             # 生成多个不同分布的输入样本
             inputs = [
-                torch.randn_like(self.sample_input) * 0.5,  # 低方差
-                torch.randn_like(self.sample_input) * 1.0,  # 标准方差
-                torch.randn_like(self.sample_input) * 2.0,  # 高方差
+                base_input * 0.5,   # 低方差
+                base_input * 1.0,   # 标准方差  
+                base_input * 2.0,   # 高方差
             ]
             
             effective_info_scores = []
@@ -191,7 +249,7 @@ class ParameterFreeStructuralEvaluator:
                     effective_info_scores.append(effective_info)
                     
                 except Exception as e:
-                    logger.warning(f"层 {type(layer).__name__} 前向传播失败: {e}")
+                    logger.debug(f"层 {type(layer).__name__} 前向传播失败: {e}")
                     effective_info_scores.append(0.0)
             
             return float(np.mean(effective_info_scores))
@@ -299,9 +357,10 @@ class ParameterFreeStructuralEvaluator:
         计算信息流效率 - 层的信息传递效率
         """
         try:
-            # 使用多个测试输入评估信息流
+            # 生成适合当前层的输入并使用多个测试输入评估信息流
+            base_test_input = self._generate_layer_input(layer)
             test_inputs = [
-                torch.randn_like(self.sample_input) * scale 
+                base_test_input * scale 
                 for scale in [0.1, 0.5, 1.0, 2.0]
             ]
             
