@@ -558,14 +558,12 @@ class IntelligentDNMCore:
                     if target_module.bias is not None:
                         deep_layers[-1].bias.data.copy_(target_module.bias.data)
                 
+                # 先计算参数变化（在替换之前）
+                original_params = sum(p.numel() for p in target_module.parameters())
+                new_params = sum(p.numel() for p in deep_layers.parameters())
+                
                 # 替换原模块
                 self._replace_module(model, target_layer, deep_layers)
-                
-                # 计算新增参数
-                new_params = (in_features * in_features * 2 + in_features * 2 + 
-                            in_features * 2 * in_features + in_features +
-                            in_features * out_features + out_features)
-                original_params = in_features * out_features + out_features
                 
                 return {
                     'success': True,
@@ -604,18 +602,12 @@ class IntelligentDNMCore:
                             nn.init.ones_(layer.weight.data)
                             nn.init.zeros_(layer.bias.data)
                 
+                # 先计算参数变化（在替换之前）
+                original_params = sum(p.numel() for p in target_module.parameters())
+                new_params = sum(p.numel() for p in deep_conv.parameters())
+                
                 # 替换原模块
                 self._replace_module(model, target_layer, deep_conv)
-                
-                # 计算新增参数
-                conv1_params = in_channels * mid_channels * 9 + mid_channels
-                bn1_params = mid_channels * 2
-                conv2_params = mid_channels * mid_channels * 9 + mid_channels
-                bn2_params = mid_channels * 2
-                conv3_params = mid_channels * out_channels * target_module.kernel_size[0] * target_module.kernel_size[1] + out_channels
-                
-                new_params = conv1_params + bn1_params + conv2_params + bn2_params + conv3_params
-                original_params = in_channels * out_channels * target_module.kernel_size[0] * target_module.kernel_size[1] + out_channels
                 
                 return {
                     'success': True,
@@ -668,16 +660,59 @@ class IntelligentDNMCore:
         """执行批归一化插入变异"""
         
         try:
-            # 插入BatchNorm层
+            logger.info(f"🔧 执行批归一化插入: {target_layer}")
+            
+            # 找到目标层
+            target_module = None
+            for name, module in model.named_modules():
+                if name == target_layer:
+                    target_module = module
+                    break
+            
+            if target_module is None:
+                return {'success': False, 'reason': 'target_layer_not_found', 'new_model': model}
+            
+            # 在目标层后插入批归一化
+            if isinstance(target_module, nn.Conv2d):
+                # 卷积层后插入BatchNorm2d
+                num_features = target_module.out_channels
+                bn_layer = nn.BatchNorm2d(num_features)
+                
+                # 创建包含原层和BN的序列
+                new_module = nn.Sequential(target_module, bn_layer)
+                
+            elif isinstance(target_module, nn.Linear):
+                # 线性层后插入BatchNorm1d
+                num_features = target_module.out_features
+                bn_layer = nn.BatchNorm1d(num_features)
+                
+                # 创建包含原层和BN的序列
+                new_module = nn.Sequential(target_module, bn_layer)
+                
+            else:
+                return {'success': False, 'reason': 'unsupported_layer_type_for_bn', 'new_model': model}
+            
+            # 计算参数变化
+            original_params = sum(p.numel() for p in target_module.parameters())
+            new_params = sum(p.numel() for p in new_module.parameters())
+            
+            # 替换模块
+            self._replace_module(model, target_layer, new_module)
+            
+            logger.info(f"📊 BatchNorm插入参数变化: {original_params:,} → {new_params:,} (增加 {new_params - original_params:,})")
+            
             return {
                 'success': True,
                 'new_model': model,
-                'parameters_added': 100,  # 估计值
+                'parameters_added': new_params - original_params,
+                'mutation_type': 'batch_norm_insertion',
                 'normalization_type': 'batch_norm'
             }
             
         except Exception as e:
             logger.error(f"❌ 批归一化插入失败: {e}")
+            import traceback
+            logger.error(f"❌ 批归一化详细错误: {traceback.format_exc()}")
             return {'success': False, 'reason': str(e), 'new_model': model}
     
     def _simple_width_expansion(self, model: nn.Module, target_layer: str, target_module: nn.Module) -> Dict[str, Any]:
@@ -705,15 +740,19 @@ class IntelligentDNMCore:
                     bias=target_module.bias is not None
                 )
                 
-                # 复制原有权重
+                # 安全的权重复制，防止边界溢出
                 with torch.no_grad():
-                    new_conv.weight[:current_width].copy_(target_module.weight)
-                    # 随机初始化新权重
-                    nn.init.kaiming_normal_(new_conv.weight[current_width:])
+                    copy_width = min(current_width, new_width)
+                    if copy_width > 0:
+                        new_conv.weight.data[:copy_width].copy_(target_module.weight.data[:copy_width])
+                        if target_module.bias is not None and new_conv.bias is not None:
+                            new_conv.bias.data[:copy_width].copy_(target_module.bias.data[:copy_width])
                     
-                    if target_module.bias is not None:
-                        new_conv.bias[:current_width].copy_(target_module.bias)
-                        nn.init.zeros_(new_conv.bias[current_width:])
+                    # 随机初始化新权重
+                    if new_width > current_width:
+                        nn.init.kaiming_normal_(new_conv.weight.data[current_width:])
+                        if new_conv.bias is not None:
+                            nn.init.zeros_(new_conv.bias.data[current_width:])
                 
                 # 替换层
                 self._replace_layer_in_model(model, target_layer, new_conv)
@@ -738,15 +777,19 @@ class IntelligentDNMCore:
                     bias=target_module.bias is not None
                 )
                 
-                # 复制原有权重
+                # 安全的权重复制，防止边界溢出
                 with torch.no_grad():
-                    new_linear.weight[:current_width].copy_(target_module.weight)
-                    # 随机初始化新权重
-                    nn.init.xavier_normal_(new_linear.weight[current_width:])
+                    copy_width = min(current_width, new_width)
+                    if copy_width > 0:
+                        new_linear.weight.data[:copy_width].copy_(target_module.weight.data[:copy_width])
+                        if target_module.bias is not None and new_linear.bias is not None:
+                            new_linear.bias.data[:copy_width].copy_(target_module.bias.data[:copy_width])
                     
-                    if target_module.bias is not None:
-                        new_linear.bias[:current_width].copy_(target_module.bias)
-                        nn.init.zeros_(new_linear.bias[current_width:])
+                    # 随机初始化新权重
+                    if new_width > current_width:
+                        nn.init.xavier_normal_(new_linear.weight.data[current_width:])
+                        if new_linear.bias is not None:
+                            nn.init.zeros_(new_linear.bias.data[current_width:])
                 
                 # 替换层
                 self._replace_layer_in_model(model, target_layer, new_linear)
@@ -1059,11 +1102,12 @@ class IntelligentDNMCore:
                         else:
                             nn.init.zeros_(serial_layers[2].bias.data)
                 
+                # 先计算参数变化（在替换之前）
+                original_params = sum(p.numel() for p in target_module.parameters())
+                new_params = sum(p.numel() for p in serial_layers.parameters())
+                
                 # 替换原模块
                 self._replace_module(model, target_layer, serial_layers)
-                
-                new_params = hidden_size * in_features + hidden_size + hidden_size * out_features + out_features
-                original_params = in_features * out_features + out_features
                 
                 return {
                     'success': True,
@@ -1083,13 +1127,29 @@ class IntelligentDNMCore:
                 
                 logger.info(f"🔧 卷积串行分裂参数: {in_channels} -> {hidden_channels} -> {out_channels}")
                 
-                # 1x1卷积串行分裂
-                serial_layers = nn.Sequential(
-                    nn.Conv2d(in_channels, hidden_channels, 1),
-                    nn.ReLU(),
-                    nn.Conv2d(hidden_channels, out_channels, target_module.kernel_size, 
-                             padding=target_module.padding, stride=target_module.stride)
-                )
+                # 安全的串行分裂：确保参数兼容性
+                try:
+                    # 验证参数兼容性
+                    test_conv = nn.Conv2d(hidden_channels, out_channels, target_module.kernel_size, 
+                                         padding=target_module.padding, stride=target_module.stride,
+                                         dilation=target_module.dilation, groups=1)
+                    
+                    # 1x1卷积串行分裂
+                    serial_layers = nn.Sequential(
+                        nn.Conv2d(in_channels, hidden_channels, 1, padding=0),  # 1x1 不需要padding
+                        nn.ReLU(),
+                        nn.Conv2d(hidden_channels, out_channels, target_module.kernel_size, 
+                                 padding=target_module.padding, stride=target_module.stride,
+                                 dilation=target_module.dilation)  # 保持所有原始参数
+                    )
+                except Exception as param_error:
+                    logger.warning(f"⚠️ 串行分裂参数不兼容，使用简化版本: {param_error}")
+                    # 回退到1x1卷积分解
+                    serial_layers = nn.Sequential(
+                        nn.Conv2d(in_channels, hidden_channels, 1),
+                        nn.ReLU(),
+                        nn.Conv2d(hidden_channels, out_channels, 1)  # 使用1x1避免参数问题
+                    )
                 
                 # 权重初始化
                 with torch.no_grad():
@@ -1100,12 +1160,18 @@ class IntelligentDNMCore:
                     if target_module.bias is not None and serial_layers[2].bias is not None:
                         serial_layers[2].bias.data.copy_(target_module.bias.data)
                 
+                # 先计算参数变化（在替换之前）
+                original_params = sum(p.numel() for p in target_module.parameters())
+                new_params = sum(p.numel() for p in serial_layers.parameters())
+                
                 self._replace_module(model, target_layer, serial_layers)
+                
+                logger.info(f"📊 串行分裂参数变化: {original_params:,} → {new_params:,} (差异 {new_params - original_params:,})")
                 
                 return {
                     'success': True,
                     'new_model': model,
-                    'parameters_added': hidden_channels * in_channels + hidden_channels * out_channels * target_module.kernel_size[0] * target_module.kernel_size[1],
+                    'parameters_added': new_params - original_params,
                     'mutation_type': 'serial_division',
                     'details': f'卷积串行分裂: {in_channels}->{hidden_channels}->{out_channels}'
                 }
