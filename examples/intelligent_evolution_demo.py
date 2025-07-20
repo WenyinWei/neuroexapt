@@ -243,19 +243,39 @@ class IntelligentEvolutionTrainer:
         
         return test_loss, accuracy
     
-    def extract_features_and_labels(self, model, data_loader, max_batches=3):
-        """提取模型特征和标签用于智能分析"""
+    def extract_features_and_labels(self, model, data_loader, max_batches=3, save_to_disk=False):
+        """提取模型特征和标签用于智能分析
+        
+        Args:
+            save_to_disk: 是否将特征保存到磁盘以节省内存
+        """
         feature_dict = {}
         all_labels = []
+        
+        # 如果需要保存到磁盘，创建临时目录
+        temp_dir = None
+        if save_to_disk:
+            import tempfile
+            temp_dir = tempfile.mkdtemp()
+            logger.info(f"创建临时目录用于特征存储: {temp_dir}")
         
         # 注册hook收集特征
         def get_hook(name):
             def hook(module, input, output):
-                if name not in feature_dict:
-                    feature_dict[name] = []
-                # 确保输出是张量
                 if isinstance(output, torch.Tensor):
-                    feature_dict[name].append(output.detach().cpu())
+                    if save_to_disk:
+                        # 保存到磁盘
+                        if name not in feature_dict:
+                            feature_dict[name] = []
+                        # 保存文件路径而不是张量
+                        filepath = f"{temp_dir}/{name}_{len(feature_dict[name])}.pt"
+                        torch.save(output.detach().cpu(), filepath)
+                        feature_dict[name].append(filepath)
+                    else:
+                        # 保存到内存（原始方式）
+                        if name not in feature_dict:
+                            feature_dict[name] = []
+                        feature_dict[name].append(output.detach().cpu())
             return hook
         
         # 为主要层注册hook
@@ -276,26 +296,59 @@ class IntelligentEvolutionTrainer:
                 data = data.to(self.device)
                 _ = model(data)
                 all_labels.append(target)
+                
+                # 及时清理GPU内存
+                torch.cuda.empty_cache() if torch.cuda.is_available() else None
         
         # 清理hooks
         for hook in hooks:
             hook.remove()
         
-        # 合并特征
-        for name in list(feature_dict.keys()):
-            if feature_dict[name]:
-                try:
-                    feature_dict[name] = torch.cat(feature_dict[name], dim=0)
-                except:
-                    # 如果无法拼接，删除这个特征
-                    del feature_dict[name]
-            else:
-                del feature_dict[name]
+        # 拼接标签
+        if all_labels:
+            all_labels = torch.cat(all_labels, dim=0)
+        else:
+            return None
         
-        labels = torch.cat(all_labels, dim=0) if all_labels else torch.tensor([])
+        # 处理特征数据
+        if save_to_disk:
+            # 返回磁盘文件信息和加载函数
+            def load_feature(name):
+                """按需加载特征"""
+                if name in feature_dict:
+                    features = []
+                    for filepath in feature_dict[name]:
+                        features.append(torch.load(filepath))
+                    result = torch.cat(features, dim=0)
+                    # 加载后立即删除文件以节省磁盘空间
+                    for filepath in feature_dict[name]:
+                        import os
+                        if os.path.exists(filepath):
+                            os.remove(filepath)
+                    return result
+                return None
+            
+            layer_names = list(feature_dict.keys())
+            return (feature_dict, all_labels, layer_names, load_feature, temp_dir)
+        else:
+            # 原始方式：直接拼接特征
+            final_features = {}
+            for name, feature_list in feature_dict.items():
+                if feature_list:
+                    final_features[name] = torch.cat(feature_list, dim=0)
+            
+            layer_names = list(final_features.keys())
+            return (final_features, all_labels, layer_names)
         
-        logger.info(f"提取到 {len(feature_dict)} 个特征层: {list(feature_dict.keys())}")
-        return feature_dict, labels
+    def cleanup_temp_features(self, temp_dir):
+        """清理临时特征文件"""
+        if temp_dir:
+            import shutil
+            try:
+                shutil.rmtree(temp_dir)
+                logger.info(f"清理临时目录: {temp_dir}")
+            except Exception as e:
+                logger.warning(f"清理临时目录失败: {e}")
 
 
 def prepare_cifar10_data(batch_size_train=128, batch_size_test=100):
@@ -394,22 +447,17 @@ def demo_mutual_information_analysis(trainer):
         if layer_name in features:
             try:
                 layer_features = features[layer_name]
+                layer_labels = labels  # 保持原始labels，不做限制
                 
-                # 限制特征数量以节省内存
-                if layer_features.size(0) > 64:
-                    layer_features = layer_features[:64]
-                    layer_labels = labels[:64]
-                else:
-                    layer_labels = labels
-                
-                # 计算互信息（减少训练轮数）
+                # 计算互信息（使用原始batch_size）
                 mi_value = mi_estimator.estimate_layerwise_mi(
                     layer_features, layer_labels, layer_name, 
                     num_classes=10, num_epochs=30  # 减少训练轮数
                 )
                 mi_results[layer_name] = mi_value
                 
-                # 清理显存
+                # 清理当前层的特征以释放内存
+                del layer_features
                 torch.cuda.empty_cache() if torch.cuda.is_available() else None
                 
             except Exception as e:
@@ -464,20 +512,15 @@ def demo_uncertainty_analysis(trainer):
         if layer_name in features:
             try:
                 layer_features = features[layer_name]
-                
-                # 限制特征数量
-                if layer_features.size(0) > 64:
-                    layer_features = layer_features[:64]
-                    layer_labels = labels[:64]
-                else:
-                    layer_labels = labels
+                layer_labels = labels  # 保持原始labels和batch_size
                 
                 uncertainty = uncertainty_estimator.estimate_uncertainty(
                     layer_features, layer_labels, layer_name, num_classes=10
                 )
                 uncertainty_results[layer_name] = uncertainty
                 
-                # 清理显存
+                # 清理当前层特征
+                del layer_features
                 torch.cuda.empty_cache() if torch.cuda.is_available() else None
                 
             except Exception as e:
