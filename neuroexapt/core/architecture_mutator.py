@@ -18,6 +18,7 @@ import torch
 import torch.nn as nn
 import copy
 import logging
+from ..utils.device import move_module_to_device_like
 from typing import Dict, List, Optional, Tuple, Union, Any
 from .function_preserving_init import FunctionPreservingInitializer, create_identity_residual_block
 from .genotypes import Genotype, PRIMITIVES
@@ -289,18 +290,9 @@ class ArchitectureMutator:
         for part in parts[:-1]:
             parent = getattr(parent, part)
         
-        # 获取原模块的设备信息并转移新模块
+        # 获取原模块的设备信息并转移新模块（使用共享工具函数）
         original_module = getattr(parent, parts[-1])
-        if hasattr(original_module, 'weight') and original_module.weight is not None:
-            device = original_module.weight.device
-            new_module = new_module.to(device)
-        elif hasattr(original_module, 'parameters'):
-            # 对于没有权重但有参数的模块
-            try:
-                device = next(original_module.parameters()).device
-                new_module = new_module.to(device)
-            except StopIteration:
-                pass  # 没有参数的模块，无需转移设备
+        new_module = move_module_to_device_like(new_module, original_module)
         
         setattr(parent, parts[-1], new_module)
     

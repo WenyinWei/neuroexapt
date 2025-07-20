@@ -12,6 +12,7 @@ import logging
 from .intelligent_morphogenesis_engine import IntelligentMorphogenesisEngine
 from .intelligent_convergence_monitor import IntelligentConvergenceMonitor
 from .information_leakage_detector import InformationLeakageDetector
+from ..utils.device import move_module_to_device_like
 import numpy as np
 
 logger = logging.getLogger(__name__)
@@ -48,7 +49,7 @@ class IntelligentDNMCore:
                                        model: nn.Module, 
                                        context: Dict[str, Any]) -> Dict[str, Any]:
         """
-        增强的形态发生执行
+        增强的形态发生执行 - 重构为管道阶段
         
         替换原有的多组件分析，使用统一的智能引擎
         """
@@ -56,71 +57,111 @@ class IntelligentDNMCore:
         logger.info("🧠 启动智能DNM分析")
         
         try:
-            # 1. 首先检查是否应该允许形态发生
-            if self.config.get('enable_convergence_control', True):
-                current_epoch = context.get('epoch', 0)
-                performance_history = context.get('performance_history', [])
-                current_performance = performance_history[-1] if performance_history else 0.0
-                
-                # 从上下文中提取损失信息
-                train_loss = context.get('train_loss', 1.0)
-                
-                convergence_decision = self.convergence_monitor.should_allow_morphogenesis(
-                    current_epoch=current_epoch,
-                    current_performance=current_performance,
-                    current_loss=train_loss
-                )
-                
-                if not convergence_decision['allow']:
-                    logger.info(f"🚫 收敛监控阻止变异: {convergence_decision['reason']}")
-                    logger.info(f"💡 建议: {convergence_decision['suggestion']}")
-                    return self._create_no_morphogenesis_result(convergence_decision)
+            # 阶段1: 收敛控制检查
+            convergence_result = self._stage_convergence_control(context)
+            if not convergence_result['allow']:
+                return self._create_no_morphogenesis_result(convergence_result)
             
-            # 2. 进行信息泄漏检测分析
-            leakage_analysis = None
-            if self.config.get('enable_leakage_detection', True):
-                activations = context.get('activations', {})
-                gradients = context.get('gradients', {})
-                targets = context.get('targets')
-                
-                if activations and gradients:
-                    leakage_analysis = self.leakage_detector.detect_information_leakage(
-                        model, activations, gradients, targets
-                    )
-                    logger.info(f"🔍 信息泄漏分析: {leakage_analysis['summary']['summary']}")
+            # 阶段2: 信息泄漏检测
+            leakage_analysis = self._stage_leakage_detection(model, context)
             
-            # 3. 使用智能形态发生引擎进行综合分析
-            comprehensive_analysis = self.intelligent_engine.comprehensive_morphogenesis_analysis(
-                model, context
+            # 阶段3: 综合分析
+            comprehensive_analysis = self._stage_comprehensive_analysis(model, context)
+            
+            # 阶段4: 分析融合
+            comprehensive_analysis = self._stage_analysis_integration(
+                comprehensive_analysis, leakage_analysis
             )
             
-            # 4. 融合泄漏检测结果到分析中
-            if leakage_analysis:
-                comprehensive_analysis = self._integrate_leakage_analysis(
-                    comprehensive_analysis, leakage_analysis
-                )
-            
-            # 决策执行
-            execution_result = self._execute_intelligent_decisions(
+            # 阶段5: 决策执行
+            execution_result = self._stage_decision_execution(
                 model, comprehensive_analysis, context
             )
             
-            # 记录和学习
-            self._record_execution_result(comprehensive_analysis, execution_result)
-            
-            # 格式化返回结果（保持兼容性）
-            formatted_result = self._format_for_compatibility(
-                comprehensive_analysis, execution_result
-            )
-            
-            # 详细日志输出
-            self._log_intelligent_analysis_results(comprehensive_analysis)
-            
-            return formatted_result
+            # 阶段6: 结果处理
+            return self._stage_result_processing(comprehensive_analysis, execution_result)
             
         except Exception as e:
             logger.error(f"❌ 智能DNM执行失败: {e}")
             return self._fallback_execution()
+    
+    def _stage_convergence_control(self, context: Dict[str, Any]) -> Dict[str, Any]:
+        """阶段1: 收敛控制检查"""
+        if not self.config.get('enable_convergence_control', True):
+            return {'allow': True}
+            
+        current_epoch = context.get('epoch', 0)
+        performance_history = context.get('performance_history', [])
+        current_performance = performance_history[-1] if performance_history else 0.0
+        train_loss = context.get('train_loss', 1.0)
+        
+        convergence_decision = self.convergence_monitor.should_allow_morphogenesis(
+            current_epoch=current_epoch,
+            current_performance=current_performance,
+            current_loss=train_loss
+        )
+        
+        if not convergence_decision['allow']:
+            logger.info(f"🚫 收敛监控阻止变异: {convergence_decision['reason']}")
+            logger.info(f"💡 建议: {convergence_decision['suggestion']}")
+            
+        return convergence_decision
+    
+    def _stage_leakage_detection(self, model: nn.Module, context: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        """阶段2: 信息泄漏检测"""
+        if not self.config.get('enable_leakage_detection', True):
+            return None
+            
+        activations = context.get('activations', {})
+        gradients = context.get('gradients', {})
+        targets = context.get('targets')
+        
+        if not (activations and gradients):
+            return None
+            
+        leakage_analysis = self.leakage_detector.detect_information_leakage(
+            model, activations, gradients, targets
+        )
+        logger.info(f"🔍 信息泄漏分析: {leakage_analysis['summary']['summary']}")
+        return leakage_analysis
+    
+    def _stage_comprehensive_analysis(self, model: nn.Module, context: Dict[str, Any]) -> Dict[str, Any]:
+        """阶段3: 综合分析"""
+        return self.intelligent_engine.comprehensive_morphogenesis_analysis(model, context)
+    
+    def _stage_analysis_integration(self, 
+                                  comprehensive_analysis: Dict[str, Any],
+                                  leakage_analysis: Optional[Dict[str, Any]]) -> Dict[str, Any]:
+        """阶段4: 分析融合"""
+        if leakage_analysis:
+            comprehensive_analysis = self._integrate_leakage_analysis(
+                comprehensive_analysis, leakage_analysis
+            )
+        return comprehensive_analysis
+    
+    def _stage_decision_execution(self, 
+                                model: nn.Module,
+                                comprehensive_analysis: Dict[str, Any],
+                                context: Dict[str, Any]) -> Dict[str, Any]:
+        """阶段5: 决策执行"""
+        return self._execute_intelligent_decisions(model, comprehensive_analysis, context)
+    
+    def _stage_result_processing(self, 
+                               comprehensive_analysis: Dict[str, Any],
+                               execution_result: Dict[str, Any]) -> Dict[str, Any]:
+        """阶段6: 结果处理"""
+        # 记录和学习
+        self._record_execution_result(comprehensive_analysis, execution_result)
+        
+        # 格式化返回结果（保持兼容性）
+        formatted_result = self._format_for_compatibility(
+            comprehensive_analysis, execution_result
+        )
+        
+        # 详细日志输出
+        self._log_intelligent_analysis_results(comprehensive_analysis)
+        
+        return formatted_result
     
     def _create_no_morphogenesis_result(self, convergence_decision: Dict[str, Any]) -> Dict[str, Any]:
         """创建不进行变异的结果"""
@@ -150,7 +191,14 @@ class IntelligentDNMCore:
         repair_suggestions = leakage_analysis.get('repair_suggestions', [])
         
         if repair_suggestions:
-            # 选择优先级最高的泄漏点进行修复
+            # 记录所有高优先级的泄漏修复建议
+            high_priority_repairs = [r for r in repair_suggestions if r['priority'] > 1.0]
+            
+            logger.info(f"🔍 检测到 {len(repair_suggestions)} 个修复建议，其中 {len(high_priority_repairs)} 个高优先级")
+            for idx, repair in enumerate(repair_suggestions[:3]):  # 记录前3个最重要的
+                logger.info(f"  修复建议 {idx+1}: {repair['layer_name']} - {repair['primary_action']} (优先级: {repair['priority']:.2f})")
+            
+            # 处理多个高优先级修复，但目前只应用最高优先级的
             primary_repair = repair_suggestions[0]
             
             # 创建基于泄漏检测的决策
@@ -160,7 +208,8 @@ class IntelligentDNMCore:
                 'confidence': min(0.9, primary_repair['priority'] / 2.0),
                 'expected_improvement': primary_repair['expected_improvement'],
                 'rationale': primary_repair['rationale'],
-                'source': 'information_leakage_detection'
+                'source': 'information_leakage_detection',
+                'alternative_repairs': high_priority_repairs[1:3] if len(high_priority_repairs) > 1 else []
             }
             
             # 将泄漏检测决策插入到最终决策列表的前面
@@ -173,8 +222,12 @@ class IntelligentDNMCore:
                 comprehensive_analysis['analysis_summary'] = {}
             
             comprehensive_analysis['analysis_summary']['leakage_analysis'] = leakage_analysis['summary']
+            comprehensive_analysis['analysis_summary']['total_repair_suggestions'] = len(repair_suggestions)
+            comprehensive_analysis['analysis_summary']['high_priority_repairs'] = len(high_priority_repairs)
             
             logger.info(f"🎯 融合泄漏检测: 优先修复 {primary_repair['layer_name']} ({primary_repair['primary_action']})")
+            if len(high_priority_repairs) > 1:
+                logger.info(f"⚡ 后续可考虑修复: {', '.join([r['layer_name'] for r in high_priority_repairs[1:3]])}")
         
         return comprehensive_analysis
     
@@ -338,15 +391,33 @@ class IntelligentDNMCore:
                 in_features = target_module.in_features
                 out_features = target_module.out_features
                 
-                # 创建更深的结构
-                deep_layers = nn.Sequential(
-                    nn.Linear(in_features, in_features * 2),
-                    nn.ReLU(),
-                    nn.Dropout(0.3),
-                    nn.Linear(in_features * 2, in_features),
-                    nn.ReLU(),
-                    nn.Linear(in_features, out_features)
-                )
+                # 形状兼容性检查和回退处理
+                try:
+                    # 保守的深度扩展：保持输入/输出形状兼容性
+                    mid_features = max(in_features, out_features)
+                    
+                    # 创建更深的结构，确保输入/输出形状匹配
+                    deep_layers = nn.Sequential(
+                        nn.Linear(in_features, mid_features),
+                        nn.ReLU(),
+                        nn.Dropout(0.2),  # 降低dropout防止信息丢失
+                        nn.Linear(mid_features, out_features)
+                    )
+                    
+                    # 验证形状兼容性
+                    test_input = torch.randn(1, in_features)
+                    test_output = deep_layers(test_input)
+                    if test_output.shape[1] != out_features:
+                        raise ValueError(f"Shape mismatch: expected {out_features}, got {test_output.shape[1]}")
+                        
+                except Exception as shape_error:
+                    logger.warning(f"⚠️ 深度扩展形状验证失败: {shape_error}")
+                    # 回退到简单的残差连接
+                    deep_layers = nn.Sequential(
+                        target_module,  # 保持原始层
+                        nn.ReLU(),
+                        nn.Linear(out_features, out_features)  # 添加一个同维度层
+                    )
                 
                 # 权重初始化
                 with torch.no_grad():
@@ -489,9 +560,14 @@ class IntelligentDNMCore:
         try:
             if isinstance(target_module, nn.Conv2d):
                 current_width = target_module.out_channels
+                import math  # ensure math is imported
                 # 大幅宽度扩展 - 根据当前宽度动态调整
                 expansion_factor = max(1.5, 2.0 - current_width / 512)  # 小层扩展更多
-                new_width = min(int(current_width * expansion_factor), 1024)  # 大幅增加通道
+                # 使用math.ceil确保至少增加1个通道
+                calculated_width = math.ceil(current_width * expansion_factor)
+                if calculated_width <= current_width:
+                    calculated_width = current_width + 1
+                new_width = min(calculated_width, 1024)  # 大幅增加通道
                 
                 # 创建新的卷积层
                 new_conv = nn.Conv2d(
@@ -572,12 +648,10 @@ class IntelligentDNMCore:
         for part in parts[:-1]:
             parent = getattr(parent, part)
         
-        # 获取原层的设备信息
+        # 获取原层的设备信息并转移新层（使用共享工具函数）
         original_layer = getattr(parent, parts[-1])
-        if hasattr(original_layer, 'weight') and original_layer.weight is not None:
-            device = original_layer.weight.device
-            new_layer = new_layer.to(device)
-            logger.info(f"🔧 新层已转移到设备: {device}")
+        new_layer = move_module_to_device_like(new_layer, original_layer)
+        logger.info(f"🔧 新层已通过共享工具转移到设备")
         
         # 替换最后一级的层
         setattr(parent, parts[-1], new_layer)
@@ -1020,11 +1094,10 @@ class IntelligentDNMCore:
         else:
             original_module = getattr(model, module_name)
         
-        # 将新模块移到与原模块相同的设备
+        # 将新模块移到与原模块相同的设备（使用共享工具函数）
         if original_module is not None:
-            device = next(original_module.parameters()).device
-            new_module = new_module.to(device)
-            logger.info(f"🔧 新模块已转移到设备: {device}")
+            new_module = move_module_to_device_like(new_module, original_module)
+            logger.info(f"🔧 新模块已通过共享工具转移到设备")
         
         # 解析模块路径并替换
         if '.' in module_name:
