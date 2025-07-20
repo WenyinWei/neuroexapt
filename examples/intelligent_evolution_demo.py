@@ -243,6 +243,10 @@ class IntelligentEvolutionTrainer:
         
         return test_loss, accuracy
     
+    def evaluate(self):
+        """评估模型性能（与test方法相同，提供统一接口）"""
+        return self.test()
+    
     def extract_features_and_labels(self, model, data_loader, max_batches=3, save_to_disk=False):
         """提取模型特征和标签用于智能分析
         
@@ -633,7 +637,7 @@ def demo_intelligent_evolution(trainer, initial_epochs=5):
     best_accuracy = 0
     
     for epoch in range(initial_epochs):
-        train_acc = trainer.train_epoch(epoch)
+        train_loss, train_acc = trainer.train_epoch(epoch)
         test_loss, test_acc = trainer.evaluate()
         
         print(f"Epoch {epoch}: Train Acc: {train_acc:.2f}%, Test Acc: {test_acc:.2f}%, Test Loss: {test_loss:.4f}")
