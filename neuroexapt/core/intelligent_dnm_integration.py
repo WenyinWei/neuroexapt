@@ -3,6 +3,11 @@
 
 用新的智能形态发生引擎替换原有的生硬分析框架
 实现真正综合的、有机配合的架构变异决策系统
+
+核心升级：
+- 集成增强贝叶斯形态发生引擎
+- 提升变异决策的智能化程度
+- 基于贝叶斯推断的准确率提升预测
 """
 
 from typing import Dict, Any, List, Optional
@@ -10,6 +15,7 @@ import torch
 import torch.nn as nn
 import logging
 from .intelligent_morphogenesis_engine import IntelligentMorphogenesisEngine
+from .enhanced_bayesian_morphogenesis import BayesianMorphogenesisEngine
 from .intelligent_convergence_monitor import IntelligentConvergenceMonitor
 from .information_leakage_detector import InformationLeakageDetector
 from ..utils.device import move_module_to_device_like
@@ -27,10 +33,12 @@ class IntelligentDNMCore:
     2. 统一决策流水线，避免配合生硬
     3. 动态阈值，解决"全是0"的问题
     4. 精准定位变异点和策略
+    5. 集成贝叶斯推断引擎，提升决策智能化
     """
     
     def __init__(self):
         self.intelligent_engine = IntelligentMorphogenesisEngine()
+        self.bayesian_engine = BayesianMorphogenesisEngine()
         self.convergence_monitor = IntelligentConvergenceMonitor()
         self.leakage_detector = InformationLeakageDetector()
         self.execution_history = []
@@ -38,9 +46,11 @@ class IntelligentDNMCore:
         # 集成配置
         self.config = {
             'enable_intelligent_analysis': True,
-            'enable_convergence_control': True,  # 启用收敛控制
-            'enable_leakage_detection': True,    # 启用泄漏检测
-            'fallback_to_old_system': False,     # 完全使用新系统
+            'enable_bayesian_analysis': True,     # 启用贝叶斯分析
+            'enable_convergence_control': True,   # 启用收敛控制
+            'enable_leakage_detection': True,     # 启用泄漏检测
+            'prefer_bayesian_decisions': True,    # 优先使用贝叶斯决策
+            'fallback_to_old_system': False,      # 完全使用新系统
             'detailed_logging': True,
             'performance_tracking': True
         }
@@ -126,7 +136,23 @@ class IntelligentDNMCore:
         return leakage_analysis
     
     def _stage_comprehensive_analysis(self, model: nn.Module, context: Dict[str, Any]) -> Dict[str, Any]:
-        """阶段3: 综合分析"""
+        """阶段3: 综合分析（增强贝叶斯版本）"""
+        
+        # 优先使用贝叶斯分析
+        if self.config.get('enable_bayesian_analysis', True):
+            logger.info("🧠 使用增强贝叶斯分析引擎")
+            bayesian_result = self.bayesian_engine.bayesian_morphogenesis_analysis(model, context)
+            
+            # 如果贝叶斯分析成功且有可行决策，使用贝叶斯结果
+            if (bayesian_result.get('optimal_decisions') and 
+                bayesian_result['execution_plan'].get('execute', False)):
+                logger.info(f"✅ 贝叶斯分析成功: {len(bayesian_result['optimal_decisions'])}个最优决策")
+                return self._convert_bayesian_to_standard_format(bayesian_result)
+            else:
+                logger.info("⚠️ 贝叶斯分析未产生可行决策，回退到传统智能分析")
+        
+        # 回退到传统智能分析
+        logger.info("🔄 使用传统智能分析引擎")
         return self.intelligent_engine.comprehensive_morphogenesis_analysis(model, context)
     
     def _stage_analysis_integration(self, 
@@ -1110,3 +1136,203 @@ class IntelligentDNMCore:
         else:
             # 顶级模块
             setattr(model, module_name, new_module)
+    
+    def _convert_bayesian_to_standard_format(self, bayesian_result: Dict[str, Any]) -> Dict[str, Any]:
+        """将贝叶斯分析结果转换为标准格式"""
+        
+        optimal_decisions = bayesian_result.get('optimal_decisions', [])
+        bayesian_analysis = bayesian_result.get('bayesian_analysis', {})
+        execution_plan = bayesian_result.get('execution_plan', {})
+        
+        # 转换为标准的comprehensive_analysis格式
+        converted_result = {
+            'analysis_summary': {
+                'performance_situation': {
+                    'situation_type': 'bayesian_optimized',
+                    'urgency_level': 'intelligent',
+                    'improvement_trend': 'bayesian_predicted'
+                },
+                'structural_analysis': {
+                    'total_layers_analyzed': bayesian_analysis.get('candidates_found', 0),
+                    'bottlenecks_found': len(optimal_decisions),
+                    'severity_distribution': {'bayesian_detected': len(optimal_decisions)}
+                },
+                'information_efficiency': {
+                    'overall_efficiency': bayesian_analysis.get('decision_confidence', 0.5),
+                    'enhancement_opportunities': len(optimal_decisions)
+                },
+                'gradient_quality': {
+                    'overall_quality': 0.7,  # 贝叶斯分析假设合理的梯度质量
+                    'enhancement_needed': len(optimal_decisions) > 0
+                }
+            },
+            'mutation_candidates': self._convert_decisions_to_candidates(optimal_decisions),
+            'mutation_strategies': self._convert_decisions_to_strategies(optimal_decisions),
+            'final_decisions': optimal_decisions,
+            'execution_plan': execution_plan,
+            'intelligent_analysis': {
+                'candidates_discovered': len(optimal_decisions),
+                'strategies_evaluated': len(optimal_decisions),
+                'final_decisions': len(optimal_decisions),
+                'execution_confidence': bayesian_analysis.get('decision_confidence', 0.0),
+                'performance_trend': 'bayesian_enhanced',
+                'saturation_level': 0.0  # 贝叶斯分析关注改进而非饱和
+            },
+            'bayesian_insights': bayesian_result.get('bayesian_insights', {}),
+            'source_engine': 'bayesian'
+        }
+        
+        logger.info(f"🔄 贝叶斯结果转换完成: {len(optimal_decisions)}个决策")
+        return converted_result
+    
+    def _convert_decisions_to_candidates(self, decisions: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        """将贝叶斯决策转换为候选点格式"""
+        
+        candidates = []
+        for decision in decisions:
+            candidate = {
+                'layer_name': decision.get('layer_name', ''),
+                'layer_type': 'bayesian_identified',
+                'selection_reasons': ['bayesian_optimization'],
+                'bottleneck_types': ['bayesian_detected'],
+                'improvement_potential': decision.get('expected_improvement', 0.0),
+                'priority_score': decision.get('expected_utility', 0.0),
+                'recommended_mutations': [decision.get('mutation_type', '')],
+                'bayesian_metrics': {
+                    'success_probability': decision.get('success_probability', 0.5),
+                    'decision_confidence': decision.get('decision_confidence', 0.5),
+                    'expected_utility': decision.get('expected_utility', 0.0)
+                }
+            }
+            candidates.append(candidate)
+        
+        return candidates
+    
+    def _convert_decisions_to_strategies(self, decisions: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        """将贝叶斯决策转换为策略格式"""
+        
+        strategies = []
+        for decision in decisions:
+            strategy = {
+                'target_layer': decision.get('layer_name', ''),
+                'mutation_type': decision.get('mutation_type', ''),
+                'rationale': {
+                    'selection_method': 'bayesian_inference',
+                    'success_probability': decision.get('success_probability', 0.5),
+                    'expected_improvement': decision.get('expected_improvement', 0.0),
+                    'decision_confidence': decision.get('decision_confidence', 0.5)
+                },
+                'expected_outcome': {
+                    'expected_accuracy_improvement': decision.get('expected_improvement', 0.0),
+                    'confidence_level': decision.get('decision_confidence', 0.5),
+                    'success_probability': decision.get('success_probability', 0.5)
+                },
+                'risk_assessment': {
+                    'overall_risk': 1.0 - decision.get('success_probability', 0.5),
+                    'risk_factors': [],
+                    'value_at_risk': decision.get('risk_metrics', {}).get('value_at_risk', 0.0),
+                    'expected_shortfall': decision.get('risk_metrics', {}).get('expected_shortfall', 0.0)
+                },
+                'bayesian_reasoning': decision.get('rationale', 'Bayesian optimization recommended'),
+                'implementation_priority': decision.get('expected_utility', 0.0)
+            }
+            strategies.append(strategy)
+        
+        return strategies
+    
+    def update_bayesian_outcome(self, 
+                              mutation_type: str,
+                              layer_name: str,
+                              success: bool,
+                              performance_change: float,
+                              context: Dict[str, Any]):
+        """更新贝叶斯引擎的变异结果，用于在线学习"""
+        
+        if hasattr(self, 'bayesian_engine') and self.bayesian_engine:
+            self.bayesian_engine.update_mutation_outcome(
+                mutation_type=mutation_type,
+                layer_name=layer_name,
+                success=success,
+                performance_change=performance_change,
+                context=context
+            )
+            logger.info(f"📊 已更新贝叶斯学习: {mutation_type} @ {layer_name} -> {'✅成功' if success else '❌失败'}")
+        
+        # 记录执行历史
+        outcome_record = {
+            'timestamp': context.get('epoch', 0),
+            'mutation_type': mutation_type,
+            'layer_name': layer_name,
+            'success': success,
+            'performance_change': performance_change,
+            'engine_used': 'bayesian' if self.config.get('prefer_bayesian_decisions') else 'traditional'
+        }
+        self.execution_history.append(outcome_record)
+    
+    def get_bayesian_insights(self) -> Dict[str, Any]:
+        """获取贝叶斯引擎的洞察信息"""
+        
+        if not hasattr(self, 'bayesian_engine') or not self.bayesian_engine:
+            return {'status': 'bayesian_engine_not_available'}
+        
+        insights = {
+            'mutation_history_length': len(self.bayesian_engine.mutation_history),
+            'performance_history_length': len(self.bayesian_engine.performance_history),
+            'architecture_features_tracked': len(self.bayesian_engine.architecture_features),
+            'current_priors': self.bayesian_engine.mutation_priors.copy(),
+            'dynamic_thresholds': self.bayesian_engine.dynamic_thresholds.copy(),
+            'utility_parameters': self.bayesian_engine.utility_params.copy(),
+            'recent_mutations': list(self.bayesian_engine.mutation_history)[-5:] if self.bayesian_engine.mutation_history else []
+        }
+        
+        return insights
+    
+    def adjust_bayesian_parameters(self, parameter_updates: Dict[str, Any]):
+        """调整贝叶斯引擎参数"""
+        
+        if not hasattr(self, 'bayesian_engine') or not self.bayesian_engine:
+            logger.warning("⚠️ 贝叶斯引擎不可用，无法调整参数")
+            return
+        
+        # 更新动态阈值
+        if 'thresholds' in parameter_updates:
+            for key, value in parameter_updates['thresholds'].items():
+                if key in self.bayesian_engine.dynamic_thresholds:
+                    self.bayesian_engine.dynamic_thresholds[key] = value
+                    logger.info(f"📊 更新贝叶斯阈值: {key} = {value}")
+        
+        # 更新效用参数
+        if 'utility' in parameter_updates:
+            for key, value in parameter_updates['utility'].items():
+                if key in self.bayesian_engine.utility_params:
+                    self.bayesian_engine.utility_params[key] = value
+                    logger.info(f"📊 更新效用参数: {key} = {value}")
+        
+        # 更新先验分布
+        if 'priors' in parameter_updates:
+            for mutation_type, prior_params in parameter_updates['priors'].items():
+                if mutation_type in self.bayesian_engine.mutation_priors:
+                    self.bayesian_engine.mutation_priors[mutation_type].update(prior_params)
+                    logger.info(f"📊 更新先验分布: {mutation_type} = {prior_params}")
+    
+    def enable_aggressive_bayesian_mode(self):
+        """启用积极的贝叶斯模式（更容易触发变异）"""
+        
+        if hasattr(self, 'bayesian_engine') and self.bayesian_engine:
+            # 降低阈值，提高探索性
+            aggressive_updates = {
+                'thresholds': {
+                    'min_expected_improvement': 0.001,   # 更低的期望改进阈值
+                    'confidence_threshold': 0.2,        # 更低的置信度阈值
+                    'exploration_threshold': 0.15       # 更积极的探索
+                },
+                'utility': {
+                    'risk_aversion': 0.1,               # 降低风险厌恶
+                    'exploration_bonus': 0.15           # 增加探索奖励
+                }
+            }
+            
+            self.adjust_bayesian_parameters(aggressive_updates)
+            logger.info("🚀 已启用积极贝叶斯模式")
+        else:
+            logger.warning("⚠️ 贝叶斯引擎不可用，无法启用积极模式")
