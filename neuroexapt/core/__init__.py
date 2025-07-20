@@ -50,6 +50,18 @@ from .intelligent_mutation_planner import IntelligentMutationPlanner, MutationPl
 from .advanced_net2net_transfer import AdvancedNet2NetTransfer, Net2NetTransferMethod
 from .intelligent_architecture_evolution_engine import IntelligentArchitectureEvolutionEngine, EvolutionConfig, EvolutionIteration
 
+# 🚀 最新理论框架 - 无参数结构评估与多变异类型收益建模
+from .parameter_free_structural_evaluator import ParameterFreeStructuralEvaluator, StructuralMetrics
+from .multi_mutation_type_evaluator import (
+    MultiMutationTypeEvaluator, MutationType as NewMutationType, MutationConfig,
+    MutationBenefitExpectation, MutationBenefitPrior, MutationEvidence as NewMutationEvidence
+)
+from .lightweight_sampling_validator import LightweightSamplingValidator, SamplingValidationConfig, SamplingResult
+from .unified_intelligent_evolution_engine import (
+    UnifiedIntelligentEvolutionEngine, EvolutionConfig as NewEvolutionConfig, 
+    EvolutionState, MutationCandidate
+)
+
 __all__ = [
     # Core Components
     'Network', 'OPS', 'PRIMITIVES', 'Genotype',
@@ -79,5 +91,11 @@ __all__ = [
     'IntelligentBottleneckDetector', 'BottleneckReport', 'BottleneckType',
     'IntelligentMutationPlanner', 'MutationPlan', 'MutationType',
     'AdvancedNet2NetTransfer', 'Net2NetTransferMethod',
-    'IntelligentArchitectureEvolutionEngine', 'EvolutionConfig', 'EvolutionIteration'
+    'IntelligentArchitectureEvolutionEngine', 'EvolutionConfig', 'EvolutionIteration',
+    # 🚀 最新理论框架组件 - 无参数结构评估与多变异类型收益建模
+    'ParameterFreeStructuralEvaluator', 'StructuralMetrics',
+    'MultiMutationTypeEvaluator', 'NewMutationType', 'MutationConfig',
+    'MutationBenefitExpectation', 'MutationBenefitPrior', 'NewMutationEvidence',
+    'LightweightSamplingValidator', 'SamplingValidationConfig', 'SamplingResult',
+    'UnifiedIntelligentEvolutionEngine', 'NewEvolutionConfig', 'EvolutionState', 'MutationCandidate'
 ]
