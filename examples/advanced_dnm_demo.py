@@ -515,6 +515,15 @@ class AdvancedDNMTrainer:
                     print(f"    新增参数: {results['parameters_added']:,}")
                     print(f"    置信度: {results.get('decision_confidence', 0):.3f}")
                     
+                    # 记录变异事件到收敛监控器
+                    if hasattr(self, 'intelligent_dnm_core') and hasattr(self.intelligent_dnm_core, 'convergence_monitor'):
+                        current_perf = test_acc / 100.0 if 'test_acc' in locals() else 0.0
+                        self.intelligent_dnm_core.convergence_monitor.record_morphogenesis(
+                            epoch=epoch,
+                            morphogenesis_type=results['morphogenesis_type'],
+                            performance_before=current_perf
+                        )
+                    
                     print("  🔄 开始更新模型...")
                     # 在形态发生之前获取原始参数数量
                     if hasattr(self, '_pre_morphogenesis_param_count'):

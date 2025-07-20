@@ -10,6 +10,8 @@ import torch
 import torch.nn as nn
 import logging
 from .intelligent_morphogenesis_engine import IntelligentMorphogenesisEngine
+from .intelligent_convergence_monitor import IntelligentConvergenceMonitor
+from .information_leakage_detector import InformationLeakageDetector
 import numpy as np
 
 logger = logging.getLogger(__name__)
@@ -28,12 +30,16 @@ class IntelligentDNMCore:
     
     def __init__(self):
         self.intelligent_engine = IntelligentMorphogenesisEngine()
+        self.convergence_monitor = IntelligentConvergenceMonitor()
+        self.leakage_detector = InformationLeakageDetector()
         self.execution_history = []
         
         # 集成配置
         self.config = {
             'enable_intelligent_analysis': True,
-            'fallback_to_old_system': False,  # 完全使用新系统
+            'enable_convergence_control': True,  # 启用收敛控制
+            'enable_leakage_detection': True,    # 启用泄漏检测
+            'fallback_to_old_system': False,     # 完全使用新系统
             'detailed_logging': True,
             'performance_tracking': True
         }
@@ -50,10 +56,49 @@ class IntelligentDNMCore:
         logger.info("🧠 启动智能DNM分析")
         
         try:
-            # 使用智能形态发生引擎进行综合分析
+            # 1. 首先检查是否应该允许形态发生
+            if self.config.get('enable_convergence_control', True):
+                current_epoch = context.get('epoch', 0)
+                performance_history = context.get('performance_history', [])
+                current_performance = performance_history[-1] if performance_history else 0.0
+                
+                # 从上下文中提取损失信息
+                train_loss = context.get('train_loss', 1.0)
+                
+                convergence_decision = self.convergence_monitor.should_allow_morphogenesis(
+                    current_epoch=current_epoch,
+                    current_performance=current_performance,
+                    current_loss=train_loss
+                )
+                
+                if not convergence_decision['allow']:
+                    logger.info(f"🚫 收敛监控阻止变异: {convergence_decision['reason']}")
+                    logger.info(f"💡 建议: {convergence_decision['suggestion']}")
+                    return self._create_no_morphogenesis_result(convergence_decision)
+            
+            # 2. 进行信息泄漏检测分析
+            leakage_analysis = None
+            if self.config.get('enable_leakage_detection', True):
+                activations = context.get('activations', {})
+                gradients = context.get('gradients', {})
+                targets = context.get('targets')
+                
+                if activations and gradients:
+                    leakage_analysis = self.leakage_detector.detect_information_leakage(
+                        model, activations, gradients, targets
+                    )
+                    logger.info(f"🔍 信息泄漏分析: {leakage_analysis['summary']['summary']}")
+            
+            # 3. 使用智能形态发生引擎进行综合分析
             comprehensive_analysis = self.intelligent_engine.comprehensive_morphogenesis_analysis(
                 model, context
             )
+            
+            # 4. 融合泄漏检测结果到分析中
+            if leakage_analysis:
+                comprehensive_analysis = self._integrate_leakage_analysis(
+                    comprehensive_analysis, leakage_analysis
+                )
             
             # 决策执行
             execution_result = self._execute_intelligent_decisions(
@@ -76,6 +121,62 @@ class IntelligentDNMCore:
         except Exception as e:
             logger.error(f"❌ 智能DNM执行失败: {e}")
             return self._fallback_execution()
+    
+    def _create_no_morphogenesis_result(self, convergence_decision: Dict[str, Any]) -> Dict[str, Any]:
+        """创建不进行变异的结果"""
+        return {
+            'model_modified': False,
+            'new_model': None,
+            'parameters_added': 0,
+            'morphogenesis_events': [],
+            'morphogenesis_type': 'no_morphogenesis',
+            'trigger_reasons': [convergence_decision['reason']],
+            'intelligent_analysis': {
+                'convergence_blocked': True,
+                'convergence_info': convergence_decision,
+                'candidates_found': 0,
+                'strategies_evaluated': 0,
+                'final_decisions': 0,
+                'execution_confidence': 0.0
+            }
+        }
+    
+    def _integrate_leakage_analysis(self, 
+                                  comprehensive_analysis: Dict[str, Any],
+                                  leakage_analysis: Dict[str, Any]) -> Dict[str, Any]:
+        """将泄漏检测结果融合到综合分析中"""
+        
+        # 获取泄漏检测的修复建议
+        repair_suggestions = leakage_analysis.get('repair_suggestions', [])
+        
+        if repair_suggestions:
+            # 选择优先级最高的泄漏点进行修复
+            primary_repair = repair_suggestions[0]
+            
+            # 创建基于泄漏检测的决策
+            leakage_decision = {
+                'mutation_type': primary_repair['primary_action'],
+                'target_layer': primary_repair['layer_name'],
+                'confidence': min(0.9, primary_repair['priority'] / 2.0),
+                'expected_improvement': primary_repair['expected_improvement'],
+                'rationale': primary_repair['rationale'],
+                'source': 'information_leakage_detection'
+            }
+            
+            # 将泄漏检测决策插入到最终决策列表的前面
+            final_decisions = comprehensive_analysis.get('final_decisions', [])
+            final_decisions.insert(0, leakage_decision)
+            comprehensive_analysis['final_decisions'] = final_decisions
+            
+            # 更新分析摘要
+            if 'analysis_summary' not in comprehensive_analysis:
+                comprehensive_analysis['analysis_summary'] = {}
+            
+            comprehensive_analysis['analysis_summary']['leakage_analysis'] = leakage_analysis['summary']
+            
+            logger.info(f"🎯 融合泄漏检测: 优先修复 {primary_repair['layer_name']} ({primary_repair['primary_action']})")
+        
+        return comprehensive_analysis
     
     def _execute_intelligent_decisions(self, 
                                      model: nn.Module,
