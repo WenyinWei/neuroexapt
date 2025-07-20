@@ -218,7 +218,10 @@ def run_intelligent_evolution_demo(args):
         max_mutations_per_round=2 if args.quick else 3,
         enable_sampling_validation=not args.quick,  # 快速模式禁用抽样验证
         validation_sample_ratio=0.05 if args.quick else 0.1,
-        quick_validation_epochs=2 if args.quick else 3
+        quick_validation_epochs=2 if args.quick else 3,
+        # 调整阈值使其更合理
+        min_benefit_threshold=0.0001,  # 0.01%最小改进
+        confidence_threshold=0.15,     # 15%最小成功率
     )
     
     # 创建进化引擎

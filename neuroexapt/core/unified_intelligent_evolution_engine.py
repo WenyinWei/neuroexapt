@@ -60,8 +60,8 @@ class EvolutionConfig:
     
     # 决策参数
     risk_aversion: float = 2.0                # λ - 风险规避系数
-    min_benefit_threshold: float = 0.01       # 最小收益阈值
-    confidence_threshold: float = 0.7         # 置信度阈值
+    min_benefit_threshold: float = 0.001      # 最小收益阈值 (0.1%改进)
+    confidence_threshold: float = 0.2         # 置信度阈值 (20%成功概率)
     
     # 验证设置
     enable_sampling_validation: bool = True   # 启用抽样验证
@@ -190,6 +190,9 @@ class UnifiedIntelligentEvolutionEngine:
         self.evolution_state.current_accuracy = self._evaluate_model(current_model, test_loader)
         self.evolution_state.best_accuracy = self.evolution_state.current_accuracy
         
+        # 初始化准确率历史记录
+        self.evolution_state.accuracy_history.append(self.evolution_state.current_accuracy)
+        
         logger.info(f"开始架构进化，初始准确率: {self.evolution_state.current_accuracy:.2f}%")
         
         # 进化循环
@@ -212,8 +215,10 @@ class UnifiedIntelligentEvolutionEngine:
             selected_mutations = self._select_best_mutations(candidates)
             
             if not selected_mutations:
-                logger.info("没有超过阈值的变异候选，结束进化")
-                break
+                logger.info("本轮没有合适的变异候选，跳过本轮")
+                round_time = time.time() - round_start_time
+                self.evolution_state.timing_history.append(round_time)
+                continue
             
             # 3. 应用变异
             improved_model, improvements = self._apply_mutations(
@@ -246,9 +251,15 @@ class UnifiedIntelligentEvolutionEngine:
                 logger.info(f"达到目标准确率 {self.config.target_accuracy}%，停止进化")
                 break
             
-            if round_improvement < self.config.min_benefit_threshold:
-                logger.info(f"改进幅度 {round_improvement:.4f} 低于阈值，停止进化")
-                break
+            # 更宽松的收敛条件：连续多轮无显著改进才停止
+            if round_improvement < 0.0001:  # 改进低于0.01%
+                no_improvement_rounds = getattr(self, '_no_improvement_rounds', 0) + 1
+                self._no_improvement_rounds = no_improvement_rounds
+                if no_improvement_rounds >= 2:  # 连续2轮无改进才停止
+                    logger.info(f"连续{no_improvement_rounds}轮改进微小，停止进化")
+                    break
+            else:
+                self._no_improvement_rounds = 0  # 重置计数器
         
         # 进化完成
         logger.info(f"\n=== 进化完成 ===")
@@ -378,35 +389,60 @@ class UnifiedIntelligentEvolutionEngine:
     
     def _select_best_mutations(self, candidates: List[MutationCandidate]) -> List[MutationCandidate]:
         """选择最佳变异"""
-        selected = []
+        if not candidates:
+            return []
+        
+        # 首先尝试按严格标准筛选
+        strict_selected = []
         
         for candidate in candidates:
-            # 检查各种阈值条件
-            if len(selected) >= self.config.max_mutations_per_round:
+            if len(strict_selected) >= self.config.max_mutations_per_round:
                 break
             
             expectation = candidate.calibrated_expectation
             
-            # 收益阈值
-            if expectation.expected_benefit < self.config.min_benefit_threshold:
-                continue
-            
-            # 置信度阈值
-            if expectation.success_probability < self.config.confidence_threshold:
-                continue
-            
-            # 期望效用阈值
-            if candidate.expected_utility <= 0:
-                continue
-            
-            # 资源约束检查
-            if self._check_resource_constraints(candidate):
-                selected.append(candidate)
-                logger.info(f"选择变异: {candidate.config.mutation_type.value} "
+            # 严格阈值检查
+            if (expectation.expected_benefit >= self.config.min_benefit_threshold and
+                expectation.success_probability >= self.config.confidence_threshold and
+                candidate.expected_utility > 0 and
+                self._check_resource_constraints(candidate)):
+                
+                strict_selected.append(candidate)
+                logger.info(f"选择变异(严格标准): {candidate.config.mutation_type.value} "
                            f"(期望收益: {expectation.expected_benefit:.4f}, "
+                           f"成功率: {expectation.success_probability:.2f}, "
                            f"效用: {candidate.expected_utility:.4f})")
         
-        return selected
+        # 如果严格标准没有选到足够的候选，使用宽松标准
+        if len(strict_selected) == 0:
+            logger.info("严格标准未选到候选，使用宽松标准选择最佳候选")
+            
+            # 过滤掉明显不合理的候选
+            viable_candidates = [
+                c for c in candidates 
+                if (c.calibrated_expectation.expected_benefit > -0.01 and  # 不能损失超过1%
+                    c.calibrated_expectation.success_probability > 0.1 and  # 至少10%成功率
+                    self._check_resource_constraints(c))
+            ]
+            
+            if viable_candidates:
+                # 按期望效用排序，选择最好的
+                viable_candidates.sort(key=lambda c: c.expected_utility, reverse=True)
+                relaxed_selected = viable_candidates[:self.config.max_mutations_per_round]
+                
+                for candidate in relaxed_selected:
+                    expectation = candidate.calibrated_expectation
+                    logger.info(f"选择变异(宽松标准): {candidate.config.mutation_type.value} "
+                               f"(期望收益: {expectation.expected_benefit:.4f}, "
+                               f"成功率: {expectation.success_probability:.2f}, "
+                               f"效用: {candidate.expected_utility:.4f})")
+                
+                return relaxed_selected
+            else:
+                logger.warning("所有候选都不满足基本要求")
+                return []
+        
+        return strict_selected
     
     def _check_resource_constraints(self, candidate: MutationCandidate) -> bool:
         """检查资源约束"""
