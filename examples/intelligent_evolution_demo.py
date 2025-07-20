@@ -353,9 +353,9 @@ def demo_mutual_information_analysis(trainer):
     model = trainer.model
     device = trainer.device
     
-         # 评估当前性能
-     _, current_accuracy = trainer.evaluate()
-     print(f"📊 当前模型准确率: {current_accuracy:.2f}%")
+    # 评估当前性能
+    _, current_accuracy = trainer.evaluate()
+    print(f"📊 当前模型准确率: {current_accuracy:.2f}%")
     
     # 如果准确率太低，跳过复杂分析
     if current_accuracy < 30.0:
