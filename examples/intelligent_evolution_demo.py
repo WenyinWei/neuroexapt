@@ -344,242 +344,314 @@ def prepare_cifar10_data(batch_size_train=128, batch_size_test=100):
 
 
 def demo_mutual_information_analysis(trainer):
-    """演示互信息分析"""
-    print("\n" + "="*60)
-    print("🔬 演示：基于MINE的互信息分析")
+    """演示：互信息分析"""
+    print("="*60)
+    print("🔗 演示：互信息分析")
     print("="*60)
     
-    # 提取特征和标签
-    feature_dict, labels = trainer.extract_features_and_labels(
-        trainer.model, trainer.test_loader, max_batches=5
+    # 检查训练进度 - 只有在模型有一定性能时才进行分析
+    model = trainer.model
+    device = trainer.device
+    
+         # 评估当前性能
+     _, current_accuracy = trainer.evaluate()
+     print(f"📊 当前模型准确率: {current_accuracy:.2f}%")
+    
+    # 如果准确率太低，跳过复杂分析
+    if current_accuracy < 30.0:
+        print("⚠️  模型准确率过低，跳过互信息分析以节省计算资源")
+        print("💡 建议：在模型收敛到30%以上准确率后再进行智能分析")
+        return {}
+    
+    print("🎯 模型性能足够，开始互信息分析...")
+    
+    # 提取特征（使用更小的批次以节省内存）
+    features_and_labels = trainer.extract_features_and_labels(
+        model, trainer.test_loader, max_batches=2  # 减少批次数
     )
     
-    if not feature_dict or labels.numel() == 0:
-        print("❌ 无法提取特征，跳过互信息分析")
-        return
+    if not features_and_labels:
+        print("❌ 特征提取失败")
+        return {}
+        
+    features, labels, layer_names = features_and_labels
+    print(f"✅ 提取到 {len(layer_names)} 个特征层: {layer_names}")
     
     # 创建互信息估计器
-    mi_estimator = MutualInformationEstimator(device=trainer.device)
+    mi_estimator = MutualInformationEstimator(device=device)
     
-    print(f"📊 开始计算 {len(feature_dict)} 个层的互信息...")
+    print("🔗 开始计算互信息...")
+    mi_results = {}
     
-    # 估计分层互信息
-    mi_results = mi_estimator.batch_estimate_layerwise_mi(
-        feature_dict, labels, num_classes=10
-    )
+    # 只分析关键层以节省计算资源
+    key_layers = [name for name in layer_names if any(
+        keyword in name for keyword in ['layer1.0', 'layer2.0', 'layer3.0', 'layer4.0', 'classifier']
+    )]
     
-    print("\n🔍 分层互信息结果 I(H_k; Y):")
+    print(f"🎯 分析 {len(key_layers)} 个关键层: {key_layers}")
+    
+    for layer_name in key_layers:
+        if layer_name in features:
+            try:
+                layer_features = features[layer_name]
+                
+                # 限制特征数量以节省内存
+                if layer_features.size(0) > 64:
+                    layer_features = layer_features[:64]
+                    layer_labels = labels[:64]
+                else:
+                    layer_labels = labels
+                
+                # 计算互信息（减少训练轮数）
+                mi_value = mi_estimator.estimate_layerwise_mi(
+                    layer_features, layer_labels, layer_name, 
+                    num_classes=10, num_epochs=30  # 减少训练轮数
+                )
+                mi_results[layer_name] = mi_value
+                
+                # 清理显存
+                torch.cuda.empty_cache() if torch.cuda.is_available() else None
+                
+            except Exception as e:
+                print(f"⚠️  层 {layer_name} 互信息计算失败: {e}")
+                mi_results[layer_name] = 0.0
+    
+    # 显示结果
+    print(f"\n🔗 互信息结果 I(H; Y):")
     for layer_name, mi_value in mi_results.items():
-        print(f"  {layer_name}: {mi_value:.4f}")
-    
-    # 计算条件互信息（如果有足够的层）
-    if len(feature_dict) >= 2:
-        print("\n🔗 计算条件互信息 I(H_k; Y|H_{k+1})...")
-        layer_names = list(feature_dict.keys())
-        feature_pairs = []
-        
-        for i in range(len(layer_names) - 1):
-            current_layer = layer_names[i]
-            next_layer = layer_names[i + 1]
-            feature_pairs.append((
-                current_layer,
-                feature_dict[current_layer],
-                feature_dict[next_layer]
-            ))
-        
-        if feature_pairs:
-            conditional_mi_results = mi_estimator.batch_estimate_conditional_mi(
-                feature_pairs, labels, num_classes=10
-            )
-            
-            print("\n🔗 条件互信息结果 I(H_k; Y|H_{k+1}):")
-            for layer_name, cmi_value in conditional_mi_results.items():
-                print(f"  {layer_name}: {cmi_value:.4f}")
-                if cmi_value < 0.01:
-                    print(f"    ⚠️  检测到潜在信息泄露瓶颈")
+        status = "✓ 正常" if mi_value > 1.0 else "⚠️  偏低"
+        print(f"  {layer_name}: {mi_value:.4f} ({status})")
     
     return mi_results
 
 
 def demo_uncertainty_analysis(trainer):
-    """演示贝叶斯不确定性分析"""
+    """演示：贝叶斯不确定性分析"""
     print("\n" + "="*60)
     print("🎲 演示：贝叶斯不确定性分析")
     print("="*60)
     
+         # 检查训练进度
+     _, current_accuracy = trainer.evaluate()
+     if current_accuracy < 30.0:
+        print("⚠️  模型准确率过低，跳过不确定性分析")
+        return {}
+    
     # 提取特征
-    feature_dict, labels = trainer.extract_features_and_labels(
-        trainer.model, trainer.test_loader, max_batches=3
+    features_and_labels = trainer.extract_features_and_labels(
+        trainer.model, trainer.test_loader, max_batches=2
     )
     
-    if not feature_dict:
-        print("❌ 无法提取特征，跳过不确定性分析")
-        return
+    if not features_and_labels:
+        print("❌ 特征提取失败")
+        return {}
+        
+    features, labels, layer_names = features_and_labels
+    print(f"✅ 提取到 {len(layer_names)} 个特征层: {layer_names}")
     
     # 创建不确定性估计器
     uncertainty_estimator = BayesianUncertaintyEstimator(device=trainer.device)
     
-    print(f"📊 开始计算 {len(feature_dict)} 个层的不确定性...")
+    print(f"📊 开始计算 {len(layer_names)} 个层的不确定性...")
+    uncertainty_results = {}
     
-    # 估计特征不确定性
-    uncertainty_results = uncertainty_estimator.estimate_feature_uncertainty(
-        feature_dict, labels
-    )
+    # 只分析关键层
+    key_layers = [name for name in layer_names if any(
+        keyword in name for keyword in ['layer2.0', 'layer3.0', 'layer4.0', 'classifier']
+    )]
     
-    print("\n🎲 特征不确定性结果 U(H_k):")
+    for layer_name in key_layers:
+        if layer_name in features:
+            try:
+                layer_features = features[layer_name]
+                
+                # 限制特征数量
+                if layer_features.size(0) > 64:
+                    layer_features = layer_features[:64]
+                    layer_labels = labels[:64]
+                else:
+                    layer_labels = labels
+                
+                uncertainty = uncertainty_estimator.estimate_uncertainty(
+                    layer_features, layer_labels, layer_name, num_classes=10
+                )
+                uncertainty_results[layer_name] = uncertainty
+                
+                # 清理显存
+                torch.cuda.empty_cache() if torch.cuda.is_available() else None
+                
+            except Exception as e:
+                print(f"⚠️  层 {layer_name} 不确定性计算失败: {e}")
+                uncertainty_results[layer_name] = 0.0
+    
+    # 显示结果
+    print(f"\n🎲 特征不确定性结果 U(H_k):")
     for layer_name, uncertainty in uncertainty_results.items():
-        status = "⚠️ 高" if uncertainty > 1.0 else "✓ 正常"
+        status = "✓ 正常" if uncertainty < 0.5 else "⚠️  过高"
         print(f"  {layer_name}: {uncertainty:.4f} ({status})")
     
     return uncertainty_results
 
 
 def demo_intelligent_bottleneck_detection(trainer):
-    """演示智能瓶颈检测"""
+    """演示：智能瓶颈检测"""
     print("\n" + "="*60)
     print("🔍 演示：智能瓶颈检测")
     print("="*60)
     
-    # 提取特征和标签
-    feature_dict, labels = trainer.extract_features_and_labels(
-        trainer.model, trainer.test_loader, max_batches=5
-    )
-    
-    if not feature_dict or labels.numel() == 0:
-        print("❌ 无法提取特征，跳过瓶颈检测")
+         # 检查训练进度
+     _, current_accuracy = trainer.evaluate()
+     if current_accuracy < 40.0:  # 瓶颈检测需要更高的准确率
+        print("⚠️  模型准确率过低，跳过瓶颈检测")
+        print("💡 建议：在模型收敛到40%以上准确率后再进行瓶颈检测")
         return []
     
+    # 提取特征
+    features_and_labels = trainer.extract_features_and_labels(
+        trainer.model, trainer.test_loader, max_batches=2
+    )
+    
+    if not features_and_labels:
+        print("❌ 特征提取失败")
+        return []
+        
+    features, labels, layer_names = features_and_labels
+    print(f"✅ 提取到 {len(layer_names)} 个特征层: {layer_names}")
+    
     # 创建瓶颈检测器
-    detector = IntelligentBottleneckDetector(device=trainer.device)
+    detector = IntelligentBottleneckDetector(
+        device=trainer.device,
+        confidence_threshold=0.7  # 提高置信度阈值
+    )
     
     print("🔍 开始智能瓶颈检测...")
     
-    # 执行瓶颈检测
-    bottleneck_reports = detector.detect_bottlenecks(
-        model=trainer.model,
-        feature_dict=feature_dict,
-        labels=labels,
-        num_classes=10,
-        confidence_threshold=0.6  # 适中的置信度阈值
-    )
-    
-    print(f"\n📊 检测结果: 发现 {len(bottleneck_reports)} 个潜在瓶颈")
-    
-    # 可视化瓶颈报告
-    if bottleneck_reports:
-        visualization = detector.visualize_bottlenecks(bottleneck_reports)
-        print(visualization)
+    # 检测瓶颈
+    try:
+        bottleneck_reports = detector.detect_bottlenecks(
+            features=features,
+            labels=labels,
+            layer_names=layer_names,
+            num_classes=10
+        )
         
-        # 获取摘要
-        summary = detector.get_bottleneck_summary(bottleneck_reports)
-        print(f"\n📈 瓶颈类型分布: {summary.get('type_distribution', {})}")
-        print(f"🎯 建议优先处理: {summary.get('recommended_priority', [])}")
-    else:
-        print("✅ 未检测到显著瓶颈，网络架构相对健康")
-    
-    return bottleneck_reports
+        print(f"📊 检测结果: 发现 {len(bottleneck_reports)} 个潜在瓶颈")
+        
+        # 显示前5个最严重的瓶颈
+        print("🔍 瓶颈检测报告")
+        print("="*50)
+        
+        for i, report in enumerate(bottleneck_reports[:5]):
+            print(f"\n🔴 #{i+1} 层: {report.layer_name}")
+            print(f"   类型: {report.bottleneck_type.value}")
+            print(f"   严重程度: {report.severity:.3f} | 置信度: {report.confidence:.3f}")
+            print(f"   互信息: {report.mutual_info:.4f} | 条件互信息: {report.conditional_mutual_info:.4f}")
+            print(f"   不确定性: {report.uncertainty:.4f}")
+            print(f"   原因: {report.explanation}")
+            print(f"   建议: {', '.join(report.suggested_mutations)}")
+        
+        if len(bottleneck_reports) > 5:
+            print(f"\n... 还有 {len(bottleneck_reports) - 5} 个瓶颈未显示")
+        
+        # 统计信息
+        bottleneck_types = {}
+        total_severity = 0
+        for report in bottleneck_reports:
+            bottleneck_types[report.bottleneck_type.value] = bottleneck_types.get(report.bottleneck_type.value, 0) + 1
+            total_severity += report.severity
+        
+        avg_severity = total_severity / len(bottleneck_reports) if bottleneck_reports else 0
+        
+        print(f"\n📊 总计: {len(bottleneck_reports)} 个瓶颈 | 平均严重程度: {avg_severity:.3f}")
+        print(f"📈 瓶颈类型分布: {bottleneck_types}")
+        
+        # 推荐优先处理的层
+        priority_layers = [report.layer_name for report in bottleneck_reports[:3]]
+        print(f"🎯 建议优先处理: {priority_layers}")
+        
+        return bottleneck_reports
+        
+    except Exception as e:
+        print(f"❌ 瓶颈检测失败: {e}")
+        return []
 
 
-def demo_intelligent_evolution(trainer, initial_epochs=10):
-    """演示完整的智能架构进化"""
+def demo_intelligent_evolution(trainer, initial_epochs=5):
+    """演示：完整智能架构进化流程"""
     print("\n" + "="*60)
     print("🚀 演示：完整智能架构进化流程")
     print("="*60)
     
-    # 先进行基础训练
-    print(f"📚 开始基础训练 {initial_epochs} 个epoch...")
-    trainer.setup_optimizer(learning_rate=0.1)
+    model = trainer.model
+    device = trainer.device
     
+    # 基础训练
+    print(f"📚 开始基础训练 {initial_epochs} 个epoch...")
     best_accuracy = 0
+    
     for epoch in range(initial_epochs):
-        train_loss, train_acc = trainer.train_epoch(epoch)
-        test_loss, test_acc = trainer.test()
+        train_acc = trainer.train_epoch(epoch)
+                 test_loss, test_acc = trainer.evaluate()
         
-        if trainer.scheduler:
-            trainer.scheduler.step()
-        
-        trainer.test_history.append({
-            'epoch': epoch, 'loss': test_loss, 'accuracy': test_acc
-        })
+        print(f"Epoch {epoch}: Train Acc: {train_acc:.2f}%, Test Acc: {test_acc:.2f}%, Test Loss: {test_loss:.4f}")
         
         if test_acc > best_accuracy:
             best_accuracy = test_acc
-        
-        print(f"Epoch {epoch}: Train Acc: {train_acc:.2f}%, "
-              f"Test Acc: {test_acc:.2f}%, Test Loss: {test_loss:.4f}")
     
     print(f"🎯 基础训练完成，最佳测试准确率: {best_accuracy:.2f}%")
     
-    # 配置进化参数
+    # 检查是否准备好进行进化
+    if best_accuracy < 50.0:
+        print("⚠️  模型性能不足，建议继续基础训练")
+        print("💡 智能进化在模型达到50%以上准确率时效果最佳")
+        return model
+    
+    # 配置进化引擎
     evolution_config = EvolutionConfig(
-        max_iterations=3,  # 限制迭代次数用于演示
+        confidence_threshold=0.8,  # 提高置信度阈值
+        max_mutations_per_iteration=2,  # 减少突变数量
+        risk_tolerance=0.8,
+        max_iterations=2,  # 减少迭代次数以节省计算
         patience=2,
-        min_improvement=0.005,  # 0.5%的最小改进
-        confidence_threshold=0.6,
-        max_mutations_per_iteration=2,
+        min_improvement=0.02,
         task_type='vision',
-        risk_tolerance=0.8
+        evaluation_samples=500  # 减少评估样本
     )
     
     print(f"🧬 配置智能进化引擎: {evolution_config.max_iterations} 轮迭代")
     
     # 创建进化引擎
-    evolution_engine = IntelligentArchitectureEvolutionEngine(evolution_config)
+    evolution_engine = IntelligentArchitectureEvolutionEngine(config=evolution_config)
     
-    # 定义评估函数
-    def evaluation_fn(model):
-        original_model = trainer.model
-        trainer.model = model
-        _, accuracy = trainer.test()
-        trainer.model = original_model
-        return accuracy / 100.0  # 转换为[0,1]范围
+    print("🚀 开始智能架构进化...")
     
-    # 定义特征提取函数
-    def feature_extractor_fn(model, data_loader):
-        original_model = trainer.model
+    def evaluation_function(model):
+        """评估函数"""
         trainer.model = model
-        features, labels = trainer.extract_features_and_labels(model, data_loader, max_batches=3)
-        trainer.model = original_model
-        return features, labels
+                 _, accuracy = trainer.evaluate()
+        return accuracy / 100.0  # 转换为0-1范围
     
     try:
-        print("🚀 开始智能架构进化...")
-        
-        # 执行智能进化
-        best_model, evolution_history = evolution_engine.evolve(
-            model=trainer.model,
-            data_loader=trainer.train_loader,
-            evaluation_fn=evaluation_fn,
-            feature_extractor_fn=feature_extractor_fn
+        # 开始进化
+        final_model, evolution_history = evolution_engine.evolve(
+            model=model,
+            evaluation_fn=evaluation_function,
+            data_loader=trainer.test_loader,
+            device=device
         )
         
-        # 评估进化后的性能
-        trainer.model = best_model
-        final_loss, final_accuracy = trainer.test()
+        # 显示进化结果
+        print(f"\n🎉 进化完成!")
+        print(f"初始性能: {evolution_history[0].performance_before:.4f}")
+        print(f"最终性能: {evolution_history[-1].performance_after:.4f}")
+        print(f"总改进: {evolution_history[-1].performance_after - evolution_history[0].performance_before:.4f}")
         
-        print(f"\n🎉 智能进化完成!")
-        print(f"📈 性能提升: {best_accuracy:.2f}% → {final_accuracy:.2f}% "
-              f"(+{final_accuracy - best_accuracy:.2f}%)")
-        
-        # 可视化进化过程
-        evolution_visualization = evolution_engine.visualize_evolution()
-        print(evolution_visualization)
-        
-        # 获取进化摘要
-        summary = evolution_engine.get_evolution_summary()
-        if summary.get('status') == 'completed':
-            print(f"\n📊 进化统计:")
-            print(f"  总迭代数: {summary['total_iterations']}")
-            print(f"  成功率: {summary['success_rate']:.1%}")
-            print(f"  参数增长: {summary['total_parameter_growth']:.1%}")
-        
-        trainer.evolution_history = evolution_history
-        return best_model
+        return final_model
         
     except Exception as e:
         print(f"❌ 进化过程中遇到错误: {e}")
         print("这可能是由于演示环境的限制，实际使用中请确保有足够的数据和计算资源")
-        return trainer.model
+        return model
 
 
 def run_complete_demo():

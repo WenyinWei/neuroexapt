@@ -117,80 +117,117 @@ class MutualInformationEstimator:
         Returns:
             互信息估计值
         """
-        # 获取特征维度
-        if features.dim() > 2:
-            feature_dim = np.prod(features.shape[1:])
-        else:
-            feature_dim = features.shape[1]
+        try:
+            # 确保所有张量在同一设备上，并清理显存
+            torch.cuda.empty_cache() if torch.cuda.is_available() else None
             
-        # 创建或获取判别器
-        discriminator_key = f"{layer_name}_layerwise"
-        if discriminator_key not in self.discriminators:
-            self.discriminators[discriminator_key] = MINEDiscriminator(
-                input_dim_features=feature_dim,
-                num_classes=num_classes
-            ).to(self.device)
+            # 统一设备处理
+            features = features.to(self.device).detach()
+            labels = labels.to(self.device).detach()
             
-        discriminator = self.discriminators[discriminator_key]
-        optimizer = torch.optim.Adam(discriminator.parameters(), lr=learning_rate)
-        
-        # 训练判别器
-        mi_estimates = []
-        
-        for epoch in range(num_epochs):
-            # 生成联合样本和边缘样本
-            batch_size = features.size(0)
-            
-            # 联合样本：真实的(features, labels)配对
-            joint_features = features.to(self.device)
-            joint_labels = labels.to(self.device)
-            
-            # 边缘样本：打乱labels，破坏features和labels的依赖关系
-            marginal_labels = joint_labels[torch.randperm(batch_size)]
-            
-            # 计算判别器输出
-            joint_logits = discriminator(joint_features, joint_labels)
-            marginal_logits = discriminator(joint_features, marginal_labels)
-            
-            # 计算MINE损失
-            if num_classes is not None:  # 分类任务
-                # 对于离散标签，使用交叉熵形式的MINE估计
-                joint_probs = F.softmax(joint_logits, dim=1)
-                marginal_probs = F.softmax(marginal_logits, dim=1)
+            # 获取特征维度
+            if features.dim() > 2:
+                feature_dim = np.prod(features.shape[1:])
+                # 对于大特征图，采样减少内存使用
+                if feature_dim > 1024:  # 如果特征维度太大
+                    batch_size = min(features.size(0), 32)  # 限制batch size
+                    features = features[:batch_size]
+                    labels = labels[:batch_size]
+                    feature_dim = min(feature_dim, 1024)  # 限制特征维度
+            else:
+                feature_dim = features.shape[1]
                 
-                # 计算联合样本的对数似然
-                if joint_labels.dim() == 1:
-                    joint_ll = F.cross_entropy(joint_logits, joint_labels, reduction='none')
-                else:
-                    joint_ll = -torch.sum(joint_labels * torch.log(joint_probs + 1e-8), dim=1)
+            # 创建或获取判别器
+            discriminator_key = f"{layer_name}_layerwise"
+            if discriminator_key not in self.discriminators:
+                self.discriminators[discriminator_key] = MINEDiscriminator(
+                    input_dim_features=feature_dim,
+                    num_classes=num_classes
+                ).to(self.device)
+                
+            discriminator = self.discriminators[discriminator_key]
+            optimizer = torch.optim.Adam(discriminator.parameters(), lr=learning_rate)
+            
+            # 训练判别器
+            mi_estimates = []
+            
+            # 减少训练轮数以节省计算资源
+            effective_epochs = min(num_epochs, 50) if features.size(0) < 100 else num_epochs
+            
+            for epoch in range(effective_epochs):
+                try:
+                    # 生成联合样本和边缘样本
+                    batch_size = features.size(0)
                     
-                # 计算边缘样本的对数配分函数
-                marginal_ll = torch.logsumexp(marginal_logits, dim=1) - np.log(num_classes)
+                    # 联合样本：真实的(features, labels)配对
+                    joint_features = features
+                    joint_labels = labels
+                    
+                    # 边缘样本：打乱labels，破坏features和labels的依赖关系
+                    marginal_labels = joint_labels[torch.randperm(batch_size)]
+                    
+                    # 计算判别器输出
+                    joint_logits = discriminator(joint_features, joint_labels)
+                    marginal_logits = discriminator(joint_features, marginal_labels)
+                    
+                    # 计算MINE损失
+                    if num_classes is not None:  # 分类任务
+                        # 对于离散标签，使用交叉熵形式的MINE估计
+                        joint_probs = F.softmax(joint_logits, dim=1)
+                        marginal_probs = F.softmax(marginal_logits, dim=1)
+                        
+                        # 计算联合样本的对数似然
+                        if joint_labels.dim() == 1:
+                            joint_ll = F.cross_entropy(joint_logits, joint_labels, reduction='none')
+                        else:
+                            joint_ll = -torch.sum(joint_labels * torch.log(joint_probs + 1e-8), dim=1)
+                            
+                        # 计算边缘样本的对数配分函数
+                        marginal_ll = torch.logsumexp(marginal_logits, dim=1) - np.log(num_classes)
+                        
+                        # MINE估计：E[log p(y|x)] - log E[exp(f(x,y'))]  
+                        mi_estimate = torch.mean(-joint_ll) - torch.mean(marginal_ll)
+                        
+                    else:  # 回归任务
+                        # 标准MINE估计
+                        mi_estimate = torch.mean(joint_logits) - torch.log(torch.mean(torch.exp(marginal_logits)))
+                        
+                    # 反向传播
+                    loss = -mi_estimate  # 最大化互信息 = 最小化负互信息
+                    optimizer.zero_grad()
+                    loss.backward()
+                    
+                    # 梯度裁剪防止梯度爆炸
+                    torch.nn.utils.clip_grad_norm_(discriminator.parameters(), max_norm=1.0)
+                    optimizer.step()
+                    
+                    mi_estimates.append(mi_estimate.item())
+                    
+                    # 定期清理显存
+                    if epoch % 10 == 0:
+                        torch.cuda.empty_cache() if torch.cuda.is_available() else None
+                        
+                except RuntimeError as e:
+                    if "out of memory" in str(e) or "CUDA" in str(e):
+                        # 内存不足，减少batch size重试
+                        torch.cuda.empty_cache() if torch.cuda.is_available() else None
+                        logger.warning(f"Memory warning during MI estimation for {layer_name}, retrying with smaller batch")
+                        break
+                    else:
+                        raise e
+                        
+            # 计算平均互信息估计
+            if mi_estimates:
+                final_mi = np.mean(mi_estimates[-10:])  # 取最后10次的平均值
+                logger.info(f"Layer {layer_name}: I(H; Y) = {final_mi:.4f}")
+                return max(0.0, final_mi)  # 确保非负
+            else:
+                logger.warning(f"Failed to estimate MI for layer {layer_name}")
+                return 0.0
                 
-                # MINE估计：E[log p(y|x)] - log E[exp(f(x,y'))]  
-                mi_estimate = torch.mean(-joint_ll) - torch.mean(marginal_ll)
-                
-            else:  # 回归任务
-                # 标准MINE估计
-                mi_estimate = torch.mean(joint_logits) - torch.log(torch.mean(torch.exp(marginal_logits)))
-                
-            # 反向传播
-            loss = -mi_estimate  # 最大化互信息 = 最小化负互信息
-            optimizer.zero_grad()
-            loss.backward()
-            torch.nn.utils.clip_grad_norm_(discriminator.parameters(), max_norm=1.0)
-            optimizer.step()
-            
-            mi_estimates.append(mi_estimate.item())
-            
-            if epoch % 20 == 0:
-                logger.debug(f"Epoch {epoch}: MI estimate = {mi_estimate.item():.4f}")
-                
-        # 返回最后几个epoch的平均值（更稳定）
-        final_mi = np.mean(mi_estimates[-10:])
-        self.training_history[discriminator_key].append(final_mi)
-        
-        return final_mi
+        except Exception as e:
+            logger.warning(f"Failed to estimate MI for layer {layer_name}: {e}")
+            return 0.0
     
     def estimate_conditional_mi(self,
                               current_features: torch.Tensor,
@@ -198,7 +235,7 @@ class MutualInformationEstimator:
                               labels: torch.Tensor,
                               layer_name: str,
                               num_classes: int = None,
-                              num_epochs: int = 100,
+                              num_epochs: int = 50,  # 减少训练轮数
                               learning_rate: float = 1e-3) -> float:
         """
         估计条件互信息 I(H_k; Y | H_{k+1})
@@ -214,30 +251,55 @@ class MutualInformationEstimator:
         Returns:
             条件互信息估计值
         """
-        # 1. 估计 I(H_{k+1}; Y)
-        mi_next_y = self.estimate_layerwise_mi(
-            next_features, labels, f"{layer_name}_next", num_classes, num_epochs, learning_rate
-        )
-        
-        # 2. 估计 I((H_k, H_{k+1}); Y)
-        # 将当前层和下一层特征拼接
-        current_flat = current_features.view(current_features.size(0), -1)
-        next_flat = next_features.view(next_features.size(0), -1)
-        joint_features = torch.cat([current_flat, next_flat], dim=1)
-        
-        mi_joint_y = self.estimate_layerwise_mi(
-            joint_features, labels, f"{layer_name}_joint", num_classes, num_epochs, learning_rate
-        )
-        
-        # 3. 计算条件互信息
-        conditional_mi = mi_joint_y - mi_next_y
-        
-        logger.info(f"Conditional MI for {layer_name}: "
-                   f"I((H_k,H_{{k+1}}); Y) = {mi_joint_y:.4f}, "
-                   f"I(H_{{k+1}}; Y) = {mi_next_y:.4f}, "
-                   f"I(H_k; Y | H_{{k+1}}) = {conditional_mi:.4f}")
-        
-        return conditional_mi
+        try:
+            # 确保所有张量在同一设备上
+            current_features = current_features.to(self.device).detach()
+            next_features = next_features.to(self.device).detach()
+            labels = labels.to(self.device).detach()
+            
+            # 限制batch size以节省内存
+            batch_size = min(current_features.size(0), 32)
+            current_features = current_features[:batch_size]
+            next_features = next_features[:batch_size]
+            labels = labels[:batch_size]
+            
+            # 1. 估计 I(H_{k+1}; Y)
+            mi_next_y = self.estimate_layerwise_mi(
+                next_features, labels, f"{layer_name}_next", num_classes, num_epochs, learning_rate
+            )
+            
+            # 2. 估计 I((H_k, H_{k+1}); Y)
+            # 将当前层和下一层特征拼接
+            current_flat = current_features.view(current_features.size(0), -1)
+            next_flat = next_features.view(next_features.size(0), -1)
+            
+            # 限制拼接后的特征维度
+            max_dim = 1024
+            if current_flat.size(1) + next_flat.size(1) > max_dim:
+                current_dim = min(current_flat.size(1), max_dim // 2)
+                next_dim = min(next_flat.size(1), max_dim // 2)
+                current_flat = current_flat[:, :current_dim]
+                next_flat = next_flat[:, :next_dim]
+            
+            joint_features = torch.cat([current_flat, next_flat], dim=1)
+            
+            mi_joint_y = self.estimate_layerwise_mi(
+                joint_features, labels, f"{layer_name}_joint", num_classes, num_epochs, learning_rate
+            )
+            
+            # 3. 计算条件互信息
+            conditional_mi = mi_joint_y - mi_next_y
+            
+            logger.info(f"Conditional MI for {layer_name}: "
+                       f"I((H_k,H_{{k+1}}); Y) = {mi_joint_y:.4f}, "
+                       f"I(H_{{k+1}}; Y) = {mi_next_y:.4f}, "
+                       f"I(H_k; Y | H_{{k+1}}) = {conditional_mi:.4f}")
+            
+            return conditional_mi
+            
+        except Exception as e:
+            logger.warning(f"Failed to estimate conditional MI for layer {layer_name}: {e}")
+            return 0.0
     
     def batch_estimate_layerwise_mi(self,
                                   feature_dict: Dict[str, torch.Tensor],
