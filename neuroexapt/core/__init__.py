@@ -43,6 +43,8 @@ from .intelligent_dnm_integration import IntelligentDNMCore
 # 🔬 新一代基于互信息和贝叶斯推断的核心框架
 from .mutual_information_estimator import MutualInformationEstimator, MINEDiscriminator
 from .bayesian_uncertainty_estimator import BayesianUncertaintyEstimator, BayesianLinear, UncertaintyProbe
+from .monte_carlo_uncertainty_estimator import MonteCarloUncertaintyEstimator
+from .bayesian_mutation_decision import BayesianMutationDecision, MutationEvidence, MutationPrior, MutationDecision
 from .intelligent_bottleneck_detector import IntelligentBottleneckDetector, BottleneckReport, BottleneckType
 from .intelligent_mutation_planner import IntelligentMutationPlanner, MutationPlan, MutationType
 from .advanced_net2net_transfer import AdvancedNet2NetTransfer, Net2NetTransferMethod
@@ -72,6 +74,8 @@ __all__ = [
     # 🔬 新一代理论框架组件 - 基于互信息和贝叶斯推断的智能架构进化
     'MutualInformationEstimator', 'MINEDiscriminator',
     'BayesianUncertaintyEstimator', 'BayesianLinear', 'UncertaintyProbe',
+    'MonteCarloUncertaintyEstimator',
+    'BayesianMutationDecision', 'MutationEvidence', 'MutationPrior', 'MutationDecision',
     'IntelligentBottleneckDetector', 'BottleneckReport', 'BottleneckType',
     'IntelligentMutationPlanner', 'MutationPlan', 'MutationType',
     'AdvancedNet2NetTransfer', 'Net2NetTransferMethod',
