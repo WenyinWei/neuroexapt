@@ -40,6 +40,14 @@ from .performance_guided_division import PerformanceGuidedDivision, DivisionStra
 from .intelligent_morphogenesis_engine import IntelligentMorphogenesisEngine
 from .intelligent_dnm_integration import IntelligentDNMCore
 
+# 🔬 新一代基于互信息和贝叶斯推断的核心框架
+from .mutual_information_estimator import MutualInformationEstimator, MINEDiscriminator
+from .bayesian_uncertainty_estimator import BayesianUncertaintyEstimator, BayesianLinear, UncertaintyProbe
+from .intelligent_bottleneck_detector import IntelligentBottleneckDetector, BottleneckReport, BottleneckType
+from .intelligent_mutation_planner import IntelligentMutationPlanner, MutationPlan, MutationType
+from .advanced_net2net_transfer import AdvancedNet2NetTransfer, Net2NetTransferMethod
+from .intelligent_architecture_evolution_engine import IntelligentArchitectureEvolutionEngine, EvolutionConfig, EvolutionIteration
+
 __all__ = [
     # Core Components
     'Network', 'OPS', 'PRIMITIVES', 'Genotype',
@@ -60,5 +68,12 @@ __all__ = [
     # Enhanced DNM Components - 增强的DNM组件
     'EnhancedBottleneckDetector', 'PerformanceGuidedDivision', 'DivisionStrategy',
     # Intelligent Morphogenesis Components - 智能形态发生组件
-    'IntelligentMorphogenesisEngine', 'IntelligentDNMCore'
+    'IntelligentMorphogenesisEngine', 'IntelligentDNMCore',
+    # 🔬 新一代理论框架组件 - 基于互信息和贝叶斯推断的智能架构进化
+    'MutualInformationEstimator', 'MINEDiscriminator',
+    'BayesianUncertaintyEstimator', 'BayesianLinear', 'UncertaintyProbe',
+    'IntelligentBottleneckDetector', 'BottleneckReport', 'BottleneckType',
+    'IntelligentMutationPlanner', 'MutationPlan', 'MutationType',
+    'AdvancedNet2NetTransfer', 'Net2NetTransferMethod',
+    'IntelligentArchitectureEvolutionEngine', 'EvolutionConfig', 'EvolutionIteration'
 ]
