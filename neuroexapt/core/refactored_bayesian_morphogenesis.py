@@ -531,8 +531,12 @@ class DecisionMaker:
             analysis = data['analysis']
             candidate = analysis['candidate']
             
+            # 调试日志：检查候选点内容
+            layer_name = candidate.get('layer_name', '')
+            logger.info(f"🔍 构建决策 - 候选点 layer_name: '{layer_name}', 候选点内容: {candidate}")
+            
             decision = {
-                'layer_name': candidate.get('layer_name', ''),
+                'layer_name': layer_name,
                 'mutation_type': analysis.get('mutation_type', ''),
                 'success_probability': analysis.get('success_probability', 0.0),
                 'expected_improvement': analysis.get('expected_improvement', 0.0),

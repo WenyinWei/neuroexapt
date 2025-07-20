@@ -326,9 +326,20 @@ class IntelligentDNMCore:
             if final_decisions:
                 # 使用第一个最终决策作为主要变异
                 first_decision = final_decisions[0]
+                
+                # 调试日志：显示原始决策内容
+                logger.info(f"🔍 原始贝叶斯决策内容: {first_decision}")
+                
+                layer_name = first_decision.get('layer_name', 'unknown')
+                mutation_type = first_decision.get('mutation_type', 'unknown')
+                
+                # 进一步调试：检查字段值
+                logger.info(f"🔍 提取字段 - layer_name: '{layer_name}', mutation_type: '{mutation_type}'")
+                logger.info(f"🔍 决策键列表: {list(first_decision.keys())}")
+                
                 primary_mutation = {
-                    'mutation_type': first_decision.get('mutation_type', 'unknown'),
-                    'target_layer': first_decision.get('layer_name', 'unknown'),
+                    'mutation_type': mutation_type,
+                    'target_layer': layer_name,
                     'expected_improvement': first_decision.get('expected_improvement', 0.0),
                     'confidence': first_decision.get('decision_confidence', 0.0),
                     'rationale': first_decision.get('rationale', 'bayesian_recommendation')
@@ -396,6 +407,16 @@ class IntelligentDNMCore:
         mutation_type = mutation_config.get('mutation_type', '')
         
         logger.info(f"🔧 执行变异: {mutation_type} on {target_layer}")
+        logger.info(f"🔍 变异配置内容: {mutation_config}")
+        
+        # 检查目标层是否有效
+        if not target_layer or target_layer == 'unknown':
+            logger.error(f"❌ 无效的目标层: '{target_layer}'")
+            return {
+                'success': False,
+                'error': f'invalid_target_layer: {target_layer}',
+                'new_model': model
+            }
         
         # 根据变异类型执行相应操作
         if mutation_type == 'width_expansion':

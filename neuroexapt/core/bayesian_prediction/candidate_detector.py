@@ -39,10 +39,16 @@ class BayesianCandidateDetector:
         performance_candidates = self._detect_performance_candidates(features)
         candidates.extend(performance_candidates)
         
-        # 5. 去重和优先级排序
+        # 5. 去重和优先级排序前的日志
+        logger.info(f"🔍 去重前候选点数量: {len(candidates)}")
+        for i, candidate in enumerate(candidates[:5]):  # 只显示前5个
+            logger.info(f"  候选点 {i+1}: {candidate.get('layer_name', 'N/A')} - {candidate.get('detection_method', 'N/A')}")
+        
         unique_candidates = self._deduplicate_and_prioritize(candidates)
         
         logger.info(f"🔍 候选点检测完成: 发现{len(unique_candidates)}个候选点")
+        for i, candidate in enumerate(unique_candidates[:3]):  # 只显示前3个
+            logger.info(f"  最终候选点 {i+1}: {candidate.get('layer_name', 'N/A')} - 优先级 {candidate.get('priority', 0)}")
         
         return unique_candidates
     
@@ -59,19 +65,24 @@ class BayesianCandidateDetector:
         
         # 检测低激活层（可能的瓶颈）
         avg_activation = global_features.get('avg_activation', 0)
+        logger.info(f"🔍 激活检测 - 平均激活: {avg_activation:.4f}, 层数: {len(layer_features)}")
+        
         for layer_name, layer_data in layer_features.items():
             layer_mean = layer_data.get('mean', 0)
+            logger.debug(f"🔍 检查层 '{layer_name}': 平均激活 {layer_mean:.4f}")
             
             # 激活过低的层
             if layer_mean < avg_activation * 0.3:
-                candidates.append({
+                candidate = {
                     'layer_name': layer_name,
                     'detection_method': 'low_activation',
                     'priority': 0.7,
                     'rationale': f'激活过低 ({layer_mean:.4f})',
                     'suggested_mutations': ['width_expansion', 'attention_enhancement'],
                     'confidence': 0.6
-                })
+                }
+                logger.info(f"✅ 添加低激活候选点: {layer_name}")
+                candidates.append(candidate)
             
             # 激活饱和的层（可能需要正则化）
             sparsity = layer_data.get('zeros_ratio', 0)
@@ -230,7 +241,7 @@ class BayesianCandidateDetector:
             if layer_name and layer_name != 'unknown' and layer_name.strip():
                 valid_candidates.append(candidate)
             else:
-                logger.warning(f"跳过无效候选点: {candidate}")
+                logger.warning(f"🚫 跳过无效候选点 - layer_name: '{layer_name}', 候选点: {candidate}")
         
         # 按层名去重，保留优先级最高的
         layer_candidates = {}

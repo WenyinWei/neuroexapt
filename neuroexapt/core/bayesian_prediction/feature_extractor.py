@@ -95,6 +95,9 @@ class ArchitectureFeatureExtractor:
                 # 转换为numpy进行计算
                 act_data = activation.detach().cpu().numpy()
                 
+                # 调试日志：确认层名
+                logger.debug(f"🔍 处理激活层: '{layer_name}', 形状: {activation.shape}")
+                
                 # 基础统计
                 mean_val = np.mean(act_data)
                 std_val = np.std(act_data)
