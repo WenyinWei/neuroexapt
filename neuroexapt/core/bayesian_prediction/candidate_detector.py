@@ -223,10 +223,19 @@ class BayesianCandidateDetector:
     def _deduplicate_and_prioritize(self, candidates: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         """去重和优先级排序"""
         
+        # 过滤掉无效的候选点
+        valid_candidates = []
+        for candidate in candidates:
+            layer_name = candidate.get('layer_name', '')
+            if layer_name and layer_name != 'unknown' and layer_name.strip():
+                valid_candidates.append(candidate)
+            else:
+                logger.warning(f"跳过无效候选点: {candidate}")
+        
         # 按层名去重，保留优先级最高的
         layer_candidates = {}
         
-        for candidate in candidates:
+        for candidate in valid_candidates:
             layer_name = candidate['layer_name']
             priority = candidate.get('priority', 0)
             

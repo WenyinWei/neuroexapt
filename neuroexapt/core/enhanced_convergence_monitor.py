@@ -127,9 +127,9 @@ class EnhancedConvergenceMonitor:
             urgency_analysis
         )
         
-        # 更新状态
+        # 更新状态（只更新统计，不更新last_morphogenesis_epoch）
+        # last_morphogenesis_epoch 应该在实际执行变异后才更新
         if decision['allow']:
-            self.last_morphogenesis_epoch = current_epoch
             self.convergence_streak = 0
             self.stagnation_streak = 0
         else:
@@ -412,6 +412,21 @@ class EnhancedConvergenceMonitor:
             logger.info(f"收敛监控模式已设置为: {mode}")
         else:
             logger.warning(f"未知模式: {mode}，保持当前模式: {self.mode}")
+    
+    def record_morphogenesis_execution(self, current_epoch: int, mutation_info: Dict[str, Any]):
+        """记录实际执行的变异"""
+        self.last_morphogenesis_epoch = current_epoch
+        self.morphogenesis_history.append({
+            'epoch': current_epoch,
+            'mutation_info': mutation_info,
+            'timestamp': len(self.morphogenesis_history)
+        })
+        
+        # 限制历史长度
+        if len(self.morphogenesis_history) > 50:
+            self.morphogenesis_history = self.morphogenesis_history[-50:]
+        
+        logger.info(f"📝 记录变异执行: epoch {current_epoch}, 类型 {mutation_info.get('mutation_type', 'unknown')}")
     
     def reset_history(self):
         """重置历史记录"""

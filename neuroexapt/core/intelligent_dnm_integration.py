@@ -320,10 +320,25 @@ class IntelligentDNMCore:
         # 获取主要变异决策
         primary_mutation = execution_plan.get('primary_mutation', {})
         
+        # 如果没有primary_mutation，尝试从final_decisions中获取
         if not primary_mutation:
+            final_decisions = analysis.get('final_decisions', [])
+            if final_decisions:
+                # 使用第一个最终决策作为主要变异
+                first_decision = final_decisions[0]
+                primary_mutation = {
+                    'mutation_type': first_decision.get('mutation_type', 'unknown'),
+                    'target_layer': first_decision.get('layer_name', 'unknown'),
+                    'expected_improvement': first_decision.get('expected_improvement', 0.0),
+                    'confidence': first_decision.get('decision_confidence', 0.0),
+                    'rationale': first_decision.get('rationale', 'bayesian_recommendation')
+                }
+                logger.info(f"🔧 从贝叶斯决策构建主要变异: {primary_mutation['mutation_type']} on {primary_mutation['target_layer']}")
+        
+        if not primary_mutation or primary_mutation.get('target_layer') == 'unknown':
             return {
                 'executed': False,
-                'reason': 'no_primary_mutation',
+                'reason': 'no_valid_primary_mutation',
                 'model_modified': False,
                 'new_model': model
             }
@@ -338,6 +353,20 @@ class IntelligentDNMCore:
             mutation_success = mutation_result.get('success', False)
             mutation_type = primary_mutation.get('mutation_type', 'unknown')
             self.intelligent_engine.update_success_rate(mutation_type, mutation_success)
+            
+            # 如果变异执行成功，通知收敛监控器
+            if mutation_result.get('success', False):
+                current_epoch = context.get('current_epoch', 0)
+                mutation_info = {
+                    'mutation_type': primary_mutation.get('mutation_type', 'unknown'),
+                    'target_layer': primary_mutation.get('target_layer', 'unknown'),
+                    'expected_improvement': primary_mutation.get('expected_improvement', 0.0)
+                }
+                
+                # 通知收敛监控器记录变异执行
+                if hasattr(self.convergence_monitor, 'record_morphogenesis_execution'):
+                    self.convergence_monitor.record_morphogenesis_execution(current_epoch, mutation_info)
+                    logger.info(f"✅ 已通知收敛监控器变异执行成功")
             
             return {
                 'executed': True,
