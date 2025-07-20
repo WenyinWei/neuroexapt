@@ -170,109 +170,197 @@ def run_baseline_demo(args):
     }
 
 
-def run_intelligent_evolution_demo(args):
-    """运行智能进化演示"""
-    # 初始化日志器和配置
+def run_intelligent_evolution_experiment(args):
+    """运行智能进化实验"""
+    # 初始化日志器
     logger = DemoLogger('evolution_demo', level='INFO', verbose=args.verbose and not args.quiet)
-    
+    logger.info("🔬 开始智能进化实验")
     logger.info("="*60)
-    logger.info("🧬 智能架构进化演示 - 理论框架版本")
+    logger.info("🧬 80-Epoch混合训练（常规训练+间歇进化）")
     logger.info(f"🎯 目标：CIFAR-10上{args.target}%准确率")
     logger.info("="*60)
     
-    # 创建配置
-    config = DemoConfiguration(
-        device_type=args.device,
-        seed=args.seed,
-        enhanced_augmentation=args.enhanced,
-        model_type='enhanced_resnet34' if args.enhanced else 'enhanced_resnet18',
-        verbose=args.verbose and not args.quiet
-    )
+    # 设备和数据加载
+    device = setup_device()
+    train_loader, test_loader = load_cifar10_data(args.batch_size, args.num_workers)
+    config = {
+        'lr': args.lr,
+        'weight_decay': args.weight_decay,
+        'epochs': args.epochs,
+        'label_smoothing': 0.1,
+        'device': device
+    }
     
-    # 设置环境
-    device = DeviceManager.setup_environment(args.seed)
-    device_info = DeviceManager.get_device_info(device)
-    logger.info(f"设备信息:\n{ResultFormatter.format_device_info(device_info)}")
+    # 初始模型和训练
+    logger.info("🏗️ 创建初始模型")
+    initial_model = create_enhanced_resnet(num_classes=10, dropout_rate=0.1).to(device)
     
-    # 数据管理
-    data_manager = CIFAR10DataManager(config)
-    train_loader, test_loader = data_manager.create_data_loaders()
-    
-    # 创建初始模型
-    initial_model = ModelManager.create_model(config)
-    model_info = ModelManager.get_model_info(initial_model)
-    logger.info(f"初始模型信息:\n{ResultFormatter.format_model_info(model_info)}")
-    
-    # 初始训练
+    # 初始训练 - 建立基线
+    logger.info("📚 进行初始基线训练")
     trainer = AdvancedTrainer(initial_model, device, config, logger)
-    epochs = args.epochs if not args.quick else max(5, args.epochs // 3)
     
-    logger.progress(f"初始训练 ({epochs} epochs)")
-    initial_accuracy = trainer.train_model(train_loader, test_loader, epochs=epochs)
-    logger.info(f"初始准确率: {initial_accuracy:.2f}%")
-    
-    # 配置进化引擎 - 长期进化策略
-    evolution_config = EvolutionConfig(
-        max_evolution_rounds=80 if not args.quick else 10,  # 长期进化：80轮
-        target_accuracy=args.target,
-        max_mutations_per_round=1 if args.quick else 2,     # 每轮少量变异，持续优化
-        enable_sampling_validation=not args.quick,  # 快速模式禁用抽样验证
-        validation_sample_ratio=0.05 if args.quick else 0.1,
-        quick_validation_epochs=2 if args.quick else 3,
-        # 调整阈值以注重长期潜力而非短期表现
-        min_benefit_threshold=-0.01,   # 允许-1%短期下降
-        confidence_threshold=0.05,     # 5%最小成功率 (更宽松探索)
-    )
-    
-    # 创建进化引擎
-    evolution_engine = UnifiedIntelligentEvolutionEngine(
-        config=evolution_config,
-        device=device
-    )
-    
-    logger.progress(f"开始智能架构进化")
-    logger.info(f"进化配置: {evolution_config.max_evolution_rounds}轮, "
-               f"目标{evolution_config.target_accuracy}%")
-    
-    # 执行进化
     start_time = time.time()
+    
+    # === 80-Epoch 训练 + 间歇性进化 ===
+    logger.info("🔄 开始80-epoch混合训练（训练+间歇进化）")
+    
+    model = initial_model
+    total_epochs = 80
+    evolution_epochs = [10, 20, 35, 50, 65]  # 在这些epoch进行进化
+    criterion = nn.CrossEntropyLoss()
     
     def optimizer_factory(params):
         return optim.SGD(params, lr=0.01, momentum=0.9, weight_decay=5e-4)
     
-    evolved_model, evolution_state = evolution_engine.evolve_architecture(
-        model=initial_model,
-        train_loader=train_loader,
-        test_loader=test_loader,
-        criterion=nn.CrossEntropyLoss(),
-        optimizer_factory=optimizer_factory
+    # 简化的进化配置 - 每次只做1轮快速进化
+    evolution_config = EvolutionConfig(
+        max_evolution_rounds=1,  # 每次进化只做1轮
+        target_accuracy=args.target,
+        max_mutations_per_round=1,  # 每次只尝试1个变异
+        enable_sampling_validation=True,
+        validation_sample_ratio=0.05,  # 更快的验证
+        quick_validation_epochs=2,     # 更快的验证
+        min_benefit_threshold=-0.01,
+        confidence_threshold=0.05,
     )
     
-    evolution_time = time.time() - start_time
+    # 记录进化历史
+    accuracy_history = []
+    evolution_attempts = []
+    successful_evolutions = 0
     
-    # 获取进化摘要
-    summary = evolution_engine.get_evolution_summary()
+    # 初始准确率
+    current_accuracy = trainer.evaluate_model(test_loader)
+    accuracy_history.append(current_accuracy)
+    logger.info(f"初始准确率: {current_accuracy:.2f}%")
     
-    # 最终评估
-    final_trainer = AdvancedTrainer(evolved_model, device, config, logger)
-    final_accuracy = final_trainer.evaluate_model(test_loader)
+    # 80-epoch 主循环
+    for epoch in range(1, total_epochs + 1):
+        logger.info(f"\n=== Epoch {epoch}/{total_epochs} ===")
+        
+        # 检查是否是进化epoch
+        if epoch in evolution_epochs:
+            logger.info(f"🧬 进化Epoch {epoch} - 尝试架构进化")
+            
+            # 创建进化引擎
+            evolution_engine = UnifiedIntelligentEvolutionEngine(
+                config=evolution_config,
+                device=device
+            )
+            
+            try:
+                # 单轮进化尝试
+                evolved_model, evolution_state = evolution_engine.evolve_architecture(
+                    model=model,
+                    train_loader=train_loader,
+                    test_loader=test_loader,
+                    criterion=criterion,
+                    optimizer_factory=optimizer_factory
+                )
+                
+                # 检查进化是否成功
+                if evolution_state.successful_mutations > 0:
+                    model = evolved_model
+                    successful_evolutions += 1
+                    improvement = evolution_state.best_accuracy - current_accuracy
+                    logger.success(f"进化成功！改进: {improvement:.2f}%")
+                    current_accuracy = evolution_state.best_accuracy
+                else:
+                    logger.info("进化未产生改进，继续常规训练")
+                
+                evolution_attempts.append({
+                    'epoch': epoch,
+                    'successful': evolution_state.successful_mutations > 0,
+                    'improvement': evolution_state.best_accuracy - current_accuracy if evolution_state.successful_mutations > 0 else 0
+                })
+                
+            except Exception as e:
+                logger.warning(f"进化尝试失败: {e}")
+                evolution_attempts.append({
+                    'epoch': epoch,
+                    'successful': False,
+                    'improvement': 0
+                })
+        
+        else:
+            # 常规训练epoch
+            logger.info(f"📚 常规训练Epoch {epoch}")
+            
+            # 单epoch训练
+            trainer.model = model  # 更新trainer的模型引用
+            
+            # 训练一个epoch
+            model.train()
+            optimizer = optimizer_factory(model.parameters())
+            
+            # 动态调整学习率
+            if epoch > 40:
+                for param_group in optimizer.param_groups:
+                    param_group['lr'] = 0.001
+            elif epoch > 60:
+                for param_group in optimizer.param_groups:
+                    param_group['lr'] = 0.0001
+            
+            epoch_loss = 0.0
+            batches_processed = 0
+            
+            for batch_idx, (data, target) in enumerate(train_loader):
+                data, target = data.to(device), target.to(device)
+                
+                optimizer.zero_grad()
+                output = model(data)
+                loss = criterion(output, target)
+                loss.backward()
+                optimizer.step()
+                
+                epoch_loss += loss.item()
+                batches_processed += 1
+            
+            # 评估当前准确率
+            current_accuracy = trainer.evaluate_model(test_loader)
+            avg_loss = epoch_loss / max(batches_processed, 1)
+            logger.info(f"Epoch {epoch} - 损失: {avg_loss:.4f}, 准确率: {current_accuracy:.2f}%")
+        
+        # 记录准确率历史
+        accuracy_history.append(current_accuracy)
+        
+        # 检查目标达成
+        if current_accuracy >= args.target:
+            logger.success(f"🎯 在Epoch {epoch}达到{args.target}%目标准确率！")
+            break
     
-    # 结果展示
-    logger.success(f"智能进化完成！(用时: {evolution_time:.1f}s)")
-    logger.info(f"进化结果摘要:\n{ResultFormatter.format_evolution_summary(summary)}")
+    total_time = time.time() - start_time
+    
+    # 最终评估和结果
+    final_accuracy = trainer.evaluate_model(test_loader)
+    total_improvement = final_accuracy - accuracy_history[0]
+    
+    logger.success(f"80-Epoch混合训练完成！(用时: {total_time:.1f}s)")
+    logger.info(f"初始准确率: {accuracy_history[0]:.2f}%")
+    logger.info(f"最终准确率: {final_accuracy:.2f}%")
+    logger.info(f"总改进: {total_improvement:.2f}%")
+    logger.info(f"成功进化次数: {successful_evolutions}/{len(evolution_epochs)}")
+    
+    # 显示进化历史
+    logger.info("进化尝试历史:")
+    for attempt in evolution_attempts:
+        status = "✅" if attempt['successful'] else "❌"
+        logger.info(f"  Epoch {attempt['epoch']}: {status} 改进 {attempt['improvement']:.2f}%")
     
     if final_accuracy >= args.target:
-        logger.success(f"成功达到{args.target}%准确率目标！")
+        logger.success(f"🎉 成功达到{args.target}%准确率目标！")
     else:
         logger.warning(f"距离{args.target}%目标还差: {args.target - final_accuracy:.2f}%")
     
     return {
-        'initial_accuracy': initial_accuracy,
+        'initial_accuracy': accuracy_history[0],
         'final_accuracy': final_accuracy,
-        'total_improvement': final_accuracy - initial_accuracy,
+        'total_improvement': total_improvement,
         'target_reached': final_accuracy >= args.target,
-        'evolution_summary': summary,
-        'evolution_time': evolution_time
+        'successful_evolutions': successful_evolutions,
+        'evolution_attempts': evolution_attempts,
+        'accuracy_history': accuracy_history,
+        'total_time': total_time
     }
 
 
@@ -292,7 +380,7 @@ def main():
         if args.baseline:
             results = run_baseline_demo(args)
         else:
-            results = run_intelligent_evolution_demo(args)
+            results = run_intelligent_evolution_experiment(args)
         
         # 显示最终结果摘要
         logger.info("\n" + "="*60)
