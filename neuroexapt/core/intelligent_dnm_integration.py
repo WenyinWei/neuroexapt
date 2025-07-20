@@ -867,15 +867,23 @@ class IntelligentDNMCore:
         type_mapping = {
             'width_expansion': 'width_expansion',
             'depth_expansion': 'depth_expansion',
+            'serial_division': 'serial_division',
             'parallel_division': 'parallel_division',
             'attention_enhancement': 'attention_enhancement',
             'residual_connection': 'structural_enhancement',
             'batch_norm_insertion': 'normalization_enhancement',
+            'layer_norm': 'normalization_enhancement',
             'information_enhancement': 'information_enhancement',
             'channel_attention': 'attention_enhancement'
         }
         
-        return type_mapping.get(mutation_type, 'intelligent_mutation')
+        mapped_type = type_mapping.get(mutation_type, 'intelligent_mutation')
+        
+        if mapped_type == 'intelligent_mutation':
+            logger.warning(f"⚠️  变异类型 '{mutation_type}' 未在映射表中找到，使用默认类型 'intelligent_mutation'")
+            logger.info(f"🔍 当前支持的变异类型: {list(type_mapping.keys())}")
+        
+        return mapped_type
     
     def _format_trigger_reasons(self, analysis: Dict[str, Any]) -> List[str]:
         """格式化触发原因"""
