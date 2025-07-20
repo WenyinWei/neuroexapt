@@ -61,9 +61,9 @@ from neuroexapt.core import (
 from demo_utils import (
     DemoConfiguration,
     DemoLogger,
-    DeviceManager,
-    CIFAR10DataManager,
-    ModelManager,
+    setup_device,
+    load_cifar10_data,
+    create_enhanced_resnet,
     AdvancedTrainer,
     ResultFormatter
 )

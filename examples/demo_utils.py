@@ -521,12 +521,62 @@ class ResultFormatter:
 
 
 # 导出主要类和函数
+def load_cifar10_data(batch_size: int = 128, num_workers: int = 2) -> tuple:
+    """Load CIFAR-10 dataset with enhanced augmentation."""
+    
+    # Data transformations
+    transform_train = transforms.Compose([
+        transforms.RandomCrop(32, padding=4),
+        transforms.RandomHorizontalFlip(),
+        transforms.ToTensor(),
+        transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
+    ])
+    
+    transform_test = transforms.Compose([
+        transforms.ToTensor(),
+        transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
+    ])
+    
+    # Load datasets
+    trainset = torchvision.datasets.CIFAR10(
+        root='./data', train=True, download=True, transform=transform_train
+    )
+    trainloader = DataLoader(
+        trainset, batch_size=batch_size, shuffle=True, num_workers=num_workers
+    )
+    
+    testset = torchvision.datasets.CIFAR10(
+        root='./data', train=False, download=True, transform=transform_test
+    )
+    testloader = DataLoader(
+        testset, batch_size=batch_size, shuffle=False, num_workers=num_workers
+    )
+    
+    return trainloader, testloader
+
+
+def create_enhanced_resnet(num_classes: int = 10, dropout_rate: float = 0.1) -> nn.Module:
+    """Create enhanced ResNet model."""
+    try:
+        # 尝试使用新的enhanced模型工厂
+        return create_enhanced_model('enhanced_resnet34', num_classes=num_classes)
+    except Exception as e:
+        logging.warning(f"Failed to create enhanced model: {e}")
+        logging.info("Falling back to basic ResNet...")
+        
+        # 回退到基础ResNet实现
+        import torchvision.models as models
+        model = models.resnet18(pretrained=False)
+        model.fc = nn.Linear(model.fc.in_features, num_classes)
+        return model
+
+
 __all__ = [
     'DemoConfiguration',
-    'DemoLogger', 
-    'DeviceManager',
-    'CIFAR10DataManager',
-    'ModelManager',
+    'DemoLogger',
+    'setup_device',
+    'load_cifar10_data',
+    'create_enhanced_resnet',
     'AdvancedTrainer',
     'ResultFormatter'
 ]
