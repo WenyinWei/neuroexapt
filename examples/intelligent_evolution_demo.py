@@ -103,6 +103,10 @@ def parse_arguments():
                        help='计算设备 (默认: auto)')
     parser.add_argument('--seed', type=int, default=42,
                        help='随机种子 (默认: 42)')
+    parser.add_argument('--batch-size', type=int, default=128,
+                       help='批处理大小 (默认: 128)')
+    parser.add_argument('--num-workers', type=int, default=2,
+                       help='数据加载器工作线程数 (默认: 2)')
     parser.add_argument('--verbose', action='store_true', default=True,
                        help='详细输出模式')
     parser.add_argument('--quiet', action='store_true',
