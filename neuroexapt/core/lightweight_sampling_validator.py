@@ -36,7 +36,7 @@ class SamplingValidationConfig:
     """抽样验证配置"""
     # 抽样参数
     num_samples: int = 5              # 随机初始化样本数
-    sample_epochs: int = 3            # 每个样本的训练轮数
+    sample_epochs: int = 8            # 每个样本的训练轮数 (增加以评估长期潜力)
     sample_data_ratio: float = 0.1    # 抽样数据比例
     
     # 训练参数
@@ -451,7 +451,7 @@ class LightweightSamplingValidator:
             weight_decay=self.config.weight_decay
         )
         
-        # 快速训练
+        # 快速训练 - 增加训练量以更好评估长期潜力
         for epoch in range(self.config.sample_epochs):
             for batch_idx, (data, target) in enumerate(train_loader):
                 data, target = data.to(self.device), target.to(self.device)
@@ -462,8 +462,8 @@ class LightweightSamplingValidator:
                 loss.backward()
                 optimizer.step()
                 
-                # 限制训练步数以控制时间
-                if batch_idx >= 10:  # 最多10个batch
+                # 增加训练步数以更好评估潜力
+                if batch_idx >= 25:  # 最多25个batch (之前是10)
                     break
         
         # 评估

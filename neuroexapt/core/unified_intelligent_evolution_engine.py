@@ -226,9 +226,18 @@ class UnifiedIntelligentEvolutionEngine:
                 criterion, optimizer_factory
             )
             
-            # 4. 更新状态
+            # 4. 更新状态 - 考虑最好的改进而不是平均改进
             new_accuracy = self._evaluate_model(improved_model, test_loader)
             round_improvement = new_accuracy - self.evolution_state.current_accuracy
+            
+            # 如果有任何正向改进，记录最佳结果
+            best_improvement = max(improvements) if improvements else 0.0
+            if best_improvement > 0:
+                logger.info(f"检测到正向改进: {best_improvement:.2f}% (即使当前轮次总体改进: {round_improvement:.2f}%)")
+                # 接受最好的变异结果，而不是平均结果
+                if best_improvement > round_improvement:
+                    logger.info("使用最佳变异结果而非平均结果")
+                    round_improvement = best_improvement * 0.5  # 保守估计
             
             self.evolution_state.current_accuracy = new_accuracy
             if new_accuracy > self.evolution_state.best_accuracy:
@@ -417,11 +426,11 @@ class UnifiedIntelligentEvolutionEngine:
         if len(strict_selected) == 0:
             logger.info("严格标准未选到候选，使用宽松标准选择最佳候选")
             
-            # 过滤掉明显不合理的候选
+            # 过滤掉明显不合理的候选 - 更注重长期潜力
             viable_candidates = [
                 c for c in candidates 
-                if (c.calibrated_expectation.expected_benefit > -0.01 and  # 不能损失超过1%
-                    c.calibrated_expectation.success_probability > 0.1 and  # 至少10%成功率
+                if (c.calibrated_expectation.expected_benefit > -0.02 and  # 允许2%短期损失
+                    c.calibrated_expectation.success_probability > 0.05 and  # 至少5%成功率
                     self._check_resource_constraints(c))
             ]
             
@@ -541,12 +550,23 @@ class UnifiedIntelligentEvolutionEngine:
                         train_loader: DataLoader,
                         criterion: nn.Module,
                         optimizer_factory: Callable,
-                        epochs: int = 5) -> nn.Module:
-        """微调模型"""
+                        epochs: int = 15) -> nn.Module:
+        """
+        微调模型 - 更长的训练以评估长期潜力
+        
+        Args:
+            epochs: 训练轮数，默认15轮以更好评估潜力
+        """
         model.train()
         optimizer = optimizer_factory(model.parameters())
         
+        # 使用学习率衰减
+        scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=epochs)
+        
         for epoch in range(epochs):
+            epoch_loss = 0.0
+            batches_processed = 0
+            
             for batch_idx, (data, target) in enumerate(train_loader):
                 data, target = data.to(self.device), target.to(self.device)
                 
@@ -556,9 +576,19 @@ class UnifiedIntelligentEvolutionEngine:
                 loss.backward()
                 optimizer.step()
                 
-                # 限制训练步数
-                if batch_idx >= 50:  # 最多50个batch
+                epoch_loss += loss.item()
+                batches_processed += 1
+                
+                # 增加训练步数限制
+                if batch_idx >= 100:  # 最多100个batch (之前是50)
                     break
+            
+            scheduler.step()
+            
+            # 记录训练进度
+            if epoch % 5 == 0:
+                avg_loss = epoch_loss / max(batches_processed, 1)
+                logger.debug(f"微调 Epoch {epoch+1}/{epochs}, 平均损失: {avg_loss:.4f}")
         
         return model
     

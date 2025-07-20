@@ -219,9 +219,9 @@ def run_intelligent_evolution_demo(args):
         enable_sampling_validation=not args.quick,  # 快速模式禁用抽样验证
         validation_sample_ratio=0.05 if args.quick else 0.1,
         quick_validation_epochs=2 if args.quick else 3,
-        # 调整阈值使其更合理
-        min_benefit_threshold=0.0001,  # 0.01%最小改进
-        confidence_threshold=0.15,     # 15%最小成功率
+        # 调整阈值以注重长期潜力而非短期表现
+        min_benefit_threshold=-0.005,  # 允许-0.5%短期下降
+        confidence_threshold=0.1,      # 10%最小成功率 (更宽松)
     )
     
     # 创建进化引擎
