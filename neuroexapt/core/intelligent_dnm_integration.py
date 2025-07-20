@@ -36,11 +36,34 @@ class IntelligentDNMCore:
     5. 集成贝叶斯推断引擎，提升决策智能化
     """
     
-    def __init__(self):
-        self.intelligent_engine = IntelligentMorphogenesisEngine()
-        self.bayesian_engine = BayesianMorphogenesisEngine()
-        self.convergence_monitor = IntelligentConvergenceMonitor()
-        self.leakage_detector = InformationLeakageDetector()
+    def __init__(self, 
+                 bayesian_engine=None,
+                 intelligent_engine=None,
+                 convergence_monitor=None,
+                 leakage_detector=None):
+        # 支持依赖注入，提高可测试性和扩展性
+        self.intelligent_engine = intelligent_engine or IntelligentMorphogenesisEngine()
+        
+        # 使用重构后的贝叶斯引擎（如果没有传入的话）
+        if bayesian_engine is None:
+            from .refactored_bayesian_morphogenesis import RefactoredBayesianMorphogenesisEngine
+            self.bayesian_engine = RefactoredBayesianMorphogenesisEngine()
+        else:
+            self.bayesian_engine = bayesian_engine
+        
+        # 使用增强版收敛监控器（如果没有传入的话）
+        if convergence_monitor is None:
+            from .enhanced_convergence_monitor import EnhancedConvergenceMonitor
+            self.convergence_monitor = EnhancedConvergenceMonitor(mode='balanced')
+        else:
+            self.convergence_monitor = convergence_monitor
+            
+        self.leakage_detector = leakage_detector or InformationLeakageDetector()
+        
+        # 添加模式转换器
+        from .bayesian_prediction.schema_transformer import BayesianSchemaTransformer
+        self.schema_transformer = BayesianSchemaTransformer()
+        
         self.execution_history = []
         
         # 集成配置
@@ -52,8 +75,12 @@ class IntelligentDNMCore:
             'prefer_bayesian_decisions': True,    # 优先使用贝叶斯决策
             'fallback_to_old_system': False,      # 完全使用新系统
             'detailed_logging': True,
-            'performance_tracking': True
+            'performance_tracking': True,
+            'aggressive_mutation_mode': True      # 积极变异模式
         }
+        
+        # 设置积极模式以解决过于保守的问题
+        self.set_aggressive_mode()
     
     def enhanced_morphogenesis_execution(self, 
                                        model: nn.Module, 
@@ -138,19 +165,36 @@ class IntelligentDNMCore:
     def _stage_comprehensive_analysis(self, model: nn.Module, context: Dict[str, Any]) -> Dict[str, Any]:
         """阶段3: 综合分析（增强贝叶斯版本）"""
         
-        # 优先使用贝叶斯分析
-        if self.config.get('enable_bayesian_analysis', True):
+        # 综合分析：根据配置决定是否优先/仅使用贝叶斯分析
+        enable_bayes = self.config.get('enable_bayesian_analysis', True)
+        prefer_bayes = self.config.get('prefer_bayesian_decisions', False)
+
+        if enable_bayes:
             logger.info("🧠 使用增强贝叶斯分析引擎")
             bayesian_result = self.bayesian_engine.bayesian_morphogenesis_analysis(model, context)
-            
-            # 如果贝叶斯分析成功且有可行决策，使用贝叶斯结果
-            if (bayesian_result.get('optimal_decisions') and 
-                bayesian_result['execution_plan'].get('execute', False)):
-                logger.info(f"✅ 贝叶斯分析成功: {len(bayesian_result['optimal_decisions'])}个最优决策")
-                return self._convert_bayesian_to_standard_format(bayesian_result)
+            bayes_success = (
+                bayesian_result.get('optimal_decisions') and 
+                bayesian_result['execution_plan'].get('execute', False)
+            )
+
+            if prefer_bayes:
+                # 配置要求优先使用贝叶斯决策，只要贝叶斯分析成功就直接返回
+                if bayes_success:
+                    logger.info(f"✅ 贝叶斯分析成功: {len(bayesian_result['optimal_decisions'])}个最优决策")
+                    return self.schema_transformer.convert_bayesian_to_standard_format(bayesian_result)
+                else:
+                    logger.info("⚠️ 贝叶斯分析未产生可行决策，回退到传统智能分析")
             else:
-                logger.info("⚠️ 贝叶斯分析未产生可行决策，回退到传统智能分析")
-        
+                # 配置未要求优先贝叶斯，进行混合分析
+                standard_result = self.intelligent_engine.comprehensive_morphogenesis_analysis(model, context)
+                
+                if bayes_success:
+                    logger.info(f"✅ 贝叶斯分析成功: {len(bayesian_result['optimal_decisions'])}个最优决策，与传统分析合并")
+                    return self.schema_transformer.merge_bayesian_and_standard_results(bayesian_result, standard_result)
+                else:
+                    logger.info("⚠️ 贝叶斯分析未产生可行决策，使用传统智能分析结果")
+                    return standard_result
+
         # 回退到传统智能分析
         logger.info("🔄 使用传统智能分析引擎")
         return self.intelligent_engine.comprehensive_morphogenesis_analysis(model, context)
@@ -1137,53 +1181,63 @@ class IntelligentDNMCore:
             # 顶级模块
             setattr(model, module_name, new_module)
     
-    def _convert_bayesian_to_standard_format(self, bayesian_result: Dict[str, Any]) -> Dict[str, Any]:
-        """将贝叶斯分析结果转换为标准格式"""
+    def set_aggressive_mode(self):
+        """设置积极模式以解决过于保守的问题"""
         
-        optimal_decisions = bayesian_result.get('optimal_decisions', [])
-        bayesian_analysis = bayesian_result.get('bayesian_analysis', {})
-        execution_plan = bayesian_result.get('execution_plan', {})
+        # 设置收敛监控为积极模式
+        if hasattr(self.convergence_monitor, 'set_mode'):
+            self.convergence_monitor.set_mode('aggressive')
         
-        # 转换为标准的comprehensive_analysis格式
-        converted_result = {
-            'analysis_summary': {
-                'performance_situation': {
-                    'situation_type': 'bayesian_optimized',
-                    'urgency_level': 'intelligent',
-                    'improvement_trend': 'bayesian_predicted'
-                },
-                'structural_analysis': {
-                    'total_layers_analyzed': bayesian_analysis.get('candidates_found', 0),
-                    'bottlenecks_found': len(optimal_decisions),
-                    'severity_distribution': {'bayesian_detected': len(optimal_decisions)}
-                },
-                'information_efficiency': {
-                    'overall_efficiency': bayesian_analysis.get('decision_confidence', 0.5),
-                    'enhancement_opportunities': len(optimal_decisions)
-                },
-                'gradient_quality': {
-                    'overall_quality': 0.7,  # 贝叶斯分析假设合理的梯度质量
-                    'enhancement_needed': len(optimal_decisions) > 0
-                }
-            },
-            'mutation_candidates': self._convert_decisions_to_candidates(optimal_decisions),
-            'mutation_strategies': self._convert_decisions_to_strategies(optimal_decisions),
-            'final_decisions': optimal_decisions,
-            'execution_plan': execution_plan,
-            'intelligent_analysis': {
-                'candidates_discovered': len(optimal_decisions),
-                'strategies_evaluated': len(optimal_decisions),
-                'final_decisions': len(optimal_decisions),
-                'execution_confidence': bayesian_analysis.get('decision_confidence', 0.0),
-                'performance_trend': 'bayesian_enhanced',
-                'saturation_level': 0.0  # 贝叶斯分析关注改进而非饱和
-            },
-            'bayesian_insights': bayesian_result.get('bayesian_insights', {}),
-            'source_engine': 'bayesian'
+        # 设置贝叶斯引擎为积极模式
+        if hasattr(self.bayesian_engine, 'set_aggressive_mode'):
+            self.bayesian_engine.set_aggressive_mode()
+        
+        # 更新配置
+        self.config.update({
+            'aggressive_mutation_mode': True,
+            'prefer_bayesian_decisions': True,
+            'enable_bayesian_analysis': True
+        })
+        
+        logger.info("🚀 智能DNM核心已设置为积极模式")
+    
+    def set_conservative_mode(self):
+        """设置保守模式"""
+        
+        # 设置收敛监控为保守模式
+        if hasattr(self.convergence_monitor, 'set_mode'):
+            self.convergence_monitor.set_mode('conservative')
+        
+        # 设置贝叶斯引擎为保守模式
+        if hasattr(self.bayesian_engine, 'set_conservative_mode'):
+            self.bayesian_engine.set_conservative_mode()
+        
+        # 更新配置
+        self.config.update({
+            'aggressive_mutation_mode': False,
+            'prefer_bayesian_decisions': False,
+        })
+        
+        logger.info("🛡️ 智能DNM核心已设置为保守模式")
+    
+    def get_system_status(self) -> Dict[str, Any]:
+        """获取系统状态"""
+        
+        status = {
+            'config': self.config,
+            'execution_history_length': len(self.execution_history)
         }
         
-        logger.info(f"🔄 贝叶斯结果转换完成: {len(optimal_decisions)}个决策")
-        return converted_result
+        # 添加组件状态
+        if hasattr(self.convergence_monitor, 'get_status_summary'):
+            status['convergence_monitor'] = self.convergence_monitor.get_status_summary()
+        
+        if hasattr(self.bayesian_engine, 'get_analysis_summary'):
+            status['bayesian_engine'] = self.bayesian_engine.get_analysis_summary()
+        
+        return status
+    
+    # 移除重复的转换方法，现在使用schema_transformer
     
     def _convert_decisions_to_candidates(self, decisions: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         """将贝叶斯决策转换为候选点格式"""
