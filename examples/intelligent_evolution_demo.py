@@ -178,6 +178,9 @@ class IntelligentEvolutionTrainer:
         self.optimizer = None
         self.scheduler = None
         
+        # 🔧 修复：立即设置优化器以避免 'NoneType' object has no attribute 'zero_grad' 错误
+        self.setup_optimizer()
+        
     def setup_optimizer(self, learning_rate=0.1):
         """设置优化器和学习率调度器"""
         self.optimizer = optim.SGD(

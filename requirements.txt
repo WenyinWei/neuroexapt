@@ -1,30 +1,7 @@
-# Core dependencies
-torch>=2.0.0
-torchvision>=0.15.0
-numpy>=1.20.0
-scipy>=1.7.0
-scikit-learn>=1.0.0
-
-# Visualization
+torch>=1.9.0
+torchvision>=0.10.0
+numpy>=1.21.0
 matplotlib>=3.5.0
-seaborn>=0.11.2
-
-# Progress tracking
+psutil>=5.8.0
 tqdm>=4.62.0
-
-# Dataset downloading and caching
-requests>=2.25.0
-
-# Monitoring
-tensorboard>=2.8.0
-
-# Configuration
-pyyaml>=6.0 
-GPUtil>=1.4.0  # For GPU monitoring
-
-# Web scraping
-beautifulsoup4>=4.9.3
-lxml>=4.6.3
-
-# Torrent client
-qbittorrent-api>=2021.5.21 
+scipy>=1.7.0 
