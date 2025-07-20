@@ -431,9 +431,9 @@ def demo_uncertainty_analysis(trainer):
     print("🎲 演示：贝叶斯不确定性分析")
     print("="*60)
     
-         # 检查训练进度
-     _, current_accuracy = trainer.evaluate()
-     if current_accuracy < 30.0:
+    # 检查训练进度
+    _, current_accuracy = trainer.evaluate()
+    if current_accuracy < 30.0:
         print("⚠️  模型准确率过低，跳过不确定性分析")
         return {}
     
@@ -499,9 +499,9 @@ def demo_intelligent_bottleneck_detection(trainer):
     print("🔍 演示：智能瓶颈检测")
     print("="*60)
     
-         # 检查训练进度
-     _, current_accuracy = trainer.evaluate()
-     if current_accuracy < 40.0:  # 瓶颈检测需要更高的准确率
+    # 检查训练进度
+    _, current_accuracy = trainer.evaluate()
+    if current_accuracy < 40.0:  # 瓶颈检测需要更高的准确率
         print("⚠️  模型准确率过低，跳过瓶颈检测")
         print("💡 建议：在模型收敛到40%以上准确率后再进行瓶颈检测")
         return []
@@ -591,7 +591,7 @@ def demo_intelligent_evolution(trainer, initial_epochs=5):
     
     for epoch in range(initial_epochs):
         train_acc = trainer.train_epoch(epoch)
-                 test_loss, test_acc = trainer.evaluate()
+        test_loss, test_acc = trainer.evaluate()
         
         print(f"Epoch {epoch}: Train Acc: {train_acc:.2f}%, Test Acc: {test_acc:.2f}%, Test Loss: {test_loss:.4f}")
         
@@ -628,7 +628,7 @@ def demo_intelligent_evolution(trainer, initial_epochs=5):
     def evaluation_function(model):
         """评估函数"""
         trainer.model = model
-                 _, accuracy = trainer.evaluate()
+        _, accuracy = trainer.evaluate()
         return accuracy / 100.0  # 转换为0-1范围
     
     try:
