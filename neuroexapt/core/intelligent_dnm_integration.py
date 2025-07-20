@@ -883,12 +883,29 @@ class IntelligentDNMCore:
         # 执行计划
         execution_plan = analysis.get('execution_plan', {})
         if execution_plan.get('execute', False):
-            primary = execution_plan.get('primary_mutation', {})
-            logger.info(f"🚀 执行计划: {primary.get('mutation_type', 'unknown')} "
-                       f"on {primary.get('target_layer', 'unknown')} "
-                       f"(期望改进: {primary.get('expected_improvement', 0):.3%})")
+            # 从贝叶斯分析结果中获取主要变异信息
+            final_decisions = analysis.get('final_decisions', [])
+            
+            if final_decisions:
+                primary = final_decisions[0]  # 第一个决策作为主要变异
+                mutation_type = primary.get('mutation_type', 'unknown')
+                target_layer = primary.get('layer_name', 'unknown')
+                expected_improvement = primary.get('expected_improvement', 0)
+                confidence = execution_plan.get('confidence', 0)
+                
+                logger.info(f"🚀 执行计划: {mutation_type} "
+                           f"on {target_layer} "
+                           f"(置信度: {confidence:.3f}, 期望改进: {expected_improvement:.3%})")
+            else:
+                # 回退到原有格式
+                primary = execution_plan.get('primary_mutation', {})
+                logger.info(f"🚀 执行计划: {primary.get('mutation_type', 'unknown')} "
+                           f"on {primary.get('target_layer', 'unknown')} "
+                           f"(期望改进: {primary.get('expected_improvement', 0):.3%})")
         else:
-            logger.info(f"❌ 未执行变异: {execution_plan.get('reason', 'unknown')}")
+            reason = execution_plan.get('reason', 'unknown')
+            confidence = execution_plan.get('confidence', 0)
+            logger.info(f"❌ 未执行变异: {reason} (置信度: {confidence:.3f})")
     
     def _fallback_execution(self) -> Dict[str, Any]:
         """fallback执行"""

@@ -172,13 +172,28 @@ class RefactoredBayesianMorphogenesisEngine:
     def _build_execution_plan(self, optimal_decisions: List[Dict[str, Any]], decisions: Dict[str, Any]) -> Dict[str, Any]:
         """构建执行计划"""
         
-        should_execute = len(optimal_decisions) > 0 and decisions.get('overall_confidence', 0) > self.config.dynamic_thresholds['confidence_threshold']
+        overall_confidence = decisions.get('overall_confidence', 0.0)
+        confidence_threshold = self.config.dynamic_thresholds['confidence_threshold']
+        
+        # 修复置信度计算问题 - 如果有决策但置信度为0，使用决策本身的置信度
+        if len(optimal_decisions) > 0 and overall_confidence == 0.0:
+            decision_confidences = [d.get('decision_confidence', 0.0) for d in optimal_decisions]
+            if decision_confidences:
+                overall_confidence = max(decision_confidences)  # 使用最高的决策置信度
+                logger.info(f"🔧 修正执行置信度: {overall_confidence:.3f} (来自最佳决策)")
+        
+        should_execute = len(optimal_decisions) > 0 and overall_confidence > confidence_threshold
+        
+        # 计算总期望改进
+        total_expected_improvement = sum(d.get('expected_improvement', 0.0) for d in optimal_decisions)
         
         plan = {
             'execute': should_execute,
             'reason': decisions.get('execution_reason', 'bayesian_analysis'),
-            'confidence': decisions.get('overall_confidence', 0.0),
-            'expected_improvements': []
+            'confidence': overall_confidence,
+            'expected_improvements': [],
+            'total_expected_improvement': total_expected_improvement,
+            'decisions_count': len(optimal_decisions)
         }
         
         if should_execute:
@@ -332,6 +347,20 @@ class BayesianInferenceEngine:
         # 估计期望改进
         expected_improvement = self._estimate_expected_improvement(candidate, features, success_probability)
         
+        # 更好的置信度计算
+        # 基于贝叶斯后验分布的不确定性
+        total_observations = alpha + beta
+        if total_observations > 0:
+            # 使用贝塔分布的方差来计算置信度
+            variance = (alpha * beta) / ((alpha + beta) ** 2 * (alpha + beta + 1))
+            confidence = min(1.0, 1.0 - variance * 10)  # 方差越小，置信度越高
+        else:
+            confidence = success_probability * 0.5  # 无观测数据时的低置信度
+        
+        # 确保最小置信度
+        if expected_improvement > 0:
+            confidence = max(confidence, 0.3)  # 如果有期望改进，最少30%置信度
+        
         return {
             'candidate': candidate,
             'mutation_type': mutation_type,
@@ -341,7 +370,7 @@ class BayesianInferenceEngine:
             'posterior_beta': beta,
             'success_probability': success_probability,
             'expected_improvement': expected_improvement,
-            'confidence': min(success_probability * 2, 1.0)  # 简化的置信度计算
+            'confidence': confidence
         }
     
     def _update_posterior_from_history(self, mutation_type: str, history: List[Dict[str, Any]], alpha: float, beta: float) -> Tuple[float, float]:
@@ -435,6 +464,11 @@ class UtilityEvaluator:
         # 计算总效用
         total_utility = accuracy_gain + success_bonus + exploration_bonus - risk_penalty
         
+        # 确保效用值合理，避免全为0的情况
+        if total_utility <= 0 and analysis.get('expected_improvement', 0.0) > 0:
+            # 如果计算出的效用为0但有期望改进，给一个最小值
+            total_utility = analysis.get('expected_improvement', 0.0) * 0.5
+        
         return max(0.0, total_utility)
 
 
@@ -457,14 +491,26 @@ class DecisionMaker:
         # 合并分析和效用
         combined_data = []
         for analysis, utility in zip(candidate_analyses, utilities):
+            # 更灵活的阈值检查
+            expected_improvement = analysis.get('expected_improvement', 0)
+            success_probability = analysis.get('success_probability', 0)
+            confidence = analysis.get('confidence', 0)
+            
+            # 检查是否满足阈值（使用OR逻辑，更宽松）
+            meets_improvement = expected_improvement >= self.thresholds['min_expected_improvement']
+            meets_probability = success_probability >= self.thresholds['confidence_threshold'] 
+            meets_confidence = confidence >= self.thresholds['confidence_threshold']
+            meets_utility = utility >= self.thresholds.get('min_utility', 0.01)
+            
+            # 如果满足任意两个条件就认为通过（更宽松的策略）
+            conditions_met = sum([meets_improvement, meets_probability, meets_confidence, meets_utility])
+            meets_threshold = conditions_met >= 2
+            
             combined_data.append({
                 'analysis': analysis,
                 'utility': utility,
-                'meets_threshold': (
-                    analysis.get('expected_improvement', 0) >= self.thresholds['min_expected_improvement'] and
-                    analysis.get('success_probability', 0) >= self.thresholds['confidence_threshold'] and
-                    utility >= self.thresholds.get('min_utility', 0.01)
-                )
+                'meets_threshold': meets_threshold,
+                'conditions_met': conditions_met
             })
         
         # 筛选满足阈值的候选点
@@ -503,6 +549,14 @@ class DecisionMaker:
         # 计算整体置信度
         confidences = [d['decision_confidence'] for d in optimal_decisions]
         overall_confidence = np.mean(confidences) if confidences else 0.0
+        
+        # 确保置信度不为0（如果有决策的话）
+        if overall_confidence == 0.0 and len(optimal_decisions) > 0:
+            # 使用期望效用作为备用置信度指标
+            utilities = [d.get('expected_utility', 0.0) for d in optimal_decisions]
+            if utilities and max(utilities) > 0:
+                overall_confidence = min(0.8, max(utilities) * 10)  # 将效用转换为置信度
+                logger.info(f"🔧 使用效用计算置信度: {overall_confidence:.3f}")
         
         return {
             'optimal_decisions': optimal_decisions,
