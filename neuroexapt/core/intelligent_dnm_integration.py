@@ -867,6 +867,7 @@ class IntelligentDNMCore:
         type_mapping = {
             'width_expansion': 'width_expansion',
             'depth_expansion': 'depth_expansion',
+            'parallel_division': 'parallel_division',
             'attention_enhancement': 'attention_enhancement',
             'residual_connection': 'structural_enhancement',
             'batch_norm_insertion': 'normalization_enhancement',
@@ -1164,40 +1165,84 @@ class IntelligentDNMCore:
                 }
                 
             elif isinstance(target_module, nn.Conv2d):
-                # 卷积层并行分裂
+                # 异质并行分裂：不同核尺寸的卷积层并行处理
                 in_channels = target_module.in_channels
                 out_channels = target_module.out_channels
                 
-                branch1 = nn.Conv2d(in_channels, out_channels // 2, target_module.kernel_size,
-                                   padding=target_module.padding, stride=target_module.stride)
-                branch2 = nn.Conv2d(in_channels, out_channels - out_channels // 2, target_module.kernel_size,
+                # 设计异质分支：不同的卷积核和深度
+                # 分支1: 原始核尺寸，一半通道
+                branch1_channels = out_channels // 2
+                branch1 = nn.Conv2d(in_channels, branch1_channels, target_module.kernel_size,
                                    padding=target_module.padding, stride=target_module.stride)
                 
-                class ParallelConv(nn.Module):
-                    def __init__(self, branch1, branch2):
+                # 分支2: 不同核尺寸 + 深度卷积，增强通道
+                branch2_channels = out_channels
+                kernel_size_alt = 1 if target_module.kernel_size[0] > 1 else 3
+                
+                # 创建异质分支：1x1 + 3x3 深度分离卷积
+                branch2 = nn.Sequential(
+                    nn.Conv2d(in_channels, branch2_channels, kernel_size=1, padding=0),
+                    nn.ReLU(inplace=True),
+                    nn.Conv2d(branch2_channels, branch2_channels, kernel_size=kernel_size_alt, 
+                             padding=kernel_size_alt//2, groups=branch2_channels),  # 深度分离卷积
+                    nn.Conv2d(branch2_channels, branch2_channels, kernel_size=1, padding=0)
+                )
+                
+                class HeterogeneousParallelConv(nn.Module):
+                    def __init__(self, branch1, branch2, fusion_conv):
                         super().__init__()
                         self.branch1 = branch1
                         self.branch2 = branch2
+                        self.fusion_conv = fusion_conv
                     
                     def forward(self, x):
                         out1 = self.branch1(x)
                         out2 = self.branch2(x)
-                        return torch.cat([out1, out2], dim=1)
+                        # 特征融合而非简单拼接
+                        combined = torch.cat([out1, out2], dim=1)
+                        return self.fusion_conv(combined)
                 
-                parallel_module = ParallelConv(branch1, branch2)
+                # 添加融合层来整合异质特征
+                total_features = branch1_channels + branch2_channels
+                fusion_conv = nn.Conv2d(total_features, out_channels, kernel_size=1, padding=0)
                 
+                parallel_module = HeterogeneousParallelConv(branch1, branch2, fusion_conv)
+                
+                # 智能权重初始化
                 with torch.no_grad():
-                    branch1.weight.data = target_module.weight.data[:out_channels//2, :, :, :] * 0.7
-                    branch2.weight.data = target_module.weight.data[out_channels//2:, :, :, :] * 0.7
+                    # 分支1使用原始权重的一部分
+                    branch1.weight.data = target_module.weight.data[:branch1_channels, :, :, :] * 0.8
+                    if target_module.bias is not None:
+                        branch1.bias.data = target_module.bias.data[:branch1_channels] * 0.8
+                    
+                    # 分支2使用xavier初始化
+                    for module in branch2.modules():
+                        if isinstance(module, nn.Conv2d):
+                            nn.init.xavier_uniform_(module.weight)
+                            if module.bias is not None:
+                                nn.init.zeros_(module.bias)
+                    
+                    # 融合层使用恒等映射初始化
+                    nn.init.xavier_uniform_(fusion_conv.weight)
+                    if fusion_conv.bias is not None:
+                        nn.init.zeros_(fusion_conv.bias)
                 
                 self._replace_module(model, target_layer, parallel_module)
+                
+                # 计算实际增加的参数
+                original_params = sum(p.numel() for p in [target_module])
+                new_params = sum(p.numel() for p in parallel_module.parameters())
+                params_added = new_params - original_params
+                
+                logger.info(f"📊 参数变化: {original_params:,} → {new_params:,} (增加 {params_added:,})")
+                logger.info(f"🏗️ 异质分支设计: 分支1({branch1_channels}ch) + 分支2({branch2_channels}ch深度分离) + 融合层")
                 
                 return {
                     'success': True,
                     'new_model': model,
-                    'parameters_added': 0,
+                    'parameters_added': params_added,
                     'mutation_type': 'parallel_division',
-                    'details': f'卷积并行分裂: {out_channels//2} + {out_channels - out_channels//2}'
+                    'details': f'异质并行分裂: {branch1_channels}ch标准卷积 + {branch2_channels}ch深度分离卷积 → 融合为{out_channels}ch'
                 }
                 
             else:
