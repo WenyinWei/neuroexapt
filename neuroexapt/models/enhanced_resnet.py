@@ -9,6 +9,10 @@ Enhanced ResNet Architecture - Optimized for CIFAR-10
 3. 自适应学习率调度
 4. 混合精度训练支持
 5. 渐进式训练策略
+
+Args:
+    use_dropout (bool): Whether to apply dropout after global average pooling. Default: True.
+    dropout_rate (float): Dropout probability if dropout is used. Default: 0.1.
 """
 
 import torch
@@ -91,11 +95,13 @@ class EnhancedResNet(nn.Module):
     
     def __init__(self, num_blocks: List[int] = [3, 4, 6, 3], 
                  num_classes: int = 10, dropout_rate: float = 0.1,
-                 use_se: bool = True, widen_factor: int = 1):
+                 use_se: bool = True, widen_factor: int = 1, 
+                 use_dropout: bool = True):
         super(EnhancedResNet, self).__init__()
         self.in_planes = 64 * widen_factor
         self.dropout_rate = dropout_rate
         self.use_se = use_se
+        self.use_dropout = use_dropout
         
         # Initial convolution - 针对CIFAR-10的小图像优化
         self.conv1 = nn.Conv2d(3, 64 * widen_factor, kernel_size=3, 
@@ -110,7 +116,8 @@ class EnhancedResNet(nn.Module):
         
         # Global average pooling and classifier
         self.avgpool = nn.AdaptiveAvgPool2d((1, 1))
-        self.dropout = nn.Dropout(dropout_rate)
+        if self.use_dropout:
+            self.dropout = nn.Dropout(dropout_rate)
         self.fc = nn.Linear(512 * widen_factor, num_classes)
         
         # Initialize weights
@@ -126,15 +133,20 @@ class EnhancedResNet(nn.Module):
         return nn.Sequential(*layers)
         
     def _initialize_weights(self):
+        """权重初始化 - 修复bias为None的问题"""
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
                 nn.init.kaiming_normal_(m.weight, mode='fan_out', nonlinearity='relu')
+                if m.bias is not None:  # 🔧 修复：检查bias是否存在
+                    nn.init.constant_(m.bias, 0)
             elif isinstance(m, nn.BatchNorm2d):
                 nn.init.constant_(m.weight, 1)
-                nn.init.constant_(m.bias, 0)
+                if m.bias is not None:  # 🔧 修复：检查bias是否存在
+                    nn.init.constant_(m.bias, 0)
             elif isinstance(m, nn.Linear):
                 nn.init.normal_(m.weight, 0, 0.01)
-                nn.init.constant_(m.bias, 0)
+                if m.bias is not None:  # 🔧 修复：检查bias是否存在
+                    nn.init.constant_(m.bias, 0)
                 
     def forward(self, x, return_features: bool = False):
         # Initial conv
@@ -159,7 +171,9 @@ class EnhancedResNet(nn.Module):
         out = torch.flatten(out, 1)
         features['avgpool'] = out
         
-        out = self.dropout(out)
+        # 🔧 修复：条件性应用dropout
+        if self.use_dropout:
+            out = self.dropout(out)
         out = self.fc(out)
         features['fc'] = out
         
@@ -212,6 +226,7 @@ class EnhancedTrainingConfig:
         # Regularization
         self.dropout_rate = 0.1
         self.label_smoothing = 0.1
+        self.use_dropout = True  # 🔧 新增：dropout配置
         
         # Advanced techniques
         self.use_ema = True  # Exponential Moving Average
@@ -236,7 +251,8 @@ def create_enhanced_model(config: EnhancedTrainingConfig = None) -> nn.Module:
         'num_classes': 10,
         'dropout_rate': config.dropout_rate,
         'use_se': config.use_se,
-        'widen_factor': config.widen_factor
+        'widen_factor': config.widen_factor,
+        'use_dropout': config.use_dropout  # 🔧 新增：dropout配置传递
     }
     
     if config.model_type == 'enhanced_resnet18':
