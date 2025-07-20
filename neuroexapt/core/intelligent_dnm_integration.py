@@ -216,19 +216,120 @@ class IntelligentDNMCore:
             return {'success': False, 'reason': str(e), 'new_model': model}
     
     def _execute_depth_expansion(self, model: nn.Module, target_layer: str, context: Dict[str, Any]) -> Dict[str, Any]:
-        """执行深度扩展变异"""
+        """执行深度扩展变异 - 真正的实现"""
         
         try:
-            # 在目标层后插入新层
-            # 这是一个简化实现，实际应该根据网络结构智能插入
+            logger.info(f"🔧 执行深度扩展: {target_layer}")
             
-            return {
-                'success': True,
-                'new_model': model,
-                'parameters_added': 10000,  # 估计值
-                'layers_added': 1
-            }
+            # 找到目标层
+            target_module = None
+            for name, module in model.named_modules():
+                if name == target_layer:
+                    target_module = module
+                    break
             
+            if target_module is None:
+                return {'success': False, 'reason': 'target_layer_not_found', 'new_model': model}
+            
+            # 根据层类型创建深度扩展
+            if isinstance(target_module, nn.Linear):
+                # Linear层深度扩展：插入中间层
+                in_features = target_module.in_features
+                out_features = target_module.out_features
+                
+                # 创建更深的结构
+                deep_layers = nn.Sequential(
+                    nn.Linear(in_features, in_features * 2),
+                    nn.ReLU(),
+                    nn.Dropout(0.3),
+                    nn.Linear(in_features * 2, in_features),
+                    nn.ReLU(),
+                    nn.Linear(in_features, out_features)
+                )
+                
+                # 权重初始化
+                with torch.no_grad():
+                    for layer in deep_layers:
+                        if isinstance(layer, nn.Linear):
+                            nn.init.xavier_normal_(layer.weight.data, gain=0.5)
+                            if layer.bias is not None:
+                                nn.init.zeros_(layer.bias.data)
+                
+                # 复制原始输出层的权重和偏置
+                with torch.no_grad():
+                    if target_module.bias is not None:
+                        deep_layers[-1].bias.data.copy_(target_module.bias.data)
+                
+                # 替换原模块
+                self._replace_module(model, target_layer, deep_layers)
+                
+                # 计算新增参数
+                new_params = (in_features * in_features * 2 + in_features * 2 + 
+                            in_features * 2 * in_features + in_features +
+                            in_features * out_features + out_features)
+                original_params = in_features * out_features + out_features
+                
+                return {
+                    'success': True,
+                    'new_model': model,
+                    'parameters_added': new_params - original_params,
+                    'mutation_type': 'depth_expansion',
+                    'details': f'Linear深度扩展: {in_features} -> {in_features*2} -> {in_features} -> {out_features}'
+                }
+                
+            elif isinstance(target_module, nn.Conv2d):
+                # 卷积层深度扩展：插入中间卷积层
+                in_channels = target_module.in_channels
+                out_channels = target_module.out_channels
+                mid_channels = min(max(in_channels, out_channels), 256)
+                
+                # 创建更深的卷积结构
+                deep_conv = nn.Sequential(
+                    nn.Conv2d(in_channels, mid_channels, 3, padding=1),
+                    nn.BatchNorm2d(mid_channels),
+                    nn.ReLU(),
+                    nn.Conv2d(mid_channels, mid_channels, 3, padding=1),
+                    nn.BatchNorm2d(mid_channels),
+                    nn.ReLU(),
+                    nn.Conv2d(mid_channels, out_channels, target_module.kernel_size,
+                             stride=target_module.stride, padding=target_module.padding)
+                )
+                
+                # 权重初始化
+                with torch.no_grad():
+                    for layer in deep_conv:
+                        if isinstance(layer, nn.Conv2d):
+                            nn.init.kaiming_normal_(layer.weight.data)
+                            if layer.bias is not None:
+                                nn.init.zeros_(layer.bias.data)
+                        elif isinstance(layer, nn.BatchNorm2d):
+                            nn.init.ones_(layer.weight.data)
+                            nn.init.zeros_(layer.bias.data)
+                
+                # 替换原模块
+                self._replace_module(model, target_layer, deep_conv)
+                
+                # 计算新增参数
+                conv1_params = in_channels * mid_channels * 9 + mid_channels
+                bn1_params = mid_channels * 2
+                conv2_params = mid_channels * mid_channels * 9 + mid_channels
+                bn2_params = mid_channels * 2
+                conv3_params = mid_channels * out_channels * target_module.kernel_size[0] * target_module.kernel_size[1] + out_channels
+                
+                new_params = conv1_params + bn1_params + conv2_params + bn2_params + conv3_params
+                original_params = in_channels * out_channels * target_module.kernel_size[0] * target_module.kernel_size[1] + out_channels
+                
+                return {
+                    'success': True,
+                    'new_model': model,
+                    'parameters_added': new_params - original_params,
+                    'mutation_type': 'depth_expansion',
+                    'details': f'Conv深度扩展: {in_channels} -> {mid_channels} -> {mid_channels} -> {out_channels}'
+                }
+            
+            else:
+                return {'success': False, 'reason': 'unsupported_layer_type', 'new_model': model}
+                
         except Exception as e:
             logger.error(f"❌ 深度扩展失败: {e}")
             return {'success': False, 'reason': str(e), 'new_model': model}
@@ -287,7 +388,9 @@ class IntelligentDNMCore:
         try:
             if isinstance(target_module, nn.Conv2d):
                 current_width = target_module.out_channels
-                new_width = min(current_width + 32, 512)  # 增加32个通道
+                # 大幅宽度扩展 - 根据当前宽度动态调整
+                expansion_factor = max(1.5, 2.0 - current_width / 512)  # 小层扩展更多
+                new_width = min(int(current_width * expansion_factor), 1024)  # 大幅增加通道
                 
                 # 创建新的卷积层
                 new_conv = nn.Conv2d(
@@ -316,7 +419,40 @@ class IntelligentDNMCore:
                     'success': True,
                     'new_model': model,
                     'parameters_added': (new_width - current_width) * target_module.in_channels * target_module.kernel_size[0] * target_module.kernel_size[1],
-                    'expansion_type': 'simple_width_expansion'
+                    'expansion_type': 'enhanced_width_expansion'
+                }
+                
+            elif isinstance(target_module, nn.Linear):
+                current_width = target_module.out_features
+                # Linear层宽度扩展
+                expansion_factor = max(1.8, 3.0 - current_width / 256)  # 动态扩展因子
+                new_width = min(int(current_width * expansion_factor), 2048)
+                
+                # 创建新的Linear层
+                new_linear = nn.Linear(
+                    target_module.in_features,
+                    new_width,
+                    bias=target_module.bias is not None
+                )
+                
+                # 复制原有权重
+                with torch.no_grad():
+                    new_linear.weight[:current_width].copy_(target_module.weight)
+                    # 随机初始化新权重
+                    nn.init.xavier_normal_(new_linear.weight[current_width:])
+                    
+                    if target_module.bias is not None:
+                        new_linear.bias[:current_width].copy_(target_module.bias)
+                        nn.init.zeros_(new_linear.bias[current_width:])
+                
+                # 替换层
+                self._replace_layer_in_model(model, target_layer, new_linear)
+                
+                return {
+                    'success': True,
+                    'new_model': model,
+                    'parameters_added': (new_width - current_width) * target_module.in_features + (new_width - current_width),
+                    'expansion_type': 'enhanced_linear_width_expansion'
                 }
             
             return {'success': False, 'reason': 'unsupported_layer_type', 'new_model': model}

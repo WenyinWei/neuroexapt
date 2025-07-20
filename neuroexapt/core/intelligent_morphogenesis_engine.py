@@ -37,7 +37,7 @@ class IntelligentMorphogenesisEngine:
         self.adaptive_thresholds = {
             'bottleneck_severity': 0.1,        # 降低到0.1 - 更容易检测瓶颈
             'improvement_potential': 0.05,     # 降低到0.05 - 更容易发现改进机会
-            'mutation_confidence': 0.1,        # 降低到0.1 - 更容易通过变异决策
+            'mutation_confidence': 0.05,       # 降低到0.05 - 更容易通过变异决策
             'performance_plateau_ratio': 0.02  # 降低到0.02 - 更敏感的停滞检测
         }
         
@@ -496,17 +496,28 @@ class IntelligentMorphogenesisEngine:
                 'recommended_mutations': []
             }
             
-            # 根据瓶颈类型推荐变异策略
+            # 根据瓶颈类型推荐变异策略 - 增强版
             if 'parameter_constraint' in bottleneck['bottleneck_types']:
-                candidate['recommended_mutations'].extend(['width_expansion', 'serial_division'])
+                # 参数瓶颈：优先大规模扩展
+                candidate['recommended_mutations'].extend(['width_expansion', 'depth_expansion', 'parallel_division'])
             if 'information_bottleneck' in bottleneck['bottleneck_types']:
-                candidate['recommended_mutations'].extend(['depth_expansion', 'attention_enhancement', 'parallel_division'])
+                # 信息瓶颈：增强信息流
+                candidate['recommended_mutations'].extend(['depth_expansion', 'attention_enhancement', 'parallel_division', 'residual_connection'])
             if 'gradient_bottleneck' in bottleneck['bottleneck_types']:
-                candidate['recommended_mutations'].extend(['residual_connection', 'batch_norm_insertion'])
+                # 梯度瓶颈：改善训练稳定性
+                candidate['recommended_mutations'].extend(['residual_connection', 'batch_norm_insertion', 'width_expansion'])
             
-            # 根据层类型添加特定推荐
+            # 根据层类型和改进潜力添加特定推荐
             if bottleneck['layer_type'] in ['conv', 'linear']:
-                candidate['recommended_mutations'].extend(['serial_division', 'parallel_division'])
+                if bottleneck['improvement_potential'] > 0.7:
+                    # 高潜力层：大规模变异
+                    candidate['recommended_mutations'].extend(['width_expansion', 'depth_expansion', 'parallel_division'])
+                elif bottleneck['improvement_potential'] > 0.5:
+                    # 中等潜力：中等规模变异
+                    candidate['recommended_mutations'].extend(['width_expansion', 'serial_division'])
+                else:
+                    # 低潜力：保守变异
+                    candidate['recommended_mutations'].extend(['serial_division', 'batch_norm_insertion'])
             
             candidates.append(candidate)
             logger.info(f"✅ 添加候选点: {candidate['layer_name']}, 推荐变异: {candidate['recommended_mutations']}")
@@ -587,25 +598,27 @@ class IntelligentMorphogenesisEngine:
         
         # 根据变异类型调整
         type_multipliers = {
-            'width_expansion': 1.0,
-            'depth_expansion': 0.8,
-            'attention_enhancement': 1.2,
-            'residual_connection': 0.9,
-            'batch_norm_insertion': 0.7,
-            'information_enhancement': 1.1,
-            'channel_attention': 1.0,
-            'layer_norm': 0.6,
-            'serial_division': 1.5,      # 串行分裂 - 高改进潜力
-            'parallel_division': 1.3     # 并行分裂 - 良好改进潜力
+            'width_expansion': 2.0,      # 宽度扩展 - 高改进潜力
+            'depth_expansion': 2.5,      # 深度扩展 - 最高改进潜力
+            'attention_enhancement': 2.2,# 注意力机制 - 很高改进潜力
+            'residual_connection': 1.8,  # 残差连接 - 高改进潜力
+            'batch_norm_insertion': 1.2, # 批归一化 - 中等改进潜力
+            'information_enhancement': 1.9, # 信息增强 - 高改进潜力
+            'channel_attention': 1.6,   # 通道注意力 - 较高改进潜力
+            'layer_norm': 1.1,          # 层归一化 - 低改进潜力
+            'serial_division': 1.0,      # 串行分裂 - 基础改进潜力
+            'parallel_division': 2.3     # 并行分裂 - 很高改进潜力
         }
         
         adjusted_improvement = base_improvement * type_multipliers.get(mutation_type, 1.0)
         
         # 根据性能态势调整
         if performance_situation['situation_type'] == 'high_saturation':
-            adjusted_improvement *= 0.5  # 高饱和时改进较小
+            adjusted_improvement *= 1.5  # 高饱和时需要更大变异
         elif performance_situation['situation_type'] == 'performance_plateau':
-            adjusted_improvement *= 1.2  # 停滞时改进潜力较大
+            adjusted_improvement *= 2.0  # 停滞时改进潜力很大
+        elif performance_situation['situation_type'] == 'performance_decline':
+            adjusted_improvement *= 2.5  # 性能下降时需要激进变异
         
         return {
             'expected_accuracy_improvement': adjusted_improvement,
@@ -765,16 +778,16 @@ class IntelligentMorphogenesisEngine:
     def _estimate_parameter_increase(self, mutation_type: str) -> int:
         """估计参数增加量"""
         estimates = {
-            'width_expansion': 50000,
-            'depth_expansion': 100000,
-            'attention_enhancement': 30000,
-            'residual_connection': 0,
-            'batch_norm_insertion': 100,
-            'information_enhancement': 20000,
-            'channel_attention': 5000,
-            'layer_norm': 200,
-            'serial_division': 75000,     # 串行分裂参数增加
-            'parallel_division': 120000   # 并行分裂参数增加更多
+            'width_expansion': 200000,      # 宽度扩展 - 大幅增加参数
+            'depth_expansion': 500000,      # 深度扩展 - 显著增加参数  
+            'attention_enhancement': 150000,# 注意力机制 - 中等增加
+            'residual_connection': 50000,   # 残差连接 - 适中增加
+            'batch_norm_insertion': 500,    # 批归一化 - 少量增加
+            'information_enhancement': 100000, # 信息增强 - 中等增加
+            'channel_attention': 25000,     # 通道注意力 - 适中增加
+            'layer_norm': 1000,            # 层归一化 - 少量增加
+            'serial_division': 50000,       # 串行分裂 - 中等增加（更现实）
+            'parallel_division': 300000     # 并行分裂 - 大幅增加（更现实）
         }
         return estimates.get(mutation_type, 10000)
     
