@@ -61,7 +61,7 @@ from neuroexapt.core import (
 from demo_utils import (
     DemoConfiguration,
     DemoLogger,
-    setup_device,
+    DeviceManager,
     load_cifar10_data,
     create_enhanced_resnet,
     AdvancedTrainer,
@@ -181,7 +181,7 @@ def run_intelligent_evolution_experiment(args):
     logger.info("="*60)
     
     # 设备和数据加载
-    device = setup_device()
+    device = DeviceManager.setup_device()
     train_loader, test_loader = load_cifar10_data(args.batch_size, args.num_workers)
     config = {
         'lr': args.lr,
