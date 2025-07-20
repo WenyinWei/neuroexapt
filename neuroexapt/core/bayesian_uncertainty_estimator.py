@@ -266,56 +266,85 @@ class BayesianUncertaintyEstimator:
             不确定性估计值
         """
         try:
-            # 清理显存
+            # 预先清理显存
             torch.cuda.empty_cache() if torch.cuda.is_available() else None
             
-            # 确保张量在正确设备上
+            # 统一设备处理
             features = features.to(self.device).detach()
             labels = labels.to(self.device).detach()
             
-            # 限制batch size以节省内存
-            if features.size(0) > 32:
-                features = features[:32]
-                labels = labels[:32]
+            # 保持用户的batch_size，不做限制
+            batch_size = features.size(0)
             
-            # 获取特征维度
+            # 获取并优化特征维度
             if features.dim() > 2:
                 feature_dim = np.prod(features.shape[1:])
-                features_flat = features.view(features.size(0), -1)
-                # 限制特征维度
-                if feature_dim > 512:
-                    features_flat = features_flat[:, :512]
-                    feature_dim = 512
+                features_flat = features.view(batch_size, -1)
+                
+                # 如果特征维度过大，进行降维（保持样本数量）
+                if feature_dim > 1024:
+                    # 随机采样特征维度
+                    indices = torch.randperm(feature_dim)[:1024].to(self.device)
+                    features_flat = features_flat[:, indices]
+                    feature_dim = 1024
+                    logger.info(f"Reduced feature dimension for {layer_name}: {np.prod(features.shape[1:])} -> {feature_dim}")
             else:
                 features_flat = features
                 feature_dim = features.shape[1]
             
-            # 创建简化的不确定性探针
+            # 创建轻量化的不确定性探针
             if layer_name not in self.uncertainty_probes:
-                hidden_dim = min(64, feature_dim // 2)  # 减少隐藏层维度
+                hidden_dim = min(128, max(32, feature_dim // 4))  # 自适应隐藏层大小
                 self.uncertainty_probes[layer_name] = UncertaintyProbe(
                     feature_dim, hidden_dim=hidden_dim
                 ).to(self.device)
             
             probe = self.uncertainty_probes[layer_name]
             
-            # 训练探针
+            # 训练探针（用完即删中间变量）
             uncertainty_value = self.train_uncertainty_probe(
                 layer_name, features_flat, labels, 
                 num_epochs=num_epochs, kl_weight=1e-4
             )
             
+            # 立即清理训练过程的中间变量
+            torch.cuda.empty_cache() if torch.cuda.is_available() else None
+            
             # 估计预测不确定性
             probe.eval()
             with torch.no_grad():
                 try:
-                    _, variance = probe.predict_with_uncertainty(
-                        features_flat, num_samples=num_samples
-                    )
-                    uncertainty_estimate = torch.mean(variance).item()
+                    # 分批处理以节省内存（如果batch太大）
+                    if batch_size > 128:
+                        # 分批计算不确定性
+                        uncertainty_values = []
+                        chunk_size = 64
+                        for i in range(0, batch_size, chunk_size):
+                            chunk_features = features_flat[i:i+chunk_size]
+                            _, variance = probe.predict_with_uncertainty(
+                                chunk_features, num_samples=num_samples
+                            )
+                            uncertainty_values.append(torch.mean(variance).item())
+                            # 立即清理chunk结果
+                            del chunk_features, variance
+                            torch.cuda.empty_cache() if torch.cuda.is_available() else None
+                        
+                        uncertainty_estimate = np.mean(uncertainty_values)
+                    else:
+                        # 一次性处理
+                        _, variance = probe.predict_with_uncertainty(
+                            features_flat, num_samples=num_samples
+                        )
+                        uncertainty_estimate = torch.mean(variance).item()
+                        del variance
+                        
                 except Exception as e:
                     logger.warning(f"Failed to estimate prediction uncertainty for {layer_name}: {e}")
                     uncertainty_estimate = uncertainty_value
+            
+            # 清理特征数据
+            del features_flat
+            torch.cuda.empty_cache() if torch.cuda.is_available() else None
             
             # 确保返回有效值
             if torch.isnan(torch.tensor(uncertainty_estimate)) or torch.isinf(torch.tensor(uncertainty_estimate)):
@@ -323,14 +352,14 @@ class BayesianUncertaintyEstimator:
             
             logger.info(f"Layer {layer_name}: Uncertainty = {uncertainty_estimate:.4f}")
             
-            # 清理显存
-            torch.cuda.empty_cache() if torch.cuda.is_available() else None
-            
             return max(0.0, uncertainty_estimate)
             
         except Exception as e:
             logger.warning(f"Failed to estimate uncertainty for layer {layer_name}: {e}")
             return 0.0
+        finally:
+            # 最终清理
+            torch.cuda.empty_cache() if torch.cuda.is_available() else None
     
     def estimate_feature_uncertainty(self,
                                    feature_dict: Dict[str, torch.Tensor],

@@ -118,23 +118,29 @@ class MutualInformationEstimator:
             互信息估计值
         """
         try:
-            # 确保所有张量在同一设备上，并清理显存
+            # 预先清理显存
             torch.cuda.empty_cache() if torch.cuda.is_available() else None
             
-            # 统一设备处理
+            # 统一设备处理并detach（避免梯度计算）
             features = features.to(self.device).detach()
             labels = labels.to(self.device).detach()
             
-            # 获取特征维度
+            # 获取特征维度（保持用户的batch size）
+            batch_size = features.size(0)  # 保持用户设置的batch_size
             if features.dim() > 2:
                 feature_dim = np.prod(features.shape[1:])
-                # 对于大特征图，采样减少内存使用
-                if feature_dim > 1024:  # 如果特征维度太大
-                    batch_size = min(features.size(0), 32)  # 限制batch size
-                    features = features[:batch_size]
-                    labels = labels[:batch_size]
-                    feature_dim = min(feature_dim, 1024)  # 限制特征维度
+                # 如果特征维度过大，进行降维而不是减少batch_size
+                if feature_dim > 2048:
+                    # 使用自适应池化或PCA降维
+                    features_flat = features.view(batch_size, -1)
+                    # 随机采样特征维度而不是减少样本数量
+                    indices = torch.randperm(feature_dim)[:2048].to(self.device)
+                    features_flat = features_flat[:, indices]
+                    feature_dim = 2048
+                else:
+                    features_flat = features.view(batch_size, -1)
             else:
+                features_flat = features
                 feature_dim = features.shape[1]
                 
             # 创建或获取判别器
@@ -151,19 +157,13 @@ class MutualInformationEstimator:
             # 训练判别器
             mi_estimates = []
             
-            # 减少训练轮数以节省计算资源
-            effective_epochs = min(num_epochs, 50) if features.size(0) < 100 else num_epochs
-            
-            for epoch in range(effective_epochs):
+            for epoch in range(num_epochs):
                 try:
                     # 生成联合样本和边缘样本
-                    batch_size = features.size(0)
-                    
-                    # 联合样本：真实的(features, labels)配对
-                    joint_features = features
+                    joint_features = features_flat
                     joint_labels = labels
                     
-                    # 边缘样本：打乱labels，破坏features和labels的依赖关系
+                    # 边缘样本：打乱labels
                     marginal_labels = joint_labels[torch.randperm(batch_size)]
                     
                     # 计算判别器输出
@@ -172,55 +172,75 @@ class MutualInformationEstimator:
                     
                     # 计算MINE损失
                     if num_classes is not None:  # 分类任务
-                        # 对于离散标签，使用交叉熵形式的MINE估计
                         joint_probs = F.softmax(joint_logits, dim=1)
-                        marginal_probs = F.softmax(marginal_logits, dim=1)
                         
-                        # 计算联合样本的对数似然
                         if joint_labels.dim() == 1:
                             joint_ll = F.cross_entropy(joint_logits, joint_labels, reduction='none')
                         else:
                             joint_ll = -torch.sum(joint_labels * torch.log(joint_probs + 1e-8), dim=1)
                             
-                        # 计算边缘样本的对数配分函数
                         marginal_ll = torch.logsumexp(marginal_logits, dim=1) - np.log(num_classes)
-                        
-                        # MINE估计：E[log p(y|x)] - log E[exp(f(x,y'))]  
                         mi_estimate = torch.mean(-joint_ll) - torch.mean(marginal_ll)
                         
                     else:  # 回归任务
-                        # 标准MINE估计
                         mi_estimate = torch.mean(joint_logits) - torch.log(torch.mean(torch.exp(marginal_logits)))
                         
                     # 反向传播
-                    loss = -mi_estimate  # 最大化互信息 = 最小化负互信息
+                    loss = -mi_estimate
                     optimizer.zero_grad()
                     loss.backward()
                     
-                    # 梯度裁剪防止梯度爆炸
+                    # 梯度裁剪
                     torch.nn.utils.clip_grad_norm_(discriminator.parameters(), max_norm=1.0)
                     optimizer.step()
                     
                     mi_estimates.append(mi_estimate.item())
                     
+                    # 及时清理中间变量
+                    del joint_logits, marginal_logits, loss
+                    if 'joint_probs' in locals():
+                        del joint_probs
+                    if 'joint_ll' in locals():
+                        del joint_ll, marginal_ll
+                    
                     # 定期清理显存
-                    if epoch % 10 == 0:
+                    if epoch % 20 == 0:
                         torch.cuda.empty_cache() if torch.cuda.is_available() else None
                         
                 except RuntimeError as e:
-                    if "out of memory" in str(e) or "CUDA" in str(e):
-                        # 内存不足，减少batch size重试
+                    if "out of memory" in str(e).lower() or "cuda" in str(e).lower():
+                        # 内存不足时，清理所有缓存并尝试降维
                         torch.cuda.empty_cache() if torch.cuda.is_available() else None
-                        logger.warning(f"Memory warning during MI estimation for {layer_name}, retrying with smaller batch")
-                        break
+                        
+                        # 如果还是内存不足，使用更激进的降维
+                        if feature_dim > 512:
+                            logger.warning(f"Memory insufficient for {layer_name}, reducing feature dimension to 512")
+                            indices = torch.randperm(feature_dim)[:512].to(self.device)
+                            features_flat = features_flat[:, indices]
+                            feature_dim = 512
+                            # 重新创建判别器
+                            self.discriminators[discriminator_key] = MINEDiscriminator(
+                                input_dim_features=feature_dim,
+                                num_classes=num_classes
+                            ).to(self.device)
+                            discriminator = self.discriminators[discriminator_key]
+                            optimizer = torch.optim.Adam(discriminator.parameters(), lr=learning_rate)
+                            continue
+                        else:
+                            logger.warning(f"Memory error during MI estimation for {layer_name}: {e}")
+                            break
                     else:
                         raise e
                         
-            # 计算平均互信息估计
+            # 最终清理
+            del features_flat, joint_features, joint_labels, marginal_labels
+            torch.cuda.empty_cache() if torch.cuda.is_available() else None
+            
+            # 计算最终结果
             if mi_estimates:
-                final_mi = np.mean(mi_estimates[-10:])  # 取最后10次的平均值
+                final_mi = np.mean(mi_estimates[-10:])
                 logger.info(f"Layer {layer_name}: I(H; Y) = {final_mi:.4f}")
-                return max(0.0, final_mi)  # 确保非负
+                return max(0.0, final_mi)
             else:
                 logger.warning(f"Failed to estimate MI for layer {layer_name}")
                 return 0.0
@@ -228,6 +248,9 @@ class MutualInformationEstimator:
         except Exception as e:
             logger.warning(f"Failed to estimate MI for layer {layer_name}: {e}")
             return 0.0
+        finally:
+            # 确保最终清理
+            torch.cuda.empty_cache() if torch.cuda.is_available() else None
     
     def estimate_conditional_mi(self,
                               current_features: torch.Tensor,
@@ -252,40 +275,67 @@ class MutualInformationEstimator:
             条件互信息估计值
         """
         try:
-            # 确保所有张量在同一设备上
+            # 统一设备处理
             current_features = current_features.to(self.device).detach()
             next_features = next_features.to(self.device).detach()
             labels = labels.to(self.device).detach()
             
-            # 限制batch size以节省内存
-            batch_size = min(current_features.size(0), 32)
-            current_features = current_features[:batch_size]
-            next_features = next_features[:batch_size]
-            labels = labels[:batch_size]
+            # 保持用户的batch_size
+            batch_size = current_features.size(0)
             
-            # 1. 估计 I(H_{k+1}; Y)
+            # 1. 估计 I(H_{k+1}; Y) - 用完即删
             mi_next_y = self.estimate_layerwise_mi(
                 next_features, labels, f"{layer_name}_next", num_classes, num_epochs, learning_rate
             )
             
-            # 2. 估计 I((H_k, H_{k+1}); Y)
-            # 将当前层和下一层特征拼接
-            current_flat = current_features.view(current_features.size(0), -1)
-            next_flat = next_features.view(next_features.size(0), -1)
+            # 清理next_features相关的中间结果
+            torch.cuda.empty_cache() if torch.cuda.is_available() else None
             
-            # 限制拼接后的特征维度
-            max_dim = 1024
-            if current_flat.size(1) + next_flat.size(1) > max_dim:
-                current_dim = min(current_flat.size(1), max_dim // 2)
-                next_dim = min(next_flat.size(1), max_dim // 2)
-                current_flat = current_flat[:, :current_dim]
-                next_flat = next_flat[:, :next_dim]
+            # 2. 估计 I((H_k, H_{k+1}); Y) - 智能特征拼接
+            current_flat = current_features.view(batch_size, -1)
+            next_flat = next_features.view(batch_size, -1)
             
+            # 智能降维：保持batch_size，只降低特征维度
+            current_dim = current_flat.size(1)
+            next_dim = next_flat.size(1)
+            total_dim = current_dim + next_dim
+            
+            # 如果拼接后维度过大，智能采样而非减少样本
+            max_total_dim = 2048
+            if total_dim > max_total_dim:
+                # 按比例分配维度
+                current_keep_ratio = current_dim / total_dim
+                next_keep_ratio = next_dim / total_dim
+                
+                current_keep_dim = int(max_total_dim * current_keep_ratio)
+                next_keep_dim = max_total_dim - current_keep_dim
+                
+                # 随机采样特征维度
+                if current_dim > current_keep_dim:
+                    current_indices = torch.randperm(current_dim)[:current_keep_dim].to(self.device)
+                    current_flat = current_flat[:, current_indices]
+                    
+                if next_dim > next_keep_dim:
+                    next_indices = torch.randperm(next_dim)[:next_keep_dim].to(self.device)
+                    next_flat = next_flat[:, next_indices]
+                    
+                logger.info(f"Reduced feature dims for {layer_name}: {current_dim}+{next_dim} -> {current_flat.size(1)}+{next_flat.size(1)}")
+            
+            # 拼接特征
             joint_features = torch.cat([current_flat, next_flat], dim=1)
             
+            # 立即清理原始flat特征
+            del current_flat, next_flat
+            torch.cuda.empty_cache() if torch.cuda.is_available() else None
+            
+            # 估计联合互信息
             mi_joint_y = self.estimate_layerwise_mi(
                 joint_features, labels, f"{layer_name}_joint", num_classes, num_epochs, learning_rate
             )
+            
+            # 清理联合特征
+            del joint_features
+            torch.cuda.empty_cache() if torch.cuda.is_available() else None
             
             # 3. 计算条件互信息
             conditional_mi = mi_joint_y - mi_next_y
@@ -300,6 +350,9 @@ class MutualInformationEstimator:
         except Exception as e:
             logger.warning(f"Failed to estimate conditional MI for layer {layer_name}: {e}")
             return 0.0
+        finally:
+            # 最终清理
+            torch.cuda.empty_cache() if torch.cuda.is_available() else None
     
     def batch_estimate_layerwise_mi(self,
                                   feature_dict: Dict[str, torch.Tensor],
