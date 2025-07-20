@@ -115,6 +115,10 @@ class MutationBenefitExpectation:
     diversity_benefit: float = 0.0
     flow_improvement_benefit: float = 0.0
     cost_penalty: float = 0.0
+    
+    # 显式资源增长指标
+    parameter_increase: float = 0.0      # 参数增长比例
+    computation_increase: float = 0.0    # 计算量增长比例
 
 
 class MultiMutationTypeEvaluator:
@@ -373,6 +377,10 @@ class MultiMutationTypeEvaluator:
             evidence.gradient_flow_improvement * 0.5
         ) * 0.025
         
+        # 设置显式资源增长指标
+        expectation.parameter_increase = evidence.parameter_increase_ratio
+        expectation.computation_increase = evidence.computation_increase_ratio
+        
         # 计算成本惩罚
         expectation.cost_penalty = (
             evidence.parameter_increase_ratio * self.prior.parameter_cost_weight +
@@ -470,7 +478,9 @@ class MultiMutationTypeEvaluator:
             information_gain_benefit=current_expectation.information_gain_benefit,
             diversity_benefit=current_expectation.diversity_benefit,
             flow_improvement_benefit=current_expectation.flow_improvement_benefit,
-            cost_penalty=current_expectation.cost_penalty
+            cost_penalty=current_expectation.cost_penalty,
+            parameter_increase=current_expectation.parameter_increase,
+            computation_increase=current_expectation.computation_increase
         )
         
         return updated_expectation

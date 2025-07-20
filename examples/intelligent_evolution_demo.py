@@ -57,171 +57,19 @@ from neuroexapt.core import (
     LightweightSamplingValidator
 )
 
-# 导入模型组件
-try:
-    from neuroexapt.models import create_enhanced_model
-except ImportError:
-    # 如果没有增强模型，使用基础ResNet
-    from torchvision.models import resnet18, resnet34
-    def create_enhanced_model(model_type='resnet18', num_classes=10, **kwargs):
-        if model_type == 'resnet18':
-            model = resnet18(num_classes=num_classes)
-        elif model_type == 'resnet34':
-            model = resnet34(num_classes=num_classes)
-        else:
-            model = resnet18(num_classes=num_classes)
-        
-        # CIFAR-10适配
-        model.conv1 = nn.Conv2d(3, 64, kernel_size=3, stride=1, padding=1, bias=False)
-        model.maxpool = nn.Identity()
-        return model
-
-logger = logging.getLogger(__name__)
+# 导入统一演示工具
+from demo_utils import (
+    DemoConfiguration,
+    DemoLogger,
+    DeviceManager,
+    CIFAR10DataManager,
+    ModelManager,
+    AdvancedTrainer,
+    ResultFormatter
+)
 
 
-class CIFAR10DataManager:
-    """CIFAR-10数据管理器"""
-    
-    def __init__(self, data_root='./data', batch_size=128, num_workers=4):
-        self.data_root = data_root
-        self.batch_size = batch_size
-        self.num_workers = num_workers
-        
-    def get_data_loaders(self, enhanced_augmentation=True):
-        """获取数据加载器"""
-        if enhanced_augmentation:
-            # 增强数据增广
-            train_transform = transforms.Compose([
-                transforms.RandomCrop(32, padding=4),
-                transforms.RandomHorizontalFlip(),
-                transforms.RandomRotation(15),
-                transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.1),
-                transforms.ToTensor(),
-                transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
-                transforms.RandomErasing(p=0.1)
-            ])
-        else:
-            # 基础数据增广
-            train_transform = transforms.Compose([
-                transforms.RandomCrop(32, padding=4),
-                transforms.RandomHorizontalFlip(),
-                transforms.ToTensor(),
-                transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))
-            ])
-        
-        test_transform = transforms.Compose([
-            transforms.ToTensor(),
-            transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))
-        ])
-        
-        # 加载数据集
-        train_dataset = torchvision.datasets.CIFAR10(
-            root=self.data_root, train=True, download=True, transform=train_transform
-        )
-        test_dataset = torchvision.datasets.CIFAR10(
-            root=self.data_root, train=False, download=True, transform=test_transform
-        )
-        
-        # 创建数据加载器
-        train_loader = DataLoader(
-            train_dataset, batch_size=self.batch_size, shuffle=True,
-            num_workers=self.num_workers, pin_memory=True
-        )
-        test_loader = DataLoader(
-            test_dataset, batch_size=self.batch_size, shuffle=False,
-            num_workers=self.num_workers, pin_memory=True
-        )
-        
-        return train_loader, test_loader
-
-
-class AdvancedTrainer:
-    """高级训练器"""
-    
-    def __init__(self, model, device, criterion=None):
-        self.model = model.to(device)
-        self.device = device
-        self.criterion = criterion or nn.CrossEntropyLoss()
-        
-    def train_model(self, train_loader, test_loader, epochs=15, 
-                   learning_rate=0.1, weight_decay=5e-4):
-        """训练模型"""
-        # 使用学习率调度
-        optimizer = optim.SGD(
-            self.model.parameters(),
-            lr=learning_rate,
-            momentum=0.9,
-            weight_decay=weight_decay
-        )
-        
-        scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=epochs)
-        
-        best_accuracy = 0.0
-        
-        for epoch in range(epochs):
-            # 训练阶段
-            self.model.train()
-            train_loss = 0.0
-            train_correct = 0
-            train_total = 0
-            
-            for batch_idx, (data, target) in enumerate(train_loader):
-                data, target = data.to(self.device), target.to(self.device)
-                
-                optimizer.zero_grad()
-                output = self.model(data)
-                loss = self.criterion(output, target)
-                loss.backward()
-                optimizer.step()
-                
-                train_loss += loss.item()
-                pred = output.argmax(dim=1)
-                train_correct += pred.eq(target).sum().item()
-                train_total += target.size(0)
-            
-            # 测试阶段
-            test_accuracy = self.evaluate_model(test_loader)
-            train_accuracy = 100.0 * train_correct / train_total
-            
-            if test_accuracy > best_accuracy:
-                best_accuracy = test_accuracy
-            
-            scheduler.step()
-            
-            # 打印进度
-            if epoch % 5 == 0 or epoch == epochs - 1:
-                print(f"Epoch {epoch+1}/{epochs}: "
-                      f"Train Acc={train_accuracy:.2f}%, "
-                      f"Test Acc={test_accuracy:.2f}%, "
-                      f"Best={best_accuracy:.2f}%")
-        
-        return best_accuracy
-    
-    def evaluate_model(self, test_loader):
-        """评估模型"""
-        self.model.eval()
-        correct = 0
-        total = 0
-        
-        with torch.no_grad():
-            for data, target in test_loader:
-                data, target = data.to(self.device), target.to(self.device)
-                output = self.model(data)
-                pred = output.argmax(dim=1)
-                correct += pred.eq(target).sum().item()
-                total += target.size(0)
-        
-        accuracy = 100.0 * correct / total
-        return accuracy
-
-
-def setup_logging(verbose=True):
-    """设置日志"""
-    level = logging.INFO if verbose else logging.WARNING
-    logging.basicConfig(
-        level=level,
-        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-    )
+# 删除重复的类定义，使用demo_utils中的统一实现
 
 
 def parse_arguments():
@@ -263,98 +111,105 @@ def parse_arguments():
     return parser.parse_args()
 
 
-def setup_device(device_arg='auto'):
-    """设置计算设备"""
-    if device_arg == 'auto':
-        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    else:
-        device = torch.device(device_arg)
-    
-    if device.type == 'cuda':
-        print(f"🚀 使用GPU: {torch.cuda.get_device_name()}")
-        print(f"GPU内存: {torch.cuda.get_device_properties(0).total_memory / 1e9:.1f} GB")
-    else:
-        print("🖥️ 使用CPU")
-    
-    return device
+# 移除重复的设备设置函数，使用DeviceManager
 
 
 def run_baseline_demo(args):
     """运行基准演示（无进化）"""
-    print("="*60)
-    print("📊 基准对比演示 - 无架构进化")
-    print(f"🎯 目标：CIFAR-10上{args.target}%准确率")
-    print("="*60)
+    # 初始化日志器和配置
+    logger = DemoLogger('baseline_demo', level='INFO', verbose=args.verbose and not args.quiet)
+    
+    logger.info("="*60)
+    logger.info("📊 基准对比演示 - 无架构进化")
+    logger.info(f"🎯 目标：CIFAR-10上{args.target}%准确率")
+    logger.info("="*60)
+    
+    # 创建配置
+    config = DemoConfiguration(
+        device_type=args.device,
+        seed=args.seed,
+        enhanced_augmentation=args.enhanced,
+        model_type='enhanced_resnet34' if args.enhanced else 'enhanced_resnet18',
+        verbose=args.verbose and not args.quiet
+    )
     
     # 设置环境
-    device = setup_device(args.device)
-    torch.manual_seed(args.seed)
-    np.random.seed(args.seed)
+    device = DeviceManager.setup_environment(args.seed)
+    device_info = DeviceManager.get_device_info(device)
+    logger.info(f"设备信息:\n{ResultFormatter.format_device_info(device_info)}")
     
     # 数据管理
-    data_manager = CIFAR10DataManager()
-    train_loader, test_loader = data_manager.get_data_loaders(enhanced_augmentation=args.enhanced)
+    data_manager = CIFAR10DataManager(config)
+    train_loader, test_loader = data_manager.create_data_loaders()
     
     # 创建基础模型
-    model_type = 'resnet34' if args.enhanced else 'resnet18'
-    model = create_enhanced_model(model_type=model_type, num_classes=10)
-    
-    print(f"基准模型: {model_type}")
-    print(f"参数量: {sum(p.numel() for p in model.parameters()):,}")
+    model = ModelManager.create_model(config)
+    model_info = ModelManager.get_model_info(model)
+    logger.info(f"模型信息:\n{ResultFormatter.format_model_info(model_info)}")
     
     # 训练模型
-    trainer = AdvancedTrainer(model, device)
+    trainer = AdvancedTrainer(model, device, config, logger)
     epochs = args.epochs if not args.quick else max(5, args.epochs // 3)
     
-    print(f"\n📚 开始基准训练 ({epochs} epochs)...")
+    logger.progress(f"开始基准训练 ({epochs} epochs)")
     final_accuracy = trainer.train_model(train_loader, test_loader, epochs=epochs)
     
     # 结果摘要
-    print(f"\n🏁 基准演示完成")
-    print(f"最终准确率: {final_accuracy:.2f}%")
+    logger.info(f"\n🏁 基准演示完成")
+    logger.info(f"最终准确率: {final_accuracy:.2f}%")
     
     if final_accuracy >= args.target:
-        print(f"🎉 基准模型达到{args.target}%准确率目标！")
+        logger.success(f"基准模型达到{args.target}%准确率目标！")
     else:
-        print(f"📊 基准模型距离{args.target}%目标还差: {args.target - final_accuracy:.2f}%")
+        logger.warning(f"基准模型距离{args.target}%目标还差: {args.target - final_accuracy:.2f}%")
     
     return {
         'baseline_accuracy': final_accuracy,
         'target_reached': final_accuracy >= args.target,
-        'model_type': model_type
+        'model_type': config.model_type
     }
 
 
 def run_intelligent_evolution_demo(args):
     """运行智能进化演示"""
-    print("="*60)
-    print("🧬 智能架构进化演示 - 理论框架版本")
-    print(f"🎯 目标：CIFAR-10上{args.target}%准确率")
-    print("="*60)
+    # 初始化日志器和配置
+    logger = DemoLogger('evolution_demo', level='INFO', verbose=args.verbose and not args.quiet)
+    
+    logger.info("="*60)
+    logger.info("🧬 智能架构进化演示 - 理论框架版本")
+    logger.info(f"🎯 目标：CIFAR-10上{args.target}%准确率")
+    logger.info("="*60)
+    
+    # 创建配置
+    config = DemoConfiguration(
+        device_type=args.device,
+        seed=args.seed,
+        enhanced_augmentation=args.enhanced,
+        model_type='enhanced_resnet34' if args.enhanced else 'enhanced_resnet18',
+        verbose=args.verbose and not args.quiet
+    )
     
     # 设置环境
-    device = setup_device(args.device)
-    torch.manual_seed(args.seed)
-    np.random.seed(args.seed)
+    device = DeviceManager.setup_environment(args.seed)
+    device_info = DeviceManager.get_device_info(device)
+    logger.info(f"设备信息:\n{ResultFormatter.format_device_info(device_info)}")
     
     # 数据管理
-    data_manager = CIFAR10DataManager()
-    train_loader, test_loader = data_manager.get_data_loaders(enhanced_augmentation=args.enhanced)
+    data_manager = CIFAR10DataManager(config)
+    train_loader, test_loader = data_manager.create_data_loaders()
     
     # 创建初始模型
-    model_type = 'resnet34' if args.enhanced else 'resnet18'
-    initial_model = create_enhanced_model(model_type=model_type, num_classes=10)
-    
-    print(f"初始模型: {model_type}")
-    print(f"参数量: {sum(p.numel() for p in initial_model.parameters()):,}")
+    initial_model = ModelManager.create_model(config)
+    model_info = ModelManager.get_model_info(initial_model)
+    logger.info(f"初始模型信息:\n{ResultFormatter.format_model_info(model_info)}")
     
     # 初始训练
-    trainer = AdvancedTrainer(initial_model, device)
+    trainer = AdvancedTrainer(initial_model, device, config, logger)
     epochs = args.epochs if not args.quick else max(5, args.epochs // 3)
     
-    print(f"\n📚 初始训练 ({epochs} epochs)...")
+    logger.progress(f"初始训练 ({epochs} epochs)")
     initial_accuracy = trainer.train_model(train_loader, test_loader, epochs=epochs)
-    print(f"初始准确率: {initial_accuracy:.2f}%")
+    logger.info(f"初始准确率: {initial_accuracy:.2f}%")
     
     # 配置进化引擎
     evolution_config = EvolutionConfig(
@@ -372,9 +227,9 @@ def run_intelligent_evolution_demo(args):
         device=device
     )
     
-    print(f"\n🧬 开始智能架构进化...")
-    print(f"进化配置: {evolution_config.max_evolution_rounds}轮, "
-          f"目标{evolution_config.target_accuracy}%")
+    logger.progress(f"开始智能架构进化")
+    logger.info(f"进化配置: {evolution_config.max_evolution_rounds}轮, "
+               f"目标{evolution_config.target_accuracy}%")
     
     # 执行进化
     start_time = time.time()
@@ -396,23 +251,17 @@ def run_intelligent_evolution_demo(args):
     summary = evolution_engine.get_evolution_summary()
     
     # 最终评估
-    final_trainer = AdvancedTrainer(evolved_model, device)
+    final_trainer = AdvancedTrainer(evolved_model, device, config, logger)
     final_accuracy = final_trainer.evaluate_model(test_loader)
     
     # 结果展示
-    print(f"\n🎊 智能进化完成！")
-    print(f"进化时间: {evolution_time:.1f} 秒")
-    print(f"初始准确率: {initial_accuracy:.2f}%")
-    print(f"最终准确率: {final_accuracy:.2f}%")
-    print(f"总体改进: {final_accuracy - initial_accuracy:.2f}%")
-    print(f"进化轮数: {summary['rounds_completed']}")
-    print(f"成功变异: {summary['successful_mutations']}")
-    print(f"失败变异: {summary['failed_mutations']}")
+    logger.success(f"智能进化完成！(用时: {evolution_time:.1f}s)")
+    logger.info(f"进化结果摘要:\n{ResultFormatter.format_evolution_summary(summary)}")
     
     if final_accuracy >= args.target:
-        print(f"🎉 成功达到{args.target}%准确率目标！")
+        logger.success(f"成功达到{args.target}%准确率目标！")
     else:
-        print(f"📈 距离{args.target}%目标还差: {args.target - final_accuracy:.2f}%")
+        logger.warning(f"距离{args.target}%目标还差: {args.target - final_accuracy:.2f}%")
     
     return {
         'initial_accuracy': initial_accuracy,
@@ -430,11 +279,11 @@ def main():
         # 解析参数
         args = parse_arguments()
         
-        # 设置日志
-        setup_logging(args.verbose and not args.quiet)
+        # 初始化主日志器
+        logger = DemoLogger('main', level='INFO', verbose=args.verbose and not args.quiet)
         
-        print("🚀 智能架构进化演示启动")
-        print(f"PyTorch版本: {torch.__version__}")
+        logger.info("🚀 智能架构进化演示启动")
+        logger.info(f"PyTorch版本: {torch.__version__}")
         
         # 运行对应的演示
         if args.baseline:
@@ -443,34 +292,33 @@ def main():
             results = run_intelligent_evolution_demo(args)
         
         # 显示最终结果摘要
-        print("\n" + "="*60)
-        print("📈 演示结果摘要")
-        print("="*60)
+        logger.info("\n" + "="*60)
+        logger.info("📈 演示结果摘要")
+        logger.info("="*60)
         
         if 'baseline_accuracy' in results:
-            print(f"基准准确率: {results['baseline_accuracy']:.2f}%")
+            logger.info(f"基准准确率: {results['baseline_accuracy']:.2f}%")
         else:
-            print(f"初始准确率: {results['initial_accuracy']:.2f}%")
-            print(f"最终准确率: {results['final_accuracy']:.2f}%")
-            print(f"总体改进: {results['total_improvement']:.2f}%")
-            print(f"进化时间: {results['evolution_time']:.1f}秒")
+            logger.info(f"初始准确率: {results['initial_accuracy']:.2f}%")
+            logger.info(f"最终准确率: {results['final_accuracy']:.2f}%")
+            logger.info(f"总体改进: {results['total_improvement']:.2f}%")
+            logger.info(f"进化时间: {results['evolution_time']:.1f}秒")
         
-        print(f"目标达成: {'✅ 是' if results['target_reached'] else '❌ 否'}")
-        print("="*60)
+        status = "✅ 是" if results['target_reached'] else "❌ 否"
+        logger.info(f"目标达成: {status}")
+        logger.info("="*60)
         
         # 特别庆祝95%成就
-        if (args.enhanced and results.get('final_accuracy', 
-            results.get('baseline_accuracy', 0)) >= 95.0):
-            print("\n🎊🎊🎊 恭喜！成功达成95%准确率挑战！🎊🎊🎊")
-            print("🏆 理论框架验证成功！")
+        final_acc = results.get('final_accuracy', results.get('baseline_accuracy', 0))
+        if args.enhanced and final_acc >= 95.0:
+            logger.success("\n🎊🎊🎊 恭喜！成功达成95%准确率挑战！🎊🎊🎊")
+            logger.success("🏆 理论框架验证成功！")
             
     except KeyboardInterrupt:
-        print("\n\n⏹️ 演示被用户中断")
-        logger.info("演示被用户中断")
+        logger.warning("\n⏹️ 演示被用户中断")
         
     except Exception as e:
-        print(f"\n\n❌ 演示过程中遇到错误: {e}")
-        logger.error(f"演示过程中遇到错误: {e}")
+        logger.error(f"\n❌ 演示过程中遇到错误: {e}")
         import traceback
         if args.verbose:
             traceback.print_exc()

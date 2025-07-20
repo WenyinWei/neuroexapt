@@ -505,7 +505,9 @@ class LightweightSamplingValidator:
             information_gain_benefit=theoretical_expectation.information_gain_benefit,
             diversity_benefit=theoretical_expectation.diversity_benefit,
             flow_improvement_benefit=theoretical_expectation.flow_improvement_benefit,
-            cost_penalty=theoretical_expectation.cost_penalty
+            cost_penalty=theoretical_expectation.cost_penalty,
+            parameter_increase=theoretical_expectation.parameter_increase,
+            computation_increase=theoretical_expectation.computation_increase
         )
         
         logger.info(f"收益期望校准: {prior_mean:.4f} -> {posterior_mean:.4f}, "

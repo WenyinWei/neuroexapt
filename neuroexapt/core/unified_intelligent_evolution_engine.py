@@ -253,9 +253,19 @@ class UnifiedIntelligentEvolutionEngine:
         # 进化完成
         logger.info(f"\n=== 进化完成 ===")
         logger.info(f"最终准确率: {self.evolution_state.best_accuracy:.2f}%")
-        logger.info(f"总改进: {self.evolution_state.best_accuracy - self.evolution_state.accuracy_history[0]:.2f}%")
+        
+        # 安全计算总改进，处理空历史的情况
+        if self.evolution_state.accuracy_history:
+            initial_accuracy = self.evolution_state.accuracy_history[0]
+            total_improvement = self.evolution_state.best_accuracy - initial_accuracy
+            logger.info(f"总改进: {total_improvement:.2f}%")
+        else:
+            logger.info("总改进: 无法计算（缺少初始准确率记录）")
+            
         logger.info(f"成功变异: {self.evolution_state.successful_mutations}")
         logger.info(f"失败变异: {self.evolution_state.failed_mutations}")
+        logger.info(f"总资源增长 - 参数: {self.evolution_state.total_parameter_increase:.3f}, "
+                   f"计算: {self.evolution_state.total_computation_increase:.3f}")
         
         return current_model, self.evolution_state
     
@@ -400,17 +410,24 @@ class UnifiedIntelligentEvolutionEngine:
     
     def _check_resource_constraints(self, candidate: MutationCandidate) -> bool:
         """检查资源约束"""
-        # 检查参数增长限制
-        if (self.evolution_state.total_parameter_increase + 
-            candidate.calibrated_expectation.cost_penalty) > self.config.max_parameter_increase:
+        # 显式检查参数增长和计算量增长
+        param_increase = candidate.calibrated_expectation.parameter_increase
+        comp_increase = candidate.calibrated_expectation.computation_increase
+
+        if param_increase is None or comp_increase is None:
+            logger.warning("候选变异缺少参数增长或计算量增长信息，无法进行资源约束检查。")
             return False
-        
-        # 检查计算增长限制
-        estimated_computation_increase = candidate.calibrated_expectation.cost_penalty * 1.5
-        if (self.evolution_state.total_computation_increase + 
-            estimated_computation_increase) > self.config.max_computation_increase:
+
+        if (self.evolution_state.total_parameter_increase + param_increase) > self.config.max_parameter_increase:
+            logger.debug(f"参数增长超限: 当前{self.evolution_state.total_parameter_increase:.3f} + "
+                        f"新增{param_increase:.3f} > 限制{self.config.max_parameter_increase:.3f}")
             return False
-        
+
+        if (self.evolution_state.total_computation_increase + comp_increase) > self.config.max_computation_increase:
+            logger.debug(f"计算量增长超限: 当前{self.evolution_state.total_computation_increase:.3f} + "
+                        f"新增{comp_increase:.3f} > 限制{self.config.max_computation_increase:.3f}")
+            return False
+
         return True
     
     def _apply_mutations(self,
@@ -448,6 +465,10 @@ class UnifiedIntelligentEvolutionEngine:
                     self.evolution_state.successful_mutations += 1
                     self.evolution_state.total_mutations_applied += 1
                     
+                    # 更新资源追踪
+                    self.evolution_state.total_parameter_increase += candidate.calibrated_expectation.parameter_increase
+                    self.evolution_state.total_computation_increase += candidate.calibrated_expectation.computation_increase
+                    
                     # 更新变异历史
                     self.mutation_evaluator.update_mutation_history(
                         candidate.config, 
@@ -455,7 +476,9 @@ class UnifiedIntelligentEvolutionEngine:
                         improvement / 100.0  # 转换为小数
                     )
                     
-                    logger.info(f"变异成功，改进: {improvement:.2f}%")
+                    logger.info(f"变异成功，改进: {improvement:.2f}%, "
+                               f"参数增长: +{candidate.calibrated_expectation.parameter_increase:.3f}, "
+                               f"计算增长: +{candidate.calibrated_expectation.computation_increase:.3f}")
                 else:
                     self.evolution_state.failed_mutations += 1
                     logger.info(f"变异失败，改进: {improvement:.2f}%")
@@ -571,15 +594,20 @@ class UnifiedIntelligentEvolutionEngine:
     
     def get_evolution_summary(self) -> Dict[str, Any]:
         """获取进化摘要"""
+        initial_accuracy = self.evolution_state.accuracy_history[0] if self.evolution_state.accuracy_history else 0.0
+        total_improvement = self.evolution_state.best_accuracy - initial_accuracy if self.evolution_state.accuracy_history else 0.0
+        
         return {
             'rounds_completed': self.evolution_state.current_round,
-            'initial_accuracy': self.evolution_state.accuracy_history[0] if self.evolution_state.accuracy_history else 0.0,
+            'initial_accuracy': initial_accuracy,
             'final_accuracy': self.evolution_state.best_accuracy,
-            'total_improvement': self.evolution_state.best_accuracy - (self.evolution_state.accuracy_history[0] if self.evolution_state.accuracy_history else 0.0),
+            'total_improvement': total_improvement,
             'successful_mutations': self.evolution_state.successful_mutations,
             'failed_mutations': self.evolution_state.failed_mutations,
             'total_mutations': self.evolution_state.total_mutations_applied,
             'accuracy_history': self.evolution_state.accuracy_history.copy(),
             'average_time_per_round': np.mean(self.evolution_state.timing_history) if self.evolution_state.timing_history else 0.0,
-            'target_reached': self.evolution_state.best_accuracy >= self.config.target_accuracy
+            'target_reached': self.evolution_state.best_accuracy >= self.config.target_accuracy,
+            'total_parameter_increase': self.evolution_state.total_parameter_increase,
+            'total_computation_increase': self.evolution_state.total_computation_increase
         }
