@@ -1,0 +1,257 @@
+# 智能架构进化演示配置
+# Intelligent Architecture Evolution Demo Configuration
+
+# 基础配置
+basic:
+  # 数据设置
+  data:
+    dataset: "CIFAR-10"
+    data_root: "./data"
+    batch_size: 128
+    num_workers: 4
+    enhanced_augmentation: true
+  
+  # 模型设置
+  model:
+    type: "enhanced_resnet34"
+    num_classes: 10
+    use_se: true
+    dropout_rate: 0.1
+    width_multiplier: 1.0
+  
+  # 训练设置
+  training:
+    epochs: 15
+    learning_rate: 0.1
+    weight_decay: 0.0005
+    momentum: 0.9
+    scheduler: "cosine"
+    label_smoothing: 0.1
+  
+  # 进化设置
+  evolution:
+    max_rounds: 3
+    max_mutations_per_round: 3
+    target_accuracy: 95.0
+    enable_sampling_validation: true
+    validation_sample_ratio: 0.1
+    quick_validation_epochs: 3
+  
+  # 设备设置
+  device:
+    type: "auto"  # auto, cuda, cpu
+    seed: 42
+
+# 快速演示配置
+quick:
+  # 继承基础配置
+  <<: *basic
+  
+  # 覆盖特定设置
+  training:
+    epochs: 8
+    learning_rate: 0.05
+  
+  evolution:
+    max_rounds: 2
+    max_mutations_per_round: 2
+    enable_sampling_validation: false
+    quick_validation_epochs: 2
+  
+  model:
+    type: "enhanced_resnet18"
+
+# 增强版配置（95%目标）
+enhanced:
+  # 继承基础配置
+  <<: *basic
+  
+  # 数据增强
+  data:
+    <<: *basic.data
+    enhanced_augmentation: true
+    mixup_alpha: 1.0
+    cutmix_alpha: 1.0
+    random_erasing: 0.1
+  
+  # 更强的模型
+  model:
+    type: "enhanced_resnet50"
+    num_classes: 10
+    use_se: true
+    dropout_rate: 0.15
+    width_multiplier: 1.2
+  
+  # 更长的训练
+  training:
+    epochs: 25
+    learning_rate: 0.1
+    weight_decay: 0.0005
+    momentum: 0.9
+    scheduler: "cosine"
+    label_smoothing: 0.15
+    gradient_clip: 1.0
+  
+  # 更多进化轮次
+  evolution:
+    max_rounds: 5
+    max_mutations_per_round: 4
+    target_accuracy: 95.5
+    enable_sampling_validation: true
+    validation_sample_ratio: 0.15
+    quick_validation_epochs: 5
+    
+    # 更精细的权重调整
+    weights:
+      information_gain: 0.4
+      integration: 0.3
+      redundancy: 0.2
+      cost: 0.1
+    
+    # 风险参数
+    risk_aversion: 2.0
+    min_benefit_threshold: 0.01
+    confidence_threshold: 0.7
+
+# 基准对比配置
+baseline:
+  # 继承基础配置但禁用进化
+  <<: *basic
+  
+  # 简化模型
+  model:
+    type: "resnet18"
+    num_classes: 10
+    use_se: false
+    dropout_rate: 0.0
+    width_multiplier: 1.0
+  
+  # 标准训练
+  training:
+    epochs: 20
+    learning_rate: 0.1
+    weight_decay: 0.0001
+    momentum: 0.9
+    scheduler: "step"
+    label_smoothing: 0.0
+  
+  # 禁用进化
+  evolution:
+    max_rounds: 0
+    enable_sampling_validation: false
+
+# 实验配置（多种模型对比）
+experimental:
+  models:
+    - name: "enhanced_resnet18"
+      config:
+        type: "enhanced_resnet18"
+        use_se: true
+        dropout_rate: 0.1
+    
+    - name: "enhanced_resnet34"
+      config:
+        type: "enhanced_resnet34"
+        use_se: true
+        dropout_rate: 0.1
+    
+    - name: "enhanced_resnet50"
+      config:
+        type: "enhanced_resnet50"
+        use_se: true
+        dropout_rate: 0.15
+    
+    - name: "hybrid_resdense"
+      config:
+        type: "hybrid_resdense"
+        growth_rate: 32
+        num_dense_layers: 6
+    
+    - name: "wide_resnet"
+      config:
+        type: "wide_resnet"
+        width_multiplier: 2.0
+        use_se: true
+  
+  # 共同的训练配置
+  training:
+    epochs: 15
+    learning_rate: 0.1
+    weight_decay: 0.0005
+    
+  # 进化配置
+  evolution:
+    max_rounds: 3
+    target_accuracy: 95.0
+
+# 调试配置
+debug:
+  <<: *quick
+  
+  data:
+    batch_size: 32
+    num_workers: 0
+  
+  training:
+    epochs: 2
+  
+  evolution:
+    max_rounds: 1
+    max_mutations_per_round: 1
+    enable_sampling_validation: false
+
+# 生产配置（最佳性能）
+production:
+  data:
+    dataset: "CIFAR-10"
+    data_root: "./data"
+    batch_size: 256
+    num_workers: 8
+    enhanced_augmentation: true
+    mixup_alpha: 1.0
+    cutmix_alpha: 1.0
+    random_erasing: 0.15
+  
+  model:
+    type: "enhanced_resnet50"
+    num_classes: 10
+    use_se: true
+    dropout_rate: 0.2
+    width_multiplier: 1.5
+  
+  training:
+    epochs: 50
+    learning_rate: 0.1
+    weight_decay: 0.0005
+    momentum: 0.9
+    scheduler: "cosine"
+    label_smoothing: 0.2
+    gradient_clip: 1.0
+    warmup_epochs: 5
+  
+  evolution:
+    max_rounds: 8
+    max_mutations_per_round: 5
+    target_accuracy: 96.0
+    enable_sampling_validation: true
+    validation_sample_ratio: 0.2
+    quick_validation_epochs: 8
+    
+    weights:
+      information_gain: 0.35
+      integration: 0.35
+      redundancy: 0.2
+      cost: 0.1
+    
+    risk_aversion: 1.5
+    min_benefit_threshold: 0.005
+    confidence_threshold: 0.8
+    
+    constraints:
+      max_parameter_increase: 0.8
+      max_computation_increase: 1.0
+  
+  device:
+    type: "cuda"
+    seed: 42
+    mixed_precision: true

@@ -1,16 +1,45 @@
 """
-NeuroExapt Models Package
-Enhanced model architectures for intelligent evolution
+Models module for NeuroExapt framework.
 """
 
-from .enhanced_resnet import (
-    EnhancedResNet, enhanced_resnet18, enhanced_resnet34, enhanced_resnet50,
-    enhanced_wide_resnet, create_enhanced_model, EnhancedTrainingConfig,
-    get_enhanced_transforms, LabelSmoothingCrossEntropy, mixup_data, mixup_criterion
+# Import enhanced model components
+from .enhanced_model_factory import (
+    create_enhanced_model,
+    get_model_stats,
+    EnhancedTrainingConfig,
+    get_enhanced_transforms,
+    mixup_data,
+    mixup_criterion,
+    LabelSmoothingCrossEntropy,
+    EnhancedResNet,
+    HybridResNetDense,
+    SEBlock,
+    EnhancedBasicBlock,
+    EnhancedBottleneck,
+    DenseBlock
 )
 
+# Import existing enhanced resnet if available
+try:
+    from .enhanced_resnet import *
+except ImportError:
+    pass
+
 __all__ = [
-    'EnhancedResNet', 'enhanced_resnet18', 'enhanced_resnet34', 'enhanced_resnet50',
-    'enhanced_wide_resnet', 'create_enhanced_model', 'EnhancedTrainingConfig',
-    'get_enhanced_transforms', 'LabelSmoothingCrossEntropy', 'mixup_data', 'mixup_criterion'
+    # Enhanced model factory
+    'create_enhanced_model',
+    'get_model_stats',
+    'EnhancedTrainingConfig',
+    'get_enhanced_transforms',
+    'mixup_data',
+    'mixup_criterion',
+    'LabelSmoothingCrossEntropy',
+    
+    # Model architectures
+    'EnhancedResNet',
+    'HybridResNetDense',
+    'SEBlock',
+    'EnhancedBasicBlock',
+    'EnhancedBottleneck',
+    'DenseBlock'
 ]
