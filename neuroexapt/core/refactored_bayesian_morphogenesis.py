@@ -537,6 +537,7 @@ class DecisionMaker:
             
             decision = {
                 'layer_name': layer_name,
+                'target_layer': layer_name,  # 添加备用字段保持一致性
                 'mutation_type': analysis.get('mutation_type', ''),
                 'success_probability': analysis.get('success_probability', 0.0),
                 'expected_improvement': analysis.get('expected_improvement', 0.0),
@@ -546,7 +547,8 @@ class DecisionMaker:
                 'risk_metrics': {
                     'overall_risk': 1.0 - analysis.get('success_probability', 0.0),
                     'value_at_risk': analysis.get('expected_improvement', 0.0) * 0.5  # 简化的VaR
-                }
+                },
+                'source': 'bayesian_analysis'
             }
             optimal_decisions.append(decision)
         

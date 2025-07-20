@@ -271,10 +271,11 @@ class IntelligentDNMCore:
             # 处理多个高优先级修复，但目前只应用最高优先级的
             primary_repair = repair_suggestions[0]
             
-            # 创建基于泄漏检测的决策
+            # 创建基于泄漏检测的决策（使用一致的字段名）
             leakage_decision = {
                 'mutation_type': primary_repair['primary_action'],
-                'target_layer': primary_repair['layer_name'],
+                'layer_name': primary_repair['layer_name'],  # 使用layer_name保持一致
+                'target_layer': primary_repair['layer_name'],  # 保留target_layer作为备用
                 'confidence': min(0.9, primary_repair['priority'] / 2.0),
                 'expected_improvement': primary_repair['expected_improvement'],
                 'rationale': primary_repair['rationale'],
@@ -330,7 +331,10 @@ class IntelligentDNMCore:
                 # 调试日志：显示原始决策内容
                 logger.info(f"🔍 原始贝叶斯决策内容: {first_decision}")
                 
-                layer_name = first_decision.get('layer_name', 'unknown')
+                # 尝试多个可能的字段名
+                layer_name = (first_decision.get('layer_name') or 
+                             first_decision.get('target_layer') or 
+                             'unknown')
                 mutation_type = first_decision.get('mutation_type', 'unknown')
                 
                 # 进一步调试：检查字段值
