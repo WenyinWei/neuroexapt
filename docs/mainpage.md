@@ -1,202 +1,135 @@
 # Neuro Exapt Documentation {#mainpage}
 
-![Neuro Exapt Logo](https://img.shields.io/badge/Neuro%20Exapt-v1.0.0-007ACC.svg)
+![Neuro Exapt Logo](https://img.shields.io/badge/Neuro%20Exapt-DNM--v1.0-007ACC.svg)
 
-Welcome to the comprehensive documentation for **Neuro Exapt** - a revolutionary neural network framework based on information theory for dynamic architecture optimization.
+Welcome to the comprehensive documentation for **Neuro Exapt** - a revolutionary neural network framework based on **Dynamic Neural Morphogenesis (DNM)** for adaptive architecture evolution during training.
 
-## 🌟 Overview
+## 🌟 What is NeuroExapt?
 
-Neuro Exapt empowers neural networks with the ability to adaptively evolve their structure during training using rigorous information-theoretic principles. Our framework implements cutting-edge algorithms for:
+NeuroExapt 是一个基于生物学启发的**动态神经形态发生框架**，它能让神经网络在训练过程中像生物大脑一样自适应地调整其架构。这不仅仅是简单的网络搜索，而是真正的"神经网络生长"。
 
-- **Information Bottleneck Optimization**: Dynamic capacity adjustment based on information flow
-- **Adaptive Entropy Control**: Intelligent threshold management for structural decisions  
-- **Structural Evolution**: Information-guided pruning and expansion with theoretical guarantees
-- **Discrete Parameter Optimization**: Continuous relaxation for gradient-based discrete choices
+### 🧬 从传统方法到 DNM 的革命性突破
 
-## 📚 Documentation Structure
-
-### Core Modules
-
-| Module | Description | Key Classes |
-|--------|-------------|-------------|
-| @ref neuroexapt.core.information_theory | Information-theoretic measures and bottleneck implementation | InformationBottleneck, AdaptiveInformationBottleneck |
-| @ref neuroexapt.core.entropy_control | Adaptive entropy threshold management | AdaptiveEntropy, EntropyMetrics |
-| @ref neuroexapt.core.structural_evolution | Dynamic network structure optimization | StructuralEvolution, EvolutionStep |
-| @ref neuroexapt.core.operators | Structural operators for pruning and expansion | StructuralOperator |
-| @ref neuroexapt.math.metrics | Mathematical metrics and utilities | - |
-| @ref neuroexapt.math.optimization | Optimization algorithms | - |
-
-### Mathematical Framework
-
-- **@ref theory "Theoretical Foundation"**: Complete mathematical framework with proofs
-- **@ref symbols "Symbol Glossary"**: Comprehensive notation reference
-- **@ref examples "Examples & Tutorials"**: Step-by-step implementation guides
+| 传统方法 | DNM 框架 |
+|----------|----------|
+| 固定架构训练 | 动态架构进化 |
+| 人工设计网络结构 | 智能自适应生长 |
+| 性能瓶颈时停滞 | 突破瓶颈持续优化 |
+| 单一理论指导 | 多理论融合驱动 |
 
 ## 🚀 Quick Start
 
-### Basic Usage Example
+### 最简单的开始方式
 
 ```python
-import neuroexapt
+from neuroexapt.core.dnm_framework import train_with_dnm
 import torch.nn as nn
 
-# Initialize the framework
-ne = neuroexapt.NeuroExapt(
-    task_type="classification",
-    entropy_weight=0.5,
-    alpha=0.7,  # Information retention coefficient
-    beta=0.3    # Structure variation coefficient
+# 创建基础模型
+model = nn.Sequential(
+    nn.Conv2d(3, 32, 3, padding=1),
+    nn.ReLU(),
+    nn.Linear(32*32*32, 10)
 )
 
-# Wrap your existing model
-model = ne.wrap_model(your_pytorch_model)
-
-# Train with dynamic evolution
-trainer = neuroexapt.Trainer(model=model)
-trainer.fit(train_loader, val_loader, epochs=100)
-```
-
-### Information-Theoretic Analysis
-
-```python
-# Analyze network information flow
-analyzer = neuroexapt.InformationBottleneck(beta=1.0)
-analysis = analyzer.analyze_network(model, dataloader)
-
-print(f"Network redundancy: {analysis['redundancy']:.3f}")
-print(f"Layer importances: {analysis['layer_importances']}")
-```
-
-### Adaptive Evolution Control
-
-```python
-# Configure entropy-based evolution
-entropy_ctrl = neuroexapt.AdaptiveEntropy(
-    initial_threshold=0.5,
-    decay_rate=0.05,
-    task_complexity_factor=0.2
+# 🧬 一行代码启动智能训练
+result = train_with_dnm(
+    model=model,
+    train_loader=train_loader,
+    val_loader=val_loader,
+    target_accuracy=95.0
 )
 
-# Evolution engine
-evolution = neuroexapt.StructuralEvolution(alpha=0.7, beta=0.3)
+print(f"🎉 最终准确率: {result.final_accuracy:.2f}%")
+print(f"🧬 执行了 {result.morphogenesis_events} 次形态发生")
 ```
 
-## 🔬 Mathematical Foundation
+## 📚 Documentation Structure
 
-### Core Equations
+### 🎓 Learning Pathways
 
-**Layer Importance Evaluation:**
-$$I(L_i;O) = H(O) - H(O|L_i) \cdot \psi(\text{TaskType})$$
+Choose your learning path based on your experience level:
 
-**Network Redundancy:**
-$$R = 1 - \frac{\sum_{i=1}^L I(L_i;O)}{H(O) \cdot \exp(-\lambda \cdot \text{Depth})}$$
+#### 🌱 Beginners
+- **@ref getting_started "Quick Start Guide"** - Get up and running in 5 minutes
+- **@ref dnm_principles "DNM Core Principles"** - Understand the biological inspiration
+- **@ref basic_examples "Basic Examples"** - Simple classification and regression tasks
 
-**Structural Evolution:**
-$$\frac{\partial S}{\partial t} = -\alpha I(L_i;O) + \beta \cdot \text{KL}(p_{\text{old}}||p_{\text{new}})$$
+#### 🌿 Advanced Developers
+- **@ref dnm_architecture "DNM Architecture Deep Dive"** - Framework design details
+- **@ref intelligent_bottleneck "Intelligent Bottleneck Detection"** - Performance analysis mechanisms
+- **@ref morphogenesis_events "Morphogenesis Events"** - Network evolution process
 
-**Discrete Parameter Relaxation:**
-$$k = \lfloor \sigma(\theta) \cdot (k_{\max} - k_{\min}) + 0.5 \rfloor$$
+#### 🌳 Expert Users
+- **@ref custom_operators "Custom Operators"** - Extend DNM functionality
+- **@ref theory_deep_dive "Theoretical Foundation"** - Mathematical principles and proofs
+- **@ref performance_tuning "Performance Optimization"** - Large-scale deployment
 
-For complete mathematical details, see @ref theory "Theoretical Foundation".
+### 🧠 Core Modules
 
-## 📊 Performance Characteristics
+| Module | Description | Key Classes |
+|--------|-------------|-------------|
+| @ref neuroexapt.core.dnm_framework | DNM core framework | DNMFramework, MorphogenesisEngine |
+| @ref neuroexapt.core.intelligent_growth | Intelligent growth engine | IntelligentGrowthSolution, BottleneckAnalyzer |
+| @ref neuroexapt.core.morphogenesis | Morphogenesis controller | MorphogenesisController, NeuronDivision |
+| @ref neuroexapt.analysis.bottleneck | Bottleneck analysis system | BottleneckDetector, PerformanceAnalyzer |
+| @ref neuroexapt.optimization.pareto | Multi-objective optimization | ParetoOptimizer, MultiObjectiveEvolution |
 
-### Computational Complexity
+## 🌟 Key Features Overview
 
-| Operation | Time Complexity | Space Complexity | Use Case |
-|-----------|----------------|------------------|----------|
-| Information Assessment | $\mathcal{O}(n)$ | $\mathcal{O}(1)$ | Real-time inference |
-| Structural Optimization | $\mathcal{O}(k^2)$ | $\mathcal{O}(k)$ | Training phase |
-| Discrete Parameter Mapping | $\mathcal{O}(1)$ | $\mathcal{O}(1)$ | Gradient updates |
+### 🧬 Biologically-Inspired Network Evolution
 
-### Convergence Guarantees
+DNM framework draws inspiration from biological neural development:
 
-**Theorem**: Under KL-divergence constraints, structural evolution satisfies:
-$$\lim_{t \to \infty} ||S(t) - S^*||_2 \leq \frac{C}{\sqrt{t}}$$
+- **Neurogenesis**: Dynamic addition of new neurons
+- **Synaptogenesis**: Automatic establishment of new connections  
+- **Functional Plasticity**: Net2Net smooth parameter migration
+- **Specialization**: Task-based neuron differentiation
 
-where $S^*$ is the information-optimal structure.
+For detailed feature descriptions, see @ref core_features "Core Features".
 
-## 🎯 Key Features
+### 📈 Performance Breakthrough
 
-### Information Bottleneck Engine
-- **Mutual Information Estimation**: Advanced binning and neural estimation methods
-- **Adaptive β Scheduling**: Dynamic trade-off between compression and prediction
-- **Layer Importance Ranking**: Information-theoretic layer evaluation
+DNM consistently outperforms traditional methods. See @ref performance_benchmarks "Performance Benchmarks" for detailed comparisons and results.
 
-### Entropy Control System
-- **Adaptive Thresholding**: $\tau = \tau_0 \cdot e^{-\gamma \cdot \text{Epoch}} \cdot (1 + \delta \cdot \text{TaskComplexity})$
-- **Task Complexity Estimation**: Automatic adaptation to dataset characteristics
-- **Real-time Monitoring**: Comprehensive entropy tracking and visualization
-
-### Structural Evolution
-- **Intelligent Pruning**: Entropy-based layer removal with performance preservation
-- **Information-Guided Expansion**: Mutual information triggers for capacity increase
-- **Discrete Parameter Mutation**: Continuous relaxation for discrete architectural choices
-
-## 🔧 Advanced Configuration
-
-### Custom Information Metrics
+### 🔧 Easy Integration
 
 ```python
-def custom_importance(layer_output, target_output, layer_depth):
-    """Custom layer importance with depth weighting."""
-    base_mi = neuroexapt.mutual_information(layer_output, target_output)
-    depth_weight = np.exp(-0.1 * layer_depth)
-    return base_mi * depth_weight
-
-ne.set_importance_metric(custom_importance)
+# Drop-in replacement for traditional training
+result = train_with_dnm(your_model, train_loader, val_loader)
 ```
 
-### Evolution Strategy Customization
+For complete integration examples, see @ref integration_examples "Integration Examples".
 
-```python
-class CustomEvolution(neuroexapt.StructuralEvolution):
-    def should_prune(self, entropy, threshold, performance):
-        return entropy < threshold and performance > 0.9
-    
-    def should_expand(self, mutual_info, avg_info, utilization):
-        return mutual_info > 1.5 * avg_info and utilization > 0.8
-```
+## 🎓 Learning Recommendations
 
-## 📈 Performance Benchmarks
+### 🔰 New to NeuroExapt? (Estimated time: 1-2 days)
+1. Read @ref getting_started "Quick Start Guide"
+2. Run `examples/basic_classification.py`
+3. Understand @ref dnm_principles "DNM Core Principles"
+4. Experiment with different hyperparameters
 
-### Efficiency Gains
-- **30-50% parameter reduction** without accuracy loss
-- **2-3x inference speedup** through intelligent pruning
-- **40% memory reduction** via structural optimization
+### 🎯 Ready to Go Deeper? (Estimated time: 1 week)
+1. Study @ref intelligent_growth "Intelligent Growth Mechanisms"
+2. Learn about @ref morphogenesis_events "Morphogenesis Events"
+3. Apply DNM to your custom datasets
+4. Analyze performance improvements
 
-### Accuracy Improvements
-- **+2-5% accuracy** on CIFAR-10/100 vs. static architectures
-- **Better generalization** through information-theoretic regularization
-- **Robust performance** across different initialization seeds
+### 🚀 Expert-Level Application? (Estimated time: 2-4 weeks)
+1. Explore @ref theory_deep_dive "Theoretical Foundation"
+2. Develop @ref custom_operators "Custom Operators"
+3. Deploy at scale with @ref performance_tuning "Performance Optimization"
+4. Contribute improvements and feedback
 
-## 🧪 Research Applications
+## 🤝 Community & Support
 
-### Information Theory Research
-- Investigate information flow in deep networks
-- Study capacity-performance trade-offs
-- Analyze layer redundancy patterns
-
-### Neural Architecture Search
-- Information-guided architecture optimization
-- Discrete parameter space exploration
-- Efficient architecture evolution
-
-### Model Compression
-- Information-preserving pruning
-- Dynamic capacity adjustment
-- Real-time compression during training
-
-## 📞 Support & Community
-
-- **Issues**: [GitHub Issues](https://github.com/yourusername/neuroexapt/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/neuroexapt/discussions)
-- **Email**: team@neuroexapt.ai
-
-## 📜 License
-
-This project is licensed under the MIT License. See the LICENSE file for details.
+- **GitHub Repository**: [neuroexapt/neuroexapt](https://github.com/neuroexapt/neuroexapt)
+- **Online Demo**: [Experience DNM Framework](https://demo.neuroexapt.org)
+- **Technical Blog**: [Deep Dive into DNM Principles](https://blog.neuroexapt.org)
+- **Issues & Discussions**: [Get Help](https://github.com/neuroexapt/neuroexapt/issues)
 
 ---
 
-*This documentation is generated using Doxygen. For the latest updates, visit our [GitHub repository](https://github.com/yourusername/neuroexapt).* 
+*🧬 让神经网络像生物大脑一样生长和进化！*
+
+*Make neural networks grow and evolve like biological brains!* 
