@@ -521,6 +521,24 @@ class ResultFormatter:
 
 
 # 导出主要类和函数
+def setup_device(device_type: str = 'auto') -> torch.device:
+    """
+    设置计算设备 - 独立函数版本
+    
+    Args:
+        device_type: 设备类型 ('auto', 'cuda', 'cpu')
+        
+    Returns:
+        torch.device: 配置好的设备
+    """
+    if device_type == 'auto':
+        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    else:
+        device = torch.device(device_type)
+    
+    return device
+
+
 def load_cifar10_data(batch_size: int = 128, num_workers: int = 2) -> tuple:
     """Load CIFAR-10 dataset with enhanced augmentation."""
     
