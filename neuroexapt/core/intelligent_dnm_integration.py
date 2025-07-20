@@ -394,6 +394,8 @@ class IntelligentDNMCore:
             
         except Exception as e:
             logger.error(f"❌ 变异执行失败: {e}")
+            import traceback
+            logger.error(f"❌ 详细错误信息: {traceback.format_exc()}")
             return {
                 'executed': False,
                 'reason': f'execution_error: {str(e)}',
@@ -1153,6 +1155,11 @@ class IntelligentDNMCore:
                 
                 parallel_module = ParallelLinear(branch1, branch2)
                 
+                # 先计算参数变化（在替换之前）
+                original_params = sum(p.numel() for p in target_module.parameters())
+                new_params = sum(p.numel() for p in parallel_module.parameters())
+                params_added = new_params - original_params
+                
                 # 权重初始化 - 保持原始功能的近似
                 with torch.no_grad():
                     branch1.weight.data = target_module.weight.data[:out_features//2, :] * 0.7
@@ -1164,10 +1171,12 @@ class IntelligentDNMCore:
                 
                 self._replace_module(model, target_layer, parallel_module)
                 
+                logger.info(f"📊 Linear参数变化: {original_params:,} → {new_params:,} (差异 {params_added:,})")
+                
                 return {
                     'success': True,
                     'new_model': model,
-                    'parameters_added': 0,  # 参数总数不变，但结构并行化
+                    'parameters_added': params_added,
                     'mutation_type': 'parallel_division',
                     'details': f'并行分裂为 {out_features//2} + {out_features - out_features//2}'
                 }
@@ -1216,12 +1225,23 @@ class IntelligentDNMCore:
                 
                 parallel_module = HeterogeneousParallelConv(branch1, branch2, fusion_conv)
                 
+                # 先计算参数变化（在替换之前）
+                original_params = sum(p.numel() for p in target_module.parameters())
+                new_params = sum(p.numel() for p in parallel_module.parameters())
+                params_added = new_params - original_params
+                
                 # 智能权重初始化
                 with torch.no_grad():
                     # 分支1使用原始权重的一部分
-                    branch1.weight.data = target_module.weight.data[:branch1_channels, :, :, :] * 0.8
-                    if target_module.bias is not None:
-                        branch1.bias.data = target_module.bias.data[:branch1_channels] * 0.8
+                    try:
+                        branch1.weight.data = target_module.weight.data[:branch1_channels, :, :, :] * 0.8
+                        if target_module.bias is not None:
+                            branch1.bias.data = target_module.bias.data[:branch1_channels] * 0.8
+                    except Exception as e:
+                        logger.warning(f"⚠️  分支1权重初始化失败，使用默认初始化: {e}")
+                        nn.init.xavier_uniform_(branch1.weight)
+                        if branch1.bias is not None:
+                            nn.init.zeros_(branch1.bias)
                     
                     # 分支2使用xavier初始化
                     for module in branch2.modules():
@@ -1236,11 +1256,6 @@ class IntelligentDNMCore:
                         nn.init.zeros_(fusion_conv.bias)
                 
                 self._replace_module(model, target_layer, parallel_module)
-                
-                # 计算实际增加的参数
-                original_params = sum(p.numel() for p in [target_module])
-                new_params = sum(p.numel() for p in parallel_module.parameters())
-                params_added = new_params - original_params
                 
                 logger.info(f"📊 参数变化: {original_params:,} → {new_params:,} (增加 {params_added:,})")
                 logger.info(f"🏗️ 异质分支设计: 分支1({branch1_channels}ch) + 分支2({branch2_channels}ch深度分离) + 融合层")
@@ -1258,6 +1273,8 @@ class IntelligentDNMCore:
                 
         except Exception as e:
             logger.error(f"❌ 并行分裂失败: {e}")
+            import traceback
+            logger.error(f"❌ 并行分裂详细错误: {traceback.format_exc()}")
             return {'success': False, 'reason': str(e), 'new_model': model}
     
     def _execute_information_enhancement(self, model: nn.Module, target_layer: str, context: Dict[str, Any]) -> Dict[str, Any]:
