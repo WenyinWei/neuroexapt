@@ -3,6 +3,11 @@
 
 用新的智能形态发生引擎替换原有的生硬分析框架
 实现真正综合的、有机配合的架构变异决策系统
+
+核心升级：
+- 集成增强贝叶斯形态发生引擎
+- 提升变异决策的智能化程度
+- 基于贝叶斯推断的准确率提升预测
 """
 
 from typing import Dict, Any, List, Optional
@@ -10,6 +15,7 @@ import torch
 import torch.nn as nn
 import logging
 from .intelligent_morphogenesis_engine import IntelligentMorphogenesisEngine
+from .enhanced_bayesian_morphogenesis import BayesianMorphogenesisEngine
 from .intelligent_convergence_monitor import IntelligentConvergenceMonitor
 from .information_leakage_detector import InformationLeakageDetector
 from ..utils.device import move_module_to_device_like
@@ -27,23 +33,54 @@ class IntelligentDNMCore:
     2. 统一决策流水线，避免配合生硬
     3. 动态阈值，解决"全是0"的问题
     4. 精准定位变异点和策略
+    5. 集成贝叶斯推断引擎，提升决策智能化
     """
     
-    def __init__(self):
-        self.intelligent_engine = IntelligentMorphogenesisEngine()
-        self.convergence_monitor = IntelligentConvergenceMonitor()
-        self.leakage_detector = InformationLeakageDetector()
+    def __init__(self, 
+                 bayesian_engine=None,
+                 intelligent_engine=None,
+                 convergence_monitor=None,
+                 leakage_detector=None):
+        # 支持依赖注入，提高可测试性和扩展性
+        self.intelligent_engine = intelligent_engine or IntelligentMorphogenesisEngine()
+        
+        # 使用重构后的贝叶斯引擎（如果没有传入的话）
+        if bayesian_engine is None:
+            from .refactored_bayesian_morphogenesis import RefactoredBayesianMorphogenesisEngine
+            self.bayesian_engine = RefactoredBayesianMorphogenesisEngine()
+        else:
+            self.bayesian_engine = bayesian_engine
+        
+        # 使用增强版收敛监控器（如果没有传入的话）
+        if convergence_monitor is None:
+            from .enhanced_convergence_monitor import EnhancedConvergenceMonitor
+            self.convergence_monitor = EnhancedConvergenceMonitor(mode='balanced')
+        else:
+            self.convergence_monitor = convergence_monitor
+            
+        self.leakage_detector = leakage_detector or InformationLeakageDetector()
+        
+        # 添加模式转换器
+        from .bayesian_prediction.schema_transformer import BayesianSchemaTransformer
+        self.schema_transformer = BayesianSchemaTransformer()
+        
         self.execution_history = []
         
         # 集成配置
         self.config = {
             'enable_intelligent_analysis': True,
-            'enable_convergence_control': True,  # 启用收敛控制
-            'enable_leakage_detection': True,    # 启用泄漏检测
-            'fallback_to_old_system': False,     # 完全使用新系统
+            'enable_bayesian_analysis': True,     # 启用贝叶斯分析
+            'enable_convergence_control': True,   # 启用收敛控制
+            'enable_leakage_detection': True,     # 启用泄漏检测
+            'prefer_bayesian_decisions': True,    # 优先使用贝叶斯决策
+            'fallback_to_old_system': False,      # 完全使用新系统
             'detailed_logging': True,
-            'performance_tracking': True
+            'performance_tracking': True,
+            'aggressive_mutation_mode': True      # 积极变异模式
         }
+        
+        # 设置积极模式以解决过于保守的问题
+        self.set_aggressive_mode()
     
     def enhanced_morphogenesis_execution(self, 
                                        model: nn.Module, 
@@ -126,7 +163,40 @@ class IntelligentDNMCore:
         return leakage_analysis
     
     def _stage_comprehensive_analysis(self, model: nn.Module, context: Dict[str, Any]) -> Dict[str, Any]:
-        """阶段3: 综合分析"""
+        """阶段3: 综合分析（增强贝叶斯版本）"""
+        
+        # 综合分析：根据配置决定是否优先/仅使用贝叶斯分析
+        enable_bayes = self.config.get('enable_bayesian_analysis', True)
+        prefer_bayes = self.config.get('prefer_bayesian_decisions', False)
+
+        if enable_bayes:
+            logger.info("🧠 使用增强贝叶斯分析引擎")
+            bayesian_result = self.bayesian_engine.bayesian_morphogenesis_analysis(model, context)
+            bayes_success = (
+                bayesian_result.get('optimal_decisions') and 
+                bayesian_result['execution_plan'].get('execute', False)
+            )
+
+            if prefer_bayes:
+                # 配置要求优先使用贝叶斯决策，只要贝叶斯分析成功就直接返回
+                if bayes_success:
+                    logger.info(f"✅ 贝叶斯分析成功: {len(bayesian_result['optimal_decisions'])}个最优决策")
+                    return self.schema_transformer.convert_bayesian_to_standard_format(bayesian_result)
+                else:
+                    logger.info("⚠️ 贝叶斯分析未产生可行决策，回退到传统智能分析")
+            else:
+                # 配置未要求优先贝叶斯，进行混合分析
+                standard_result = self.intelligent_engine.comprehensive_morphogenesis_analysis(model, context)
+                
+                if bayes_success:
+                    logger.info(f"✅ 贝叶斯分析成功: {len(bayesian_result['optimal_decisions'])}个最优决策，与传统分析合并")
+                    return self.schema_transformer.merge_bayesian_and_standard_results(bayesian_result, standard_result)
+                else:
+                    logger.info("⚠️ 贝叶斯分析未产生可行决策，使用传统智能分析结果")
+                    return standard_result
+
+        # 回退到传统智能分析
+        logger.info("🔄 使用传统智能分析引擎")
         return self.intelligent_engine.comprehensive_morphogenesis_analysis(model, context)
     
     def _stage_analysis_integration(self, 
@@ -201,10 +271,11 @@ class IntelligentDNMCore:
             # 处理多个高优先级修复，但目前只应用最高优先级的
             primary_repair = repair_suggestions[0]
             
-            # 创建基于泄漏检测的决策
+            # 创建基于泄漏检测的决策（使用一致的字段名）
             leakage_decision = {
                 'mutation_type': primary_repair['primary_action'],
-                'target_layer': primary_repair['layer_name'],
+                'layer_name': primary_repair['layer_name'],  # 使用layer_name保持一致
+                'target_layer': primary_repair['layer_name'],  # 保留target_layer作为备用
                 'confidence': min(0.9, primary_repair['priority'] / 2.0),
                 'expected_improvement': primary_repair['expected_improvement'],
                 'rationale': primary_repair['rationale'],
@@ -250,10 +321,39 @@ class IntelligentDNMCore:
         # 获取主要变异决策
         primary_mutation = execution_plan.get('primary_mutation', {})
         
+        # 如果没有primary_mutation，尝试从final_decisions中获取
         if not primary_mutation:
+            final_decisions = analysis.get('final_decisions', [])
+            if final_decisions:
+                # 使用第一个最终决策作为主要变异
+                first_decision = final_decisions[0]
+                
+                # 调试日志：显示原始决策内容
+                logger.info(f"🔍 原始贝叶斯决策内容: {first_decision}")
+                
+                # 尝试多个可能的字段名
+                layer_name = (first_decision.get('layer_name') or 
+                             first_decision.get('target_layer') or 
+                             'unknown')
+                mutation_type = first_decision.get('mutation_type', 'unknown')
+                
+                # 进一步调试：检查字段值
+                logger.info(f"🔍 提取字段 - layer_name: '{layer_name}', mutation_type: '{mutation_type}'")
+                logger.info(f"🔍 决策键列表: {list(first_decision.keys())}")
+                
+                primary_mutation = {
+                    'mutation_type': mutation_type,
+                    'target_layer': layer_name,
+                    'expected_improvement': first_decision.get('expected_improvement', 0.0),
+                    'confidence': first_decision.get('decision_confidence', 0.0),
+                    'rationale': first_decision.get('rationale', 'bayesian_recommendation')
+                }
+                logger.info(f"🔧 从贝叶斯决策构建主要变异: {primary_mutation['mutation_type']} on {primary_mutation['target_layer']}")
+        
+        if not primary_mutation or primary_mutation.get('target_layer') == 'unknown':
             return {
                 'executed': False,
-                'reason': 'no_primary_mutation',
+                'reason': 'no_valid_primary_mutation',
                 'model_modified': False,
                 'new_model': model
             }
@@ -269,6 +369,20 @@ class IntelligentDNMCore:
             mutation_type = primary_mutation.get('mutation_type', 'unknown')
             self.intelligent_engine.update_success_rate(mutation_type, mutation_success)
             
+            # 如果变异执行成功，通知收敛监控器
+            if mutation_result.get('success', False):
+                current_epoch = context.get('current_epoch', 0)
+                mutation_info = {
+                    'mutation_type': primary_mutation.get('mutation_type', 'unknown'),
+                    'target_layer': primary_mutation.get('target_layer', 'unknown'),
+                    'expected_improvement': primary_mutation.get('expected_improvement', 0.0)
+                }
+                
+                # 通知收敛监控器记录变异执行
+                if hasattr(self.convergence_monitor, 'record_morphogenesis_execution'):
+                    self.convergence_monitor.record_morphogenesis_execution(current_epoch, mutation_info)
+                    logger.info(f"✅ 已通知收敛监控器变异执行成功")
+            
             return {
                 'executed': True,
                 'mutation_applied': primary_mutation,
@@ -280,6 +394,8 @@ class IntelligentDNMCore:
             
         except Exception as e:
             logger.error(f"❌ 变异执行失败: {e}")
+            import traceback
+            logger.error(f"❌ 详细错误信息: {traceback.format_exc()}")
             return {
                 'executed': False,
                 'reason': f'execution_error: {str(e)}',
@@ -297,6 +413,16 @@ class IntelligentDNMCore:
         mutation_type = mutation_config.get('mutation_type', '')
         
         logger.info(f"🔧 执行变异: {mutation_type} on {target_layer}")
+        logger.info(f"🔍 变异配置内容: {mutation_config}")
+        
+        # 检查目标层是否有效
+        if not target_layer or target_layer == 'unknown':
+            logger.error(f"❌ 无效的目标层: '{target_layer}'")
+            return {
+                'success': False,
+                'error': f'invalid_target_layer: {target_layer}',
+                'new_model': model
+            }
         
         # 根据变异类型执行相应操作
         if mutation_type == 'width_expansion':
@@ -432,14 +558,12 @@ class IntelligentDNMCore:
                     if target_module.bias is not None:
                         deep_layers[-1].bias.data.copy_(target_module.bias.data)
                 
+                # 先计算参数变化（在替换之前）
+                original_params = sum(p.numel() for p in target_module.parameters())
+                new_params = sum(p.numel() for p in deep_layers.parameters())
+                
                 # 替换原模块
                 self._replace_module(model, target_layer, deep_layers)
-                
-                # 计算新增参数
-                new_params = (in_features * in_features * 2 + in_features * 2 + 
-                            in_features * 2 * in_features + in_features +
-                            in_features * out_features + out_features)
-                original_params = in_features * out_features + out_features
                 
                 return {
                     'success': True,
@@ -478,18 +602,12 @@ class IntelligentDNMCore:
                             nn.init.ones_(layer.weight.data)
                             nn.init.zeros_(layer.bias.data)
                 
+                # 先计算参数变化（在替换之前）
+                original_params = sum(p.numel() for p in target_module.parameters())
+                new_params = sum(p.numel() for p in deep_conv.parameters())
+                
                 # 替换原模块
                 self._replace_module(model, target_layer, deep_conv)
-                
-                # 计算新增参数
-                conv1_params = in_channels * mid_channels * 9 + mid_channels
-                bn1_params = mid_channels * 2
-                conv2_params = mid_channels * mid_channels * 9 + mid_channels
-                bn2_params = mid_channels * 2
-                conv3_params = mid_channels * out_channels * target_module.kernel_size[0] * target_module.kernel_size[1] + out_channels
-                
-                new_params = conv1_params + bn1_params + conv2_params + bn2_params + conv3_params
-                original_params = in_channels * out_channels * target_module.kernel_size[0] * target_module.kernel_size[1] + out_channels
                 
                 return {
                     'success': True,
@@ -542,16 +660,59 @@ class IntelligentDNMCore:
         """执行批归一化插入变异"""
         
         try:
-            # 插入BatchNorm层
+            logger.info(f"🔧 执行批归一化插入: {target_layer}")
+            
+            # 找到目标层
+            target_module = None
+            for name, module in model.named_modules():
+                if name == target_layer:
+                    target_module = module
+                    break
+            
+            if target_module is None:
+                return {'success': False, 'reason': 'target_layer_not_found', 'new_model': model}
+            
+            # 在目标层后插入批归一化
+            if isinstance(target_module, nn.Conv2d):
+                # 卷积层后插入BatchNorm2d
+                num_features = target_module.out_channels
+                bn_layer = nn.BatchNorm2d(num_features)
+                
+                # 创建包含原层和BN的序列
+                new_module = nn.Sequential(target_module, bn_layer)
+                
+            elif isinstance(target_module, nn.Linear):
+                # 线性层后插入BatchNorm1d
+                num_features = target_module.out_features
+                bn_layer = nn.BatchNorm1d(num_features)
+                
+                # 创建包含原层和BN的序列
+                new_module = nn.Sequential(target_module, bn_layer)
+                
+            else:
+                return {'success': False, 'reason': 'unsupported_layer_type_for_bn', 'new_model': model}
+            
+            # 计算参数变化
+            original_params = sum(p.numel() for p in target_module.parameters())
+            new_params = sum(p.numel() for p in new_module.parameters())
+            
+            # 替换模块
+            self._replace_module(model, target_layer, new_module)
+            
+            logger.info(f"📊 BatchNorm插入参数变化: {original_params:,} → {new_params:,} (增加 {new_params - original_params:,})")
+            
             return {
                 'success': True,
                 'new_model': model,
-                'parameters_added': 100,  # 估计值
+                'parameters_added': new_params - original_params,
+                'mutation_type': 'batch_norm_insertion',
                 'normalization_type': 'batch_norm'
             }
             
         except Exception as e:
             logger.error(f"❌ 批归一化插入失败: {e}")
+            import traceback
+            logger.error(f"❌ 批归一化详细错误: {traceback.format_exc()}")
             return {'success': False, 'reason': str(e), 'new_model': model}
     
     def _simple_width_expansion(self, model: nn.Module, target_layer: str, target_module: nn.Module) -> Dict[str, Any]:
@@ -579,15 +740,19 @@ class IntelligentDNMCore:
                     bias=target_module.bias is not None
                 )
                 
-                # 复制原有权重
+                # 安全的权重复制，防止边界溢出
                 with torch.no_grad():
-                    new_conv.weight[:current_width].copy_(target_module.weight)
-                    # 随机初始化新权重
-                    nn.init.kaiming_normal_(new_conv.weight[current_width:])
+                    copy_width = min(current_width, new_width)
+                    if copy_width > 0:
+                        new_conv.weight.data[:copy_width].copy_(target_module.weight.data[:copy_width])
+                        if target_module.bias is not None and new_conv.bias is not None:
+                            new_conv.bias.data[:copy_width].copy_(target_module.bias.data[:copy_width])
                     
-                    if target_module.bias is not None:
-                        new_conv.bias[:current_width].copy_(target_module.bias)
-                        nn.init.zeros_(new_conv.bias[current_width:])
+                    # 随机初始化新权重
+                    if new_width > current_width:
+                        nn.init.kaiming_normal_(new_conv.weight.data[current_width:])
+                        if new_conv.bias is not None:
+                            nn.init.zeros_(new_conv.bias.data[current_width:])
                 
                 # 替换层
                 self._replace_layer_in_model(model, target_layer, new_conv)
@@ -612,15 +777,19 @@ class IntelligentDNMCore:
                     bias=target_module.bias is not None
                 )
                 
-                # 复制原有权重
+                # 安全的权重复制，防止边界溢出
                 with torch.no_grad():
-                    new_linear.weight[:current_width].copy_(target_module.weight)
-                    # 随机初始化新权重
-                    nn.init.xavier_normal_(new_linear.weight[current_width:])
+                    copy_width = min(current_width, new_width)
+                    if copy_width > 0:
+                        new_linear.weight.data[:copy_width].copy_(target_module.weight.data[:copy_width])
+                        if target_module.bias is not None and new_linear.bias is not None:
+                            new_linear.bias.data[:copy_width].copy_(target_module.bias.data[:copy_width])
                     
-                    if target_module.bias is not None:
-                        new_linear.bias[:current_width].copy_(target_module.bias)
-                        nn.init.zeros_(new_linear.bias[current_width:])
+                    # 随机初始化新权重
+                    if new_width > current_width:
+                        nn.init.xavier_normal_(new_linear.weight.data[current_width:])
+                        if new_linear.bias is not None:
+                            nn.init.zeros_(new_linear.bias.data[current_width:])
                 
                 # 替换层
                 self._replace_layer_in_model(model, target_layer, new_linear)
@@ -743,14 +912,23 @@ class IntelligentDNMCore:
         type_mapping = {
             'width_expansion': 'width_expansion',
             'depth_expansion': 'depth_expansion',
+            'serial_division': 'serial_division',
+            'parallel_division': 'parallel_division',
             'attention_enhancement': 'attention_enhancement',
             'residual_connection': 'structural_enhancement',
             'batch_norm_insertion': 'normalization_enhancement',
+            'layer_norm': 'normalization_enhancement',
             'information_enhancement': 'information_enhancement',
             'channel_attention': 'attention_enhancement'
         }
         
-        return type_mapping.get(mutation_type, 'intelligent_mutation')
+        mapped_type = type_mapping.get(mutation_type, 'intelligent_mutation')
+        
+        if mapped_type == 'intelligent_mutation':
+            logger.warning(f"⚠️  变异类型 '{mutation_type}' 未在映射表中找到，使用默认类型 'intelligent_mutation'")
+            logger.info(f"🔍 当前支持的变异类型: {list(type_mapping.keys())}")
+        
+        return mapped_type
     
     def _format_trigger_reasons(self, analysis: Dict[str, Any]) -> List[str]:
         """格式化触发原因"""
@@ -813,12 +991,29 @@ class IntelligentDNMCore:
         # 执行计划
         execution_plan = analysis.get('execution_plan', {})
         if execution_plan.get('execute', False):
-            primary = execution_plan.get('primary_mutation', {})
-            logger.info(f"🚀 执行计划: {primary.get('mutation_type', 'unknown')} "
-                       f"on {primary.get('target_layer', 'unknown')} "
-                       f"(期望改进: {primary.get('expected_improvement', 0):.3%})")
+            # 从贝叶斯分析结果中获取主要变异信息
+            final_decisions = analysis.get('final_decisions', [])
+            
+            if final_decisions:
+                primary = final_decisions[0]  # 第一个决策作为主要变异
+                mutation_type = primary.get('mutation_type', 'unknown')
+                target_layer = primary.get('layer_name', 'unknown')
+                expected_improvement = primary.get('expected_improvement', 0)
+                confidence = execution_plan.get('confidence', 0)
+                
+                logger.info(f"🚀 执行计划: {mutation_type} "
+                           f"on {target_layer} "
+                           f"(置信度: {confidence:.3f}, 期望改进: {expected_improvement:.3%})")
+            else:
+                # 回退到原有格式
+                primary = execution_plan.get('primary_mutation', {})
+                logger.info(f"🚀 执行计划: {primary.get('mutation_type', 'unknown')} "
+                           f"on {primary.get('target_layer', 'unknown')} "
+                           f"(期望改进: {primary.get('expected_improvement', 0):.3%})")
         else:
-            logger.info(f"❌ 未执行变异: {execution_plan.get('reason', 'unknown')}")
+            reason = execution_plan.get('reason', 'unknown')
+            confidence = execution_plan.get('confidence', 0)
+            logger.info(f"❌ 未执行变异: {reason} (置信度: {confidence:.3f})")
     
     def _fallback_execution(self) -> Dict[str, Any]:
         """fallback执行"""
@@ -907,11 +1102,12 @@ class IntelligentDNMCore:
                         else:
                             nn.init.zeros_(serial_layers[2].bias.data)
                 
+                # 先计算参数变化（在替换之前）
+                original_params = sum(p.numel() for p in target_module.parameters())
+                new_params = sum(p.numel() for p in serial_layers.parameters())
+                
                 # 替换原模块
                 self._replace_module(model, target_layer, serial_layers)
-                
-                new_params = hidden_size * in_features + hidden_size + hidden_size * out_features + out_features
-                original_params = in_features * out_features + out_features
                 
                 return {
                     'success': True,
@@ -931,13 +1127,29 @@ class IntelligentDNMCore:
                 
                 logger.info(f"🔧 卷积串行分裂参数: {in_channels} -> {hidden_channels} -> {out_channels}")
                 
-                # 1x1卷积串行分裂
-                serial_layers = nn.Sequential(
-                    nn.Conv2d(in_channels, hidden_channels, 1),
-                    nn.ReLU(),
-                    nn.Conv2d(hidden_channels, out_channels, target_module.kernel_size, 
-                             padding=target_module.padding, stride=target_module.stride)
-                )
+                # 安全的串行分裂：确保参数兼容性
+                try:
+                    # 验证参数兼容性
+                    test_conv = nn.Conv2d(hidden_channels, out_channels, target_module.kernel_size, 
+                                         padding=target_module.padding, stride=target_module.stride,
+                                         dilation=target_module.dilation, groups=1)
+                    
+                    # 1x1卷积串行分裂
+                    serial_layers = nn.Sequential(
+                        nn.Conv2d(in_channels, hidden_channels, 1, padding=0),  # 1x1 不需要padding
+                        nn.ReLU(),
+                        nn.Conv2d(hidden_channels, out_channels, target_module.kernel_size, 
+                                 padding=target_module.padding, stride=target_module.stride,
+                                 dilation=target_module.dilation)  # 保持所有原始参数
+                    )
+                except Exception as param_error:
+                    logger.warning(f"⚠️ 串行分裂参数不兼容，使用简化版本: {param_error}")
+                    # 回退到1x1卷积分解
+                    serial_layers = nn.Sequential(
+                        nn.Conv2d(in_channels, hidden_channels, 1),
+                        nn.ReLU(),
+                        nn.Conv2d(hidden_channels, out_channels, 1)  # 使用1x1避免参数问题
+                    )
                 
                 # 权重初始化
                 with torch.no_grad():
@@ -948,12 +1160,18 @@ class IntelligentDNMCore:
                     if target_module.bias is not None and serial_layers[2].bias is not None:
                         serial_layers[2].bias.data.copy_(target_module.bias.data)
                 
+                # 先计算参数变化（在替换之前）
+                original_params = sum(p.numel() for p in target_module.parameters())
+                new_params = sum(p.numel() for p in serial_layers.parameters())
+                
                 self._replace_module(model, target_layer, serial_layers)
+                
+                logger.info(f"📊 串行分裂参数变化: {original_params:,} → {new_params:,} (差异 {new_params - original_params:,})")
                 
                 return {
                     'success': True,
                     'new_model': model,
-                    'parameters_added': hidden_channels * in_channels + hidden_channels * out_channels * target_module.kernel_size[0] * target_module.kernel_size[1],
+                    'parameters_added': new_params - original_params,
                     'mutation_type': 'serial_division',
                     'details': f'卷积串行分裂: {in_channels}->{hidden_channels}->{out_channels}'
                 }
@@ -1003,6 +1221,11 @@ class IntelligentDNMCore:
                 
                 parallel_module = ParallelLinear(branch1, branch2)
                 
+                # 先计算参数变化（在替换之前）
+                original_params = sum(p.numel() for p in target_module.parameters())
+                new_params = sum(p.numel() for p in parallel_module.parameters())
+                params_added = new_params - original_params
+                
                 # 权重初始化 - 保持原始功能的近似
                 with torch.no_grad():
                     branch1.weight.data = target_module.weight.data[:out_features//2, :] * 0.7
@@ -1014,49 +1237,101 @@ class IntelligentDNMCore:
                 
                 self._replace_module(model, target_layer, parallel_module)
                 
+                logger.info(f"📊 Linear参数变化: {original_params:,} → {new_params:,} (差异 {params_added:,})")
+                
                 return {
                     'success': True,
                     'new_model': model,
-                    'parameters_added': 0,  # 参数总数不变，但结构并行化
+                    'parameters_added': params_added,
                     'mutation_type': 'parallel_division',
                     'details': f'并行分裂为 {out_features//2} + {out_features - out_features//2}'
                 }
                 
             elif isinstance(target_module, nn.Conv2d):
-                # 卷积层并行分裂
+                # 异质并行分裂：不同核尺寸的卷积层并行处理
                 in_channels = target_module.in_channels
                 out_channels = target_module.out_channels
                 
-                branch1 = nn.Conv2d(in_channels, out_channels // 2, target_module.kernel_size,
-                                   padding=target_module.padding, stride=target_module.stride)
-                branch2 = nn.Conv2d(in_channels, out_channels - out_channels // 2, target_module.kernel_size,
+                # 设计异质分支：不同的卷积核和深度
+                # 分支1: 原始核尺寸，一半通道
+                branch1_channels = out_channels // 2
+                branch1 = nn.Conv2d(in_channels, branch1_channels, target_module.kernel_size,
                                    padding=target_module.padding, stride=target_module.stride)
                 
-                class ParallelConv(nn.Module):
-                    def __init__(self, branch1, branch2):
+                # 分支2: 不同核尺寸 + 深度卷积，增强通道
+                branch2_channels = out_channels
+                kernel_size_alt = 1 if target_module.kernel_size[0] > 1 else 3
+                
+                # 创建异质分支：1x1 + 3x3 深度分离卷积
+                branch2 = nn.Sequential(
+                    nn.Conv2d(in_channels, branch2_channels, kernel_size=1, padding=0),
+                    nn.ReLU(inplace=True),
+                    nn.Conv2d(branch2_channels, branch2_channels, kernel_size=kernel_size_alt, 
+                             padding=kernel_size_alt//2, groups=branch2_channels),  # 深度分离卷积
+                    nn.Conv2d(branch2_channels, branch2_channels, kernel_size=1, padding=0)
+                )
+                
+                class HeterogeneousParallelConv(nn.Module):
+                    def __init__(self, branch1, branch2, fusion_conv):
                         super().__init__()
                         self.branch1 = branch1
                         self.branch2 = branch2
+                        self.fusion_conv = fusion_conv
                     
                     def forward(self, x):
                         out1 = self.branch1(x)
                         out2 = self.branch2(x)
-                        return torch.cat([out1, out2], dim=1)
+                        # 特征融合而非简单拼接
+                        combined = torch.cat([out1, out2], dim=1)
+                        return self.fusion_conv(combined)
                 
-                parallel_module = ParallelConv(branch1, branch2)
+                # 添加融合层来整合异质特征
+                total_features = branch1_channels + branch2_channels
+                fusion_conv = nn.Conv2d(total_features, out_channels, kernel_size=1, padding=0)
                 
+                parallel_module = HeterogeneousParallelConv(branch1, branch2, fusion_conv)
+                
+                # 先计算参数变化（在替换之前）
+                original_params = sum(p.numel() for p in target_module.parameters())
+                new_params = sum(p.numel() for p in parallel_module.parameters())
+                params_added = new_params - original_params
+                
+                # 智能权重初始化
                 with torch.no_grad():
-                    branch1.weight.data = target_module.weight.data[:out_channels//2, :, :, :] * 0.7
-                    branch2.weight.data = target_module.weight.data[out_channels//2:, :, :, :] * 0.7
+                    # 分支1使用原始权重的一部分
+                    try:
+                        branch1.weight.data = target_module.weight.data[:branch1_channels, :, :, :] * 0.8
+                        if target_module.bias is not None:
+                            branch1.bias.data = target_module.bias.data[:branch1_channels] * 0.8
+                    except Exception as e:
+                        logger.warning(f"⚠️  分支1权重初始化失败，使用默认初始化: {e}")
+                        nn.init.xavier_uniform_(branch1.weight)
+                        if branch1.bias is not None:
+                            nn.init.zeros_(branch1.bias)
+                    
+                    # 分支2使用xavier初始化
+                    for module in branch2.modules():
+                        if isinstance(module, nn.Conv2d):
+                            nn.init.xavier_uniform_(module.weight)
+                            if module.bias is not None:
+                                nn.init.zeros_(module.bias)
+                    
+                    # 融合层使用恒等映射初始化
+                    nn.init.xavier_uniform_(fusion_conv.weight)
+                    if fusion_conv.bias is not None:
+                        nn.init.zeros_(fusion_conv.bias)
                 
                 self._replace_module(model, target_layer, parallel_module)
+                
+                logger.info(f"📊 参数变化: {original_params:,} → {new_params:,} (增加 {params_added:,})")
+                logger.info(f"🏗️ 异质分支设计: 分支1({branch1_channels}ch) + 分支2({branch2_channels}ch深度分离) + 融合层")
                 
                 return {
                     'success': True,
                     'new_model': model,
-                    'parameters_added': 0,
+                    'parameters_added': params_added,
                     'mutation_type': 'parallel_division',
-                    'details': f'卷积并行分裂: {out_channels//2} + {out_channels - out_channels//2}'
+                    'details': f'异质并行分裂: {branch1_channels}ch标准卷积 + {branch2_channels}ch深度分离卷积 → 融合为{out_channels}ch'
                 }
                 
             else:
@@ -1064,6 +1339,8 @@ class IntelligentDNMCore:
                 
         except Exception as e:
             logger.error(f"❌ 并行分裂失败: {e}")
+            import traceback
+            logger.error(f"❌ 并行分裂详细错误: {traceback.format_exc()}")
             return {'success': False, 'reason': str(e), 'new_model': model}
     
     def _execute_information_enhancement(self, model: nn.Module, target_layer: str, context: Dict[str, Any]) -> Dict[str, Any]:
@@ -1110,3 +1387,213 @@ class IntelligentDNMCore:
         else:
             # 顶级模块
             setattr(model, module_name, new_module)
+    
+    def set_aggressive_mode(self):
+        """设置积极模式以解决过于保守的问题"""
+        
+        # 设置收敛监控为积极模式
+        if hasattr(self.convergence_monitor, 'set_mode'):
+            self.convergence_monitor.set_mode('aggressive')
+        
+        # 设置贝叶斯引擎为积极模式
+        if hasattr(self.bayesian_engine, 'set_aggressive_mode'):
+            self.bayesian_engine.set_aggressive_mode()
+        
+        # 更新配置
+        self.config.update({
+            'aggressive_mutation_mode': True,
+            'prefer_bayesian_decisions': True,
+            'enable_bayesian_analysis': True
+        })
+        
+        logger.info("🚀 智能DNM核心已设置为积极模式")
+    
+    def set_conservative_mode(self):
+        """设置保守模式"""
+        
+        # 设置收敛监控为保守模式
+        if hasattr(self.convergence_monitor, 'set_mode'):
+            self.convergence_monitor.set_mode('conservative')
+        
+        # 设置贝叶斯引擎为保守模式
+        if hasattr(self.bayesian_engine, 'set_conservative_mode'):
+            self.bayesian_engine.set_conservative_mode()
+        
+        # 更新配置
+        self.config.update({
+            'aggressive_mutation_mode': False,
+            'prefer_bayesian_decisions': False,
+        })
+        
+        logger.info("🛡️ 智能DNM核心已设置为保守模式")
+    
+    def get_system_status(self) -> Dict[str, Any]:
+        """获取系统状态"""
+        
+        status = {
+            'config': self.config,
+            'execution_history_length': len(self.execution_history)
+        }
+        
+        # 添加组件状态
+        if hasattr(self.convergence_monitor, 'get_status_summary'):
+            status['convergence_monitor'] = self.convergence_monitor.get_status_summary()
+        
+        if hasattr(self.bayesian_engine, 'get_analysis_summary'):
+            status['bayesian_engine'] = self.bayesian_engine.get_analysis_summary()
+        
+        return status
+    
+    # 移除重复的转换方法，现在使用schema_transformer
+    
+    def _convert_decisions_to_candidates(self, decisions: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        """将贝叶斯决策转换为候选点格式"""
+        
+        candidates = []
+        for decision in decisions:
+            candidate = {
+                'layer_name': decision.get('layer_name', ''),
+                'layer_type': 'bayesian_identified',
+                'selection_reasons': ['bayesian_optimization'],
+                'bottleneck_types': ['bayesian_detected'],
+                'improvement_potential': decision.get('expected_improvement', 0.0),
+                'priority_score': decision.get('expected_utility', 0.0),
+                'recommended_mutations': [decision.get('mutation_type', '')],
+                'bayesian_metrics': {
+                    'success_probability': decision.get('success_probability', 0.5),
+                    'decision_confidence': decision.get('decision_confidence', 0.5),
+                    'expected_utility': decision.get('expected_utility', 0.0)
+                }
+            }
+            candidates.append(candidate)
+        
+        return candidates
+    
+    def _convert_decisions_to_strategies(self, decisions: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        """将贝叶斯决策转换为策略格式"""
+        
+        strategies = []
+        for decision in decisions:
+            strategy = {
+                'target_layer': decision.get('layer_name', ''),
+                'mutation_type': decision.get('mutation_type', ''),
+                'rationale': {
+                    'selection_method': 'bayesian_inference',
+                    'success_probability': decision.get('success_probability', 0.5),
+                    'expected_improvement': decision.get('expected_improvement', 0.0),
+                    'decision_confidence': decision.get('decision_confidence', 0.5)
+                },
+                'expected_outcome': {
+                    'expected_accuracy_improvement': decision.get('expected_improvement', 0.0),
+                    'confidence_level': decision.get('decision_confidence', 0.5),
+                    'success_probability': decision.get('success_probability', 0.5)
+                },
+                'risk_assessment': {
+                    'overall_risk': 1.0 - decision.get('success_probability', 0.5),
+                    'risk_factors': [],
+                    'value_at_risk': decision.get('risk_metrics', {}).get('value_at_risk', 0.0),
+                    'expected_shortfall': decision.get('risk_metrics', {}).get('expected_shortfall', 0.0)
+                },
+                'bayesian_reasoning': decision.get('rationale', 'Bayesian optimization recommended'),
+                'implementation_priority': decision.get('expected_utility', 0.0)
+            }
+            strategies.append(strategy)
+        
+        return strategies
+    
+    def update_bayesian_outcome(self, 
+                              mutation_type: str,
+                              layer_name: str,
+                              success: bool,
+                              performance_change: float,
+                              context: Dict[str, Any]):
+        """更新贝叶斯引擎的变异结果，用于在线学习"""
+        
+        if hasattr(self, 'bayesian_engine') and self.bayesian_engine:
+            self.bayesian_engine.update_mutation_outcome(
+                mutation_type=mutation_type,
+                layer_name=layer_name,
+                success=success,
+                performance_change=performance_change,
+                context=context
+            )
+            logger.info(f"📊 已更新贝叶斯学习: {mutation_type} @ {layer_name} -> {'✅成功' if success else '❌失败'}")
+        
+        # 记录执行历史
+        outcome_record = {
+            'timestamp': context.get('epoch', 0),
+            'mutation_type': mutation_type,
+            'layer_name': layer_name,
+            'success': success,
+            'performance_change': performance_change,
+            'engine_used': 'bayesian' if self.config.get('prefer_bayesian_decisions') else 'traditional'
+        }
+        self.execution_history.append(outcome_record)
+    
+    def get_bayesian_insights(self) -> Dict[str, Any]:
+        """获取贝叶斯引擎的洞察信息"""
+        
+        if not hasattr(self, 'bayesian_engine') or not self.bayesian_engine:
+            return {'status': 'bayesian_engine_not_available'}
+        
+        insights = {
+            'mutation_history_length': len(self.bayesian_engine.mutation_history),
+            'performance_history_length': len(self.bayesian_engine.performance_history),
+            'architecture_features_tracked': len(self.bayesian_engine.architecture_features),
+            'current_priors': self.bayesian_engine.mutation_priors.copy(),
+            'dynamic_thresholds': self.bayesian_engine.dynamic_thresholds.copy(),
+            'utility_parameters': self.bayesian_engine.utility_params.copy(),
+            'recent_mutations': list(self.bayesian_engine.mutation_history)[-5:] if self.bayesian_engine.mutation_history else []
+        }
+        
+        return insights
+    
+    def adjust_bayesian_parameters(self, parameter_updates: Dict[str, Any]):
+        """调整贝叶斯引擎参数"""
+        
+        if not hasattr(self, 'bayesian_engine') or not self.bayesian_engine:
+            logger.warning("⚠️ 贝叶斯引擎不可用，无法调整参数")
+            return
+        
+        # 更新动态阈值
+        if 'thresholds' in parameter_updates:
+            for key, value in parameter_updates['thresholds'].items():
+                if key in self.bayesian_engine.dynamic_thresholds:
+                    self.bayesian_engine.dynamic_thresholds[key] = value
+                    logger.info(f"📊 更新贝叶斯阈值: {key} = {value}")
+        
+        # 更新效用参数
+        if 'utility' in parameter_updates:
+            for key, value in parameter_updates['utility'].items():
+                if key in self.bayesian_engine.utility_params:
+                    self.bayesian_engine.utility_params[key] = value
+                    logger.info(f"📊 更新效用参数: {key} = {value}")
+        
+        # 更新先验分布
+        if 'priors' in parameter_updates:
+            for mutation_type, prior_params in parameter_updates['priors'].items():
+                if mutation_type in self.bayesian_engine.mutation_priors:
+                    self.bayesian_engine.mutation_priors[mutation_type].update(prior_params)
+                    logger.info(f"📊 更新先验分布: {mutation_type} = {prior_params}")
+    
+    def enable_aggressive_bayesian_mode(self):
+        """启用积极的贝叶斯模式（更容易触发变异）"""
+        
+        if hasattr(self, 'bayesian_engine') and self.bayesian_engine:
+            # 降低阈值，提高探索性
+            aggressive_updates = {
+                'thresholds': {
+                    'min_expected_improvement': 0.001,   # 更低的期望改进阈值
+                    'confidence_threshold': 0.2,        # 更低的置信度阈值
+                    'exploration_threshold': 0.15       # 更积极的探索
+                },
+                'utility': {
+                    'risk_aversion': 0.1,               # 降低风险厌恶
+                    'exploration_bonus': 0.15           # 增加探索奖励
+                }
+            }
+            
+            self.adjust_bayesian_parameters(aggressive_updates)
+            logger.info("🚀 已启用积极贝叶斯模式")
+        else:
+            logger.warning("⚠️ 贝叶斯引擎不可用，无法启用积极模式")
