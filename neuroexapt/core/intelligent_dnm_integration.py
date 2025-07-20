@@ -565,7 +565,11 @@ class IntelligentDNMCore:
             if isinstance(target_module, nn.Linear):
                 in_features = target_module.in_features
                 out_features = target_module.out_features
-                hidden_size = min(max(in_features, out_features) // 2, 256)  # 中间层大小
+                # 确保hidden_size合理，并且不超过原始维度
+                hidden_size = max(min(in_features, out_features) // 2, 16)  # 至少16个神经元
+                hidden_size = min(hidden_size, min(in_features, out_features), 128)  # 不超过原始维度和128
+                
+                logger.info(f"🔧 串行分裂参数: {in_features} -> {hidden_size} -> {out_features}")
                 
                 # 串行分裂: Linear -> ReLU -> Linear
                 serial_layers = nn.Sequential(
@@ -576,15 +580,21 @@ class IntelligentDNMCore:
                 
                 # 使用网络变换保持功能等价性
                 with torch.no_grad():
-                    # 第一层使用原权重的子集
-                    serial_layers[0].weight.data = target_module.weight.data[:hidden_size, :]
-                    if target_module.bias is not None:
-                        serial_layers[0].bias.data = target_module.bias.data[:hidden_size]
+                    # 第一层：从输入到中间层的投影
+                    # 使用SVD分解或者简单的随机初始化
+                    nn.init.xavier_normal_(serial_layers[0].weight.data, gain=0.5)
+                    if serial_layers[0].bias is not None:
+                        nn.init.zeros_(serial_layers[0].bias.data)
                     
-                    # 第二层初始化为小值以保持稳定性
-                    nn.init.xavier_normal_(serial_layers[2].weight.data, gain=0.1)
+                    # 第二层：从中间层到输出的重建
+                    # 使用更小的初始化以保持稳定性
+                    nn.init.xavier_normal_(serial_layers[2].weight.data, gain=0.5)
                     if serial_layers[2].bias is not None:
-                        nn.init.zeros_(serial_layers[2].bias.data)
+                        # 复制原始偏置作为起点
+                        if target_module.bias is not None:
+                            serial_layers[2].bias.data.copy_(target_module.bias.data)
+                        else:
+                            nn.init.zeros_(serial_layers[2].bias.data)
                 
                 # 替换原模块
                 self._replace_module(model, target_layer, serial_layers)
@@ -604,7 +614,11 @@ class IntelligentDNMCore:
                 # 卷积层的串行分裂
                 in_channels = target_module.in_channels
                 out_channels = target_module.out_channels
-                hidden_channels = min(max(in_channels, out_channels) // 2, 128)
+                # 确保hidden_channels合理
+                hidden_channels = max(min(in_channels, out_channels) // 2, 8)  # 至少8个通道
+                hidden_channels = min(hidden_channels, min(in_channels, out_channels), 64)  # 不超过原始通道数和64
+                
+                logger.info(f"🔧 卷积串行分裂参数: {in_channels} -> {hidden_channels} -> {out_channels}")
                 
                 # 1x1卷积串行分裂
                 serial_layers = nn.Sequential(
@@ -616,8 +630,12 @@ class IntelligentDNMCore:
                 
                 # 权重初始化
                 with torch.no_grad():
-                    nn.init.xavier_normal_(serial_layers[0].weight.data, gain=0.1)
-                    nn.init.xavier_normal_(serial_layers[2].weight.data, gain=0.1)
+                    nn.init.xavier_normal_(serial_layers[0].weight.data, gain=0.5)
+                    nn.init.xavier_normal_(serial_layers[2].weight.data, gain=0.5)
+                    
+                    # 复制偏置如果存在
+                    if target_module.bias is not None and serial_layers[2].bias is not None:
+                        serial_layers[2].bias.data.copy_(target_module.bias.data)
                 
                 self._replace_module(model, target_layer, serial_layers)
                 
