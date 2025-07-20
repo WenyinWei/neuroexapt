@@ -427,6 +427,10 @@ class AdvancedDNMTrainer:
                 print(f"    ✅ 上下文构建完成")
                 
                 print("  🚀 开始执行形态发生分析...")
+                
+                # 保存形态发生前的参数数量用于准确计算
+                self._pre_morphogenesis_param_count = sum(p.numel() for p in self.model.parameters())
+                
                 try:
                     # 🧠 选择执行引擎：智能引擎 vs 传统引擎
                     if self.use_intelligent_engine:
@@ -512,7 +516,12 @@ class AdvancedDNMTrainer:
                     print(f"    置信度: {results.get('decision_confidence', 0):.3f}")
                     
                     print("  🔄 开始更新模型...")
-                    old_param_count = sum(p.numel() for p in self.model.parameters())
+                    # 在形态发生之前获取原始参数数量
+                    if hasattr(self, '_pre_morphogenesis_param_count'):
+                        old_param_count = self._pre_morphogenesis_param_count
+                        delattr(self, '_pre_morphogenesis_param_count')
+                    else:
+                        old_param_count = sum(p.numel() for p in self.model.parameters())
                     print(f"    📊 原始模型参数: {old_param_count:,}")
                     
                     # 更新模型
@@ -520,8 +529,17 @@ class AdvancedDNMTrainer:
                         if results.get('model_modified', False) and 'new_model' in results:
                             self.model = results['new_model']
                             new_param_count = sum(p.numel() for p in self.model.parameters())
+                            actual_param_increase = new_param_count - old_param_count
+                            reported_param_increase = results.get('parameters_added', 0)
+                            
                             print(f"    📊 新模型参数: {new_param_count:,}")
-                            print(f"    📈 参数增长: {new_param_count - old_param_count:,}")
+                            print(f"    📈 实际参数增长: {actual_param_increase:,}")
+                            print(f"    📋 报告参数增长: {reported_param_increase:,}")
+                            
+                            # 验证参数增长的一致性
+                            if actual_param_increase != reported_param_increase:
+                                print(f"    ⚠️  警告: 实际增长与报告不符! 差异: {actual_param_increase - reported_param_increase:,}")
+                            
                             print(f"    ✅ 模型更新成功")
                         else:
                             print(f"    📊 模型未修改，保持原有结构")
