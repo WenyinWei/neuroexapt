@@ -428,6 +428,14 @@ class EnhancedConvergenceMonitor:
         
         logger.info(f"📝 记录变异执行: epoch {current_epoch}, 类型 {mutation_info.get('mutation_type', 'unknown')}")
     
+    def record_morphogenesis(self, epoch: int, morphogenesis_type: str, performance_before: float = 0.0):
+        """兼容性方法：记录变异事件"""
+        mutation_info = {
+            'mutation_type': morphogenesis_type,
+            'performance_before': performance_before
+        }
+        self.record_morphogenesis_execution(epoch, mutation_info)
+    
     def reset_history(self):
         """重置历史记录"""
         self.performance_history.clear()
