@@ -22,6 +22,7 @@ from typing import Dict, List, Tuple, Optional, Union, Any, Callable
 from dataclasses import dataclass
 from enum import Enum
 import logging
+import copy
 from scipy import stats
 
 from .parameter_free_structural_evaluator import ParameterFreeStructuralEvaluator, StructuralMetrics
@@ -510,7 +511,7 @@ class MultiMutationTypeEvaluator:
                                    model: nn.Module,
                                    top_k: int = 5) -> List[Tuple[MutationConfig, MutationBenefitExpectation]]:
         """
-        获取最佳变异候选
+        获取最佳变异候选 - 智能适应性版本
         
         Args:
             model: 当前模型
@@ -521,20 +522,28 @@ class MultiMutationTypeEvaluator:
         """
         candidates = []
         
+        # 分析历史成功模式
+        successful_types = self._analyze_successful_mutation_types()
+        
         # 遍历所有层，生成候选变异
         for layer_name, layer in model.named_modules():
             if len(list(layer.children())) == 0:  # 叶子节点
-                # 为每种变异类型生成候选
-                layer_candidates = self._generate_layer_mutation_candidates(
-                    layer_name, layer
+                # 智能生成候选 - 偏好成功类型
+                layer_candidates = self._generate_adaptive_mutation_candidates(
+                    layer_name, layer, successful_types
                 )
                 
                 for config in layer_candidates:
                     try:
                         expectation = self.evaluate_mutation_benefit(config, model)
+                        # 对历史成功类型给予额外奖励
+                        if config.mutation_type in successful_types:
+                            expectation.expected_benefit *= 1.2  # 20%奖励
+                            logger.debug(f"历史成功类型奖励: {config.mutation_type.value}")
+                        
                         candidates.append((config, expectation))
                     except Exception as e:
-                        logger.warning(f"评估变异候选失败: {e}")
+                        logger.debug(f"评估变异候选失败: {e}")
         
         # 按风险调整收益排序
         candidates.sort(
@@ -542,7 +551,126 @@ class MultiMutationTypeEvaluator:
             reverse=True
         )
         
-        return candidates[:top_k]
+        # 确保多样性 - 不让单一类型占据所有候选
+        diversified_candidates = self._ensure_candidate_diversity(candidates, top_k)
+        
+        return diversified_candidates
+    
+    def _analyze_successful_mutation_types(self) -> List[MutationType]:
+        """分析历史成功的变异类型"""
+        if not self.mutation_history:
+            return []
+        
+        # 统计各类型的成功率和平均收益
+        type_stats = {}
+        for config, evidence, outcome in self.mutation_history:
+            mutation_type = config.mutation_type
+            if mutation_type not in type_stats:
+                type_stats[mutation_type] = {'outcomes': [], 'count': 0}
+            
+            type_stats[mutation_type]['outcomes'].append(outcome)
+            type_stats[mutation_type]['count'] += 1
+        
+        # 找出成功的类型 (平均收益 > 0 且样本数 >= 2)
+        successful_types = []
+        for mutation_type, stats in type_stats.items():
+            if stats['count'] >= 2:
+                avg_outcome = np.mean(stats['outcomes'])
+                if avg_outcome > 0.001:  # 平均改进 > 0.1%
+                    successful_types.append(mutation_type)
+                    logger.debug(f"成功变异类型: {mutation_type.value}, 平均收益: {avg_outcome:.4f}")
+        
+        return successful_types
+    
+    def _generate_adaptive_mutation_candidates(self,
+                                             layer_name: str,
+                                             layer: nn.Module,
+                                             successful_types: List[MutationType]) -> List[MutationConfig]:
+        """智能生成适应性变异候选"""
+        candidates = []
+        
+        # 基础候选生成
+        base_candidates = self._generate_layer_mutation_candidates(layer_name, layer)
+        
+        # 对成功类型生成更多变体
+        for candidate in base_candidates:
+            candidates.append(candidate)
+            
+            # 如果是历史成功类型，生成参数变体
+            if candidate.mutation_type in successful_types:
+                variants = self._generate_parameter_variants(candidate)
+                candidates.extend(variants)
+        
+        # 添加一些探索性候选 (不同于历史成功模式)
+        exploratory_candidates = self._generate_exploratory_candidates(layer_name, layer, successful_types)
+        candidates.extend(exploratory_candidates)
+        
+        return candidates
+    
+    def _generate_parameter_variants(self, base_config: MutationConfig) -> List[MutationConfig]:
+        """为成功的变异类型生成参数变体"""
+        variants = []
+        
+        if base_config.mutation_type == MutationType.CHANNEL_WIDENING:
+            # 不同的扩展因子
+            for factor in [1.2, 1.3, 1.7, 2.0]:
+                if factor != base_config.widening_factor:
+                    variant = copy.deepcopy(base_config)
+                    variant.widening_factor = factor
+                    variants.append(variant)
+        
+        return variants[:2]  # 最多2个变体
+    
+    def _generate_exploratory_candidates(self,
+                                       layer_name: str,
+                                       layer: nn.Module,
+                                       successful_types: List[MutationType]) -> List[MutationConfig]:
+        """生成探索性候选 (与成功模式不同)"""
+        candidates = []
+        all_types = list(MutationType)
+        
+        # 找出未尝试或不太成功的类型
+        unexplored_types = [t for t in all_types if t not in successful_types]
+        
+        if isinstance(layer, nn.Conv2d) and MutationType.LAYER_REPLACEMENT in unexplored_types:
+            # 尝试层替换
+            candidates.append(MutationConfig(
+                mutation_type=MutationType.LAYER_REPLACEMENT,
+                target_layer_name=layer_name,
+                target_layer=layer,
+                replacement_layer_type=nn.GELU  # 尝试不同激活
+            ))
+        
+        return candidates[:1]  # 限制探索性候选数量
+    
+    def _ensure_candidate_diversity(self,
+                                  candidates: List[Tuple[MutationConfig, MutationBenefitExpectation]],
+                                  top_k: int) -> List[Tuple[MutationConfig, MutationBenefitExpectation]]:
+        """确保候选多样性"""
+        if len(candidates) <= top_k:
+            return candidates
+        
+        # 按类型分组
+        type_groups = {}
+        for candidate in candidates:
+            mutation_type = candidate[0].mutation_type
+            if mutation_type not in type_groups:
+                type_groups[mutation_type] = []
+            type_groups[mutation_type].append(candidate)
+        
+        # 每种类型最多选择一定比例
+        diversified = []
+        max_per_type = max(1, top_k // len(type_groups))
+        
+        for mutation_type, group in type_groups.items():
+            # 取该类型的最佳候选
+            group.sort(key=lambda x: x[1].risk_adjusted_benefit, reverse=True)
+            selected_count = min(max_per_type, len(group))
+            diversified.extend(group[:selected_count])
+        
+        # 按整体质量排序并返回top_k
+        diversified.sort(key=lambda x: x[1].risk_adjusted_benefit, reverse=True)
+        return diversified[:top_k]
     
     def _generate_layer_mutation_candidates(self,
                                           layer_name: str,

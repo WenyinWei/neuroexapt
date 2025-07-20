@@ -195,12 +195,39 @@ class UnifiedIntelligentEvolutionEngine:
         
         logger.info(f"开始架构进化，初始准确率: {self.evolution_state.current_accuracy:.2f}%")
         
-        # 进化循环
+        # 间歇性进化循环 - 在进化和常规训练之间交替
+        consecutive_no_evolution = 0
+        
         for round_idx in range(self.config.max_evolution_rounds):
             round_start_time = time.time()
             self.evolution_state.current_round = round_idx + 1
             
             logger.info(f"\n=== 进化轮次 {self.evolution_state.current_round} ===")
+            
+            # 每3-5轮做一次常规训练来稳定基线
+            if round_idx > 0 and round_idx % 4 == 0:
+                logger.info("进行间歇性常规训练以稳定基线...")
+                current_model = self._inter_evolution_training(
+                    current_model, train_loader, test_loader, criterion, optimizer_factory
+                )
+                # 更新准确率基线
+                self.evolution_state.current_accuracy = self._evaluate_model(current_model, test_loader)
+                logger.info(f"常规训练后准确率: {self.evolution_state.current_accuracy:.2f}%")
+            
+            # 智能检测：是否需要进化
+            need_evolution = self._should_attempt_evolution(current_model, test_loader)
+            if not need_evolution:
+                logger.info("当前模型表现良好，跳过此轮进化")
+                consecutive_no_evolution += 1
+                if consecutive_no_evolution >= 5:
+                    logger.info("连续多轮跳过进化，进行额外训练...")
+                    current_model = self._inter_evolution_training(
+                        current_model, train_loader, test_loader, criterion, optimizer_factory
+                    )
+                    consecutive_no_evolution = 0
+                continue
+            
+            consecutive_no_evolution = 0
             
             # 1. 生成和评估变异候选
             candidates = self._generate_and_evaluate_candidates(
@@ -208,14 +235,20 @@ class UnifiedIntelligentEvolutionEngine:
             )
             
             if not candidates:
-                logger.warning("没有找到有效的变异候选，结束进化")
-                break
+                logger.info("没有找到有效的变异候选，进行常规训练")
+                current_model = self._inter_evolution_training(
+                    current_model, train_loader, test_loader, criterion, optimizer_factory
+                )
+                continue
             
             # 2. 选择最佳变异
             selected_mutations = self._select_best_mutations(candidates)
             
             if not selected_mutations:
-                logger.info("本轮没有合适的变异候选，跳过本轮")
+                logger.info("本轮没有合适的变异候选，进行常规训练")
+                current_model = self._inter_evolution_training(
+                    current_model, train_loader, test_loader, criterion, optimizer_factory
+                )
                 round_time = time.time() - round_start_time
                 self.evolution_state.timing_history.append(round_time)
                 continue
@@ -589,6 +622,101 @@ class UnifiedIntelligentEvolutionEngine:
             if epoch % 5 == 0:
                 avg_loss = epoch_loss / max(batches_processed, 1)
                 logger.debug(f"微调 Epoch {epoch+1}/{epochs}, 平均损失: {avg_loss:.4f}")
+        
+        return model
+    
+    def _should_attempt_evolution(self, model: nn.Module, test_loader: DataLoader) -> bool:
+        """
+        智能检测是否需要尝试进化
+        
+        检查指标：
+        1. 最近准确率提升趋势
+        2. 与目标的距离
+        3. 历史进化成功率
+        """
+        current_accuracy = self.evolution_state.current_accuracy
+        target_accuracy = self.config.target_accuracy
+        
+        # 如果已经达到目标，降低进化频率
+        if current_accuracy >= target_accuracy:
+            return np.random.random() < 0.1  # 10%概率继续优化
+        
+        # 如果距离目标很远，总是尝试进化
+        if target_accuracy - current_accuracy > 3.0:
+            return True
+        
+        # 检查最近几轮的改进趋势
+        if len(self.evolution_state.accuracy_history) >= 3:
+            recent_improvements = []
+            for i in range(1, min(4, len(self.evolution_state.accuracy_history))):
+                improvement = (self.evolution_state.accuracy_history[-i] - 
+                             self.evolution_state.accuracy_history[-i-1])
+                recent_improvements.append(improvement)
+            
+            avg_recent_improvement = np.mean(recent_improvements)
+            # 如果最近改进很小，更可能需要进化
+            if avg_recent_improvement < 0.01:  # 最近改进 < 0.01%
+                return np.random.random() < 0.8  # 80%概率尝试进化
+        
+        # 默认适中的进化概率
+        return np.random.random() < 0.6  # 60%概率
+    
+    def _inter_evolution_training(self,
+                                model: nn.Module,
+                                train_loader: DataLoader,
+                                test_loader: DataLoader,
+                                criterion: nn.Module,
+                                optimizer_factory: Callable,
+                                epochs: int = 5) -> nn.Module:
+        """
+        间歇性常规训练 - 在进化轮次之间稳定模型
+        """
+        logger.info(f"执行{epochs}轮间歇训练...")
+        
+        # 使用更保守的学习率
+        model.train()
+        optimizer = optimizer_factory(model.parameters())
+        
+        # 降低学习率
+        for param_group in optimizer.param_groups:
+            param_group['lr'] *= 0.1  # 降低到10%
+        
+        scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=epochs)
+        
+        for epoch in range(epochs):
+            epoch_loss = 0.0
+            batches_processed = 0
+            
+            for batch_idx, (data, target) in enumerate(train_loader):
+                data, target = data.to(self.device), target.to(self.device)
+                
+                optimizer.zero_grad()
+                output = model(data)
+                loss = criterion(output, target)
+                loss.backward()
+                optimizer.step()
+                
+                epoch_loss += loss.item()
+                batches_processed += 1
+                
+                # 限制训练量
+                if batch_idx >= 20:  # 适中的训练量
+                    break
+            
+            scheduler.step()
+            
+            if epoch % 2 == 0:
+                avg_loss = epoch_loss / max(batches_processed, 1)
+                logger.debug(f"间歇训练 Epoch {epoch+1}/{epochs}, 损失: {avg_loss:.4f}")
+        
+        # 更新准确率历史
+        new_accuracy = self._evaluate_model(model, test_loader)
+        self.evolution_state.accuracy_history.append(new_accuracy)
+        self.evolution_state.current_accuracy = new_accuracy
+        
+        if new_accuracy > self.evolution_state.best_accuracy:
+            self.evolution_state.best_accuracy = new_accuracy
+            logger.info(f"间歇训练创造新记录: {new_accuracy:.2f}%")
         
         return model
     

@@ -211,17 +211,17 @@ def run_intelligent_evolution_demo(args):
     initial_accuracy = trainer.train_model(train_loader, test_loader, epochs=epochs)
     logger.info(f"初始准确率: {initial_accuracy:.2f}%")
     
-    # 配置进化引擎
+    # 配置进化引擎 - 长期进化策略
     evolution_config = EvolutionConfig(
-        max_evolution_rounds=args.evolution_rounds if not args.quick else 2,
+        max_evolution_rounds=80 if not args.quick else 10,  # 长期进化：80轮
         target_accuracy=args.target,
-        max_mutations_per_round=2 if args.quick else 3,
+        max_mutations_per_round=1 if args.quick else 2,     # 每轮少量变异，持续优化
         enable_sampling_validation=not args.quick,  # 快速模式禁用抽样验证
         validation_sample_ratio=0.05 if args.quick else 0.1,
         quick_validation_epochs=2 if args.quick else 3,
         # 调整阈值以注重长期潜力而非短期表现
-        min_benefit_threshold=-0.005,  # 允许-0.5%短期下降
-        confidence_threshold=0.1,      # 10%最小成功率 (更宽松)
+        min_benefit_threshold=-0.01,   # 允许-1%短期下降
+        confidence_threshold=0.05,     # 5%最小成功率 (更宽松探索)
     )
     
     # 创建进化引擎
