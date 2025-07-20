@@ -224,8 +224,8 @@ class IntelligentEvolutionTrainer:
         self.train_history.append({'epoch': epoch, 'loss': avg_loss, 'accuracy': accuracy})
         return avg_loss, accuracy
     
-    def test(self):
-        """测试模型性能"""
+    def evaluate(self):
+        """评估模型性能"""
         self.model.eval()
         test_loss = 0
         correct = 0
@@ -242,10 +242,6 @@ class IntelligentEvolutionTrainer:
         accuracy = 100. * correct / len(self.test_loader.dataset)
         
         return test_loss, accuracy
-    
-    def evaluate(self):
-        """评估模型性能（与test方法相同，提供统一接口）"""
-        return self.test()
     
     def extract_features_and_labels(self, model, data_loader, max_batches=3, save_to_disk=False):
         """提取模型特征和标签用于智能分析
