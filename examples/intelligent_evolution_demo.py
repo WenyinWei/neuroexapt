@@ -681,9 +681,8 @@ def demo_intelligent_evolution(trainer, initial_epochs=5):
         # 开始进化
         final_model, evolution_history = evolution_engine.evolve(
             model=model,
-            evaluation_fn=evaluation_function,
             data_loader=trainer.test_loader,
-            device=device
+            evaluation_fn=evaluation_function
         )
         
         # 显示进化结果
