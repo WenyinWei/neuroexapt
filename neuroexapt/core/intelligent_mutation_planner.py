@@ -57,13 +57,13 @@ class MutationPlan:
     priority: float  # 优先级 [0, 1]
     expected_improvement: float  # 预期改进 [0, 1]
     
-    # Net2Net参数迁移相关
-    preserve_function: bool = True  # 是否保持功能一致性
-    transfer_method: str = "weight_expansion"  # 参数迁移方法
-    
     # 详细说明
     reasoning: str
     risk_assessment: str
+    
+    # Net2Net参数迁移相关
+    preserve_function: bool = True  # 是否保持功能一致性
+    transfer_method: str = "weight_expansion"  # 参数迁移方法
 
 
 class IntelligentMutationPlanner:
